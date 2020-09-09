@@ -80,15 +80,12 @@
                   setTimeout(() => {
                       el.style.opacity = 1
                       el.style.transform = 'translate(-50%, 0)'
-                      done()
                   })
               },
               leave(el, done) {
-                  setTimeout(() => {
-                      el.style.opacity = 0
-                      el.style.transform = 'translate(-50%, 30%)'
-                      done()
-                  })
+                  el.style.opacity = 0
+                  el.style.transform = 'translate(-50%, 30%)'
+                  setTimeout(done, 300)
               },
               afterLeave () {
                   this.$destroy()
