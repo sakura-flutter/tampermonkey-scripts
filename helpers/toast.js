@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Toast
-// @version      1.0.0
+// @version      1.0.1
 // @description  Toast 可以直接Toast[type] 调用
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -128,9 +128,5 @@
           return Toast(options)
       }
   })
-
-  Toast.config = function({Vue}) {
-      Vue = Vue
-  }
 
 })();

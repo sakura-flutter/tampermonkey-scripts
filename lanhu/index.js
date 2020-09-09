@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.0.1
+// @version      1.0.2
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -11,7 +11,10 @@
 // @grant        unsafeWindow
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @require      https://greasyfork.org/scripts/411088-toast/code/Toast.js?version=846196
 // ==/UserScript==
+
+/* global Toast */
 
 (function() {
   'use strict';
@@ -25,9 +28,11 @@
       setTimeout(autofillPassword, 500)
   }
 
-  unsafeWindow.addEventListener('DOMContentLoaded', () => {
-      console.warn('DOMContentLoaded')
-      setTimeout(autofillPassword, 500)
+  ;['DOMContentLoaded', 'popstate', 'hashchange'].forEach(eventname => {
+      unsafeWindow.addEventListener(eventname, () => {
+          console.warn(eventname)
+          setTimeout(autofillPassword, 500)
+      })
   })
 
   function autofillPassword() {
@@ -45,10 +50,11 @@
       const pidPassword = GM_getValue('passwords', {})[pid]
       if (pidPassword) {
           passwordEl.value = pidPassword
+          Toast('密码已填写')
           confirmEl.click()
       }
 
-      // 蓝湖刷新会重新跳转到输入密码页 pushState与DOMContentLoaded 可能会导致重复注册事件
+      // 蓝湖刷新会重新跳转到输入密码页 pushState DOMContentLoaded popstate hashchange 可能会导致重复注册事件
       // 标记一下事件
       if (confirmEl.dataset.addedHandler) return
       confirmEl.dataset.addedHandler = '1'
