@@ -1,12 +1,4 @@
-// ==UserScript==
-// @name         Toast
-// @version      1.0.1
-// @description  Toast 可以直接Toast[type] 调用
-// @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter
-// @compatible   chrome >= 80
-// @compatible   firefox >= 75
-// ==/UserScript==
+/* Toast 可以直接Toast[type] 调用 */
 
 /* global Vue Toast */
 
@@ -88,12 +80,14 @@
                   setTimeout(() => {
                       el.style.opacity = 1
                       el.style.transform = 'translate(-50%, 0)'
+                      done()
                   })
               },
               leave(el, done) {
                   setTimeout(() => {
                       el.style.opacity = 0
                       el.style.transform = 'translate(-50%, 30%)'
+                      done()
                   })
               },
               afterLeave () {
