@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.0.3
+// @version      1.0.4
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -11,7 +11,7 @@
 // @grant        unsafeWindow
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=846229
+// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=846237
 // ==/UserScript==
 
 /* global Toast */
