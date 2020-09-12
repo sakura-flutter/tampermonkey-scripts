@@ -93,12 +93,13 @@
               },
           },
       }).$mount()
-      document.body.appendChild(toast.$el)
+      function appendToBody() {
+          document.body.appendChild(toast.$el)
+      }
+      document.body ? appendToBody() : window.addEventListener('DOMContentLoaded', appendToBody)
 
       if (options.duration > 0) {
-          setTimeout(() => {
-              toast.visible = false
-          }, options.duration)
+          setTimeout(toast.close, options.duration)
       }
 
       return {
