@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         百度贴吧签到
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.0.1
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @run-at       document-end
