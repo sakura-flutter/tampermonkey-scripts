@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.1.1
+// @version      1.2.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -127,10 +127,13 @@
             const ui = new Vue({
                 template: `
                   <article id="inject-recorded-ui" @mouseenter="toggle" @mouseleave="toggle">
-                    <transition name="fadedd">
-                      <ul v-show="recordsVisible">
+                    <transition name="slide-fade">
+                      <ul v-show="recordsVisible && reversed.length">
                         <li v-for="item in reversed" :key="item.pid">
-                          <a :href="getHref(item)" :title="item.title" target="_blank">{{item.title}}</a>
+                          <a :href="getHref(item)" :title="item.title" target="_blank">
+                            <span>{{item.title}}</span>
+                            <button title="移除" @click.prevent="deleteItem(item)">×</button>
+                          </a>
                         </li>
                       </ul>
                     </transition>
@@ -156,6 +159,16 @@
                 methods: {
                     getHref(item) {
                         return PATH + item.hash + '?' + item.queryString
+                    },
+                    deleteItem(item) {
+                        const newRecords = [...this.records]
+                        newRecords.find((record, index) => {
+                            if(record.pid === item.pid) {
+                                newRecords.splice(index, 1)
+                                return true
+                            }
+                        })
+                        GM_setValue('records', newRecords)
                     },
                     toggle() {
                         this.recordsVisible = !this.recordsVisible
@@ -186,10 +199,10 @@
              border: 0;
              background: #b4bbc5;
           }
-          #inject-recorded-ui .fadedd-enter-active, #inject-recorded-ui .fadedd-leave-active {
+          #inject-recorded-ui .slide-fade-enter-active, #inject-recorded-ui .slide-fade-leave-active {
              transition: all .1s;
           }
-           #inject-recorded-ui .fadedd-enter, #inject-recorded-ui .fadedd-leave-to {
+           #inject-recorded-ui .slide-fade-enter, #inject-recorded-ui .slide-fade-leave-to {
              transform: translateY(5px);
              opacity: 0;
           }
@@ -201,16 +214,28 @@
              box-shadow: 0 1px 6px rgba(0,0,0,.15);
           }
           #inject-recorded-ui a {
-             display: block;
+             display: flex;
+             align-items: center;
              line-height: 30px;
              padding: 0 5px;
-             overflow: hidden;
-             text-overflow: ellipsis;
-             white-space: nowrap;
              transition: background 0.1s ease-out;
           }
           #inject-recorded-ui a:hover {
              background: rgba(220, 237, 251, 0.64);
+          }
+          #inject-recorded-ui a span {
+             flex: 1;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             white-space: nowrap;
+          }
+          #inject-recorded-ui li button {
+             width: 20px;
+             line-height: 20px;
+             border: none;
+             border-radius: 50%;
+             color: #ababab;
+             cursor: pointer;
           }
           #inject-recorded-ui .view-btn {
              display: block;
