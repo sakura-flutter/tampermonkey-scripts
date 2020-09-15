@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.2.0
-// @description  自动填充填写过的产品密码(不是蓝湖账户)；查看产品页面窗口改变后帮助侧边栏更新高度
+// @version      1.3.0
+// @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
 // @compatible   chrome >= 80
@@ -128,7 +128,7 @@
                 template: `
                   <article id="inject-recorded-ui" @mouseenter="toggle" @mouseleave="toggle">
                     <transition name="slide-fade">
-                      <ul v-show="recordsVisible && reversed.length">
+                      <ul v-show="reversed.length && (unhidden || recordsVisible)">
                         <li v-for="item in reversed" :key="item.pid">
                           <a :href="getHref(item)" :title="item.title" target="_blank">
                             <span>{{item.title}}</span>
@@ -137,13 +137,17 @@
                         </li>
                       </ul>
                     </transition>
-                    <button class="view-btn">打开最近项目</button>
+                    <div style="text-align: center; padding-top: 8px;">
+                      <button class="view-btn">打开最近项目</button>
+                      <input style="margin-left: 6px;vertical-align:text-top;" v-model="unhidden" type="checkbox" title="固定显示" @change="unhiddenChange" />
+                    </div>
                   </article>
                 `,
                 data() {
                     return {
                         records: GM_getValue('records', []),
                         recordsVisible: false,
+                        unhidden: GM_getValue('unhidden', false),
                     }
                 },
                 computed: {
@@ -154,6 +158,9 @@
                 created() {
                     GM_addValueChangeListener('records', (name, oldVal, newVal) => {
                         this.records = newVal
+                    })
+                    GM_addValueChangeListener('unhidden', (name, oldVal, newVal) => {
+                        this.unhidden = newVal
                     })
                 },
                 methods: {
@@ -173,6 +180,9 @@
                     toggle() {
                         this.recordsVisible = !this.recordsVisible
                     },
+                    unhiddenChange() {
+                      GM_setValue('unhidden', this.unhidden)
+                    },
                 },
             }).$mount()
             document.body.appendChild(ui.$el)
@@ -187,6 +197,11 @@
              z-index: 1000;
              width: 220px;
              padding: 20px 20px 10px;
+             transition: opacity .1s;
+             opacity: .5;
+          }
+          #inject-recorded-ui:hover {
+             opacity: 1;
           }
           #inject-recorded-ui ul::-webkit-scrollbar {
              width: 8px;
@@ -238,19 +253,12 @@
              cursor: pointer;
           }
           #inject-recorded-ui .view-btn {
-             display: block;
-             margin: 8px auto 0;
              padding: 4px 12px;
-             transition: opacity .1s;
-             opacity: .5;
              color: #fff;
              background:#3385ff;
              box-shadow:0 1px 6px rgba(0,0,0,.2);
              border: none;
              border-radius: 2px;
-          }
-          #inject-recorded-ui:hover .view-btn {
-             opacity: 1;
           }
         `)
     }
