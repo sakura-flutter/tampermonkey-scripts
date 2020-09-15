@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.3.0
+// @version      1.3.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -126,7 +126,7 @@
 
             const ui = new Vue({
                 template: `
-                  <article id="inject-recorded-ui" @mouseenter="toggle" @mouseleave="toggle">
+                  <article id="inject-recorded-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false)">
                     <transition name="slide-fade">
                       <ul v-show="reversed.length && (unhidden || recordsVisible)">
                         <li v-for="item in reversed" :key="item.pid">
@@ -177,8 +177,8 @@
                         })
                         GM_setValue('records', newRecords)
                     },
-                    toggle() {
-                        this.recordsVisible = !this.recordsVisible
+                    toggle(visible) {
+                        this.recordsVisible = visible
                     },
                     unhiddenChange() {
                       GM_setValue('unhidden', this.unhidden)
