@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.0.0
-// @description  适配了微信公众号、知乎、掘金、简书，贴吧
+// @version      1.1.0
+// @description  适配了微信公众号、知乎、掘金、简书，贴吧，百度搜索
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
 // @compatible   chrome >= 80
@@ -12,7 +12,10 @@
 // @match        https://www.zhihu.com/question/*
 // @match        https://juejin.im/post/*
 // @match        https://www.jianshu.com/p/*
+// @match        https://www.baidu.com/s?*
+// @match        https://www.baidu.com/
 // @match        https://tieba.baidu.com/p/*
+// @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -55,6 +58,7 @@
             ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url) || /zhihu.com\/question\//.test(url)],
             ['juejin', /juejin.im\/post\//.test(url)],
             ['jianshu', /jianshu.com\/p\//.test(url)],
+            ['baidu', /www.baidu.com\/s?/.test(url)],
             ['tieba', /tieba.baidu.com\/p\//.test(url)],
         ]
         // 返回匹配的页面
@@ -205,6 +209,91 @@
         createWidescreenControl({ store, execute })
     })
     /* ===简书===end */
+
+    /* ===百度搜索===start */
+    handlers.set('baidu', function() {
+        const store = createStore('baidu')
+        function execute() {
+            const styleEl = GM_addStyle(`
+              :root {
+                --inject-page-width: 70vw;
+              }
+              @media screen and (min-width: 1490px) {
+                /* 顶部搜索 */
+                .head_wrapper .s_form {
+                   margin-left: auto;
+                   margin-right: auto;
+                   width: fit-content;
+                   width: -moz-fit-content;
+                }
+                /* 搜索tab */
+                .s_tab {
+                   padding-left: 0 !important;
+                }
+                .s_tab {
+                   margin-left: auto;
+                   margin-right: auto;
+                   width: fit-content;
+                   width: -moz-fit-content;
+                }
+                /* 搜索内容 */
+                #container {
+                   margin-left: auto !important;
+                   margin-right: auto !important;
+                }
+                /* 仅对新闻流处理宽屏 */
+                .container_new {
+                   width: var(--inject-page-width) !important;
+                }
+                /* 左侧搜索结果 */
+                .container_new #content_left {
+                   width: calc(var(--inject-page-width) - 450px) !important;
+                }
+                .container_new #content_left > div {
+                   width: 100% !important;
+                }
+                .container_new #content_left .new-pmd .c-span9 {
+                   width: 70%;
+                }
+                .container_new #content_left .c-group-wrapper .c-group {
+                   width: 95% !important;
+                }
+                /* 分页 */
+                .page-inner {
+                   margin-left: auto;
+                   margin-right: auto;
+                   padding-left: 0 !important;
+                   width: var(--inject-page-width);
+                }
+                /* 页脚 */
+                .foot-inner {
+                   margin-left: auto;
+                   margin-right: auto;
+                   width: var(--inject-page-width);
+                }
+                #foot .foot-inner #help {
+                   padding-left: 0 !important;
+                }
+              }
+            `)
+            // 搜索时百度会清除文档这里需要将样式重新插入
+            function redo() {
+                if (document.head.contains(styleEl)) return
+                document.head.appendChild(styleEl)
+            }
+            window.addEventListener('DOMContentLoaded', () => {
+                const { jQuery } = unsafeWindow
+                jQuery(document).ajaxSuccess((event, xhr, settings) => {
+                    if (!settings.url.startsWith('/s?')) return
+                    redo()
+                })
+            })
+            window.addEventListener('popstate', redo)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===百度搜索===end */
 
     /* ===贴吧===start */
     handlers.set('tieba', function() {
