@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.3.1
+// @version      1.3.2
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -87,6 +87,7 @@
 
     /* 更新侧边栏高度 */
     window.addEventListener('resize', throttle(function() {
+        if (!location.hash.startsWith('#/item/project/product')) return
         const barEl = $('.flexible-bar')
         const modalEl = $('.flexible-modal')
         if (!barEl || !modalEl) return
@@ -250,6 +251,7 @@
              border: none;
              border-radius: 50%;
              color: #ababab;
+             box-shadow: 0 1px 1px rgba(0,0,0,.15);
              cursor: pointer;
           }
           #inject-recorded-ui .view-btn {
