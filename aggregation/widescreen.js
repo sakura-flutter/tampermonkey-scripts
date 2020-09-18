@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.1.0
-// @description  适配了微信公众号、知乎、掘金、简书，贴吧，百度搜索
+// @version      1.2.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
 // @compatible   chrome >= 80
 // @compatible   firefox >= 75
 // @run-at       document-start
+// @match        https://bcy.net/item/detail/*
 // @match        https://mp.weixin.qq.com/s*
 // @match        https://zhuanlan.zhihu.com/p/*
 // @match        https://www.zhihu.com/question/*
@@ -15,6 +16,9 @@
 // @match        https://www.baidu.com/s?*
 // @match        https://www.baidu.com/
 // @match        https://tieba.baidu.com/p/*
+// @match        https://segmentfault.com/a/*
+// @match        https://segmentfault.com/q/*
+// @match        https://www.bilibili.com/read/*
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_setValue
@@ -54,12 +58,15 @@
         const url = origin + pathname
         // 格式[ ['xx', true|false], ]
         const sites = [
+            ['bcy', /bcy.net\/item\/detail/.test(url)],
             ['mpWeixin', /mp.weixin.qq.com\/s/.test(url)],
             ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url) || /zhihu.com\/question\//.test(url)],
             ['juejin', /juejin.im\/post\//.test(url)],
             ['jianshu', /jianshu.com\/p\//.test(url)],
             ['baidu', /www.baidu.com\/s?/.test(url)],
             ['tieba', /tieba.baidu.com\/p\//.test(url)],
+            ['segmentfault', /segmentfault.com/.test(url)],
+            ['bilibili', /bilibili.com/.test(url)],
         ]
         // 返回匹配的页面
         return sites
@@ -69,6 +76,30 @@
 
     // 对应网页要执行的操作操作
     const handlers = new Map()
+
+    /* ===半次元===start */
+    handlers.set('bcy', function() {
+        const store = createStore('bcy')
+        function execute() {
+            GM_addStyle(`
+              @media (min-width: 1580px) {
+                .container .row {
+                   width: 75vw;
+                }
+                .container .row .col-big {
+                   flex: .97;
+                }
+                /* 文章头部信息 */
+                .detail-main header {
+                   width: auto !important;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===半次元===end */
 
     /* ===微信文章===start */
     handlers.set('mpWeixin', function() {
@@ -216,9 +247,9 @@
         function execute() {
             const styleEl = GM_addStyle(`
               :root {
-                --inject-page-width: 70vw;
+                --inject-page-width: 75vw;
               }
-              @media screen and (min-width: 1490px) {
+              @media screen and (min-width: 1460px) {
                 /* 顶部搜索 */
                 .head_wrapper .s_form {
                    margin-left: auto;
@@ -249,11 +280,12 @@
                 .container_new #content_left {
                    width: calc(var(--inject-page-width) - 450px) !important;
                 }
-                .container_new #content_left > div {
+                /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
+                .container_new #content_left > div:not([tpl*=img_address]) {
                    width: 100% !important;
                 }
                 .container_new #content_left .new-pmd .c-span9 {
-                   width: 70%;
+                   width: 75%;
                 }
                 .container_new #content_left .c-group-wrapper .c-group {
                    width: 95% !important;
@@ -273,6 +305,12 @@
                 }
                 #foot .foot-inner #help {
                    padding-left: 0 !important;
+                }
+              }
+
+              @media screen and (min-width: 1830px) {
+                .container_new #content_left .new-pmd .c-span9 {
+                   width: 83%;
                 }
               }
             `)
@@ -348,6 +386,74 @@
         createWidescreenControl({ store, execute })
     })
     /* ===贴吧===end */
+
+    /* ===segmentfault===start */
+    handlers.set('segmentfault', function() {
+        const store = createStore('segmentfault')
+        function execute() {
+            GM_addStyle(`
+              /* 专栏/问答 */
+              @media (min-width: 1560px) {
+                .container, .container-lg, .container-md, .container-sm, .container-xl {
+                   max-width: 75vw;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===segmentfault===end */
+
+    /* ===bilibili===start */
+    handlers.set('bilibili', function() {
+        const store = createStore('bilibili')
+        function execute() {
+            // 页面整体往左
+            const offsetLeft = '-5vw'
+            GM_addStyle(`
+              /* 专栏 */
+              :root {
+                --inject-page-width: 50vw;
+              }
+              @media screen and (min-width: 1600px) {
+                /* 文章 */
+                .page-container {
+                   width: var(--inject-page-width) !important;
+                   max-width: none !important;
+                   padding-right: 0 !important;
+                   /* 左边显得空洞，往左偏移一点 */
+                   left: ${offsetLeft};
+                }
+                .article-holder, .head-container {
+                   width: var(--inject-page-width);
+                   max-width: none !important;
+                }
+                .banner-img-holder {
+                   width: auto !important;
+                   max-width: 100%;
+                }
+                .article-holder img.loaded {
+                   width: auto !important;
+                   height: auto !important;
+                }
+                /* 右侧up主等信息 */
+                .up-info-holder {
+                   margin-left: 0 !important;
+                }
+                .up-info-holder .fixed-box {
+                   left: calc(50% + (var(--inject-page-width) / 2) + ${offsetLeft} + 50px);
+                   margin-left: 0 !important;
+                   /* 避免动画太突兀 */
+                   transition: transform .2s;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===bilibili===end */
 
     // 存储 以网站作为模块
     function createStore(sitename) {
