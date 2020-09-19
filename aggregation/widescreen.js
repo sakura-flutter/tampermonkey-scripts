@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.2.0
+// @version      1.3.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -16,10 +16,12 @@
 // @match        https://www.baidu.com/s?*
 // @match        https://www.baidu.com/
 // @match        https://tieba.baidu.com/p/*
+// @match        https://tieba.baidu.com/f?*
 // @match        https://segmentfault.com/a/*
 // @match        https://segmentfault.com/q/*
 // @match        https://www.bilibili.com/read/*
 // @grant        unsafeWindow
+// @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -44,6 +46,12 @@
 
     // 主函数
     function main() {
+        GM_registerMenuCommand('宽屏通知', function() {
+            const nextStatus = !GM_getValue('notify_enabled', true)
+            Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
+            GM_setValue('notify_enabled', nextStatus)
+        })
+
         const sites = checkWebsites()
         sites.forEach(site => {
             const hanlder = handlers.get(site)
@@ -60,11 +68,13 @@
         const sites = [
             ['bcy', /bcy.net\/item\/detail/.test(url)],
             ['mpWeixin', /mp.weixin.qq.com\/s/.test(url)],
-            ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url) || /zhihu.com\/question\//.test(url)],
+            ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url)],
+            ['zhihuQuestion', /zhihu.com\/question\//.test(url)],
             ['juejin', /juejin.im\/post\//.test(url)],
             ['jianshu', /jianshu.com\/p\//.test(url)],
             ['baidu', /www.baidu.com\/s?/.test(url)],
             ['tieba', /tieba.baidu.com\/p\//.test(url)],
+            ['tiebaForum', /tieba.baidu.com\/f?/.test(url)],
             ['segmentfault', /segmentfault.com/.test(url)],
             ['bilibili', /bilibili.com/.test(url)],
         ]
@@ -106,14 +116,23 @@
         const store = createStore('mpWeixin')
         function execute() {
             GM_addStyle(`
+              :root {
+                --inject-page-width: 90vw;
+              }
               /* 文章宽屏 */
               .rich_media_area_primary_inner { max-width: 100vw !important; }
               /* 二维码位置 */
               #js_pc_qr_code .qr_code_pc { position: fixed; top: 25vh; right: 3vw; opacity: .4;}
               #js_pc_qr_code .qr_code_pc:hover { opacity: 1;}
               @media screen and (min-width: 1024px) {
-                .rich_media_area_primary_inner { max-width: 75vw !important; }
+                .rich_media_area_primary_inner { max-width: var(--inject-page-width) !important; }
                 #js_pc_qr_code .qr_code_pc { position: fixed; top: 25vh; right: 3vw; }
+              }
+
+              @media screen and (min-width: 1250px) {
+                :root {
+                   --inject-page-width: 1150px;
+                }
               }
             `)
 
@@ -139,44 +158,76 @@
     /* ===微信文章===end */
 
     /* ===知乎===start */
+    // 知乎专栏
     handlers.set('zhihu', function() {
         const store = createStore('zhihu')
         function execute() {
             GM_addStyle(`
-              /* 知乎专栏 */
-              .Post-NormalMain .Post-Header, .Post-NormalMain>div, .Post-NormalSub>div {
-                 width: 65vw;
-                 min-width: 690px;
+              :root {
+                --inject-page-width: 75vw;
               }
-              .Post-SideActions { left: calc((100vw - 82vw)/2); }
-              /* 知乎问答 */
-              .QuestionHeader-content, .QuestionHeader-footer {
-                 width: 75vw;
-                 min-width: 1000px;
-                 margin-left: auto;
-                 margin-right: auto;
+              @media screen and (min-width: 1000px) {
+                .Post-NormalMain .Post-Header, .Post-NormalMain>div, .Post-NormalSub>div {
+                   width: var(--inject-page-width);
+                }
+                /* 左侧悬浮按钮 */
+                .Post-SideActions {
+                  left: calc(50% - (var(--inject-page-width) / 2) - 120px);
+                }
               }
-              .QuestionHeader-footer-inner {
-                 width: auto;
+
+              @media screen and (min-width: 1500px) {
+                :root {
+                   --inject-page-width: 1120px;
+                }
               }
-              .QuestionHeader-footer-main {
-                 padding-left: 0;
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+
+    // 知乎问答
+    handlers.set('zhihuQuestion', function() {
+        const store = createStore('zhihu')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 75vw;
               }
-              .QuestionHeader-main {
-                 width: auto;
-                 flex: 1;
+              @media screen and (min-width: 1350px) {
+                .QuestionHeader-content, .QuestionHeader-footer {
+                   width: var(--inject-page-width);
+                   margin-left: auto;
+                   margin-right: auto;
+                }
+                .QuestionHeader-footer-inner {
+                   width: auto;
+                }
+                .QuestionHeader-footer-main {
+                   padding-left: 0;
+                }
+                .QuestionHeader-main {
+                   width: auto;
+                   flex: 1;
+                }
+                .Question-main {
+                   width: var(--inject-page-width);
+                }
+                .Question-main .ListShortcut {
+                   flex: 1;
+                }
+                .Question-mainColumn {
+                   flex: 1;
+                   width: auto;
+                   padding-right: 10px;
+                }
               }
-              .Question-main {
-                 width: 75vw;
-                 min-width: 1000px;
-              }
-              .Question-main .ListShortcut {
-                 flex: 1;
-              }
-              .Question-mainColumn {
-                 flex: 1;
-                 width: auto;
-                 padding-right: 10px;
+
+              @media screen and (min-width: 1750px) {
+                :root {
+                   --inject-page-width: 1300px;
+                }
               }
             `)
         }
@@ -190,13 +241,22 @@
         const store = createStore('juejin')
         function execute() {
             GM_addStyle(`
+              :root {
+                --inject-page-width: 82vw;
+              }
               /* 掘金文章 */
               @media screen and (min-width: 1300px) {
                 .main-container {
-                   max-width: 75vw;
+                   max-width: var(--inject-page-width);
                 }
                 .main-container .main-area {
                    width: calc(100% - 21rem);
+                }
+              }
+
+              @media screen and (min-width: 1500px) {
+                :root {
+                   --inject-page-width: 1230px;
                 }
               }
             `)
@@ -211,27 +271,27 @@
         const store = createStore('jianshu')
         function execute() {
             GM_addStyle(`
+              :root {
+                --inject-page-width: 85vw;
+              }
               /* 简书文章 */
               @media screen and (min-width: 1250px) {
+                [role=main] {
+                   width: var(--inject-page-width);
+                }
                 [role=main] > div:first-child {
                    flex: 1;
                    width: auto;
                 }
-              }
-              @media screen and (min-width: 1250px) {
-                [role=main] {
-                   width: 85vw;
-                }
+                /* 左侧悬浮按钮 */
                 #__next > div:last-child {
-                   left: 30px;
+                   left: calc(50% - (var(--inject-page-width) / 2) - 80px);
                 }
               }
-              @media screen and (min-width: 1450px) {
-                [role=main] {
-                   width: 75vw;
-                }
-                #__next > div:last-child {
-                   left: 7vw;
+
+              @media screen and (min-width: 1500px) {
+                :root {
+                   --inject-page-width: 1280px;
                 }
               }
             `)
@@ -308,9 +368,14 @@
                 }
               }
 
-              @media screen and (min-width: 1830px) {
+              @media screen and (min-width: 1680px) {
                 .container_new #content_left .new-pmd .c-span9 {
-                   width: 83%;
+                   width: 81%;
+                }
+              }
+              @media screen and (min-width: 1730px) {
+                :root {
+                   --inject-page-width: 1300px;
                 }
               }
             `)
@@ -339,9 +404,12 @@
         function execute() {
             GM_addStyle(`
               /* 帖子 */
+              :root {
+                --inject-page-width: 80vw;
+              }
               @media screen and (min-width: 1390px) {
                 #container {
-                   width: 70vw;
+                   width: var(--inject-page-width);
                 }
                 #container > .content {
                    width: 100%;
@@ -350,7 +418,7 @@
                    width: 100%;
                 }
                 .core_title_absolute_bright {
-                   width: calc(70vw - 240px);
+                   width: calc(var(--inject-page-width) - 240px);
                 }
                 /* 内容区域 */
                 .pb_content {
@@ -375,9 +443,65 @@
                 }
                 /* 右侧悬浮按钮 */
                 .tbui_aside_float_bar {
-                   left: auto;
-                   right: 11vw;
+                   left: calc(50% + (var(--inject-page-width) / 2) + 12px);
+                   right: auto;
                    margin-left: 0;
+                }
+              }
+              @media screen and (min-width: 1500px) {
+                :root {
+                   --inject-page-width: 1250px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+
+    // 贴吧吧页
+    handlers.set('tiebaForum', function() {
+        const store = createStore('tieba')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 80vw;
+              }
+              @media screen and (min-width: 1390px) {
+                /* 头部信息 */
+                .head_main .head_middle, .head_main .head_content {
+                   width: var(--inject-page-width) !important;
+                }
+                /* 内容区域 */
+                .content, .foot {
+                   width: var(--inject-page-width);
+                }
+                /* 这里的border实际上是这里的背景图 */
+                .forum_content {
+                   background: none;
+                }
+                #content_wrap {
+                   width: calc(100% - 248px);
+                   border-right: 1px solid #eee;
+                }
+                /* 发帖区域 */
+                .frs_content_footer_pagelet {
+                   width: auto !important;
+                }
+                .tb_rich_poster_container {
+                   margin-left: 0 !important;
+                }
+                /* 右侧悬浮按钮 */
+                .tbui_aside_float_bar {
+                   left: calc(50% + (var(--inject-page-width) / 2) + 12px) !important;
+                   right: auto;
+                   margin-left: 0 !important;
+                }
+              }
+
+              @media screen and (min-width: 1500px) {
+                :root {
+                   --inject-page-width: 1250px;
                 }
               }
             `)
@@ -392,10 +516,19 @@
         const store = createStore('segmentfault')
         function execute() {
             GM_addStyle(`
+              :root {
+                --inject-page-width: 82vw;
+              }
               /* 专栏/问答 */
-              @media (min-width: 1560px) {
+              @media (min-width: 1390px) {
                 .container, .container-lg, .container-md, .container-sm, .container-xl {
-                   max-width: 75vw;
+                   max-width: var(--inject-page-width);
+                }
+              }
+
+              @media screen and (min-width: 1650px) {
+                :root {
+                  --inject-page-width: 1350px;
                 }
               }
             `)
@@ -416,7 +549,7 @@
               :root {
                 --inject-page-width: 50vw;
               }
-              @media screen and (min-width: 1600px) {
+              @media screen and (min-width: 1350px) {
                 /* 文章 */
                 .page-container {
                    width: var(--inject-page-width) !important;
@@ -446,6 +579,12 @@
                    margin-left: 0 !important;
                    /* 避免动画太突兀 */
                    transition: transform .2s;
+                }
+              }
+
+              @media screen and (min-width: 1830px) {
+                :root {
+                   --inject-page-width: 915px;
                 }
               }
             `)
@@ -507,6 +646,7 @@
         opacity: 1;
       }
     `)
+
     // 宽屏开关 options: store<store>, execute要执行的函数
     function createWidescreenControl(options) {
         const { store, execute } = options
@@ -526,7 +666,10 @@
                 }
             },
             beforeCreate() {
-                store.is_open && (execute(), Toast('已宽屏处理'))
+                if (store.is_open) {
+                    execute()
+                    GM_getValue('notify_enabled', true) && Toast('已宽屏处理')
+                }
             },
             methods: {
                 async toggle() {
