@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.4.1
+// @version      1.4.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -490,6 +490,16 @@
                    width: calc(100% - 248px);
                    border-right: 1px solid #eee;
                 }
+                /* 每条帖子 */
+                .threadlist_detail {
+                   display: flex;
+                }
+                .threadlist_detail .pull_left {
+                   flex: 1;
+                }
+                .threadlist_detail .pull_left .threadlist_abs {
+                   width: 97%;
+                }
                 /* 发帖区域 */
                 .frs_content_footer_pagelet {
                    width: auto !important;
@@ -610,16 +620,16 @@
             const { $CONFIG } = unsafeWindow
             // 首页
             if ($CONFIG.bpType === 'main' && !$CONFIG.page_id) {
-                doMainPage()
+                execute = doMainPage()
                 // 用户资料页
-            } else if ($CONFIG.bpType === 'page' && /^\d+$/.test($CONFIG.page_id)) {
-                doProfilePage()
+            } else if ($CONFIG.bpType === 'page' && /^page_.*_home$/.test($CONFIG.location)) {
+                execute = doProfilePage()
             }
             execute && createWidescreenControl({ store, execute })
         });
 
         function doMainPage() {
-            execute = function () {
+            return function () {
                 GM_addStyle(`
                   :root {
                     --inject-page-width: 75vw;
@@ -662,7 +672,7 @@
         }
 
         function doProfilePage() {
-            execute = function () {
+            return function () {
                 GM_addStyle(`
                   :root {
                     --inject-page-width: 75vw;
