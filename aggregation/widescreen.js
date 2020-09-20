@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.3.0
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩
+// @version      1.4.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
 // @compatible   chrome >= 80
@@ -20,6 +20,7 @@
 // @match        https://segmentfault.com/a/*
 // @match        https://segmentfault.com/q/*
 // @match        https://www.bilibili.com/read/*
+// @match        https://weibo.com/*
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -77,6 +78,7 @@
             ['tiebaForum', /tieba.baidu.com\/f?/.test(url)],
             ['segmentfault', /segmentfault.com/.test(url)],
             ['bilibili', /bilibili.com/.test(url)],
+            ['weibo', /weibo.com/.test(url)],
         ]
         // 返回匹配的页面
         return sites
@@ -437,9 +439,13 @@
                 .l_post_bright {
                    display: flex;
                 }
-                .l_post_bright .d_post_content_main{
+                .l_post_bright .d_post_content_main {
                    width: auto;
                    flex: 1;
+                }
+                /* 修正楼层回复中小按钮位置 */
+                .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-down, .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-up, .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-action {
+                   right: 180px !important;
                 }
                 /* 右侧悬浮按钮 */
                 .tbui_aside_float_bar {
@@ -478,7 +484,7 @@
                 }
                 /* 这里的border实际上是这里的背景图 */
                 .forum_content {
-                   background: none;
+                   background: #fff;
                 }
                 #content_wrap {
                    width: calc(100% - 248px);
@@ -594,7 +600,125 @@
     })
     /* ===bilibili===end */
 
-    // 存储 以网站作为模块
+    /* ===微博===start */
+    handlers.set('weibo', function() {
+        const store = createStore('weibo')
+        let execute;
+
+        document.addEventListener('readystatechange', event => {
+            if (event.target.readyState !== 'interactive') return
+            const { $CONFIG } = unsafeWindow
+            // 首页
+            if ($CONFIG.bpType === 'main' && !$CONFIG.page_id) {
+                doMainPage()
+                // 用户资料页
+            } else if ($CONFIG.bpType === 'page' && /^\d+$/.test($CONFIG.page_id)) {
+                doProfilePage()
+            }
+            execute && createWidescreenControl({ store, execute })
+        });
+
+        function doMainPage() {
+            execute = function () {
+                GM_addStyle(`
+                  :root {
+                    --inject-page-width: 75vw;
+                  }
+                  @media screen and (min-width: 1300px) {
+                    .WB_frame {
+                       display: flex;
+                       width: var(--inject-page-width) !important;
+                    }
+                    /* 内容 */
+                    #plc_main {
+                       display: flex !important;
+                       flex: 1;
+                       width: auto !important;
+                    }
+                    .WB_main_c {
+                       flex: 1;
+                    }
+                    /* 微博类型 */
+                    .tab_box {
+                       display: flex;
+                    }
+                    .tab_box .fr_box {
+                       flex: 1;
+                    }
+                    /* 返回顶部按钮 */
+                    .W_gotop {
+                       left: calc(50% + (var(--inject-page-width) / 2));
+                       margin-left: 0 !important;
+                    }
+                  }
+
+                  @media screen and (min-width: 1770px) {
+                    :root {
+                       --inject-page-width: 1330px;
+                    }
+                  }
+                `)
+            }
+        }
+
+        function doProfilePage() {
+            execute = function () {
+                GM_addStyle(`
+                  :root {
+                    --inject-page-width: 75vw;
+                  }
+                  @media screen and (min-width: 1300px) {
+                    .WB_frame {
+                       width: var(--inject-page-width) !important;
+                    }
+                    .WB_frame_a, .WB_frame_a_fix {
+                       width: 100%;
+                    }
+                    /* 内容 */
+                    #plc_main {
+                       width: 100% !important;
+                    }
+                    .WB_frame_c {
+                       margin-right: 0;
+                       width: calc(100% - 320px);
+                    }
+                    /* 右侧悬浮时间线 */
+                    .WB_timeline {
+                       left: calc(50% + (var(--inject-page-width) / 2) + 10px);
+                       margin-left: 0;
+                    }
+                    /* 返回顶部按钮 */
+                    .W_gotop {
+                       left: calc(50% + (var(--inject-page-width) / 2) - 20px);
+                       margin-left: 0 !important;
+                    }
+
+                    /* 个人资料 管理中心 */
+                    .WB_frame_a_fix {
+                      display: flex;
+                      justify-content: center;
+                    }
+                    .WB_frame_a_fix > .PCD_admin_content {
+                      float: none;
+                      margin-left: 18px;
+                    }
+                    .WB_frame_a_fix > .PCD_admin_content .PCD_admin_content {
+                       float: none;
+                    }
+                  }
+
+                  @media screen and (min-width: 1770px) {
+                    :root {
+                       --inject-page-width: 1330px;
+                    }
+                  }
+                `)
+            }
+        }
+    })
+    /* ===微博===end */
+
+    // 存储
     function createStore(sitename) {
         if (!sitename) throw new TypeError('缺少sitename，期望<string>')
         const getRealProp = property => `${sitename}_${property}`
@@ -605,6 +729,10 @@
                 let value = target[realProp]
                 if (value == null) {
                     value = GM_getValue(realProp)
+                    // 默认开启
+                    if (value == null && property === 'is_open') {
+                        value = true
+                    }
                     target[realProp] = value
                 }
                 return value
@@ -638,6 +766,7 @@
         color :#fff;
         padding: 6px 12px;
         font-size: 14px;
+        cursor: pointer;
         background: #3385ff;
         box-shadow: 0 1px 6px rgba(0,0,0,.2);
         transition: opacity .3s;
@@ -662,7 +791,7 @@
             `,
             data() {
                 return {
-                    isOpen: store.is_open || false,
+                    isOpen: store.is_open,
                 }
             },
             beforeCreate() {
@@ -678,9 +807,10 @@
                 }
             },
         }).$mount()
-        window.addEventListener('DOMContentLoaded', () => {
+        function appendToBody() {
             document.body.appendChild(buttonComponent.$el)
-        })
+        }
+        document.body ? appendToBody() : window.addEventListener('DOMContentLoaded', appendToBody)
     }
 
     main()
