@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.4.0
+// @version      1.4.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -689,7 +689,7 @@
                     }
                     /* 返回顶部按钮 */
                     .W_gotop {
-                       left: calc(50% + (var(--inject-page-width) / 2) - 20px);
+                       left: calc(50% + (var(--inject-page-width) / 2));
                        margin-left: 0 !important;
                     }
 
