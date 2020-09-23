@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.4.2
+// @version      1.4.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
@@ -613,24 +613,61 @@
     /* ===微博===start */
     handlers.set('weibo', function() {
         const store = createStore('weibo')
-        let execute;
+        let proxyConfig;
+        let styleSheet;
 
         document.addEventListener('readystatechange', event => {
-            if (event.target.readyState !== 'interactive') return
+            if (!unsafeWindow.$CONFIG) return
+            if (proxyConfig) return
+            const target = JSON.parse(JSON.stringify(unsafeWindow.$CONFIG))
+            const handler = {
+                get(target, property) {
+                    return target[property]
+                },
+                set(target, property, value) {
+                    const oldVal = target[property]
+                    target[property] = value
+                    if (property === 'location' && (value !== oldVal)) {
+                        styleSheet && styleSheet.remove()
+                        store.is_open && window.location.reload()
+                    }
+                    return true
+                },
+                deleteProperty(target, property) {
+                    return delete target[property]
+                },
+            }
+            proxyConfig = new Proxy(target, handler)
+            unsafeWindow.$CONFIG = proxyConfig
+
+            addStyle()
+        });
+
+        function addStyle() {
             const { $CONFIG } = unsafeWindow
+            let execute;
+
             // 首页
             if ($CONFIG.bpType === 'main' && !$CONFIG.page_id) {
                 execute = doMainPage()
                 // 用户资料页
             } else if ($CONFIG.bpType === 'page' && /^page_.*_home$/.test($CONFIG.location)) {
                 execute = doProfilePage()
+                // 微博详情
+            } else if ($CONFIG.bpType === 'page' && /^page_.*_single_weibo$/.test($CONFIG.location)) {
+                execute = doSingleWBPage()
             }
-            execute && createWidescreenControl({ store, execute })
-        });
+            execute && createWidescreenControl({
+                store,
+                execute() {
+                    styleSheet = execute()
+                },
+            })
+        }
 
         function doMainPage() {
             return function () {
-                GM_addStyle(`
+                return GM_addStyle(`
                   :root {
                     --inject-page-width: 75vw;
                   }
@@ -651,6 +688,9 @@
                     /* 微博类型 */
                     .tab_box {
                        display: flex;
+                    }
+                    .tab_box::after {
+                       content: none;
                     }
                     .tab_box .fr_box {
                        flex: 1;
@@ -673,7 +713,7 @@
 
         function doProfilePage() {
             return function () {
-                GM_addStyle(`
+                return GM_addStyle(`
                   :root {
                     --inject-page-width: 75vw;
                   }
@@ -725,6 +765,41 @@
                 `)
             }
         }
+
+        function doSingleWBPage() {
+            return function () {
+                return GM_addStyle(`
+                  :root {
+                    --inject-page-width: 75vw;
+                  }
+                  @media screen and (min-width: 1300px) {
+                    .WB_frame {
+                       width: var(--inject-page-width) !important;
+                    }
+                    /* 内容 */
+                    #plc_main {
+                       display: flex !important;
+                       width: auto !important;
+                    }
+                    #plc_main .WB_frame_c {
+                       flex: 1;
+                    }
+                    /* 返回顶部按钮 */
+                    .W_gotop {
+                       left: calc(50% + (var(--inject-page-width) / 2) - 19px);
+                       margin-left: 0 !important;
+                    }
+                  }
+
+                  @media screen and (min-width: 1770px) {
+                    :root {
+                       --inject-page-width: 1330px;
+                    }
+                  }
+                `)
+            }
+        }
+
     })
     /* ===微博===end */
 
