@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.4.3
+// @version      1.5.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter
 // @compatible   chrome >= 80
 // @compatible   firefox >= 75
 // @run-at       document-start
+// @noframes
 // @match        https://bcy.net/item/detail/*
 // @match        https://mp.weixin.qq.com/s*
 // @match        https://zhuanlan.zhihu.com/p/*
@@ -26,6 +27,8 @@
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
 // @require      https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=847261
 // ==/UserScript==
@@ -53,6 +56,14 @@
             GM_setValue('notify_enabled', nextStatus)
         })
 
+        // 将之前is_open重新命名成enabled
+        GM_listValues().forEach(key => {
+            if (key.endsWith('_is_open')) {
+                const modulename = key.split('_is_open')[0]
+                GM_setValue(`${modulename}_enabled`, GM_getValue(key))
+                GM_deleteValue(key)
+            }
+        })
         const sites = checkWebsites()
         sites.forEach(site => {
             const hanlder = handlers.get(site)
@@ -613,191 +624,211 @@
     /* ===微博===start */
     handlers.set('weibo', function() {
         const store = createStore('weibo')
+        const uiControl = createWidescreenControl({ store, visible: false, silent: true })
         let proxyConfig;
-        let styleSheet;
+        execute()
 
-        document.addEventListener('readystatechange', event => {
-            if (!unsafeWindow.$CONFIG) return
-            if (proxyConfig) return
-            const target = JSON.parse(JSON.stringify(unsafeWindow.$CONFIG))
-            const handler = {
-                get(target, property) {
-                    return target[property]
-                },
-                set(target, property, value) {
-                    const oldVal = target[property]
-                    target[property] = value
-                    if (property === 'location' && (value !== oldVal)) {
-                        styleSheet && styleSheet.remove()
-                        store.is_open && window.location.reload()
-                    }
-                    return true
-                },
-                deleteProperty(target, property) {
-                    return delete target[property]
-                },
-            }
-            proxyConfig = new Proxy(target, handler)
-            unsafeWindow.$CONFIG = proxyConfig
+        function execute() {
+            unsafeWindow.document.addEventListener('readystatechange', () => {
+                if (!unsafeWindow.$CONFIG) return
+                if (proxyConfig && proxyConfig === unsafeWindow.$CONFIG) return
 
-            addStyle()
-        });
+                const target = JSON.parse(JSON.stringify(unsafeWindow.$CONFIG))
+                const handler = {
+                    get(target, property) {
+                        return target[property]
+                    },
+                    set(target, property, value) {
+                        const oldVal = target[property]
+                        target[property] = value
+                        if (property === 'location' && value !== oldVal) {
+                            log('script：reinsert styleSheet')
+                            addStyle()
+                        }
+                        return true
+                    },
+                    deleteProperty(target, property) {
+                        return delete target[property]
+                    },
+                }
+                proxyConfig = new Proxy(target, handler)
+                unsafeWindow.$CONFIG = proxyConfig
 
-        function addStyle() {
-            const { $CONFIG } = unsafeWindow
-            let execute;
-
-            // 首页
-            if ($CONFIG.bpType === 'main' && !$CONFIG.page_id) {
-                execute = doMainPage()
-                // 用户资料页
-            } else if ($CONFIG.bpType === 'page' && /^page_.*_home$/.test($CONFIG.location)) {
-                execute = doProfilePage()
-                // 微博详情
-            } else if ($CONFIG.bpType === 'page' && /^page_.*_single_weibo$/.test($CONFIG.location)) {
-                execute = doSingleWBPage()
-            }
-            execute && createWidescreenControl({
-                store,
-                execute() {
-                    styleSheet = execute()
-                },
-            })
+                addStyle()
+            });
         }
 
-        function doMainPage() {
-            return function () {
-                return GM_addStyle(`
-                  :root {
-                    --inject-page-width: 75vw;
-                  }
-                  @media screen and (min-width: 1300px) {
-                    .WB_frame {
-                       display: flex;
-                       width: var(--inject-page-width) !important;
-                    }
-                    /* 内容 */
-                    #plc_main {
-                       display: flex !important;
-                       flex: 1;
-                       width: auto !important;
-                    }
-                    .WB_main_c {
-                       flex: 1;
-                    }
-                    /* 微博类型 */
-                    .tab_box {
-                       display: flex;
-                    }
-                    .tab_box::after {
-                       content: none;
-                    }
-                    .tab_box .fr_box {
-                       flex: 1;
-                    }
-                    /* 返回顶部按钮 */
-                    .W_gotop {
-                       left: calc(50% + (var(--inject-page-width) / 2));
-                       margin-left: 0 !important;
-                    }
-                  }
+        const addStyle = (function () {
+            let styleSheet;
 
-                  @media screen and (min-width: 1770px) {
-                    :root {
-                       --inject-page-width: 1330px;
+            return function () {
+                const { $CONFIG } = unsafeWindow
+                const classnamePrefix = 'inject-ws-'
+                const getClassname = classname => `${classnamePrefix}${classname}`
+
+                styleSheet && styleSheet.remove()
+                ;[...document.body.classList.values()].forEach(item => {
+                    if (item.startsWith(classnamePrefix)) {
+                        document.body.classList.remove(item)
                     }
-                  }
-                `)
+                })
+
+                const pages = {
+                    // 首页(含特别关注)、我的收藏、我的赞、好友圈
+                    mainpage: {
+                        test: /^v6.*_content_home$/.test($CONFIG.location) || /v6_(fav|likes_outbox|content_friends)/.test($CONFIG.location),
+                        use: doMainPage,
+                    },
+                    // 用户资料页、相册、管理中心、粉丝
+                    profilepage: {
+                        test:/^page_.*_(home|photos|manage|myfollow)$/.test($CONFIG.location),
+                        use: doProfilePage,
+                    },
+                    // 微博详情
+                    singleweibo: {
+                        test: /^page_.*_single_weibo$/.test($CONFIG.location),
+                        use: doSingleWBPage,
+                    },
+                }
+                const target = Object.entries(pages).find(([, { test }]) => test)
+                log(target, $CONFIG.location)
+                if (!target) return
+                uiControl.show()
+                if (!store.enabled) return
+
+                styleSheet = target[1].use(getClassname(target[0]))
+                document.body.classList.add(getClassname(target[0]))
+                uiControl.notify()
             }
+
+        })()
+
+        function doMainPage(classname) {
+            return GM_addStyle(`
+                :root {
+                  --inject-page-width: 75vw;
+                }
+                @media screen and (min-width: 1300px) {
+                  |> .WB_frame {
+                     display: flex;
+                     width: var(--inject-page-width) !important;
+                  }
+                  /* 内容 */
+                  |> #plc_main {
+                     display: flex !important;
+                     flex: 1;
+                     width: auto !important;
+                  }
+                  |> .WB_main_c {
+                     flex: 1;
+                  }
+                  /* 微博类型 */
+                  |> .tab_box {
+                     display: flex;
+                  }
+                  |> .tab_box::after {
+                     content: none;
+                  }
+                  |> .tab_box .fr_box {
+                     flex: 1;
+                  }
+                  /* 返回顶部按钮 */
+                  |> .W_gotop {
+                     left: calc(50% + (var(--inject-page-width) / 2));
+                     margin-left: 0 !important;
+                  }
+                }
+
+                @media screen and (min-width: 1770px) {
+                  :root {
+                     --inject-page-width: 1330px;
+                  }
+                }
+                `.replace(/\|\>/g, `.${classname}`))
         }
 
-        function doProfilePage() {
-            return function () {
-                return GM_addStyle(`
+        function doProfilePage(classname) {
+            return GM_addStyle(`
+                :root {
+                  --inject-page-width: 75vw;
+                }
+                @media screen and (min-width: 1300px) {
+                  |> .WB_frame {
+                     width: var(--inject-page-width) !important;
+                  }
+                  |> .WB_frame_a, .WB_frame_a_fix {
+                     width: 100%;
+                  }
+                  /* 内容 */
+                  |> #plc_main {
+                     width: 100% !important;
+                  }
+                  |> .WB_frame_c {
+                     margin-right: 0;
+                     width: calc(100% - 320px);
+                  }
+                  /* 右侧悬浮时间线 */
+                  |> .WB_timeline {
+                     left: calc(50% + (var(--inject-page-width) / 2) + 10px);
+                     margin-left: 0;
+                  }
+                  /* 返回顶部按钮 */
+                  |> .W_gotop {
+                     left: calc(50% + (var(--inject-page-width) / 2));
+                     margin-left: 0 !important;
+                  }
+                  /* 个人资料 管理中心 */
+                  |> .WB_frame_a_fix {
+                    display: flex;
+                    justify-content: center;
+                  }
+                  |> .WB_frame_a_fix > .PCD_admin_content {
+                    float: none;
+                    margin-left: 18px;
+                  }
+                  |> .WB_frame_a_fix > .PCD_admin_content .PCD_admin_content {
+                     float: none;
+                  }
+                }
+
+                @media screen and (min-width: 1770px) {
                   :root {
-                    --inject-page-width: 75vw;
+                     --inject-page-width: 1330px;
                   }
-                  @media screen and (min-width: 1300px) {
-                    .WB_frame {
-                       width: var(--inject-page-width) !important;
-                    }
-                    .WB_frame_a, .WB_frame_a_fix {
-                       width: 100%;
-                    }
-                    /* 内容 */
-                    #plc_main {
-                       width: 100% !important;
-                    }
-                    .WB_frame_c {
-                       margin-right: 0;
-                       width: calc(100% - 320px);
-                    }
-                    /* 右侧悬浮时间线 */
-                    .WB_timeline {
-                       left: calc(50% + (var(--inject-page-width) / 2) + 10px);
-                       margin-left: 0;
-                    }
-                    /* 返回顶部按钮 */
-                    .W_gotop {
-                       left: calc(50% + (var(--inject-page-width) / 2));
-                       margin-left: 0 !important;
-                    }
-
-                    /* 个人资料 管理中心 */
-                    .WB_frame_a_fix {
-                      display: flex;
-                      justify-content: center;
-                    }
-                    .WB_frame_a_fix > .PCD_admin_content {
-                      float: none;
-                      margin-left: 18px;
-                    }
-                    .WB_frame_a_fix > .PCD_admin_content .PCD_admin_content {
-                       float: none;
-                    }
-                  }
-
-                  @media screen and (min-width: 1770px) {
-                    :root {
-                       --inject-page-width: 1330px;
-                    }
-                  }
-                `)
-            }
+                }
+                `.replace(/\|\>/g, `.${classname}`))
         }
 
-        function doSingleWBPage() {
-            return function () {
-                return GM_addStyle(`
-                  :root {
-                    --inject-page-width: 75vw;
+        function doSingleWBPage(classname) {
+            return GM_addStyle(`
+                :root {
+                  --inject-page-width: 75vw;
+                }
+                @media screen and (min-width: 1300px) {
+                  |> .WB_frame {
+                     width: var(--inject-page-width) !important;
                   }
-                  @media screen and (min-width: 1300px) {
-                    .WB_frame {
-                       width: var(--inject-page-width) !important;
-                    }
-                    /* 内容 */
-                    #plc_main {
-                       display: flex !important;
-                       width: auto !important;
-                    }
-                    #plc_main .WB_frame_c {
-                       flex: 1;
-                    }
-                    /* 返回顶部按钮 */
-                    .W_gotop {
-                       left: calc(50% + (var(--inject-page-width) / 2) - 19px);
-                       margin-left: 0 !important;
-                    }
+                  /* 内容 */
+                  |> #plc_main {
+                     display: flex !important;
+                     width: auto !important;
                   }
+                  |> #plc_main .WB_frame_c {
+                     flex: 1;
+                  }
+                  /* 返回顶部按钮 */
+                  |> .W_gotop {
+                     left: calc(50% + (var(--inject-page-width) / 2) - 19px);
+                     margin-left: 0 !important;
+                  }
+                }
 
-                  @media screen and (min-width: 1770px) {
-                    :root {
-                       --inject-page-width: 1330px;
-                    }
+                @media screen and (min-width: 1770px) {
+                  :root {
+                     --inject-page-width: 1330px;
                   }
-                `)
-            }
+                }
+                `.replace(/\|\>/g, `.${classname}`))
         }
 
     })
@@ -815,7 +846,7 @@
                 if (value == null) {
                     value = GM_getValue(realProp)
                     // 默认开启
-                    if (value == null && property === 'is_open') {
+                    if (value == null && property === 'enabled') {
                         value = true
                     }
                     target[realProp] = value
@@ -861,33 +892,46 @@
       }
     `)
 
-    // 宽屏开关 options: store<store>, execute要执行的函数
+    // 宽屏开关 options: store<store>, execute要执行的函数，visible是否可见(后续用show hide控制)，silent是否显示通知
     function createWidescreenControl(options) {
-        const { store, execute } = options
+        const { store, execute = () => {}, visible = true, silent = false } = options
         const buttonComponent = new Vue({
             template: `
               <button
                 class="inject-widescreen-js"
+                v-show="visible"
                 title="注意：页面会被刷新"
                 @click="toggle"
               >
-               {{ isOpen ? '已开启' : '关闭' }}
+               {{ enabled ? '已开启' : '关闭' }}
               </button>
             `,
             data() {
                 return {
-                    isOpen: store.is_open,
+                    visible,
+                    enabled: store.enabled,
                 }
             },
-            beforeCreate() {
-                if (store.is_open) {
+            created() {
+                if (store.enabled) {
                     execute()
-                    GM_getValue('notify_enabled', true) && Toast('已宽屏处理')
+                    !silent && this.notify()
                 }
             },
             methods: {
+                // export-api
+                show() {
+                    this.visible = true
+                },
+                hide() {
+                    this.visible = false
+                },
+                notify() {
+                    GM_getValue('notify_enabled', true) && Toast('已宽屏处理')
+                },
+                // private-api
                 async toggle() {
-                    store.is_open = !this.isOpen
+                    store.enabled = !this.enabled
                     location.reload()
                 }
             },
@@ -896,6 +940,12 @@
             document.body.appendChild(buttonComponent.$el)
         }
         document.body ? appendToBody() : window.addEventListener('DOMContentLoaded', appendToBody)
+
+        return {
+            show: buttonComponent.show,
+            hide: buttonComponent.hide,
+            notify: buttonComponent.notify,
+        }
     }
 
     main()
