@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.5.0
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博
+// @version      1.6.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/blob/master/aggregation/widescreen.js
+// @license      GPL-3.0
 // @compatible   chrome >= 80
 // @compatible   firefox >= 75
 // @run-at       document-start
@@ -22,6 +23,7 @@
 // @match        https://segmentfault.com/q/*
 // @match        https://www.bilibili.com/read/*
 // @match        https://weibo.com/*
+// @match        https://movie.douban.com/subject/*
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -90,6 +92,7 @@
             ['segmentfault', /segmentfault.com/.test(url)],
             ['bilibili', /bilibili.com/.test(url)],
             ['weibo', /weibo.com/.test(url)],
+            ['doubanmovie', /movie.douban.com/.test(url)],
         ]
         // 返回匹配的页面
         return sites
@@ -104,10 +107,23 @@
     handlers.set('bcy', function() {
         const store = createStore('bcy')
         function execute() {
+            unsafeWindow.document.addEventListener('readystatechange', () => {
+                if ('It should not be enabled' || document.readyState !== 'interactive') return
+                const { multi } = unsafeWindow.__ssr_data.detail.post_data
+                const imgEls = $$('.container .album .img-wrap-inner img')
+                if (multi.length !== imgEls.length) return
+                imgEls.forEach((img, index) => {
+                    img.src = multi[index].original_path
+                })
+            })
+
             GM_addStyle(`
+              :root {
+                --inject-page-width: 75vw;
+              }
               @media (min-width: 1580px) {
                 .container .row {
-                   width: 75vw;
+                   width: var(--inject-page-width);
                 }
                 .container .row .col-big {
                    flex: .97;
@@ -115,6 +131,16 @@
                 /* 文章头部信息 */
                 .detail-main header {
                    width: auto !important;
+                }
+                /* 相册 */
+                .container .row .col-big .album {
+                   width: 100%;
+                }
+              }
+
+              @media screen and (min-width: 1920px) {
+                :root {
+                   --inject-page-width: 1440px;
                 }
               }
             `)
@@ -415,6 +441,15 @@
     handlers.set('tieba', function() {
         const store = createStore('tieba')
         function execute() {
+            unsafeWindow.document.addEventListener('readystatechange', () => {
+                if (document.readyState !== 'interactive') return
+                // 替换原图
+                const BDEImgEls = $$('.BDE_Image')
+                BDEImgEls.forEach(img => {
+                    img.src = 'http://tiebapic.baidu.com/forum/pic/item/' + img.src.split('/').slice(-1)[0]
+                })
+            })
+
             GM_addStyle(`
               /* 帖子 */
               :root {
@@ -440,6 +475,19 @@
                 }
                 .pb_content::after {
                    content: none;
+                }
+                /* 点击展开，查看完整图片 */
+                .pb_content .replace_div {
+                   width: fit-content !important;
+                }
+                .pb_content .replace_div .replace_tip {
+                   width: 100% !important;
+                }
+                .pb_content .BDE_Image {
+                   max-width: 100%;
+                   width: auto !important;
+                   height: auto;
+                   max-height: 130vh;
                 }
                 /* 楼区域 */
                 .left_section {
@@ -833,6 +881,44 @@
 
     })
     /* ===微博===end */
+
+    /* ===豆瓣电影===start */
+    handlers.set('doubanmovie', function() {
+        const store = createStore('doubanmovie')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 82vw;
+              }
+              @media screen and (min-width: 1300px) {
+                #wrapper {
+                   width: var(--inject-page-width);
+                }
+                /* 内容 */
+                #content .article {
+                   width: calc(100% - 360px);
+                }
+                /* 电影信息 */
+                #content .article .subject {
+                   width: calc(100% - 175px);
+                }
+                #content .article #info {
+                   width: calc(100% - 160px);
+                   max-width: none;
+                }
+              }
+
+              @media screen and (min-width: 1610px) {
+                :root {
+                   --inject-page-width: 1318px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===豆瓣电影===end */
 
     // 存储
     function createStore(sitename) {
