@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.6.0
+// @version      1.7.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/blob/master/aggregation/widescreen.js
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
 // @license      GPL-3.0
 // @compatible   chrome >= 80
 // @compatible   firefox >= 75
@@ -22,6 +22,7 @@
 // @match        https://segmentfault.com/a/*
 // @match        https://segmentfault.com/q/*
 // @match        https://www.bilibili.com/read/*
+// @match        https://t.bilibili.com/*
 // @match        https://weibo.com/*
 // @match        https://movie.douban.com/subject/*
 // @grant        unsafeWindow
@@ -90,7 +91,8 @@
             ['tieba', /tieba.baidu.com\/p\//.test(url)],
             ['tiebaForum', /tieba.baidu.com\/f?/.test(url)],
             ['segmentfault', /segmentfault.com/.test(url)],
-            ['bilibili', /bilibili.com/.test(url)],
+            ['bilibili', /bilibili.com\/read/.test(url)],
+            ['bilibiliDynamic', /t.bilibili.com/.test(url)],
             ['weibo', /weibo.com/.test(url)],
             ['doubanmovie', /movie.douban.com/.test(url)],
         ]
@@ -479,6 +481,7 @@
                 /* 点击展开，查看完整图片 */
                 .pb_content .replace_div {
                    width: fit-content !important;
+                   width: -moz-fit-content !important;
                 }
                 .pb_content .replace_div .replace_tip {
                    width: 100% !important;
@@ -614,13 +617,13 @@
     /* ===segmentfault===end */
 
     /* ===bilibili===start */
+    // 专栏
     handlers.set('bilibili', function() {
         const store = createStore('bilibili')
         function execute() {
             // 页面整体往左
             const offsetLeft = '-5vw'
             GM_addStyle(`
-              /* 专栏 */
               :root {
                 --inject-page-width: 50vw;
               }
@@ -660,6 +663,49 @@
               @media screen and (min-width: 1830px) {
                 :root {
                    --inject-page-width: 915px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+
+    // 动态
+    handlers.set('bilibiliDynamic', function() {
+        const store = createStore('bilibili')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 85vw;
+              }
+              @media screen and (min-width: 1380px) {
+                /* 容器 */
+                .home-content {
+                   width: var(--inject-page-width) !important;
+                }
+                .center-panel {
+                   width: calc(100% - 524px)  !important;
+                }
+                /* item */
+                .main-content {
+                   width: auto !important;
+                   margin-right: 20px;
+                }
+                .live-container,
+                .video-container,
+                .bangumi-container,
+                .shop-panel {
+                   width: auto !important;
+                }
+                .video-container .text-area {
+                   width: calc(100% - 233px) !important;
+                }
+              }
+
+              @media screen and (min-width: 1710px) {
+                :root {
+                   --inject-page-width: 1454px;
                 }
               }
             `)
