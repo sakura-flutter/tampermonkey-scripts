@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.7.1
+// @version      1.7.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -265,7 +265,7 @@
                 }
                 .Question-mainColumn {
                    flex: 1;
-                   width: 0;
+                   width: auto;
                    padding-right: 10px;
                 }
               }
