@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.7.0
+// @version      1.7.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -211,9 +211,14 @@
                 .Post-NormalMain .Post-Header, .Post-NormalMain>div, .Post-NormalSub>div {
                    width: var(--inject-page-width);
                 }
+                /* 内容图片 */
+                .ztext .content_image, .ztext .origin_image {
+                   width: auto;
+                   max-width: 100%;
+                }
                 /* 左侧悬浮按钮 */
                 .Post-SideActions {
-                  left: calc(50% - (var(--inject-page-width) / 2) - 120px);
+                   left: calc(50% - (var(--inject-page-width) / 2) - 120px);
                 }
               }
 
@@ -249,7 +254,7 @@
                    padding-left: 0;
                 }
                 .QuestionHeader-main {
-                   width: auto;
+                   width: 0;
                    flex: 1;
                 }
                 .Question-main {
@@ -260,7 +265,7 @@
                 }
                 .Question-mainColumn {
                    flex: 1;
-                   width: auto;
+                   width: 0;
                    padding-right: 10px;
                 }
               }
@@ -502,8 +507,8 @@
                    display: flex;
                 }
                 .l_post_bright .d_post_content_main {
-                   width: auto;
                    flex: 1;
+                   width: 0;
                 }
                 /* 修正楼层回复中小按钮位置 */
                 .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-down, .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-up, .l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-action {
