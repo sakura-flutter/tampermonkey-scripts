@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.7.2
+// @version      1.8.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -17,11 +17,12 @@
 // @match        https://www.jianshu.com/p/*
 // @match        https://www.baidu.com/s?*
 // @match        https://www.baidu.com/
+// @match        https://www.sogou.com/web*
 // @match        https://tieba.baidu.com/p/*
 // @match        https://tieba.baidu.com/f?*
 // @match        https://segmentfault.com/a/*
 // @match        https://segmentfault.com/q/*
-// @match        https://www.bilibili.com/read/*
+// @match        https://www.bilibili.com/read/cv*
 // @match        https://t.bilibili.com/*
 // @match        https://weibo.com/*
 // @match        https://movie.douban.com/subject/*
@@ -48,7 +49,7 @@
 
     function log(...args) {
         if (!isDebug) return
-        console.log(...args)
+        console.warn(...args)
     }
 
     // 主函数
@@ -89,9 +90,10 @@
             ['jianshu', /jianshu.com\/p\//.test(url)],
             ['baidu', /www.baidu.com\/s?/.test(url)],
             ['tieba', /tieba.baidu.com\/p\//.test(url)],
-            ['tiebaForum', /tieba.baidu.com\/f?/.test(url)],
+            ['tiebaForum', /tieba.baidu.com\/f/.test(url)],
+            ['sogou', /www.sogou.com\/web?/.test(url)],
             ['segmentfault', /segmentfault.com/.test(url)],
-            ['bilibili', /bilibili.com\/read/.test(url)],
+            ['bilibili', /bilibili.com\/read\/cv/.test(url)],
             ['bilibiliDynamic', /t.bilibili.com/.test(url)],
             ['weibo', /weibo.com/.test(url)],
             ['doubanmovie', /movie.douban.com/.test(url)],
@@ -203,6 +205,26 @@
     handlers.set('zhihu', function() {
         const store = createStore('zhihu')
         function execute() {
+            window.addEventListener('DOMContentLoaded', () => {
+                const process = new WeakSet()
+                const observer = new MutationObserver(mutationsList => {
+                    mutationsList.forEach(mutation => {
+                        const { target, oldValue } = mutation
+                        if (
+                            process.has(target) ||
+                            target.tagName !== 'IMG' ||
+                            !oldValue.startsWith('data:image/') ||
+                            // 与知乎同样的选择器判断
+                            !(target.classList.contains('lazy') && !target.classList.contains('data-thumbnail'))
+                        ) return
+                        process.add(target)
+                        // 替换原图
+                        target.dataset.original && (target.src = target.dataset.original)
+                    })
+                })
+                observer.observe($('.Post-RichTextContainer'), { subtree: true, attributeFilter: ['src'], attributeOldValue: true })
+            })
+
             GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
@@ -237,6 +259,30 @@
     handlers.set('zhihuQuestion', function() {
         const store = createStore('zhihu')
         function execute() {
+            window.addEventListener('DOMContentLoaded', () => {
+                const process = new WeakSet()
+                const observer = new MutationObserver(mutationsList => {
+                    mutationsList.forEach(mutation => {
+                        const { target, oldValue } = mutation
+                        if (
+                            process.has(target) ||
+                            target.tagName !== 'IMG' ||
+                            !oldValue.startsWith('data:image/') ||
+                            // 不对非文章图片处理
+                            !$('.ListShortcut').contains(target) ||
+                            // 与知乎同样的选择器判断
+                            !(target.classList.contains('lazy') && !target.classList.contains('data-thumbnail'))
+                        ) return
+                        process.add(target)
+                        // 替换原图
+                        target.dataset.original && (target.src = target.dataset.original)
+                    })
+                })
+                // 查看全部回答时知乎会替换Question-mainColumn标签，只能往更父级监听
+                observer.observe($('.QuestionPage'), { subtree: true, attributeFilter: ['src'], attributeOldValue: true })
+            })
+
+
             GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
@@ -267,6 +313,11 @@
                    flex: 1;
                    width: auto;
                    padding-right: 10px;
+                }
+                /* 内容图片 */
+                .ztext .content_image, .ztext .origin_image {
+                   width: auto;
+                   max-width: 100%;
                 }
               }
 
@@ -351,12 +402,16 @@
     handlers.set('baidu', function() {
         const store = createStore('baidu')
         function execute() {
-            const styleEl = GM_addStyle(`
+            const styleSheet = GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
               }
               @media screen and (min-width: 1460px) {
                 /* 顶部搜索 */
+                #head {
+                   background-color: #ffffffd1;
+                   backdrop-filter: blur(10px);
+                }
                 .head_wrapper .s_form {
                    margin-left: auto;
                    margin-right: auto;
@@ -427,8 +482,8 @@
             `)
             // 搜索时百度会清除文档这里需要将样式重新插入
             function redo() {
-                if (document.head.contains(styleEl)) return
-                document.head.appendChild(styleEl)
+                if (document.head.contains(styleSheet)) return
+                document.head.appendChild(styleSheet)
             }
             window.addEventListener('DOMContentLoaded', () => {
                 const { jQuery } = unsafeWindow
@@ -447,14 +502,43 @@
     /* ===贴吧===start */
     handlers.set('tieba', function() {
         const store = createStore('tieba')
+        const postlistSelector = '#j_p_postlist'
+
         function execute() {
+            const replaceOriSrc = (function() {
+                const process = new WeakSet()
+
+                return function () {
+                    const BDEImgEls = $$(`${postlistSelector} .BDE_Image`)
+                    BDEImgEls.forEach(img => {
+                        if (process.has(img)) return
+                        process.add(img)
+                        // 贴吧自身根据
+                        // /^http:\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/ 判断是否相册，
+                        // 后续chrome更改必须为https访问时可能需要更改这里的逻辑
+                        if (/^http(s?):\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/.test(img.src)) {
+                            const protocol = img.src.match(/^(https?:\/\/)/)[0]
+                            img.src = `${protocol}tiebapic.baidu.com/forum/pic/item/${img.src.split('/').slice(-1)[0]}`
+                            // 不能直接用css：贴吧根据宽高判断,用css宽高auto时若图片未加载宽高获取到0 导致无法查看大图
+                            img.style.cssText += 'max-width: 100%; width: auto !important; height: auto; max-height: 130vh;'
+                        }
+
+                    })
+                }
+            })()
+
             unsafeWindow.document.addEventListener('readystatechange', () => {
                 if (document.readyState !== 'interactive') return
                 // 替换原图
-                const BDEImgEls = $$('.BDE_Image')
-                BDEImgEls.forEach(img => {
-                    img.src = 'http://tiebapic.baidu.com/forum/pic/item/' + img.src.split('/').slice(-1)[0]
+                replaceOriSrc()
+                const observer = new MutationObserver(mutationsList => {
+                    mutationsList.forEach(mutation => {
+                        const { target } = mutation
+                        if (target.id !== postlistSelector.slice(1)) return
+                        replaceOriSrc()
+                    })
                 })
+                observer.observe($('.left_section'), { childList: true, subtree: true })
             })
 
             GM_addStyle(`
@@ -470,7 +554,8 @@
                    width: 100%;
                 }
                 .nav_wrap, .p_thread, .pb_content, .core_title_wrap_bright, .l_post_bright, .core_reply_wrapper, .l_post_bright .core_reply_wrapper, .pb_footer {
-                   width: 100%;
+                  /* 广告会覆盖宽度 使用important */
+                   width: 100% !important;
                 }
                 .core_title_absolute_bright {
                    width: calc(var(--inject-page-width) - 240px);
@@ -490,12 +575,6 @@
                 }
                 .pb_content .replace_div .replace_tip {
                    width: 100% !important;
-                }
-                .pb_content .BDE_Image {
-                   max-width: 100%;
-                   width: auto !important;
-                   height: auto;
-                   max-height: 130vh;
                 }
                 /* 楼区域 */
                 .left_section {
@@ -594,6 +673,81 @@
     })
     /* ===贴吧===end */
 
+    /* ===搜狗搜索===start */
+    handlers.set('sogou', function() {
+        const store = createStore('sogou')
+        function execute() {
+            const defaultWidth = '550px'
+            const horCenter = 'margin-left: auto; margin-right: auto; padding-left: 0; width: var(--inject-page-width) !important;'
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 80vw;
+              }
+              @media screen and (min-width: 1200px) {
+                /* 头部注意滚动处理 */
+                .header .header-box {
+                   position: relative;
+                   padding: 0 5px 45px;
+                   ${horCenter}
+                }
+                .header,
+                .header.headsearch .header-box {
+                   padding-bottom: 0;
+                }
+                .header .header-box .logo {
+                   top: -8px;
+                }
+                .headsearch {
+                   background-color: #ffffffd1;
+                   backdrop-filter: blur(10px);
+                }
+                /* 搜索结果 */
+                #wrapper {
+                   display: flex;
+                   ${horCenter}
+                }
+                #main {
+                   flex: 1;
+                   width: 0;
+                   max-width: none;
+                   padding-right: 74px;
+                }
+                #main .results {
+                   width: auto;
+                }
+                #main .results > .vrwrap,
+                #main .results > .rb {
+                   width: auto !important;
+                }
+                /* 特殊搜索结果恢复原本宽度 */
+                .special-wrap,
+                .vrPicBox {
+                   box-sizing: border-box;
+                   width: ${defaultWidth};
+                }
+                /* 底部 */
+                .hintBox,
+                #pagebar_container,
+                #s_footer > div {
+                   ${horCenter}
+                }
+                #s_footer {
+                   .padding-left: 0;
+                }
+              }
+
+              @media screen and (min-width: 1670px) {
+                :root {
+                   --inject-page-width: 1340px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+    /* ===搜狗搜索===end */
+
     /* ===segmentfault===start */
     handlers.set('segmentfault', function() {
         const store = createStore('segmentfault')
@@ -649,7 +803,8 @@
                    width: auto !important;
                    max-width: 100%;
                 }
-                .article-holder img.loaded {
+                /* 图片本身有宽度的不处理 */
+                .article-holder img.loaded:not([class*=cut-off]) {
                    width: auto !important;
                    height: auto !important;
                 }
