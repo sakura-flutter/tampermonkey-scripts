@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.8.0
+// @version      1.9.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -13,6 +13,9 @@
 // @match        https://mp.weixin.qq.com/s*
 // @match        https://zhuanlan.zhihu.com/p/*
 // @match        https://www.zhihu.com/question/*
+// @match        https://www.zhihu.com/
+// @match        https://www.zhihu.com/follow
+// @match        https://www.zhihu.com/hot*
 // @match        https://juejin.im/post/*
 // @match        https://www.jianshu.com/p/*
 // @match        https://www.baidu.com/s?*
@@ -33,6 +36,7 @@
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @grant        GM_addValueChangeListener
 // @require      https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=847261
 // ==/UserScript==
@@ -58,6 +62,11 @@
             const nextStatus = !GM_getValue('notify_enabled', true)
             Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
             GM_setValue('notify_enabled', nextStatus)
+        })
+        GM_registerMenuCommand('控制按钮', function() {
+            const nextStatus = !GM_getValue('ui_visible', true)
+            Toast.success(nextStatus ? '已显示按钮' : '已隐藏按钮')
+            GM_setValue('ui_visible', nextStatus)
         })
 
         // 将之前is_open重新命名成enabled
@@ -86,6 +95,7 @@
             ['mpWeixin', /mp.weixin.qq.com\/s/.test(url)],
             ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url)],
             ['zhihuQuestion', /zhihu.com\/question\//.test(url)],
+            ['zhihuHome', /www.zhihu.com/.test(url) && /^\/(follow|hot)?$/.test(pathname)],
             ['juejin', /juejin.im\/post\//.test(url)],
             ['jianshu', /jianshu.com\/p\//.test(url)],
             ['baidu', /www.baidu.com\/s?/.test(url)],
@@ -94,7 +104,7 @@
             ['sogou', /www.sogou.com\/web?/.test(url)],
             ['segmentfault', /segmentfault.com/.test(url)],
             ['bilibili', /bilibili.com\/read\/cv/.test(url)],
-            ['bilibiliDynamic', /t.bilibili.com/.test(url)],
+            ['bilibiliDynamic', /t.bilibili.com/.test(url) && pathname === '/'],
             ['weibo', /weibo.com/.test(url)],
             ['doubanmovie', /movie.douban.com/.test(url)],
         ]
@@ -237,6 +247,8 @@
                 .ztext .content_image, .ztext .origin_image {
                    width: auto;
                    max-width: 100%;
+                   max-height: 90vh;
+                   object-fit: contain;
                 }
                 /* 左侧悬浮按钮 */
                 .Post-SideActions {
@@ -318,12 +330,48 @@
                 .ztext .content_image, .ztext .origin_image {
                    width: auto;
                    max-width: 100%;
+                   max-height: 90vh;
+                   object-fit: contain;
                 }
               }
 
               @media screen and (min-width: 1750px) {
                 :root {
                    --inject-page-width: 1300px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+
+    // 首页
+    handlers.set('zhihuHome', function() {
+        const store = createStore('zhihu')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 91vw;
+              }
+              @media screen and (min-width: 1100px) {
+                .Topstory-container {
+                   width: var(--inject-page-width);
+                }
+                /* 内容 */
+                .Topstory-mainColumn {
+                   flex: 1;
+                }
+                /* 右侧 */
+                .GlobalSideBar {
+                   width: 296px;
+                   flex: initial;
+                }
+              }
+
+              @media screen and (min-width: 1490px) {
+                :root {
+                   --inject-page-width: 1360px;
                 }
               }
             `)
@@ -887,11 +935,7 @@
                 if (!unsafeWindow.$CONFIG) return
                 if (proxyConfig && proxyConfig === unsafeWindow.$CONFIG) return
 
-                const target = JSON.parse(JSON.stringify(unsafeWindow.$CONFIG))
                 const handler = {
-                    get(target, property) {
-                        return target[property]
-                    },
                     set(target, property, value) {
                         const oldVal = target[property]
                         target[property] = value
@@ -901,11 +945,8 @@
                         }
                         return true
                     },
-                    deleteProperty(target, property) {
-                        return delete target[property]
-                    },
                 }
-                proxyConfig = new Proxy(target, handler)
+                proxyConfig = new Proxy(unsafeWindow.$CONFIG, handler)
                 unsafeWindow.$CONFIG = proxyConfig
 
                 addStyle()
@@ -1191,7 +1232,7 @@
             template: `
               <button
                 class="inject-widescreen-js"
-                v-show="visible"
+                v-show="uiVisible && visible"
                 title="注意：页面会被刷新"
                 @click="toggle"
               >
@@ -1200,11 +1241,17 @@
             `,
             data() {
                 return {
+                    // 总开关
+                    uiVisible: GM_getValue('ui_visible', true),
                     visible,
                     enabled: store.enabled,
                 }
             },
             created() {
+                GM_addValueChangeListener('ui_visible', (name, oldVal, newVal) => {
+                    this.uiVisible = newVal
+                })
+
                 if (store.enabled) {
                     execute()
                     !silent && this.notify()
@@ -1222,7 +1269,7 @@
                     GM_getValue('notify_enabled', true) && Toast('已宽屏处理')
                 },
                 // private-api
-                async toggle() {
+                toggle() {
                     store.enabled = !this.enabled
                     location.reload()
                 }
