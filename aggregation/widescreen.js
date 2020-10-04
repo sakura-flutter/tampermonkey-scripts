@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.9.0
+// @version      1.9.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -601,9 +601,8 @@
                 #container > .content {
                    width: 100%;
                 }
-                .nav_wrap, .p_thread, .pb_content, .core_title_wrap_bright, .l_post_bright, .core_reply_wrapper, .l_post_bright .core_reply_wrapper, .pb_footer {
-                  /* 广告会覆盖宽度 使用important */
-                   width: 100% !important;
+                .nav_wrap, .p_thread, .pb_content, .core_title_wrap_bright, .core_reply_wrapper, .l_post_bright .core_reply_wrapper, .pb_footer {
+                   width: 100%;
                 }
                 .core_title_absolute_bright {
                    width: calc(var(--inject-page-width) - 240px);
@@ -629,9 +628,10 @@
                    flex: 1;
                    border-right: 2px solid #e4e6eb;
                 }
-                /* 楼层 */
+                /* 楼层 广告会覆盖宽度 使用important */
                 .l_post_bright {
                    display: flex;
+                   width: 100% !important;
                 }
                 .l_post_bright .d_post_content_main {
                    flex: 1;
