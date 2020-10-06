@@ -1,9 +1,12 @@
 // ==UserScript==
 // @name         百度贴吧签到
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      2.0.2
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
+// @license      GPL-3.0
+// @compatible   chrome >= 80
+// @compatible   firefox >= 75
 // @run-at       document-end
 // @match        https://tieba.baidu.com/index.html
 // @match        https://tieba.baidu.com
@@ -17,8 +20,6 @@
 // @require      https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
 // @require      https://cdn.jsdelivr.net/npm/md5/dist/md5.min.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=847261
-// @compatible   chrome >= 80
-// @compatible   firefox >= 75
 // ==/UserScript==
 
 /* global Vue MD5 Toast */
@@ -36,7 +37,7 @@
         console.log(...args)
     }
 
-    async function main() {
+    function main() {
         const store = createStore()
         const jQuery = unsafeWindow.jQuery
         const $moreforumEl = jQuery('#moreforum')
@@ -321,13 +322,16 @@
                     return async function () {
                         const { kw } = utils.URL.parse(current.href)
                         const { fid } = current.dataset
-                        const { error_code, error, user_info } = await doSign({ tbs, kw, fid })
-                        // 贴吧成功码为0 还会出现code为0但error的情况
-                        if (error_code === '0' && !error) {
+                        try {
+                            const response = await doSign({ tbs, kw, fid })
+                            const { error_code, error, user_info } = response
+                            // 贴吧成功码为0 还会出现code为0但error的情况
+                            if (error_code !== '0' || error) throw response
                             ui.updateLikeForum(fid, user_info)
                             // 替换已签到样式
                             current.classList.replace('unsign', 'sign')
-                        } else {
+                        } catch (e) {
+                            console.error(e)
                             // 重签
                             resignEls.push(current)
                         }
@@ -346,11 +350,14 @@
                 const current = resignEls.shift()
                 const { kw } = utils.URL.parse(current.href)
                 const { fid } = current.dataset
-                const { error_code, error, user_info } = await doSign({ tbs, kw, fid })
-                if (error_code === '0' && !error) {
+                try {
+                    const response = await doSign({ tbs, kw, fid })
+                    const { error_code, error, user_info } = response
+                    if (error_code !== '0' || error) throw response
                     ui.updateLikeForum(fid, user_info)
                     current.classList.replace('unsign', 'sign')
-                } else {
+                } catch (e) {
+                    console.error(e)
                     failCount++
                     Toast.error(`${decodeURIComponent(kw)} 签到失败`)
                 }
@@ -403,12 +410,15 @@
             while(allUnsignEls.length) {
                 const current = allUnsignEls.shift()
                 const { kw } = utils.URL.parse(current.href)
-                const { no } = await doSign({ kw })
-                // 贴吧成功码为0
-                if (no === 0) {
+                try {
+                    const response = await doSign({ kw })
+                    const { no } = response
+                    // 贴吧成功码为0
+                    if (no !== 0) throw response
                     // 替换已签到样式
                     current.classList.replace('unsign', 'sign')
-                } else {
+                } catch (e) {
+                    console.error(e)
                     // 重签
                     resignEls.push(current)
                 }
@@ -422,10 +432,13 @@
             while(resignEls.length) {
                 const current = resignEls.shift()
                 const { kw } = utils.URL.parse(current.href)
-                const { no } = await doSign({ kw })
-                if (no === 0) {
+                try {
+                    const response = await doSign({ kw })
+                    const { no } = response
+                    if (no !== 0) throw response
                     current.classList.replace('unsign', 'sign')
-                } else {
+                } catch (e) {
+                    console.error(e)
                     failCount++
                     Toast.error(`${decodeURIComponent(kw)} 签到失败`)
                 }
@@ -492,7 +505,7 @@
         })
     }
 
-    // 存储 以网站作为模块
+    // 存储
     function createStore() {
         const target = {}
         const handler = {
