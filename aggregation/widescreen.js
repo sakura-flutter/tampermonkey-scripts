@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.9.1
+// @version      1.10.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -16,6 +16,7 @@
 // @match        https://www.zhihu.com/
 // @match        https://www.zhihu.com/follow
 // @match        https://www.zhihu.com/hot*
+// @match        https://www.zhihu.com/topic*
 // @match        https://juejin.im/post/*
 // @match        https://www.jianshu.com/p/*
 // @match        https://www.baidu.com/s?*
@@ -96,6 +97,7 @@
             ['zhihu', /zhuanlan.zhihu.com\/p\//.test(url)],
             ['zhihuQuestion', /zhihu.com\/question\//.test(url)],
             ['zhihuHome', /www.zhihu.com/.test(url) && /^\/(follow|hot)?$/.test(pathname)],
+            ['zhihuTopic', /www.zhihu.com\/topic\//.test(url)],
             ['juejin', /juejin.im\/post\//.test(url)],
             ['jianshu', /jianshu.com\/p\//.test(url)],
             ['baidu', /www.baidu.com\/s?/.test(url)],
@@ -372,6 +374,35 @@
               @media screen and (min-width: 1490px) {
                 :root {
                    --inject-page-width: 1360px;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
+    })
+
+    // 话题
+    handlers.set('zhihuTopic', function() {
+        const store = createStore('zhihu')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: 91vw;
+              }
+              @media screen and (min-width: 1100px) {
+                .ContentLayout {
+                   width: var(--inject-page-width);
+                }
+                /* 内容 */
+                .ContentLayout-mainColumn {
+                   flex: 1;
+                }
+              }
+
+              @media screen and (min-width: 1420px) {
+                :root {
+                   --inject-page-width: 1295px;
                 }
               }
             `)
