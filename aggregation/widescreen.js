@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.10.0
+// @version      1.10.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -237,6 +237,7 @@
                 observer.observe($('.Post-RichTextContainer'), { subtree: true, attributeFilter: ['src'], attributeOldValue: true })
             })
 
+            const defaultWidth = '690px'
             GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
@@ -247,10 +248,7 @@
                 }
                 /* 内容图片 */
                 .ztext .content_image, .ztext .origin_image {
-                   width: auto;
-                   max-width: 100%;
-                   max-height: 90vh;
-                   object-fit: contain;
+                   max-width: ${defaultWidth};
                 }
                 /* 左侧悬浮按钮 */
                 .Post-SideActions {
@@ -296,7 +294,7 @@
                 observer.observe($('.QuestionPage'), { subtree: true, attributeFilter: ['src'], attributeOldValue: true })
             })
 
-
+            const defaultWidth = '694px'
             GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
@@ -330,10 +328,7 @@
                 }
                 /* 内容图片 */
                 .ztext .content_image, .ztext .origin_image {
-                   width: auto;
-                   max-width: 100%;
-                   max-height: 90vh;
-                   object-fit: contain;
+                   max-width: ${defaultWidth};
                 }
               }
 
@@ -881,11 +876,6 @@
                 .banner-img-holder {
                    width: auto !important;
                    max-width: 100%;
-                }
-                /* 图片本身有宽度的不处理 */
-                .article-holder img.loaded:not([class*=cut-off]) {
-                   width: auto !important;
-                   height: auto !important;
                 }
                 /* 右侧up主等信息 */
                 .up-info-holder {
