@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.10.1
+// @version      1.10.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -476,6 +476,7 @@
     handlers.set('baidu', function() {
         const store = createStore('baidu')
         function execute() {
+            const defaultWidth = '560px'
             const styleSheet = GM_addStyle(`
               :root {
                 --inject-page-width: 75vw;
@@ -518,6 +519,10 @@
                 /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
                 .container_new #content_left > div:not([tpl*=img_address]) {
                    width: 100% !important;
+                }
+                /* 视频宽度限制(搜索：路人女主的养成方法) */
+                .op-bk-polysemy-video__wrap {
+                   width: ${defaultWidth} !important;
                 }
                 .container_new #content_left .new-pmd .c-span9 {
                    width: 75%;
