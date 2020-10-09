@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.3.2
+// @version      1.4.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/lanhu/index.js
+// @license      GPL-3.0
 // @compatible   chrome >= 80
 // @compatible   firefox >= 75
-// @run-at       document-start
+// @noframes
 // @match        https://lanhuapp.com/web/
 // @grant        unsafeWindow
 // @grant        GM_setValue
@@ -22,27 +23,17 @@
     'use strict';
     const $ = document.querySelector.bind(document)
 
+    const marks = new WeakSet()
+    const app = $('.whole').__vue__
+
+    createRecordedUI()
+    app.$watch('$route', function(to, from) {
+        // 无法知道页面是否渲染完毕，延时处理
+        setTimeout(autofillPassword, 500)
+        record()
+    }, { immediate: true })
+
     /* 填充密码 */
-    const oldPushState = unsafeWindow.history.pushState
-    unsafeWindow.history.pushState = function(...args) {
-        oldPushState.apply(unsafeWindow.history, args)
-        console.warn('pushState')
-        setTimeout(() => {
-            autofillPassword()
-            record()
-        }, 500)
-    }
-
-    ;['DOMContentLoaded', 'popstate', 'hashchange'].forEach(eventname => {
-        unsafeWindow.addEventListener(eventname, () => {
-            console.warn(eventname)
-            setTimeout(() => {
-                autofillPassword()
-                record()
-            }, 500)
-        })
-    })
-
     function autofillPassword() {
         if (!location.hash.startsWith('#/item/project/door')) return
         const queryString = location.hash.includes('?') ? location.hash.split('?')[1] : ''
@@ -62,10 +53,9 @@
             confirmEl.click()
         }
 
-        // 蓝湖刷新会重新跳转到输入密码页 pushState DOMContentLoaded popstate hashchange 可能会导致重复注册事件
-        // 标记一下事件
-        if (confirmEl.dataset.addedHandler) return
-        confirmEl.dataset.addedHandler = '1'
+        // 标记已添加事件的元素
+        if (marks.has(confirmEl)) return
+        marks.add(confirmEl)
 
         // 点击后保存密码
         confirmEl.addEventListener('mousedown', savePassword)
@@ -104,94 +94,94 @@
         if (!pid) return
 
         const records = GM_getValue('records', [])
+        let oldTitle = null
         records.find((item, index) => {
             if(item.pid === pid) {
+                oldTitle = item.title
                 records.splice(index, 1)
                 return true
             }
         })
+        // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
+        const title = (['蓝湖', '...'].includes(document.title) && oldTitle) ? oldTitle : document.title
         records.push({
             pid,
             hash,
             queryString,
-            title: document.title,
+            title,
         })
         GM_setValue('records', records)
     }
 
-    createRecordedUI()
-
     function createRecordedUI() {
-        window.addEventListener('DOMContentLoaded', () => {
-            const PATH = 'https://lanhuapp.com/web/'
+        const PATH = 'https://lanhuapp.com/web/'
 
-            const ui = new Vue({
-                template: `
-                  <article id="inject-recorded-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false)">
-                    <transition name="slide-fade">
-                      <ul v-show="reversed.length && (unhidden || recordsVisible)">
-                        <li v-for="item in reversed" :key="item.pid">
-                          <a :href="getHref(item)" :title="item.title" target="_blank">
-                            <span>{{item.title}}</span>
-                            <button title="移除" @click.prevent="deleteItem(item)">×</button>
-                          </a>
-                        </li>
-                      </ul>
-                    </transition>
-                    <div style="text-align: center; padding-top: 8px;">
-                      <button class="view-btn">打开最近项目</button>
-                      <input style="margin-left: 6px;vertical-align:text-top;" v-model="unhidden" type="checkbox" title="固定显示" @change="unhiddenChange" />
-                    </div>
-                  </article>
-                `,
-                data() {
-                    return {
-                        records: GM_getValue('records', []),
-                        recordsVisible: false,
-                        unhidden: GM_getValue('unhidden', false),
-                    }
+        const ui = new Vue({
+            template: `
+              <article id="inject-recorded-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false)">
+                <transition name="inject-slide-fade">
+                  <transition-group v-show="reversed.length && (unhidden || recordsVisible)" tag="ul" name="inject-slide-hor-fade">
+                    <li v-for="item in reversed" :key="item.pid">
+                      <a :href="getHref(item)" :title="item.title" target="_blank">
+                        <span>{{item.title}}</span>
+                        <button title="移除" @click.prevent="deleteItem(item)">×</button>
+                      </a>
+                    </li>
+                  </transition-group>
+                </transition>
+                <div style="text-align: center; padding-top: 8px;">
+                  <button class="view-btn">打开最近项目</button>
+                  <input style="margin-left: 6px;vertical-align:text-top;" v-model="unhidden" type="checkbox" title="固定显示" @change="unhiddenChange" />
+                </div>
+              </article>
+            `,
+            data() {
+                return {
+                    records: GM_getValue('records', []),
+                    recordsVisible: false,
+                    unhidden: GM_getValue('unhidden', false),
+                }
+            },
+            computed: {
+                reversed() {
+                    return [...this.records].reverse()
                 },
-                computed: {
-                    reversed() {
-                        return [...this.records].reverse()
-                    },
+            },
+            created() {
+                GM_addValueChangeListener('records', (name, oldVal, newVal) => {
+                    this.records = Object.freeze(newVal)
+                })
+                GM_addValueChangeListener('unhidden', (name, oldVal, newVal) => {
+                    this.unhidden = newVal
+                })
+            },
+            methods: {
+                getHref(item) {
+                    return PATH + item.hash + '?' + item.queryString
                 },
-                created() {
-                    GM_addValueChangeListener('records', (name, oldVal, newVal) => {
-                        this.records = newVal
+                deleteItem(item) {
+                    const newRecords = [...this.records]
+                    newRecords.find((record, index) => {
+                        if(record.pid === item.pid) {
+                            newRecords.splice(index, 1)
+                            return true
+                        }
                     })
-                    GM_addValueChangeListener('unhidden', (name, oldVal, newVal) => {
-                        this.unhidden = newVal
-                    })
+                    GM_setValue('records', newRecords)
                 },
-                methods: {
-                    getHref(item) {
-                        return PATH + item.hash + '?' + item.queryString
-                    },
-                    deleteItem(item) {
-                        const newRecords = [...this.records]
-                        newRecords.find((record, index) => {
-                            if(record.pid === item.pid) {
-                                newRecords.splice(index, 1)
-                                return true
-                            }
-                        })
-                        GM_setValue('records', newRecords)
-                    },
-                    toggle(visible) {
-                        this.recordsVisible = visible
-                    },
-                    unhiddenChange() {
-                      GM_setValue('unhidden', this.unhidden)
-                    },
+                toggle(visible) {
+                    this.recordsVisible = visible
                 },
-            }).$mount()
-            document.body.appendChild(ui.$el)
-        })
+                unhiddenChange() {
+                    GM_setValue('unhidden', this.unhidden)
+                },
+            },
+        }).$mount()
+        document.body.appendChild(ui.$el)
 
         // 添加样式
         GM_addStyle(`
-          #inject-recorded-ui {
+          |> {
              position: fixed;
              right: 3vw;
              bottom: 8vh;
@@ -201,51 +191,47 @@
              transition: opacity .1s;
              opacity: .5;
           }
-          #inject-recorded-ui:hover {
+          |>:hover {
              opacity: 1;
           }
-          #inject-recorded-ui ul::-webkit-scrollbar {
+          |> ul::-webkit-scrollbar {
              width: 8px;
              height: 8px;
              background: #f2f2f2;
              padding-right: 2px;
           }
-          #inject-recorded-ui ul::-webkit-scrollbar-thumb {
+          |> ul::-webkit-scrollbar-thumb {
              border-radius: 3px;
              border: 0;
              background: #b4bbc5;
           }
-          #inject-recorded-ui .slide-fade-enter-active, #inject-recorded-ui .slide-fade-leave-active {
-             transition: all .1s;
-          }
-           #inject-recorded-ui .slide-fade-enter, #inject-recorded-ui .slide-fade-leave-to {
-             transform: translateY(5px);
-             opacity: 0;
-          }
-          #inject-recorded-ui ul {
+          |> ul {
              padding: 5px;
              max-height: 40vh;
-             overflow-x: auto;
+             overflow-x: hidden;
              background: rgb(251, 251, 251);
              box-shadow: 0 1px 6px rgba(0,0,0,.15);
           }
-          #inject-recorded-ui a {
+          |> li {
+             transition: all .3s;
+          }
+          |> a {
              display: flex;
              align-items: center;
              line-height: 30px;
              padding: 0 5px;
              transition: background 0.1s ease-out;
           }
-          #inject-recorded-ui a:hover {
+          |> a:hover {
              background: rgba(220, 237, 251, 0.64);
           }
-          #inject-recorded-ui a span {
+          |> a span {
              flex: 1;
              overflow: hidden;
              text-overflow: ellipsis;
              white-space: nowrap;
           }
-          #inject-recorded-ui li button {
+          |> li button {
              width: 20px;
              line-height: 20px;
              border: none;
@@ -254,7 +240,7 @@
              box-shadow: 0 1px 1px rgba(0,0,0,.15);
              cursor: pointer;
           }
-          #inject-recorded-ui .view-btn {
+          |> .view-btn {
              padding: 4px 12px;
              color: #fff;
              background:#3385ff;
@@ -262,7 +248,27 @@
              border: none;
              border-radius: 2px;
           }
-        `)
+
+          /* 动画1 */
+          |> .inject-slide-fade-enter-active, |> .inject-slide-fade-leave-active {
+             transition: all .1s;
+          }
+          |> .inject-slide-fade-enter, |> .inject-slide-fade-leave-to {
+             transform: translateY(5px);
+             opacity: 0;
+          }
+          /* 动画2 group */
+          |> .inject-slide-hor-fade-move {
+             transition: all .8s;
+          }
+          |> .inject-slide-hor-fade-enter, |> .inject-slide-hor-fade-leave-to {
+             opacity: 0;
+             transform: translateX(30px);
+          }
+          |> .inject-slide-hor-fade-active {
+             position: absolute;
+          }
+        `.replace(/\|\>/g, '#inject-recorded-ui'))
     }
 
     function throttle(fn, delay) {
