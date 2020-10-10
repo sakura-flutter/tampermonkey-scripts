@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.4.0
+// @version      1.4.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/lanhu/index.js
@@ -89,7 +89,6 @@
     function record() {
         const queryString = location.hash.includes('?') ? location.hash.split('?')[1] : ''
         if (!queryString) return
-        const hash = location.hash.split('?')[0]
         const pid = new URLSearchParams(queryString).get('pid')
         if (!pid) return
 
@@ -106,16 +105,13 @@
         const title = (['蓝湖', '...'].includes(document.title) && oldTitle) ? oldTitle : document.title
         records.push({
             pid,
-            hash,
-            queryString,
             title,
+            href: location.href,
         })
         GM_setValue('records', records)
     }
 
     function createRecordedUI() {
-        const PATH = 'https://lanhuapp.com/web/'
-
         const ui = new Vue({
             template: `
               <article id="inject-recorded-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false)">
@@ -157,6 +153,9 @@
             },
             methods: {
                 getHref(item) {
+                    if (item.href) return item.href
+                    // 兼容旧版本
+                    const PATH = 'https://lanhuapp.com/web/'
                     return PATH + item.hash + '?' + item.queryString
                 },
                 deleteItem(item) {
