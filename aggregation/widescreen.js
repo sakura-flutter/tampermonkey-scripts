@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.10.2
+// @version      1.10.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -452,7 +452,6 @@
                 }
                 [role=main] > div:first-child {
                    flex: 1;
-                   width: auto;
                 }
                 /* 左侧悬浮按钮 */
                 #__next > div:last-child {
