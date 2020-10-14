@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.10.3
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
+// @version      1.11.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
 // @license      GPL-3.0
@@ -29,6 +29,7 @@
 // @match        https://www.bilibili.com/read/cv*
 // @match        https://t.bilibili.com/*
 // @match        https://weibo.com/*
+// @match        https://d.weibo.com/*
 // @match        https://movie.douban.com/subject/*
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
@@ -78,12 +79,32 @@
                 GM_deleteValue(key)
             }
         })
+
+        if (!checkCompatibility()) return
         const sites = checkWebsites()
-        sites.forEach(site => {
+        sites.find(site => {
             const hanlder = handlers.get(site)
             log(site)
             hanlder && hanlder()
+            return site
         })
+    }
+
+    // 兼容性判断
+    function checkCompatibility() {
+        const { userAgent } = window.navigator
+        const chromeVersion = userAgent.match(/Chrome\/(\d+)/) && userAgent.match(/Chrome\/(\d+)/)[1]
+        const firefoxVersion = userAgent.match(/Firefox\/(\d+)/) && userAgent.match(/Firefox\/(\d+)/)[1]
+        let pass = false
+        if (chromeVersion && chromeVersion >= 80) {
+            pass = true
+        } else if (firefoxVersion && firefoxVersion >= 75) {
+            pass = true
+        }
+        if (!pass) {
+            GM_getValue('notify_enabled', true) && Toast.warning('宽屏脚本：哎呀！不支持的浏览器版本，请更新浏览器版本 o(╥﹏╥)o')
+        }
+        return pass
     }
 
     // 检查网站
@@ -107,7 +128,8 @@
             ['segmentfault', /segmentfault.com/.test(url)],
             ['bilibili', /bilibili.com\/read\/cv/.test(url)],
             ['bilibiliDynamic', /t.bilibili.com/.test(url) && pathname === '/'],
-            ['weibo', /weibo.com/.test(url)],
+            ['weibo', /\/\/weibo.com/.test(url)],
+            ['weiboDynamic', /d.weibo.com/.test(url)],
             ['doubanmovie', /movie.douban.com/.test(url)],
         ]
         // 返回匹配的页面
@@ -999,9 +1021,9 @@
                         test: /^v6.*_content_home$/.test($CONFIG.location) || /v6_(fav|likes_outbox|content_friends)/.test($CONFIG.location),
                         use: doMainPage,
                     },
-                    // 用户资料页、相册、管理中心、粉丝
+                    // 用户资料页、相册、管理中心、粉丝、服务、财经专家、热门话题
                     profilepage: {
-                        test:/^page_.*_(home|photos|manage|myfollow)$/.test($CONFIG.location),
+                        test:/^page_.*_(home|photos|manage|myfollow|service|expert|topic)$/.test($CONFIG.location),
                         use: doProfilePage,
                     },
                     // 微博详情
@@ -1082,10 +1104,18 @@
                   /* 内容 */
                   |> #plc_main {
                      width: 100% !important;
+                     display: flex;
+                  }
+                  /* 这里修复特殊博主页右边距 */
+                  |> #plc_main > div:last-child {
+                     margin-right: 0;
+                  }
+                  /* 特殊博主页评论 */
+                  |> .WB_frame_c .input_simple_wrap .inputfunc_simple_wrap {
+                     width: calc(100% - 80px);
                   }
                   |> .WB_frame_c {
-                     margin-right: 0;
-                     width: calc(100% - 320px);
+                     flex: 1;
                   }
                   /* 右侧悬浮时间线 */
                   |> .WB_timeline {
@@ -1151,6 +1181,44 @@
                 `.replace(/\|\>/g, `.${classname}`))
         }
 
+    })
+
+    // 动态
+    handlers.set('weiboDynamic', function() {
+        const store = createStore('weibo')
+        function execute() {
+            GM_addStyle(`
+              :root {
+                --inject-page-width: min(77.5vw, 1330px);
+              }
+              @media screen and (min-width: 1300px) {
+                .WB_frame {
+                   display: flex;
+                   width: var(--inject-page-width) !important;
+                }
+                /* 内容 */
+                .WB_frame #plc_main {
+                   flex: 1;
+                   display: flex !important;
+                }
+                .WB_frame_c {
+                   flex: 1;
+                }
+                /* 微博类型 (更多-旅游 中出现) */
+                .tab_box {
+                   display: flex;
+                }
+                .tab_box::after {
+                   content: none;
+                }
+                .tab_box .fr_box {
+                   flex: 1;
+                }
+              }
+            `)
+        }
+
+        createWidescreenControl({ store, execute })
     })
     /* ===微博===end */
 
