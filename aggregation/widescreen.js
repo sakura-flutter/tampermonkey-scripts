@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.11.0
+// @version      1.11.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -194,40 +194,27 @@
         function execute() {
             GM_addStyle(`
               :root {
-                --inject-page-width: 90vw;
+                --inject-page-width: min(90vw, 1150px);
               }
-              /* 文章宽屏 */
-              .rich_media_area_primary_inner { max-width: 100vw !important; }
-              /* 二维码位置 */
-              #js_pc_qr_code .qr_code_pc { position: fixed; top: 25vh; right: 3vw; opacity: .4;}
-              #js_pc_qr_code .qr_code_pc:hover { opacity: 1;}
-              @media screen and (min-width: 1024px) {
-                .rich_media_area_primary_inner { max-width: var(--inject-page-width) !important; }
-                #js_pc_qr_code .qr_code_pc { position: fixed; top: 25vh; right: 3vw; }
-              }
-
-              @media screen and (min-width: 1250px) {
-                :root {
-                   --inject-page-width: 1150px;
+              @media screen and (min-width: 750px) {
+                /* 文章宽屏 */
+                .rich_media_area_primary_inner {
+                   max-width: var(--inject-page-width) !important;
+                   margin-left: auto;
+                   margin-right: auto;
+                }
+                /* 二维码位置 */
+                #js_pc_qr_code .qr_code_pc {
+                   position: fixed;
+                   top: 25vh;
+                   right: 3vw;
+                   opacity: .2;
+                }
+                #js_pc_qr_code .qr_code_pc:hover {
+                   opacity: 1;
                 }
               }
             `)
-
-            window.addEventListener('DOMContentLoaded', () => {
-                // 文章图片宽高（仅对大图处理）
-                const imgEls = $$('.rich_media_area_primary_inner img')
-                imgEls.forEach(img => {
-                    img.addEventListener('load', () => {
-                        // 页面本身对图片有宽高处理，延时后再处理
-                        setTimeout(() => {
-                            const width = parseFloat(getComputedStyle(img).width)
-                            if (width >= 400) {
-                                img.style.cssText += 'width: auto !important; height: auto !important;'
-                            }
-                        },16)
-                    })
-                })
-            })
         }
 
         createWidescreenControl({ store, execute })
