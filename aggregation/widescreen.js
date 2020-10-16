@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.11.1
+// @version      1.11.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -487,7 +487,7 @@
             const defaultWidth = '560px'
             const styleSheet = GM_addStyle(`
               :root {
-                --inject-page-width: 75vw;
+                --inject-page-width: min(75vw, 1300px);
               }
               @media screen and (min-width: 1460px) {
                 /* 顶部搜索 */
@@ -515,27 +515,24 @@
                 #container {
                    margin-left: auto !important;
                    margin-right: auto !important;
-                }
-                /* 仅对新闻流处理宽屏 */
-                .container_new {
                    width: var(--inject-page-width) !important;
                 }
                 /* 左侧搜索结果 */
-                .container_new #content_left {
+                #content_left {
                    width: calc(var(--inject-page-width) - 450px) !important;
                 }
                 /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
-                .container_new #content_left > div:not([tpl*=img_address]) {
+                #content_left > div:not([tpl*=img_address]) {
                    width: 100% !important;
                 }
                 /* 视频宽度限制(搜索：路人女主的养成方法) */
                 .op-bk-polysemy-video__wrap {
                    width: ${defaultWidth} !important;
                 }
-                .container_new #content_left .new-pmd .c-span9 {
+                #content_left .new-pmd .c-span9 {
                    width: 75%;
                 }
-                .container_new #content_left .c-group-wrapper .c-group {
+                #content_left .c-group-wrapper .c-group {
                    width: 95% !important;
                 }
                 /* 分页 */
@@ -557,13 +554,8 @@
               }
 
               @media screen and (min-width: 1680px) {
-                .container_new #content_left .new-pmd .c-span9 {
+                #content_left .new-pmd .c-span9 {
                    width: 81%;
-                }
-              }
-              @media screen and (min-width: 1730px) {
-                :root {
-                   --inject-page-width: 1300px;
                 }
               }
             `)
