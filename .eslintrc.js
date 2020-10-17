@@ -21,6 +21,7 @@ module.exports = {
     GM_addValueChangeListener: 'readonly',
     GM_xmlhttpRequest: 'readonly',
     GM_addStyle: 'readonly',
+    GM_setClipboard: 'readonly',
   },
   rules: {
     'comma-dangle': [

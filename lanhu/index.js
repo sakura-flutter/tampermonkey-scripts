@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.4.1
+// @version      1.5.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/lanhu/index.js
@@ -14,6 +14,7 @@
 // @grant        GM_getValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
+// @grant        GM_setClipboard
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=846237
 // ==/UserScript==
 
@@ -22,16 +23,20 @@
 (function() {
   'use strict'
   const $ = document.querySelector.bind(document)
-
   const marks = new WeakSet()
-  const app = $('.whole').__vue__
 
-  createRecordedUI()
-  app.$watch('$route', function(to, from) {
-    // 无法知道页面是否渲染完毕，延时处理
-    setTimeout(autofillPassword, 500)
-    record()
-  }, { immediate: true })
+  function main() {
+    const app = $('.whole').__vue__
+    const recorder = createRecorder()
+
+    fixBarHeight()
+    app.$watch('$route', function(to, from) {
+      // 无法知道页面是否渲染完毕，延时处理
+      setTimeout(autofillPassword, 500)
+      // 蓝湖title是动态获取的，可能有延时，延时处理
+      setTimeout(recorder.record, 500)
+    }, { immediate: true })
+  }
 
   /* 填充密码 */
   function autofillPassword() {
@@ -76,52 +81,32 @@
   }
 
   /* 更新侧边栏高度 */
-  window.addEventListener('resize', throttle(function() {
-    if (!location.hash.startsWith('#/item/project/product')) return
-    const barEl = $('.flexible-bar')
-    const modalEl = $('.flexible-modal')
-    if (!barEl || !modalEl) return
-    barEl.dispatchEvent(new MouseEvent('mousedown'))
-    modalEl.dispatchEvent(new MouseEvent('mouseup'))
-  }, 150))
-
-  /* 记录看过的产品 */
-  function record() {
-    const queryString = location.hash.includes('?') ? location.hash.split('?')[1] : ''
-    if (!queryString) return
-    const pid = new URLSearchParams(queryString).get('pid')
-    if (!pid) return
-
-    const records = GM_getValue('records', [])
-    let oldTitle = null
-    records.find((item, index) => {
-      if (item.pid === pid) {
-        oldTitle = item.title
-        records.splice(index, 1)
-        return true
-      }
-    })
-    // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
-    const title = (['蓝湖', '...'].includes(document.title) && oldTitle) ? oldTitle : document.title
-    records.push({
-      pid,
-      title,
-      href: location.href,
-    })
-    GM_setValue('records', records)
+  function fixBarHeight() {
+    window.addEventListener('resize', throttle(function() {
+      if (!location.hash.startsWith('#/item/project/product')) return
+      const barEl = $('.flexible-bar')
+      const modalEl = $('.flexible-modal')
+      if (!barEl || !modalEl) return
+      barEl.dispatchEvent(new MouseEvent('mousedown'))
+      modalEl.dispatchEvent(new MouseEvent('mouseup'))
+    }, 150))
   }
 
-  function createRecordedUI() {
+  /* 记录看过的产品 */
+  function createRecorder() {
     const ui = new Vue({
       template: `
-        <article id="inject-recorded-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false)">
+        <article id="inject-recorder-ui" @mouseenter="toggle(true)" @mouseleave="toggle(false);toggleMoreActions(false)">
           <transition name="inject-slide-fade">
-            <transition-group v-show="reversed.length && (unhidden || recordsVisible)" tag="ul" name="inject-slide-hor-fade">
+            <transition-group v-show="reversed.length && (unhidden || recordsVisible)" :class="{'more-actions': moreActionsVisible}" tag="ul" name="inject-slide-hor-fade">
               <li v-for="item in reversed" :key="item.pid">
-                <a :href="getHref(item)" :title="item.title" target="_blank">
-                  <span>{{item.title}}</span>
-                  <button title="移除" @click.prevent="deleteItem(item)">×</button>
-                </a>
+                <a :href="getHref(item)" :title="item.title" target="_blank">{{item.title}}</a>
+                <div class="actions" @mouseenter="toggleMoreActions(true)">
+                  <button title="移除" @click="deleteItem(item)">×</button>
+                  <button v-show="moreActionsVisible" title="左击复制链接和密码；右击复制密码" @click="copy('all', item)" @contextmenu.prevent="copy('pwd', item)">
+                    <svg t="1602929080634" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4117" width="10" height="10"><path d="M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z" p-id="4118"></path></svg>
+                  </button>
+                </div>
               </li>
             </transition-group>
           </transition>
@@ -135,6 +120,7 @@
         return {
           records: GM_getValue('records', []),
           recordsVisible: false,
+          moreActionsVisible: false,
           unhidden: GM_getValue('unhidden', false),
         }
       },
@@ -168,8 +154,31 @@
           })
           GM_setValue('records', newRecords)
         },
+        copy(action, item) {
+          let copyString = ''
+          const password = GM_getValue('passwords', {})[item.pid]
+          if (action === 'all') {
+            const href = this.getHref(item)
+            copyString += `${item.title}`
+            password && (copyString += ` (密码：${password})`)
+            copyString += `\n${href}`
+          } else if (action === 'pwd') {
+            if (password) {
+              copyString += password
+            } else {
+              Toast.warning('没有密码！')
+            }
+          }
+
+          if (!copyString) return
+          GM_setClipboard(copyString, 'text')
+          Toast.success('复制成功')
+        },
         toggle(visible) {
           this.recordsVisible = visible
+        },
+        toggleMoreActions(visible) {
+          this.moreActionsVisible = visible
         },
         unhiddenChange() {
           GM_setValue('unhidden', this.unhidden)
@@ -178,17 +187,43 @@
     }).$mount()
     document.body.appendChild(ui.$el)
 
+    /* 记录函数 */
+    function record() {
+      const queryString = location.hash.includes('?') ? location.hash.split('?')[1] : ''
+      if (!queryString) return
+      const pid = new URLSearchParams(queryString).get('pid')
+      if (!pid) return
+
+      const records = GM_getValue('records', [])
+      let oldTitle = null
+      records.find((item, index) => {
+        if (item.pid === pid) {
+          oldTitle = item.title
+          records.splice(index, 1)
+          return true
+        }
+      })
+      // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
+      const title = (['蓝湖', '...'].includes(document.title) && oldTitle) ? oldTitle : document.title
+      records.push({
+        pid,
+        title,
+        href: location.href,
+      })
+      GM_setValue('records', records)
+    }
+
     // 添加样式
     GM_addStyle(`
       |> {
           position: fixed;
-          right: 3vw;
+          right: 1.5vw;
           bottom: 8vh;
           z-index: 1000;
-          width: 220px;
-          padding: 20px 20px 10px;
-          transition: opacity .1s;
+          width: 240px;
+          padding: 30px 30px 10px;
           opacity: .5;
+          transition: opacity .1s;
       }
       |>:hover {
           opacity: 1;
@@ -204,31 +239,37 @@
           border: 0;
           background: #b4bbc5;
       }
+      |> ul.more-actions {
+          width: 204px;
+      }
       |> ul {
+          width: 180px;
           padding: 5px;
           max-height: 40vh;
           overflow-x: hidden;
           background: rgb(251, 251, 251);
           box-shadow: 0 1px 6px rgba(0,0,0,.15);
+          transition: width .1s;
       }
       |> li {
-          transition: all .3s;
-      }
-      |> a {
           display: flex;
           align-items: center;
-          line-height: 30px;
           padding: 0 5px;
-          transition: background 0.1s ease-out;
+          transition: all .3s, background 0.1s ease-out;
       }
-      |> a:hover {
+      |> li:hover {
           background: rgba(220, 237, 251, 0.64);
       }
-      |> a span {
-          flex: 1;
+      |> li a {
+          width: 132px;
+          flex: none;
+          line-height: 30px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+      }
+      |> li .actions {
+          flex: 1 0 auto;
       }
       |> li button {
           width: 20px;
@@ -237,15 +278,19 @@
           border-radius: 50%;
           color: #ababab;
           box-shadow: 0 1px 1px rgba(0,0,0,.15);
+          background: #fff;
           cursor: pointer;
       }
       |> .view-btn {
           padding: 4px 12px;
           color: #fff;
-          background:#3385ff;
+          background: #3385ff;
           box-shadow:0 1px 6px rgba(0,0,0,.2);
           border: none;
           border-radius: 2px;
+      }
+      |> svg {
+          fill: currentColor;
       }
 
       /* 动画1 */
@@ -267,7 +312,11 @@
       |> .inject-slide-hor-fade-active {
           position: absolute;
       }
-    `.replace(/\|>/g, '#inject-recorded-ui'))
+    `.replace(/\|>/g, '#inject-recorder-ui'))
+
+    return {
+      record,
+    }
   }
 
   function throttle(fn, delay) {
@@ -290,4 +339,6 @@
       }
     }
   }
+
+  main()
 })()
