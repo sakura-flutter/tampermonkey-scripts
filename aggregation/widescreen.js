@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.11.2
+// @version      1.12.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -876,11 +876,16 @@
   handlers.set('weibo', function() {
     const store = createStore('weibo')
     const uiControl = createWidescreenControl({ store, visible: false, silent: true })
-    let proxyConfig
     execute()
 
     function execute() {
+      let proxyConfig
       unsafeWindow.document.addEventListener('readystatechange', () => {
+        // 是否启用新版微博
+        if ($('#app') && $('#app').__vue__) {
+          WbNewVersion()
+          return
+        }
         if (!unsafeWindow.$CONFIG) return
         if (proxyConfig && proxyConfig === unsafeWindow.$CONFIG) return
 
@@ -901,6 +906,79 @@
         addStyle()
       })
     }
+
+    // 新版
+    const WbNewVersion = once(() => {
+      const store = createStore('weibo')
+      const uiControl = createWidescreenControl({ store, visible: false, silent: true })
+      const app = $('#app').__vue__
+      let styleSheet
+      log('新版本', app)
+      const pageStyleMap = new Map([
+        // 首页、首页左侧分组、博主主页、自定义主页、微博详情、at我的、评论、赞、我的关注、粉丝、收藏、赞、热门内容、相关用户、实时微博、[我关注的、视频、图片、话题]、热门微博、热门榜单、话题榜、热搜榜
+        [['home', 'mygroups', 'profile', 'customProfile', 'bidDetail', 'atWeibo', 'cmtInbox', 'likeInbox', 'follow', 'collect', 'like', 'sweiboDefault', 'suserDefault', 'sweibo', 'weibo', 'list', 'topic', 'search'], () => {
+          return GM_addStyle(`
+            :root {
+              --inject-page-width: min(90vw, 1380px);
+            }
+            @media screen and (min-width: 1340px) {
+              [class*=Frame_content] {
+                max-width: none;
+                width: var(--inject-page-width);
+              }
+              /* 内容 */
+              [class*=Frame_main],
+              [class*=Main_full] {
+                flex-grow: 1;
+              }
+              /* 列表中固定图片宽度，避免太大 */
+              .woo-box-wrap[class*=picture_inlineNum3] {
+                max-width: 409px;
+              }
+              /* 列表中视频 */
+              [class*=content_row] [class*=card-video_videoBox] {
+                max-width: 540px;
+              }
+            }
+          `)
+        }],
+        // 视频详情
+        [['Playdetail'], () => {
+          return GM_addStyle(`
+            :root {
+              --inject-page-width: min(91vw);
+            }
+            @media screen and (min-width: 1450px) {
+              [class*=Frame_content2] {
+                max-width: none;
+                width: var(--inject-page-width);
+              }
+              /* 左列 */
+              [class*=Frame_main2] {
+                flex-grow: 1;
+                padding-right: 20px;
+              }
+            }
+          `)
+        }],
+      ])
+
+      app.$watch('$route', (to, from) => {
+        styleSheet?.remove()
+        log('route changed', to)
+        uiControl.hide()
+        for (const [routenames, fn] of pageStyleMap.entries()) {
+          if (routenames.includes(to.name)) {
+            uiControl.show()
+            if (store.enabled) {
+              styleSheet = fn()
+              uiControl.notify()
+            }
+            break
+          }
+        }
+      }, { immediate: true })
+    })
 
     const addStyle = (function() {
       let styleSheet
@@ -1258,6 +1336,16 @@
       show: buttonComponent.show,
       hide: buttonComponent.hide,
       notify: buttonComponent.notify,
+    }
+  }
+
+  const once = fn => {
+    let called = false
+    return function(...args) {
+      if (called === false) {
+        called = true
+        return fn.apply(this, args)
+      }
     }
   }
 
