@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.12.0
+// @version      1.12.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
@@ -938,6 +938,12 @@
               /* 列表中视频 */
               [class*=content_row] [class*=card-video_videoBox] {
                 max-width: 540px;
+              }
+              /* 返回顶部按钮 */
+              [class*=Index_backTop] {
+                left: calc(50% + var(--inject-page-width) / 2 + var(--frame-mod-gap-space));
+                margin-left: 0;
+                transform: translateX(0);
               }
             }
           `)
