@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.12.1
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影
+// @version      1.13.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/aggregation/widescreen.js
 // @license      GPL-3.0
-// @compatible   chrome >= 80
-// @compatible   firefox >= 75
+// @compatible   chrome Latest
+// @compatible   firefox Latest
 // @run-at       document-start
 // @noframes
 // @match        https://bcy.net/item/detail/*
@@ -31,6 +31,7 @@
 // @match        https://weibo.com/*
 // @match        https://d.weibo.com/*
 // @match        https://movie.douban.com/subject/*
+// @match        https://www.toutiao.com/*
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -131,6 +132,7 @@
       ['weibo', /\/\/weibo.com/.test(url)],
       ['weiboDynamic', /d.weibo.com/.test(url)],
       ['doubanmovie', /movie.douban.com/.test(url)],
+      ['toutiao', /www.toutiao.com/.test(url)],
     ]
     // 返回匹配的页面
     return sites
@@ -935,6 +937,10 @@
               .woo-box-wrap[class*=picture_inlineNum3] {
                 max-width: 409px;
               }
+              /* 列表4张图 */
+              .u-col-4.woo-box-wrap {
+                max-width: 546px;
+              }
               /* 列表中视频 */
               [class*=content_row] [class*=card-video_videoBox] {
                 max-width: 540px;
@@ -1224,6 +1230,44 @@
     createWidescreenControl({ store, execute })
   })
   /* ===豆瓣电影===end */
+
+  /* ===今日头条===start */
+  handlers.set('toutiao', function() {
+    const store = createStore('toutiao')
+    unsafeWindow.document.addEventListener('readystatechange', () => {
+      if (document.readyState !== 'interactive' || !unsafeWindow.Page) return
+      createWidescreenControl({ store, execute })
+    })
+    function execute() {
+      GM_addStyle(`
+        :root {
+          --inject-page-width: min(90vw, 1470px);
+        }
+        @media (min-width: 1350px) {
+          .detail-content-wrapper {
+            width: var(--inject-page-width);
+          }
+          /* 内容 */
+          .detail-article-container {
+            display: flex;
+          }
+          .article-content {
+            flex: auto;
+            margin-right: 60px;
+          }
+          /* 相关推荐 */
+          .footer-feed {
+            width: auto;
+            margin-right: 60px;
+          }
+          .feedbox-wrapper {
+            width: auto;
+          }
+        }
+      `)
+    }
+  })
+  /* ===今日头条===end */
 
   // 存储
   function createStore(sitename) {
