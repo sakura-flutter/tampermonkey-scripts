@@ -14,93 +14,57 @@
       content: '',
       type: 'info',
       duration: 3000, // 0不会自动关闭
+      closable: false,
     }, options)
 
-    const toast = new Vue({
+    const { createApp, onMounted, ref } = Vue
+    const rootContainer = document.createElement('div')
+    const app = createApp({
       template: `
-        <transition name="fade" appear @before-enter="beforeEnter" @enter="enter" @leave="leave" @after-leave="afterLeave">
-          <div
-            :style="colour"
-            style="position:fixed; z-index:99999; top:80px; left:50%; padding:8px 16px; font-size:14px; box-shadow:0 2px 3px rgba(0,0,0,.1); transition:all .3s ease-in-out;"
-            v-if="visible"
-            v-html="content"
-          >
+        <transition name="inject-toast-slide-fade" appear @after-leave="afterLeave">
+          <div class="inject-toast" v-if="visible">
+            <div class="inject-toast-content" :class="'inject-toast-content--' + type">
+              <div class="inject-toast-content-text" v-html="content"></div>
+              <button class="inject-toast-content-close" v-if="closable" @click="close">×</button>
+            </div>
           </div>
         </transition>
       `,
-      data() {
+      setup() {
+        const content = ref(options.content)
+        const type = ref(options.type)
+        const closable = ref(options.closable)
+        const visible = ref(false)
+
+        onMounted(() => {
+          visible.value = true
+          if (options.duration > 0) {
+            setTimeout(close, options.duration)
+          }
+        })
+        // export-api
+        const close = () => {
+          visible.value = false
+        }
+        // private-api
+        const afterLeave = () => {
+          app.unmount(rootContainer)
+          rootContainer.remove()
+        }
+
         return {
-          content: options.content,
-          type: options.type,
-          visible: true,
+          content,
+          type,
+          closable,
+          visible,
+          close,
+          afterLeave,
         }
       },
-      computed: {
-        // 颜色
-        colour() {
-          switch (this.type) {
-            case 'info':
-              return {
-                color: '#2e8bf0',
-                background: '#f0faff',
-                border: '1px solid #d4eeff',
-              }
-            case 'success':
-              return {
-                color: '#19bf6c',
-                background: '#edfff3',
-                border: '1px solid #bbf2cf',
-              }
-            case 'warning':
-              return {
-                color: '#f90',
-                background: '#fff9e6',
-                border: '1px solid #ffe7a3',
-              }
-            case 'error':
-              return {
-                color: '#ed3f13',
-                background: '#ffefe6',
-                border: '1px solid #ffcfb8',
-              }
-          }
-        },
-      },
-      methods: {
-        // export-api
-        // 关闭
-        close() {
-          this.visible = false
-        },
-        beforeEnter(el) {
-          el.style.opacity = 0
-          el.style.transform = 'translate(-50%, -10%)'
-        },
-        enter(el, done) {
-          setTimeout(() => {
-            el.style.opacity = 1
-            el.style.transform = 'translate(-50%, 0)'
-          })
-        },
-        leave(el, done) {
-          el.style.opacity = 0
-          el.style.transform = 'translate(-50%, 30%)'
-          setTimeout(done, 300)
-        },
-        afterLeave() {
-          this.$destroy()
-          this.$el.parentNode.removeChild(this.$el)
-        },
-      },
-    }).$mount()
-    function appendToBody() {
-      document.body.appendChild(toast.$el)
-    }
-    document.body ? appendToBody() : window.addEventListener('DOMContentLoaded', appendToBody)
+    })
 
-    if (options.duration > 0) {
-      setTimeout(toast.close, options.duration)
-    }
+    const toast = app.mount(rootContainer)
+    insertElementInContainer(rootContainer)
 
     return {
       // 关闭
@@ -120,4 +84,97 @@
       return Toast(options)
     }
   })
+
+  function safeAppendElement(cb) {
+    document.body ? cb() : window.addEventListener('DOMContentLoaded', cb)
+  }
+  function insertElementInContainer(elememnt) {
+    if (!insertElementInContainer.el) {
+      const el = insertElementInContainer.el = document.createElement('div')
+      el.classList.add('inject-toast-container')
+      safeAppendElement(() => { document.body.appendChild(el) })
+    }
+    const { el } = insertElementInContainer
+    el.appendChild(elememnt)
+  }
+
+  ;(function addStyle() {
+    const styleEl = document.createElement('style')
+    styleEl.appendChild(document.createTextNode(`
+      .inject-toast-container {
+        position: fixed;
+        z-index: 99999;
+        top: 80px;
+        right: 0;
+        left: 0;
+        text-align: center;
+      }
+      .inject-toast {
+        max-height: 100vh;
+        transition: all .3s ease-in-out;
+      }
+      |> {
+        display: inline-flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        padding: 8px 16px;
+        font-size: 14px;
+        border: 1px solid;
+        box-shadow: 0 2px 3px rgba(0,0,0,.1);
+      }
+      |>--info {
+        color: #2e8bf0;
+        background: #f0faff;
+        border-color: #d4eeff;
+      }
+      |>--success {
+        color: #19bf6c;
+        background: #edfff3;
+        border-color: #bbf2cf;
+      }
+      |>--warning {
+        color: #f90;
+        background: #fff9e6;
+        border-color: #ffe7a3;
+      }
+      |>--error {
+        color: #ed3f13;
+        background: #ffefe6;
+        border-color: #ffcfb8;
+      }
+      .inject-toast-content-text {
+        flex: auto;
+      }
+      .inject-toast-content-close {
+        flex: none;
+        width: 20px;
+        margin: 0 -8px 0 10px;
+        padding: 0;
+        font-size: 16px;
+        color: #ababab;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      /* 动画 */
+      .inject-toast-slide-fade-enter-active,
+      .inject-toast-slide-fade-leave-active {
+        transition: all .3s;
+       }
+      .inject-toast-slide-fade-enter-from {
+        transform: translateY(-50%);
+        opacity: 0;
+      }
+      .inject-toast-slide-fade-leave-to {
+        transform: translateY(50%);
+        max-height: 0;
+        padding: 0;
+        opacity: 0;
+      }
+    `.replace(/\|>/g, '.inject-toast-content')))
+    safeAppendElement(() => {
+      document.head.appendChild(styleEl)
+    })
+  })()
 })()
