@@ -2,7 +2,7 @@
 
 /* global Vue Toast */
 
-(function() {
+;(function() {
   'use strict'
 
   window.Toast = function(options, duration) {
@@ -133,6 +133,7 @@
         padding: 8px 16px;
         max-width: 90vw;
         font-size: 14px;
+        line-height: 1;
         border: 1px solid;
         box-shadow: 0 2px 3px rgba(0,0,0,.1);
       }
@@ -158,7 +159,6 @@
       }
       |>-text {
         flex: auto;
-        line-height: 1.4em;
       }
       |>-close {
         flex: none;
@@ -192,4 +192,5 @@
       document.head.appendChild(styleEl)
     })
   })()
-})()
+// eslint-disable-next-line semi
+})();
