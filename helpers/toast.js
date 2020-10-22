@@ -5,7 +5,7 @@
 (function() {
   'use strict'
 
-  window.Toast = function(options) {
+  window.Toast = function(options, duration) {
     if (typeof options === 'string') {
       options = { content: options }
     }
@@ -13,23 +13,34 @@
     options = Object.assign({
       content: '',
       type: 'info',
-      duration: 3000, // 0不会自动关闭
-      closable: false,
     }, options)
+    // 0时不会自动关闭 默认3s
+    options.duration = duration ?? options.duration ?? 3000
+    // 0时 closable默认打开
+    if (options.duration === 0 && options.closable == null) {
+      options.closable = true
+    }
 
-    const { createApp, onMounted, ref } = Vue
+    const { createApp, Transition, onMounted, ref } = Vue
     const rootContainer = document.createElement('div')
     const app = createApp({
-      template: `
-        <transition name="inject-toast-slide-fade" appear @after-leave="afterLeave">
-          <div class="inject-toast" v-if="visible">
-            <div class="inject-toast-content" :class="'inject-toast-content--' + type">
-              <div class="inject-toast-content-text" v-html="content"></div>
-              <button class="inject-toast-content-close" v-if="closable" @click="close">×</button>
-            </div>
-          </div>
-        </transition>
-      `,
+      render() {
+        const { h } = Vue
+        const { visible, type, content, closable, close, onAfterLeave } = this
+        return h(Transition, { name: 'inject-toast-slide-fade', appear: true, onAfterLeave },
+          [
+            visible &&
+            h('div', { class: 'inject-toast' },
+              h('div', { class: ['inject-toast-content', `inject-toast-content--${type}`] },
+                [
+                  h('div', { class: 'inject-toast-content-text', innerHTML: content }),
+                  closable && h('button', { class: 'inject-toast-content-close', onClick: close }, '×'),
+                ],
+              ),
+            ),
+          ],
+        )
+      },
       setup() {
         const content = ref(options.content)
         const type = ref(options.type)
@@ -47,7 +58,7 @@
           visible.value = false
         }
         // private-api
-        const afterLeave = () => {
+        const onAfterLeave = () => {
           app.unmount(rootContainer)
           rootContainer.remove()
         }
@@ -58,7 +69,7 @@
           closable,
           visible,
           close,
-          afterLeave,
+          onAfterLeave,
         }
       },
     })
@@ -73,7 +84,7 @@
   }
 
   ;['info', 'success', 'warning', 'error'].forEach(type => {
-    Toast[type] = function(options) {
+    Toast[type] = function(options, duration) {
       if (typeof options === 'string') {
         options = { content: options }
       }
@@ -81,7 +92,7 @@
         ...options,
         type,
       }
-      return Toast(options)
+      return Toast(options, duration)
     }
   })
 
@@ -107,6 +118,7 @@
         top: 80px;
         right: 0;
         left: 0;
+        pointer-events: none;
         text-align: center;
       }
       .inject-toast {
@@ -114,10 +126,12 @@
         transition: all .3s ease-in-out;
       }
       |> {
+        pointer-events: auto;
         display: inline-flex;
         justify-content: center;
         margin-bottom: 10px;
         padding: 8px 16px;
+        max-width: 90vw;
         font-size: 14px;
         border: 1px solid;
         box-shadow: 0 2px 3px rgba(0,0,0,.1);
@@ -142,10 +156,11 @@
         background: #ffefe6;
         border-color: #ffcfb8;
       }
-      .inject-toast-content-text {
+      |>-text {
         flex: auto;
+        line-height: 1.4em;
       }
-      .inject-toast-content-close {
+      |>-close {
         flex: none;
         width: 20px;
         margin: 0 -8px 0 10px;
