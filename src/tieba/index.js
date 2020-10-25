@@ -370,9 +370,9 @@
       toast.close()
       failCount
         ? Toast.warning({
-          content: `签到成功，失败${failCount}个`,
-          duration: 0,
-        })
+            content: `签到成功，失败${failCount}个`,
+            duration: 0,
+          })
         : Toast.success('签到成功')
       ui.checkUnsign()
     }
@@ -450,9 +450,9 @@
       toast.close()
       failCount
         ? Toast.warning({
-          content: `签到成功，失败${failCount}个`,
-          duration: 0,
-        })
+            content: `签到成功，失败${failCount}个`,
+            duration: 0,
+          })
         : Toast.success('签到成功')
     }
   }
