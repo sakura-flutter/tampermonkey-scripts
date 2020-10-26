@@ -11,6 +11,7 @@ function getScriptHeader(filename, argvMode) {
 }
 
 module.exports = (env, argv) => ({
+  devtool: false,
   entry: {
     lanhu: './src/lanhu',
   },
@@ -19,6 +20,11 @@ module.exports = (env, argv) => ({
   },
   externals: {
     vue: 'Vue',
+  },
+  resolve: {
+    alias: {
+      '@': path.join(__dirname, './src'),
+    },
   },
   module: {
     rules: [

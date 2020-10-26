@@ -22,6 +22,8 @@ module.exports = {
     GM_xmlhttpRequest: 'readonly',
     GM_addStyle: 'readonly',
     GM_setClipboard: 'readonly',
+    Vue: 'readonly',
+    Toast: 'readonly',
   },
   rules: {
     'comma-dangle': [
