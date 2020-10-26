@@ -1,4 +1,5 @@
 import { parseURL, throttle } from '@/utils'
+import { useGMvalue } from '@/composition/use-gm-value'
 
 const $ = document.querySelector.bind(document)
 const marks = new WeakSet()
@@ -156,18 +157,12 @@ function createRecorder() {
       const { toRefs, reactive, computed } = Vue
 
       const state = reactive({
-        records: GM_getValue('records', []),
         recordsVisible: false,
         moreActionsVisible: false,
-        unhidden: GM_getValue('unhidden', false),
       })
-      const reversed = computed(() => [...state.records].reverse())
-      GM_addValueChangeListener('records', (name, oldVal, newVal) => {
-        state.records = newVal
-      })
-      GM_addValueChangeListener('unhidden', (name, oldVal, newVal) => {
-        state.unhidden = newVal
-      })
+      const { value: records, setValue: setRecords } = useGMvalue('records', [])
+      const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
+      const reversed = computed(() => [...records.value].reverse())
 
       function getHref(item) {
         if (item.href) return item.href
@@ -176,14 +171,14 @@ function createRecorder() {
         return PATH + item.hash + '?' + item.queryString
       }
       function deleteItem(item) {
-        const newRecords = [...state.records]
+        const newRecords = [...records.value]
         newRecords.find((record, index) => {
           if (record.pid === item.pid) {
             newRecords.splice(index, 1)
             return true
           }
         })
-        GM_setValue('records', newRecords)
+        setRecords(newRecords)
       }
       function copy(action, item) {
         let copyString = ''
@@ -212,11 +207,13 @@ function createRecorder() {
         state.moreActionsVisible = visible
       }
       function onUnhiddenChange(event) {
-        GM_setValue('unhidden', event.target.checked)
+        setUnhidden(event.target.checked)
       }
 
       return {
         ...toRefs(state),
+        records,
+        unhidden,
         reversed,
         getHref,
         deleteItem,
