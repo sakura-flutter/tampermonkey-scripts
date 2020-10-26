@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.6.0
+// @version      1.6.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/lanhu/index.js
@@ -74,7 +74,39 @@ function once(fn) {
 function documentLoaded(cb) {
   document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
 }
+// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+
+/**
+ * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
+ * 暂不提供GM_deleteValue
+ * @param {string} name
+ * @param {any} defaultValue
+ */
+
+function useGMvalue(name, defaultValue) {
+  const state = (0,external_Vue_namespaceObject.reactive)({
+    value: GM_getValue(name, defaultValue),
+    old: undefined,
+    name
+  });
+  (0,external_Vue_namespaceObject.onUnmounted)(() => {
+    GM_removeValueChangeListener(id);
+  });
+  const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
+    state.value = newVal;
+    state.old = oldVal;
+  });
+
+  function setValue(val) {
+    GM_setValue(name, val);
+  }
+
+  return { ...(0,external_Vue_namespaceObject.toRefs)(state),
+    setValue
+  };
+}
 // CONCATENATED MODULE: ./src/lanhu/index.js
+
 
 
 const $ = document.querySelector.bind(document);
@@ -251,18 +283,18 @@ function createRecorder() {
         computed
       } = Vue;
       const state = reactive({
-        records: GM_getValue('records', []),
         recordsVisible: false,
-        moreActionsVisible: false,
-        unhidden: GM_getValue('unhidden', false)
+        moreActionsVisible: false
       });
-      const reversed = computed(() => [...state.records].reverse());
-      GM_addValueChangeListener('records', (name, oldVal, newVal) => {
-        state.records = newVal;
-      });
-      GM_addValueChangeListener('unhidden', (name, oldVal, newVal) => {
-        state.unhidden = newVal;
-      });
+      const {
+        value: records,
+        setValue: setRecords
+      } = useGMvalue('records', []);
+      const {
+        value: unhidden,
+        setValue: setUnhidden
+      } = useGMvalue('unhidden', false);
+      const reversed = computed(() => [...records.value].reverse());
 
       function getHref(item) {
         if (item.href) return item.href; // 兼容旧版本
@@ -272,14 +304,14 @@ function createRecorder() {
       }
 
       function deleteItem(item) {
-        const newRecords = [...state.records];
+        const newRecords = [...records.value];
         newRecords.find((record, index) => {
           if (record.pid === item.pid) {
             newRecords.splice(index, 1);
             return true;
           }
         });
-        GM_setValue('records', newRecords);
+        setRecords(newRecords);
       }
 
       function copy(action, item) {
@@ -313,10 +345,12 @@ function createRecorder() {
       }
 
       function onUnhiddenChange(event) {
-        GM_setValue('unhidden', event.target.checked);
+        setUnhidden(event.target.checked);
       }
 
       return { ...toRefs(state),
+        records,
+        unhidden,
         reversed,
         getHref,
         deleteItem,
