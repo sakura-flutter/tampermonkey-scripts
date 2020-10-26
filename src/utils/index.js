@@ -31,3 +31,23 @@ export function throttle(fn, delay) {
     }
   }
 }
+
+export function once(fn) {
+  let called = false
+  return function(...args) {
+    if (called === false) {
+      called = true
+      return fn.apply(this, args)
+    }
+  }
+}
+
+/**
+ * 有些脚本是在document-start执行的，安全地获得document
+ * @param {fn} cb
+ */
+export function documentLoaded(cb) {
+  document.body
+    ? cb()
+    : window.addEventListener('DOMContentLoaded', cb)
+}
