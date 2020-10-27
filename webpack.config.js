@@ -15,6 +15,7 @@ module.exports = (env, argv) => ({
   entry: {
     lanhu: './src/lanhu',
     widescreen: './src/aggregation/widescreen',
+    tieba: './src/tieba',
   },
   output: {
     path: path.join(__dirname, 'dist'),
