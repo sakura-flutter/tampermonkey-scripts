@@ -1,0 +1,107 @@
+#inject-sign {
+  // 列表宽度
+  --container-width: 19vw;
+  // 列表距离右边距离
+  --container-right: 10px;
+
+  &.forums-hide {
+    .forums-container {
+      bottom: 0;
+      transform: translateY(calc(100% - 33px));
+    }
+
+    .control {
+      bottom: 40px;
+    }
+  }
+
+  &.cover {
+    .forums-container {
+      z-index: 9999;
+    }
+  }
+
+  // 主按钮
+  .control {
+    position: fixed;
+    display: flex;
+    z-index: 500;
+    bottom: 12px;
+    right: max(calc(var(--container-right) + var(--container-width) / 2), 150px);
+    transform: translateX(50%);
+    align-items: center;
+    user-select: none;
+    transition: bottom .3s;
+
+    button {
+      flex: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      color: #fff;
+      background: #3385ff;
+      box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    }
+
+    label {
+      margin-left: 8px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    input {
+      margin-right: 4px;
+      vertical-align: text-top;
+    }
+
+    .label-wrap {
+      display: inline-flex;
+      flex-wrap: wrap;
+      flex: 1;
+      max-width: 156px;
+      margin-left: 10px;
+    }
+  }
+
+  // 列表区域
+  .forums-container {
+    position: fixed;
+    z-index: 2;
+    bottom: 60px;
+    right: var(--container-right);
+    width: var(--container-width);
+    min-width: 280px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    background: #fafafa;
+    padding: 5px;
+    transition: transform .3s, bottom .3s;
+  }
+
+  .reverse-btn {
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+
+  ul {
+    max-height: 65vh;
+    overflow-x: hidden;
+  }
+
+  li {
+    display: flex;
+    border-bottom: 1px solid rgba(221, 221, 221, .5);
+
+    & > :nth-child(1) {
+      width:56px;
+    }
+    & > :nth-child(2) {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    & > :nth-child(3) {
+      width: 80px;
+    }
+  }
+}
