@@ -3,11 +3,46 @@
   --container-width: 19vw;
   // 列表距离右边距离
   --container-right: 10px;
+  --color-primary: #2878FF;
+  --color-primary-text: #252526;
+
+  color: var(--color-primary-text);
+
+  &.large {
+    --container-width: 21vw;
+  }
+
+  & *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: #f2f2f2;
+  }
+  & *::-webkit-scrollbar-thumb {
+    border: 0;
+    background: #c1c1c1;
+  }
+
+  a {
+    color: var(--color-primary);
+  }
+
+  button {
+    border: 1px solid #efefef;
+    padding: 1px 12px;
+    background-image: none;
+    box-shadow: 0 2px 0 rgba(0,0,0,.015);
+    transition: all .3s;
+
+    &:hover {
+      color: var(--color-primary);
+      border-color: currentColor;
+    }
+  }
 
   &.forums-hide {
     .forums-container {
       bottom: 0;
-      transform: translateY(calc(100% - 33px));
+      transform: translateY(calc(100% - 35px));
     }
 
     .control {
@@ -35,8 +70,9 @@
 
     button {
       flex: none;
-      padding: 5px 10px;
+      padding: 6px 10px;
       font-size: 14px;
+      border: none;
       color: #fff;
       background: #3385ff;
       box-shadow: 0 1px 6px rgba(0,0,0,.2);
@@ -45,6 +81,7 @@
     label {
       margin-left: 8px;
       height: 20px;
+      text-shadow: 0 1px 3px #fff;
       cursor: pointer;
     }
 
@@ -70,29 +107,65 @@
     right: var(--container-right);
     width: var(--container-width);
     min-width: 280px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background: #fafafa;
     padding: 5px;
-    transition: transform .3s, bottom .3s;
+    transition: transform .3s, bottom .3s, box-shadow .3s;
+
+    &:hover {
+      box-shadow: 0 2px 4px 3px rgba(0, 0, 0, .1);
+    }
+  }
+
+  header {
+    display: flex;
+    margin-bottom: 4px;
   }
 
   .reverse-btn {
-    display: block;
+    flex: 1;
     text-align: center;
-    width: 100%;
+  }
+
+  .resize-btn {
+    flex: none;
+    margin-left: 4px;
   }
 
   ul {
     max-height: 65vh;
     overflow-x: hidden;
+
+    &.small {
+      li {
+        padding: 0;
+      }
+    }
+    &.middle {
+      li {
+        padding: 2px 0;
+      }
+    }
+    &.large {
+      li {
+        padding: 4px 0;
+        font-size: 14px;
+      }
+    }
   }
 
   li {
     display: flex;
-    border-bottom: 1px solid rgba(221, 221, 221, .5);
+    border-bottom: 1px solid rgba(221, 221, 221, .4);
+    cursor: default;
+    transition: background-color .15s, padding .15s;
+
+    &:hover {
+      background-color: #f0f8ff;
+    }
 
     & > :nth-child(1) {
-      width:56px;
+      width: 4.7em;
     }
     & > :nth-child(2) {
       flex: 1;
@@ -101,7 +174,8 @@
       text-overflow: ellipsis;
     }
     & > :nth-child(3) {
-      width: 80px;
+      flex: none;
+      width: 6.7em;
     }
   }
 }
