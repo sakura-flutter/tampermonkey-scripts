@@ -15,8 +15,7 @@ function main() {
   const recorder = createRecorder()
 
   app.$watch('$route', function(to, from) {
-    // 无法知道页面是否渲染完毕，延时处理
-    setTimeout(autofillPassword, 500)
+    autofillPassword()
     // 蓝湖title是动态获取的，可能有延时，延时处理
     setTimeout(recorder.record, 500)
   }, { immediate: true })
@@ -24,33 +23,15 @@ function main() {
 
 /* 填充密码 */
 function autofillPassword() {
+  // 停止上次观察
+  autofillPassword.observer?.disconnect()
   if (!location.hash.startsWith('#/item/project/door')) return
   const { pid } = parseURL()
-  // 确认登录按钮   密码框
-  const [confirmEl, passwordEl] = [
-    $('#project-door .mu-raised-button-wrapper'),
-    $('#project-door .pass input'),
-  ]
-  if (!pid || !confirmEl || !passwordEl) return
-
-  const pidPassword = GM_getValue('passwords', {})[pid]
-  if (pidPassword) {
-    passwordEl.value = pidPassword
-    Toast('密码已填写')
-    confirmEl.click()
-  }
-
-  // 标记已添加事件的元素
-  if (marks.has(confirmEl)) return
-  marks.add(confirmEl)
-
-  // 点击后保存密码
-  confirmEl.addEventListener('mousedown', savePassword)
-  // 回车键保存密码
-  passwordEl.addEventListener('keydown', event => {
-    if (event.keyCode !== 13) return
-    savePassword()
-  })
+  if (!pid) return
+  // 确认登录按钮
+  let confirmEl = null
+  // 密码框
+  let passwordEl = null
 
   function savePassword() {
     const savedPassword = GM_getValue('passwords', {})
@@ -60,6 +41,44 @@ function autofillPassword() {
       [pid]: password,
     })
   }
+
+  const observer = autofillPassword.observer = new MutationObserver((mutationsList, observer) => {
+    let filled = false
+    // eslint-disable-next-line no-unused-vars
+    for (const _ of mutationsList) {
+      const [hasConfirmEl, hasPasswordEl] = [
+        $('#project-door .mu-raised-button-wrapper'),
+        $('#project-door .pass input'),
+      ]
+      if (!hasConfirmEl || !hasPasswordEl) continue
+
+      observer.disconnect()
+      confirmEl = hasConfirmEl
+      passwordEl = hasPasswordEl
+
+      const pidPassword = GM_getValue('passwords', {})[pid]
+      // 确保本次内只进行一次操作
+      if (filled === false && pidPassword) {
+        filled = true
+        passwordEl.value = pidPassword
+        Toast('密码已填写')
+        confirmEl.click()
+      }
+
+      // 标记已添加事件的元素
+      if (marks.has(confirmEl)) break
+      marks.add(confirmEl)
+
+      // 点击后保存密码
+      confirmEl.addEventListener('mousedown', savePassword)
+      // 回车键保存密码
+      passwordEl.addEventListener('keydown', event => {
+        if (event.keyCode !== 13) return
+        savePassword()
+      })
+    }
+  })
+  observer.observe(document.body, { childList: true, subtree: true })
 }
 
 /* 更新侧边栏高度 */
