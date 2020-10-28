@@ -1,10 +1,10 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         百度贴吧签到
-// @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      3.0.0
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/tieba/index.js
 // @license      GPL-3.0
 // @compatible   chrome >= Latest
 // @compatible   firefox >= Latest

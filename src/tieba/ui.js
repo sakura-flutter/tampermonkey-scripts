@@ -1,4 +1,4 @@
-import { createApp, getCurrentInstance, toRefs, reactive, computed } from 'vue'
+import { createApp, toRefs, reactive, computed } from 'vue'
 import { useGMvalue } from '@/composition/use-gm-value'
 import './styles.scss'
 
@@ -9,10 +9,23 @@ export function createUI({
   runByBDUSS,
   runByWeb,
 }) {
+  const sizeTick = (function * () {
+    const sizes = ['small', 'middle', 'large']
+    let currSize = store.size ?? 'small'
+    let index = sizes.findIndex(v => v === currSize)
+    while (true) {
+      (index >= sizes.length) && (index = 0)
+      currSize = sizes[index++]
+      store.size = currSize
+      yield currSize
+    }
+  })()
+
   const app = createApp({
     render() {
       const {
         loading,
+        size,
         isComplete,
         isForumsHide,
         isCover,
@@ -24,12 +37,13 @@ export function createUI({
         setComplete,
         setForumsHide,
         setCover,
+        changeReverse,
+        changeSize,
         onSimulateChange,
-        onReverseChange,
       } = this
 
       return (
-        <div id="inject-sign" class={{ 'forums-hide': isForumsHide, cover: isCover }}>
+        <div id="inject-sign" class={{ 'forums-hide': isForumsHide, cover: isCover, [size]: true }}>
           <div class="control">
             <button
               disabled={loading}
@@ -81,13 +95,18 @@ export function createUI({
 
           {
             likeForums.length > 0 && <div class="forums-container">
-              <button class="reverse-btn" onClick={onReverseChange}>
-                {isReverse ? '已倒序' : '普通'}
-                <span title="已签/总数">
-                  {counter.sign}/{counter.total}
-                </span>
-              </button>
-              <ul>
+              <header class="top-btns">
+                <button class="reverse-btn" onClick={changeReverse}>
+                  {isReverse ? '已倒序' : '普通'}
+                  <span title="已签/总数">
+                    {counter.sign}/{counter.total}
+                  </span>
+                </button>
+                <button class="resize-btn" onClick={changeSize}>
+                大小
+                </button>
+              </header>
+              <ul class={{ [size]: true }}>
                 {
                   diaplayForums.map(item => (
                     <li key={item.forum_id}>
@@ -114,9 +133,9 @@ export function createUI({
       )
     },
     setup() {
-      const internalInstance = getCurrentInstance()
       const state = reactive({
         loading: false,
+        size: sizeTick.next().value,
         isSimulate: false,
         isReverse: store.is_reverse || false,
         likeForums: [],
@@ -124,27 +143,29 @@ export function createUI({
       const { value: isComplete, setValue: setComplete } = useGMvalue('is_complete', false)
       const { value: isForumsHide, setValue: setForumsHide } = useGMvalue('is_forums_hide', false)
       const { value: isCover, setValue: setCover } = useGMvalue('is_cover', false)
-      const diaplayForums = computed(() => {
-        return state.isReverse ? Object.freeze([...state.likeForums].reverse()) : state.likeForums
-      })
-      const counter = computed(() => {
-        return {
-          total: state.likeForums.length,
-          sign: state.likeForums.filter(({ is_sign }) => is_sign).length,
-        }
-      })
+      const diaplayForums = computed(() => state.isReverse ? [...state.likeForums].reverse() : state.likeForums)
+      const counter = computed(() => ({
+        total: state.likeForums.length,
+        sign: state.likeForums.filter(({ is_sign }) => is_sign).length,
+      }))
 
       // 勾选模拟APP并且确认有BDUSS 才算开启
       if (store.is_simulate && store.BDUSS) {
         state.isSimulate = true
       }
+      // 自动签到
       if (isComplete.value) {
         run()
       }
 
       function run() {
         state.loading = true
-        ;(state.isSimulate ? runByBDUSS : runByWeb)(internalInstance.ctx).finally(() => {
+        // TODO: 应该有更好的实现方法
+        const exportApi = {
+          updateLikeForum,
+          checkUnsign,
+        }
+        ;(state.isSimulate ? runByBDUSS : runByWeb)(exportApi).finally(() => {
           state.loading = false
         })
       }
@@ -170,6 +191,13 @@ export function createUI({
           return 0
         })
       }
+      function changeReverse() {
+        state.isReverse = !state.isReverse
+        store.is_reverse = state.isReverse
+      }
+      function changeSize() {
+        state.size = sizeTick.next().value
+      }
       function onSimulateChange({ target: { checked } }) {
         store.is_simulate = checked
         if (!checked) return
@@ -183,10 +211,6 @@ export function createUI({
           state.isSimulate = false
           store.is_simulate = false
         }
-      }
-      function onReverseChange() {
-        state.isReverse = !state.isReverse
-        store.is_reverse = state.isReverse
       }
 
       return {
@@ -203,8 +227,9 @@ export function createUI({
         setComplete,
         setForumsHide,
         setCover,
+        changeReverse,
+        changeSize,
         onSimulateChange,
-        onReverseChange,
       }
     },
   })
