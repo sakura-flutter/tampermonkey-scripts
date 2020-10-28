@@ -5,6 +5,7 @@ const $ = document.querySelector.bind(document)
 const marks = new WeakSet()
 
 function main() {
+  updateStorage()
   fixBarHeight()
 
   const app = $('.whole').__vue__
@@ -107,7 +108,6 @@ function createRecorder() {
         moreActionsVisible,
         toggle,
         toggleMoreActions,
-        getHref,
         deleteItem,
         copy,
         onUnhiddenChange,
@@ -135,7 +135,7 @@ function createRecorder() {
                   reversed.map(item => (
                     <li key={item.pid}>
                       <a
-                        href={getHref(item)}
+                        href={item.href}
                         title={item.title}
                         target="_blank">
                         {item.title}
@@ -183,12 +183,6 @@ function createRecorder() {
       const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
       const reversed = computed(() => [...records.value].reverse())
 
-      function getHref(item) {
-        if (item.href) return item.href
-        // 兼容旧版本
-        const PATH = 'https://lanhuapp.com/web/'
-        return PATH + item.hash + '?' + item.queryString
-      }
       function deleteItem(item) {
         const newRecords = [...records.value]
         newRecords.find((record, index) => {
@@ -203,10 +197,9 @@ function createRecorder() {
         let copyString = ''
         const password = GM_getValue('passwords', {})[item.pid]
         if (action === 'all') {
-          const href = getHref(item)
           copyString += `${item.title}`
           password && (copyString += ` (密码：${password})`)
-          copyString += `\n${href}`
+          copyString += `\n${item.href}`
         } else if (action === 'pwd') {
           if (password) {
             copyString += password
@@ -234,7 +227,6 @@ function createRecorder() {
         records,
         unhidden,
         reversed,
-        getHref,
         deleteItem,
         copy,
         toggle,
@@ -388,6 +380,26 @@ function createRecorder() {
 
   return {
     record,
+  }
+}
+
+// 将已保存的旧格式替换为新数据格式
+function updateStorage() {
+  const records = GM_getValue('records')
+  if (!records) return
+  let hasDiff = false
+  const newRecords = records.map(record => {
+    if (record.href) return record
+    hasDiff = true
+    const PATH = 'https://lanhuapp.com/web/'
+    const { hash, queryString, ...rest } = record
+    return {
+      href: PATH + hash + '?' + queryString,
+      ...rest,
+    }
+  })
+  if (hasDiff) {
+    GM_setValue('records', newRecords)
   }
 }
 
