@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.6.1
+// @version      1.7.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/lanhu/index.js
@@ -15,7 +15,7 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @require      https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.runtime.global.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=862073
 // ==/UserScript==
 
@@ -25,18 +25,39 @@
 // CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
 // CONCATENATED MODULE: ./src/utils/index.js
-function parseURL(search = location.search) {
-  if (!search) {
-    // 主要处理对hash的search
-    if (location.hash.includes('?')) {
-      search = location.hash.split('?')[1];
-    }
+/**
+ * 解析url上的参数
+ * @param {string} href 或 带有参数格式的string；有search则不再hash
+ * @return {object}
+ */
+function parseURL(href = location.href) {
+  if (!href) return {};
+  let search;
 
-    if (!search) return {};
+  try {
+    // 链接
+    const url = new URL(href);
+    ({
+      search
+    } = url); // 主要处理对hash的search
+
+    if (!search && url.hash.includes('?')) {
+      search = url.hash.split('?')[1];
+    }
+  } catch {
+    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
+    if (href.includes('?')) {
+      search = href.split('?')[1];
+    } else {
+      search = href;
+    }
   }
 
   const searchParams = new URLSearchParams(search);
   return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+}
+function stringifyURL(obj) {
+  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
 }
 function throttle(fn, delay) {
   var t = null;
@@ -73,6 +94,21 @@ function once(fn) {
 
 function documentLoaded(cb) {
   document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
+}
+/**
+ * 延时
+ * @param {number} ms 毫秒数
+ */
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function toFormData(params = {}) {
+  const formData = new FormData();
+
+  for (const [key, value] of Object.entries(params)) {
+    formData.append(key, value);
+  }
+
+  return formData;
 }
 // CONCATENATED MODULE: ./src/composition/use-gm-value.js
 
@@ -113,6 +149,7 @@ const $ = document.querySelector.bind(document);
 const marks = new WeakSet();
 
 function main() {
+  updateStorage();
   fixBarHeight();
 
   const app = $('.whole').__vue__;
@@ -124,8 +161,7 @@ function main() {
 
   const recorder = createRecorder();
   app.$watch('$route', function (to, from) {
-    // 无法知道页面是否渲染完毕，延时处理
-    setTimeout(autofillPassword, 500); // 蓝湖title是动态获取的，可能有延时，延时处理
+    autofillPassword(); // 蓝湖title是动态获取的，可能有延时，延时处理
 
     setTimeout(recorder.record, 500);
   }, {
@@ -136,31 +172,17 @@ function main() {
 
 
 function autofillPassword() {
+  // 停止上次观察
+  autofillPassword.observer?.disconnect();
   if (!location.hash.startsWith('#/item/project/door')) return;
   const {
     pid
-  } = parseURL(); // 确认登录按钮   密码框
+  } = parseURL();
+  if (!pid) return; // 确认登录按钮
 
-  const [confirmEl, passwordEl] = [$('#project-door .mu-raised-button-wrapper'), $('#project-door .pass input')];
-  if (!pid || !confirmEl || !passwordEl) return;
-  const pidPassword = GM_getValue('passwords', {})[pid];
+  let confirmEl = null; // 密码框
 
-  if (pidPassword) {
-    passwordEl.value = pidPassword;
-    Toast('密码已填写');
-    confirmEl.click();
-  } // 标记已添加事件的元素
-
-
-  if (marks.has(confirmEl)) return;
-  marks.add(confirmEl); // 点击后保存密码
-
-  confirmEl.addEventListener('mousedown', savePassword); // 回车键保存密码
-
-  passwordEl.addEventListener('keydown', event => {
-    if (event.keyCode !== 13) return;
-    savePassword();
-  });
+  let passwordEl = null;
 
   function savePassword() {
     const savedPassword = GM_getValue('passwords', {});
@@ -169,6 +191,41 @@ function autofillPassword() {
       [pid]: password
     });
   }
+
+  const observer = autofillPassword.observer = new MutationObserver((mutationsList, observer) => {
+    let filled = false; // eslint-disable-next-line no-unused-vars
+
+    for (const _ of mutationsList) {
+      const [hasConfirmEl, hasPasswordEl] = [$('#project-door .mu-raised-button-wrapper'), $('#project-door .pass input')];
+      if (!hasConfirmEl || !hasPasswordEl) continue;
+      observer.disconnect();
+      confirmEl = hasConfirmEl;
+      passwordEl = hasPasswordEl;
+      const pidPassword = GM_getValue('passwords', {})[pid]; // 确保本次内只进行一次操作
+
+      if (filled === false && pidPassword) {
+        filled = true;
+        passwordEl.value = pidPassword;
+        Toast('密码已填写');
+        confirmEl.click();
+      } // 标记已添加事件的元素
+
+
+      if (marks.has(confirmEl)) break;
+      marks.add(confirmEl); // 点击后保存密码
+
+      confirmEl.addEventListener('mousedown', savePassword); // 回车键保存密码
+
+      passwordEl.addEventListener('keydown', event => {
+        if (event.keyCode !== 13) return;
+        savePassword();
+      });
+    }
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 }
 /* 更新侧边栏高度 */
 
@@ -201,7 +258,6 @@ function createRecorder() {
         moreActionsVisible,
         toggle,
         toggleMoreActions,
-        getHref,
         deleteItem,
         copy,
         onUnhiddenChange
@@ -229,7 +285,7 @@ function createRecorder() {
           default: () => [reversed.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
             "key": item.pid
           }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-            "href": getHref(item),
+            "href": item.href,
             "title": item.title,
             "target": "_blank"
           }, [item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
@@ -296,13 +352,6 @@ function createRecorder() {
       } = useGMvalue('unhidden', false);
       const reversed = computed(() => [...records.value].reverse());
 
-      function getHref(item) {
-        if (item.href) return item.href; // 兼容旧版本
-
-        const PATH = 'https://lanhuapp.com/web/';
-        return PATH + item.hash + '?' + item.queryString;
-      }
-
       function deleteItem(item) {
         const newRecords = [...records.value];
         newRecords.find((record, index) => {
@@ -319,10 +368,9 @@ function createRecorder() {
         const password = GM_getValue('passwords', {})[item.pid];
 
         if (action === 'all') {
-          const href = getHref(item);
           copyString += `${item.title}`;
           password && (copyString += ` (密码：${password})`);
-          copyString += `\n${href}`;
+          copyString += `\n${item.href}`;
         } else if (action === 'pwd') {
           if (password) {
             copyString += password;
@@ -352,7 +400,6 @@ function createRecorder() {
         records,
         unhidden,
         reversed,
-        getHref,
         deleteItem,
         copy,
         toggle,
@@ -508,6 +555,31 @@ function createRecorder() {
   return {
     record
   };
+} // 将已保存的旧格式替换为新数据格式
+
+
+function updateStorage() {
+  const records = GM_getValue('records');
+  if (!records) return;
+  let hasDiff = false;
+  const newRecords = records.map(record => {
+    if (record.href) return record;
+    hasDiff = true;
+    const PATH = 'https://lanhuapp.com/web/';
+    const {
+      hash,
+      queryString,
+      ...rest
+    } = record;
+    return {
+      href: PATH + hash + '?' + queryString,
+      ...rest
+    };
+  });
+
+  if (hasDiff) {
+    GM_setValue('records', newRecords);
+  }
 }
 
 main();

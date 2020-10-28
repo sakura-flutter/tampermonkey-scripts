@@ -41,7 +41,7 @@
 // @grant        GM_listValues
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.2/vue.runtime.global.prod.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global.prod.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=862073
 // ==/UserScript==
 
@@ -51,18 +51,39 @@
 // CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
 // CONCATENATED MODULE: ./src/utils/index.js
-function parseURL(search = location.search) {
-  if (!search) {
-    // 主要处理对hash的search
-    if (location.hash.includes('?')) {
-      search = location.hash.split('?')[1];
-    }
+/**
+ * 解析url上的参数
+ * @param {string} href 或 带有参数格式的string；有search则不再hash
+ * @return {object}
+ */
+function parseURL(href = location.href) {
+  if (!href) return {};
+  let search;
 
-    if (!search) return {};
+  try {
+    // 链接
+    const url = new URL(href);
+    ({
+      search
+    } = url); // 主要处理对hash的search
+
+    if (!search && url.hash.includes('?')) {
+      search = url.hash.split('?')[1];
+    }
+  } catch {
+    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
+    if (href.includes('?')) {
+      search = href.split('?')[1];
+    } else {
+      search = href;
+    }
   }
 
   const searchParams = new URLSearchParams(search);
   return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+}
+function stringifyURL(obj) {
+  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
 }
 function throttle(fn, delay) {
   var t = null;
@@ -99,6 +120,21 @@ function once(fn) {
 
 function documentLoaded(cb) {
   document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
+}
+/**
+ * 延时
+ * @param {number} ms 毫秒数
+ */
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function toFormData(params = {}) {
+  const formData = new FormData();
+
+  for (const [key, value] of Object.entries(params)) {
+    formData.append(key, value);
+  }
+
+  return formData;
 }
 // CONCATENATED MODULE: ./src/composition/use-gm-value.js
 
