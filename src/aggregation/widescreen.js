@@ -630,7 +630,7 @@ handlers.set('tiebaForum', function() {
           display: flex;
         }
         .threadlist_detail .pull_left {
-          flex: 1;
+          flex: auto;
         }
         .threadlist_detail .pull_left .threadlist_abs {
           width: 97%;
