@@ -1,6 +1,8 @@
 import { createApp, toRefs, reactive, computed } from 'vue'
 import { useGMvalue } from '@/composition/use-gm-value'
-import './styles.scss'
+// eslint-disable-next-line no-unused-vars
+import { Input } from '@/components'
+import './ui.scss'
 
 /* eslint-disable camelcase */
 
@@ -9,8 +11,13 @@ export function createUI({
   runByBDUSS,
   runByWeb,
 }) {
+  // 兼容性：名称字段更换 middle -> normal
+  if (store.size === 'middle') {
+    store.size = 'normal'
+  }
+
   const sizeTick = (function * () {
-    const sizes = ['small', 'middle', 'large']
+    const sizes = ['small', 'normal', 'large']
     let currSize = store.size ?? 'small'
     let index = sizes.findIndex(v => v === currSize)
     while (true) {
@@ -26,6 +33,7 @@ export function createUI({
       const {
         loading,
         size,
+        keyword,
         isComplete,
         isForumsHide,
         isCover,
@@ -34,6 +42,7 @@ export function createUI({
         likeForums,
         diaplayForums,
         run,
+        setKeyword,
         setComplete,
         setForumsHide,
         setCover,
@@ -103,16 +112,13 @@ export function createUI({
                   </span>
                 </button>
                 <button class="resize-btn" onClick={changeSize}>
-                大小
+                  大小
                 </button>
               </header>
               <ul class={{ [size]: true }}>
                 {
                   diaplayForums.map(item => (
                     <li key={item.forum_id}>
-                      <span title={item.level_name}>
-                        {item.user_level}级{item.is_sign ? ' √' : ''}{item.sign_bonus_point ? ('+' + item.sign_bonus_point) : ''}
-                      </span>
                       <a
                         href={'/f?kw=' + item.forum_name}
                         title={item.forum_name}
@@ -120,13 +126,27 @@ export function createUI({
                       >
                         {item.forum_name}
                       </a>
-                      <span title={'距离升级' + (item.levelup_score - item.user_exp)}>
+                      <span class="signed">{item.is_sign ? ' √' : ''}</span>
+                      <span class="level" title={item.level_name}>
+                        {item.user_level}级
+                      </span>
+                      <span class="gain">{item.sign_bonus_point ? ('+' + item.sign_bonus_point) : ''}</span>
+                      <span class="exp" title={'距离升级' + (item.levelup_score - item.user_exp)}>
                         {item.user_exp}/{item.levelup_score}
                       </span>
                     </li>
                   ))
                 }
               </ul>
+              {
+                likeForums.length > 25 && <Input
+                  value={keyword}
+                  placeholder="搜索"
+                  size="small"
+                  scale
+                  onInput={event => setKeyword(event.target.value)}
+                />
+              }
             </div>
           }
         </div>
@@ -140,10 +160,18 @@ export function createUI({
         isReverse: store.is_reverse || false,
         likeForums: [],
       })
+      const { value: keyword, setValue: setKeyword } = useGMvalue('keyword', '')
       const { value: isComplete, setValue: setComplete } = useGMvalue('is_complete', false)
       const { value: isForumsHide, setValue: setForumsHide } = useGMvalue('is_forums_hide', false)
       const { value: isCover, setValue: setCover } = useGMvalue('is_cover', false)
-      const diaplayForums = computed(() => state.isReverse ? [...state.likeForums].reverse() : state.likeForums)
+      const diaplayForums = computed(() => {
+        let ectype = [...state.likeForums]
+        state.isReverse && ectype.reverse()
+        if (keyword.value) {
+          ectype = ectype.filter(forum => forum.forum_name.includes(keyword.value))
+        }
+        return ectype
+      })
       const counter = computed(() => ({
         total: state.likeForums.length,
         sign: state.likeForums.filter(({ is_sign }) => is_sign).length,
@@ -215,6 +243,7 @@ export function createUI({
 
       return {
         ...toRefs(state),
+        keyword,
         isComplete,
         isForumsHide,
         isCover,
@@ -224,6 +253,7 @@ export function createUI({
         setLikeForums,
         updateLikeForum,
         checkUnsign,
+        setKeyword,
         setComplete,
         setForumsHide,
         setCover,
