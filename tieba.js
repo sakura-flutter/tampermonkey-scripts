@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.0.0
+// @version      3.1.0
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/tieba/index.js
@@ -100,7 +100,7 @@ module.exports = function (cssWithMappingToString) {
 
 /***/ }),
 
-/***/ 197:
+/***/ 261:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -112,7 +112,26 @@ module.exports = function (cssWithMappingToString) {
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#inject-sign{--container-width: 19vw;--container-right: 10px;--color-primary: #2878FF;--color-primary-text: #252526;color:var(--color-primary-text)}#inject-sign.large{--container-width: 21vw}#inject-sign *::-webkit-scrollbar{width:8px;height:8px;background:#f2f2f2}#inject-sign *::-webkit-scrollbar-thumb{border:0;background:#c1c1c1}#inject-sign a{color:var(--color-primary)}#inject-sign button{border:1px solid #efefef;padding:1px 12px;background-image:none;box-shadow:0 2px 0 rgba(0,0,0,.015);transition:all .3s}#inject-sign button:hover{color:var(--color-primary);border-color:currentColor}#inject-sign.forums-hide .forums-container{bottom:0;transform:translateY(calc(100% - 35px))}#inject-sign.forums-hide .control{bottom:40px}#inject-sign.cover .forums-container{z-index:9999}#inject-sign .control{position:fixed;display:flex;z-index:500;bottom:12px;right:max(calc(var(--container-right) + var(--container-width) / 2), 150px);transform:translateX(50%);align-items:center;user-select:none;transition:bottom .3s}#inject-sign .control button{flex:none;padding:6px 10px;font-size:14px;border:none;color:#fff;background:#3385ff;box-shadow:0 1px 6px rgba(0,0,0,.2)}#inject-sign .control label{margin-left:8px;height:20px;text-shadow:0 1px 3px #fff;cursor:pointer}#inject-sign .control input{margin-right:4px;vertical-align:text-top}#inject-sign .control .label-wrap{display:inline-flex;flex-wrap:wrap;flex:1;max-width:156px;margin-left:10px}#inject-sign .forums-container{position:fixed;z-index:2;bottom:60px;right:var(--container-right);width:var(--container-width);min-width:280px;box-shadow:0 2px 4px rgba(0,0,0,.2);background:#fafafa;padding:5px;transition:transform .3s,bottom .3s,box-shadow .3s}#inject-sign .forums-container:hover{box-shadow:0 2px 4px 3px rgba(0,0,0,.1)}#inject-sign header{display:flex;margin-bottom:4px}#inject-sign .reverse-btn{flex:1;text-align:center}#inject-sign .resize-btn{flex:none;margin-left:4px}#inject-sign ul{max-height:65vh;overflow-x:hidden}#inject-sign ul.small li{padding:0}#inject-sign ul.middle li{padding:2px 0}#inject-sign ul.large li{padding:4px 0;font-size:14px}#inject-sign li{display:flex;border-bottom:1px solid rgba(221,221,221,.4);cursor:default;transition:background-color .15s,padding .15s}#inject-sign li:hover{background-color:#f0f8ff}#inject-sign li>:nth-child(1){width:4.7em}#inject-sign li>:nth-child(2){flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#inject-sign li>:nth-child(3){flex:none;width:6.7em}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 519:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(705);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color:#909399}#inject-sign{--container-width: 19vw;--container-right: 10px;box-sizing:border-box;color:var(--skr-text-regular-color)}#inject-sign [class*=skr-]{box-sizing:border-box}#inject-sign.normal,#inject-sign.large{--container-width: 21vw}#inject-sign *::-webkit-scrollbar{width:8px;height:8px;background:#f2f2f2}#inject-sign *::-webkit-scrollbar-thumb{border:0;background:#c1c1c1}#inject-sign a{color:var(--skr-primary-color)}#inject-sign button{border:1px solid #efefef;padding:1px 12px;color:inherit;background-image:none;box-shadow:0 2px 0 rgba(0,0,0,.015);transition:all .3s}#inject-sign button:hover{color:var(--skr-primary-color);border-color:currentColor}#inject-sign.forums-hide .forums-container{bottom:0;transform:translateY(calc(100% - 35px))}#inject-sign.forums-hide .control{bottom:40px}#inject-sign.cover .forums-container{z-index:9999}#inject-sign .control{position:fixed;display:flex;z-index:500;bottom:12px;right:max(calc(var(--container-right) + var(--container-width) / 2), 150px);transform:translateX(50%);align-items:center;user-select:none;transition:bottom .3s}#inject-sign .control button{flex:none;padding:6px 10px;font-size:14px;border:none;color:#fff;background:var(--skr-primary-color);box-shadow:0 1px 6px rgba(0,0,0,.2)}#inject-sign .control label{margin-left:8px;height:20px;text-shadow:0 1px 3px #fff;cursor:pointer}#inject-sign .control input{margin-right:4px;vertical-align:text-top}#inject-sign .control .label-wrap{display:inline-flex;flex-wrap:wrap;flex:1;max-width:156px;margin-left:10px}#inject-sign .forums-container{position:fixed;display:flex;flex-direction:column;z-index:2;bottom:60px;right:var(--container-right);width:var(--container-width);min-width:280px;max-height:calc(100vh - 124px);box-shadow:0 2px 4px rgba(0,0,0,.2);background:#fafafa;padding:5px;transition:transform .3s,bottom .3s,box-shadow .3s}#inject-sign .forums-container:hover{box-shadow:0 2px 4px 3px rgba(0,0,0,.1)}#inject-sign header{display:flex;margin-bottom:4px}#inject-sign .reverse-btn{flex:1;text-align:center}#inject-sign .resize-btn{flex:none;margin-left:4px}#inject-sign ul{overflow-x:hidden}#inject-sign ul.small li{height:24px}#inject-sign ul.normal li{height:28px;font-size:13px}#inject-sign ul.large li{height:32px;font-size:14px}#inject-sign li{display:flex;border-bottom:1px solid rgba(221,221,221,.4);cursor:default;transition:height .15s}#inject-sign li:hover{background-color:#f0f8ff}#inject-sign li>*{line-height:2.325em}#inject-sign li a{flex:1;padding-left:.2em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#inject-sign li .signed{width:.9em}#inject-sign li .level{width:2.4em}#inject-sign li .gain{width:1.8em}#inject-sign li .exp{flex:none;width:6.7em}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -630,19 +649,11 @@ function createStore() {
 /* harmony default export */ const store = (createStore());
 // CONCATENATED MODULE: ./src/tieba/signature.js
 /* global MD5 */
-// 模拟的app版本
 const FAKE_VERSION = '11.8.8.0';
-/**
- * 模拟APP参数
- * @param {object} obj
- * @return {object}
- */
-
 function makeFakeParams(obj) {
   return Object.assign({
-    // 以下可选参数 为了模拟更加真实
     _client_type: 4,
-    // 不要更改
+    // prohibit
     _client_version: FAKE_VERSION,
     _phone_imei: '0'.repeat(15),
     model: 'HUAWEI P40',
@@ -657,25 +668,14 @@ function makeFakeParams(obj) {
     timestamp: Date.now()
   }, obj);
 }
-/**
- * 贴吧参数签名函数
- * @param {object} payload
- * @param {boolean} isFake true时会加入模拟APP参数
- * @return {string}
- */
-
 function signature(payload, isFake = true) {
   if (isFake) {
     payload = makeFakeParams(payload);
-  } // 提交内容所有name-value按照name的字典序升序排列
+  }
 
-
-  const sortKeys = Object.keys(payload).sort(); // 所有内容按照key=value拼接
-
-  let str = sortKeys.reduce((acc, key) => acc += `${key}=${payload[key]}`, ''); // 拼接后补充
-
-  str += 'tiebaclient!!!'; // 最后以UTF-8编码进行MD5
-
+  const sortKeys = Object.keys(payload).sort();
+  let str = sortKeys.reduce((acc, key) => acc += `${key}=${payload[key]}`, '');
+  str += 'tiebaclient!!!';
   return MD5(str);
 }
 // CONCATENATED MODULE: ./src/tieba/api.js
@@ -689,7 +689,10 @@ function signature(payload, isFake = true) {
 
 function GMRequest(url, options) {
   return new Promise((resolve, reject) => {
-    GM_xmlhttpRequest({ ...options,
+    GM_xmlhttpRequest({
+      timeout: 1000 * 15,
+      // 15s超时，0点高峰期失败概率大，BD是1分钟超时，实际上不必等这么久
+      ...options,
       url,
 
       onload(res) {
@@ -831,9 +834,9 @@ function useGMvalue(name, defaultValue) {
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(379);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/tieba/styles.scss
-var styles = __webpack_require__(197);
-// CONCATENATED MODULE: ./src/tieba/styles.scss
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
+var input = __webpack_require__(261);
+// CONCATENATED MODULE: ./src/components/input/index.scss
 
             
 
@@ -842,12 +845,74 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = injectStylesIntoStyleTag_default()(styles/* default */.Z, options);
+var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 
 
-/* harmony default export */ const tieba_styles = (styles/* default.locals */.Z.locals || {});
+/* harmony default export */ const components_input = (input/* default.locals */.Z.locals || {});
+// CONCATENATED MODULE: ./src/components/input/index.js
+
+
+const prefixCls = 'skr-input';
+const Input = (0,external_Vue_namespaceObject.defineComponent)({
+  name: 'skr-input',
+  props: {
+    modelValue: {
+      type: [String, Number],
+      default: ''
+    },
+    size: {
+      type: String,
+      validator: value => ['small', 'normal', 'large'].includes(value),
+      default: 'normal'
+    },
+    scale: {
+      type: Boolean,
+      default: false
+    }
+  },
+  emit: ['update:modelValue'],
+
+  setup(props, {
+    emit
+  }) {
+    const {
+      scale,
+      modelValue
+    } = props;
+    return () => (0,external_Vue_namespaceObject.createVNode)("input", {
+      "class": [{
+        [`${prefixCls}--scale`]: scale
+      }, `${prefixCls}--${props.size}`, prefixCls],
+      "value": modelValue,
+      "type": "text",
+      "onInput": event => emit('update:modelValue', event.target.value)
+    }, null);
+  }
+
+});
+/* harmony default export */ const src_components_input = (Input);
+// CONCATENATED MODULE: ./src/components/index.js
+
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/tieba/ui.scss
+var ui = __webpack_require__(519);
+// CONCATENATED MODULE: ./src/tieba/ui.scss
+
+            
+
+var ui_options = {};
+
+ui_options.insert = "head";
+ui_options.singleton = false;
+
+var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options);
+
+
+
+/* harmony default export */ const tieba_ui = (ui/* default.locals */.Z.locals || {});
 // CONCATENATED MODULE: ./src/tieba/ui.js
+
+ // eslint-disable-next-line no-unused-vars
 
 
 
@@ -858,8 +923,13 @@ function createUI({
   runByBDUSS,
   runByWeb
 }) {
+  // 兼容性：名称字段更换 middle -> normal
+  if (store.size === 'middle') {
+    store.size = 'normal';
+  }
+
   const sizeTick = function* () {
-    const sizes = ['small', 'middle', 'large'];
+    const sizes = ['small', 'normal', 'large'];
     let currSize = store.size ?? 'small';
     let index = sizes.findIndex(v => v === currSize);
 
@@ -876,6 +946,7 @@ function createUI({
       const {
         loading,
         size,
+        keyword,
         isComplete,
         isForumsHide,
         isCover,
@@ -884,6 +955,7 @@ function createUI({
         likeForums,
         diaplayForums,
         run,
+        setKeyword,
         setComplete,
         setForumsHide,
         setCover,
@@ -947,15 +1019,27 @@ function createUI({
         }
       }, [diaplayForums.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
         "key": item.forum_id
-      }, [(0,external_Vue_namespaceObject.createVNode)("span", {
-        "title": item.level_name
-      }, [item.user_level, (0,external_Vue_namespaceObject.createTextVNode)("\u7EA7"), item.is_sign ? ' √' : '', item.sign_bonus_point ? '+' + item.sign_bonus_point : '']), (0,external_Vue_namespaceObject.createVNode)("a", {
+      }, [(0,external_Vue_namespaceObject.createVNode)("a", {
         "href": '/f?kw=' + item.forum_name,
         "title": item.forum_name,
         "target": "_blank"
       }, [item.forum_name]), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "signed"
+      }, [item.is_sign ? ' √' : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "level",
+        "title": item.level_name
+      }, [item.user_level, (0,external_Vue_namespaceObject.createTextVNode)("\u7EA7")]), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "gain"
+      }, [item.sign_bonus_point ? '+' + item.sign_bonus_point : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "exp",
         "title": '距离升级' + (item.levelup_score - item.user_exp)
-      }, [item.user_exp, (0,external_Vue_namespaceObject.createTextVNode)("/"), item.levelup_score])]))])])]);
+      }, [item.user_exp, (0,external_Vue_namespaceObject.createTextVNode)("/"), item.levelup_score])]))]), likeForums.length > 25 && (0,external_Vue_namespaceObject.createVNode)(src_components_input, {
+        "value": keyword,
+        "placeholder": "搜索",
+        "size": "small",
+        "scale": true,
+        "onInput": event => setKeyword(event.target.value)
+      }, null)])]);
     },
 
     setup() {
@@ -966,6 +1050,10 @@ function createUI({
         isReverse: store.is_reverse || false,
         likeForums: []
       });
+      const {
+        value: keyword,
+        setValue: setKeyword
+      } = useGMvalue('keyword', '');
       const {
         value: isComplete,
         setValue: setComplete
@@ -978,7 +1066,16 @@ function createUI({
         value: isCover,
         setValue: setCover
       } = useGMvalue('is_cover', false);
-      const diaplayForums = (0,external_Vue_namespaceObject.computed)(() => state.isReverse ? [...state.likeForums].reverse() : state.likeForums);
+      const diaplayForums = (0,external_Vue_namespaceObject.computed)(() => {
+        let ectype = [...state.likeForums];
+        state.isReverse && ectype.reverse();
+
+        if (keyword.value) {
+          ectype = ectype.filter(forum => forum.forum_name.includes(keyword.value));
+        }
+
+        return ectype;
+      });
       const counter = (0,external_Vue_namespaceObject.computed)(() => ({
         total: state.likeForums.length,
         sign: state.likeForums.filter(({
@@ -1064,6 +1161,7 @@ function createUI({
       }
 
       return { ...(0,external_Vue_namespaceObject.toRefs)(state),
+        keyword,
         isComplete,
         isForumsHide,
         isCover,
@@ -1073,6 +1171,7 @@ function createUI({
         setLikeForums,
         updateLikeForum,
         checkUnsign,
+        setKeyword,
         setComplete,
         setForumsHide,
         setCover,
@@ -1288,10 +1387,7 @@ async function runByBDUSS(ui) {
   }
 
   toast.close();
-  failCount ? Toast.warning({
-    content: `签到成功，失败${failCount}个`,
-    duration: 0
-  }) : Toast.success('签到成功');
+  failCount ? Toast.warning(`签到成功，失败${failCount}个`, 0) : Toast.success('签到成功');
   ui.checkUnsign();
 } // 网页签到 经验没客户端那么多 但不需要获得BDUSS只需贴吧已登录即可
 
