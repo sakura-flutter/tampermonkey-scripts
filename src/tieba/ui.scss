@@ -1,14 +1,16 @@
+@import "~@/components/var.scss";
+
 #inject-sign {
+  @import "~@/components/reset";
   // 列表宽度
   --container-width: 19vw;
   // 列表距离右边距离
   --container-right: 10px;
-  --color-primary: #2878FF;
-  --color-primary-text: #252526;
 
-  color: var(--color-primary-text);
+  box-sizing: border-box;
+  color: var(--skr-text-regular-color);
 
-  &.large {
+  &.normal, &.large {
     --container-width: 21vw;
   }
 
@@ -23,18 +25,19 @@
   }
 
   a {
-    color: var(--color-primary);
+    color: var(--skr-primary-color);
   }
 
   button {
     border: 1px solid #efefef;
     padding: 1px 12px;
+    color: inherit;
     background-image: none;
-    box-shadow: 0 2px 0 rgba(0,0,0,.015);
-    transition: all .3s;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
+    transition: all 0.3s;
 
     &:hover {
-      color: var(--color-primary);
+      color: var(--skr-primary-color);
       border-color: currentColor;
     }
   }
@@ -62,11 +65,14 @@
     display: flex;
     z-index: 500;
     bottom: 12px;
-    right: max(calc(var(--container-right) + var(--container-width) / 2), 150px);
+    right: max(
+      calc(var(--container-right) + var(--container-width) / 2),
+      150px
+    );
     transform: translateX(50%);
     align-items: center;
     user-select: none;
-    transition: bottom .3s;
+    transition: bottom 0.3s;
 
     button {
       flex: none;
@@ -74,8 +80,8 @@
       font-size: 14px;
       border: none;
       color: #fff;
-      background: #3385ff;
-      box-shadow: 0 1px 6px rgba(0,0,0,.2);
+      background: var(--skr-primary-color);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     }
 
     label {
@@ -102,18 +108,21 @@
   // 列表区域
   .forums-container {
     position: fixed;
+    display: flex;
+    flex-direction: column;
     z-index: 2;
     bottom: 60px;
     right: var(--container-right);
     width: var(--container-width);
     min-width: 280px;
+    max-height: calc(100vh - 124px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background: #fafafa;
     padding: 5px;
-    transition: transform .3s, bottom .3s, box-shadow .3s;
+    transition: transform 0.3s, bottom 0.3s, box-shadow 0.3s;
 
     &:hover {
-      box-shadow: 0 2px 4px 3px rgba(0, 0, 0, .1);
+      box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -133,22 +142,22 @@
   }
 
   ul {
-    max-height: 65vh;
     overflow-x: hidden;
 
     &.small {
       li {
-        padding: 0;
+        height: 24px;
       }
     }
-    &.middle {
+    &.normal {
       li {
-        padding: 2px 0;
+        height: 28px;
+        font-size: 13px;
       }
     }
     &.large {
       li {
-        padding: 4px 0;
+        height: 32px;
         font-size: 14px;
       }
     }
@@ -156,24 +165,35 @@
 
   li {
     display: flex;
-    border-bottom: 1px solid rgba(221, 221, 221, .4);
+    border-bottom: 1px solid rgb(221 221 221 / 0.4);
     cursor: default;
-    transition: background-color .15s, padding .15s;
+    transition: height 0.15s;
 
     &:hover {
       background-color: #f0f8ff;
     }
 
-    & > :nth-child(1) {
-      width: 4.7em;
+    > * {
+      line-height: 2.325em;
     }
-    & > :nth-child(2) {
+
+    a {
       flex: 1;
+      padding-left: 0.2em;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    & > :nth-child(3) {
+    .signed {
+      width: 0.9em;
+    }
+    .level {
+      width: 2.4em;
+    }
+    .gain {
+      width: 1.8em;
+    }
+    .exp {
       flex: none;
       width: 6.7em;
     }

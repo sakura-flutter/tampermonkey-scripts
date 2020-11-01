@@ -9,6 +9,7 @@ import { FAKE_VERSION, makeFakeParams, signature } from './signature'
 function GMRequest(url, options) {
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
+      timeout: 1000 * 15, // 15s超时，0点高峰期失败概率大，BD是1分钟超时，实际上不必等这么久
       ...options,
       url,
       onload(res) {
