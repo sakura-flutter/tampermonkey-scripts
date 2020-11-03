@@ -3,10 +3,8 @@ import { vRipple } from '@/directives'
 import './index.scss'
 
 const prefixCls = 'skr-button'
-// 根据button type定义的颜色
-const rippleColors = {
-  primary: 'rgb(128 208 255 / 0.3)',
-}
+// button type非default时覆盖一层白色
+const rippleColor = 'rgb(255 255 255 / 15%)'
 
 const Button = defineComponent({
   name: 'skr-button',
@@ -46,7 +44,7 @@ const Button = defineComponent({
     const rippleOptions = computed(() => {
       return Object.assign(
         {}, {
-          color: rippleColors[props.type],
+          color: props.type === 'default' ? undefined : rippleColor,
         },
         typeof props.ripple === 'boolean' ? { disabled: !props.ripple } : props.ripple,
       )

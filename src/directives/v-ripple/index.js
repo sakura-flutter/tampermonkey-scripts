@@ -41,13 +41,18 @@ const addRippleEffect = function(options = {}) {
   function listener(event) {
     if (options.disabled) return
 
-    const { currentTarget } = event
+    const { currentTarget, target } = event
     const rect = currentTarget.getBoundingClientRect()
     const rippleEl = createRippleEl()
     // 取元素长的一边作为涟漪的周长
     const side = Math.max(rect.width, rect.height)
-    const left = event.offsetX - side / 2
-    const top = event.offsetY - side / 2
+    let left = event.offsetX - side / 2
+    let top = event.offsetY - side / 2
+    // 补充当前触发元素的距离
+    if (currentTarget !== target) {
+      left += target.offsetLeft
+      top += target.offsetTop
+    }
     // 选项加入到元素中
     rippleEl.style.background = options.color
     rippleEl.style.width = side + 'px'

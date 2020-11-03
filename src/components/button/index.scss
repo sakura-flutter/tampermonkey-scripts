@@ -1,7 +1,5 @@
 .skr-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  line-height: 1.5715;
   border: 1px solid;
   border-radius: 2px;
   box-shadow: var(--skr-button-box-shadow);
@@ -9,10 +7,6 @@
 
   &:hover {
     filter: brightness(1.15);
-  }
-
-  &:active {
-    filter: brightness(0.8);
   }
 
   &--primary {
@@ -26,6 +20,7 @@
     background-color: var(--skr-white-color);
     border-color: var(--skr-border-color);
     &:hover {
+      filter: brightness(1);
       color: var(--skr-primary-color);
       border-color: currentColor;
     }
@@ -40,7 +35,7 @@
   }
 
   &--mini {
-    padding: 2px 4px;
+    padding: 2px 7px;
     font-size: 12px;
   }
 
@@ -50,7 +45,7 @@
   }
 
   &--normal {
-    padding: 5px 13px;
+    padding: 4px 15px;
     font-size: 14px;
   }
 
