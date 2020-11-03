@@ -1,0 +1,61 @@
+.skr-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 2px;
+  box-shadow: var(--skr-button-box-shadow);
+  transition: var(--skr-button-transition);
+
+  &:hover {
+    filter: brightness(1.15);
+  }
+
+  &:active {
+    filter: brightness(0.8);
+  }
+
+  &--primary {
+    color: var(--skr-text-inverse-color);
+    background-color: var(--skr-primary-color);
+    border-color: var(--skr-primary-color);
+  }
+
+  &--default {
+    color: var(--skr-text-primary-color);
+    background-color: var(--skr-white-color);
+    border-color: var(--skr-border-color);
+    &:hover {
+      color: var(--skr-primary-color);
+      border-color: currentColor;
+    }
+  }
+
+  &--round {
+    border-radius: 50%;
+  }
+
+  &--shadow {
+    box-shadow: var(--skr-box-shadow-normal);
+  }
+
+  &--mini {
+    padding: 2px 4px;
+    font-size: 12px;
+  }
+
+  &--small {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  &--normal {
+    padding: 5px 13px;
+    font-size: 14px;
+  }
+
+  &--large {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}

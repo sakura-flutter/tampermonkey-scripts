@@ -1,0 +1,26 @@
+.skr-ripple-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+}
+.skr-ripple {
+  contain: strict;
+  position: absolute;
+  border-radius: 100%;
+  transform: scale(0);
+  pointer-events: none;
+  background: var(--skr-ripple-color);
+  transition: opacity 2s cubic-bezier(0.23, 1, 0.32, 1); // 时长不能短于animation的时长
+  animation: skr-ripple forwards cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes skr-ripple {
+  to {
+    transform: scale(3);
+  }
+}

@@ -24,19 +24,14 @@ const Input = defineComponent({
     'update:modelValue',
   ],
   setup(props, { emit }) {
-    const {
-      scale,
-      modelValue,
-    } = props
-
     return () => (
       <input
         class={[
-          { [`${prefixCls}--scale`]: scale },
-          `${prefixCls}--${props.size}`,
           prefixCls,
+          `${prefixCls}--${props.size}`,
+          { [`${prefixCls}--scale`]: props.scale },
         ]}
-        value={modelValue}
+        value={props.modelValue}
         type="text"
         onInput={event => emit('update:modelValue', event.target.value)}
       />
