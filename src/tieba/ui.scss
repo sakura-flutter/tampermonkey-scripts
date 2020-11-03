@@ -10,7 +10,8 @@
   box-sizing: border-box;
   color: var(--skr-text-regular-color);
 
-  &.normal, &.large {
+  &.normal,
+  &.large {
     --container-width: 21vw;
   }
 
@@ -29,17 +30,7 @@
   }
 
   button {
-    border: 1px solid #efefef;
-    padding: 1px 12px;
-    color: inherit;
     background-image: none;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-    transition: all 0.3s;
-
-    &:hover {
-      color: var(--skr-primary-color);
-      border-color: currentColor;
-    }
   }
 
   &.forums-hide {
@@ -73,16 +64,6 @@
     align-items: center;
     user-select: none;
     transition: bottom 0.3s;
-
-    button {
-      flex: none;
-      padding: 6px 10px;
-      font-size: 14px;
-      border: none;
-      color: #fff;
-      background: var(--skr-primary-color);
-      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-    }
 
     label {
       margin-left: 8px;

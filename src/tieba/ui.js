@@ -1,7 +1,7 @@
 import { createApp, toRefs, reactive, computed } from 'vue'
 import { useGMvalue } from '@/composition/use-gm-value'
 // eslint-disable-next-line no-unused-vars
-import { Input } from '@/components'
+import { Input, Button } from '@/components'
 import './ui.scss'
 
 /* eslint-disable camelcase */
@@ -54,12 +54,14 @@ export function createUI({
       return (
         <div id="inject-sign" class={{ 'forums-hide': isForumsHide, cover: isCover, [size]: true }}>
           <div class="control">
-            <button
+            <Button
               disabled={loading}
+              type="primary"
+              shadow
               onClick={run}
             >
               一键签到
-            </button>
+            </Button>
             <div class="label-wrap">
               <label title="模拟APP签到可以获得与APP相同的经验，比网页签到经验更多，也提供更多功能，但需要BDUSS，重新登录后需要再次输入，请网上搜索获得方法，不勾选则通过网页签到，此时不需要BDUSS">
                 <input
@@ -105,15 +107,15 @@ export function createUI({
           {
             likeForums.length > 0 && <div class="forums-container">
               <header class="top-btns">
-                <button class="reverse-btn" onClick={changeReverse}>
+                <Button class="reverse-btn" size="mini" onClick={changeReverse}>
                   {isReverse ? '已倒序' : '普通'}
                   <span title="已签/总数">
                     {counter.sign}/{counter.total}
                   </span>
-                </button>
-                <button class="resize-btn" onClick={changeSize}>
+                </Button>
+                <Button class="resize-btn" size="mini" onClick={changeSize}>
                   大小
-                </button>
+                </Button>
               </header>
               <ul class={{ [size]: true }}>
                 {
@@ -168,7 +170,8 @@ export function createUI({
         let ectype = [...state.likeForums]
         state.isReverse && ectype.reverse()
         if (keyword.value) {
-          ectype = ectype.filter(forum => forum.forum_name.includes(keyword.value))
+          // 忽略大小写
+          ectype = ectype.filter(forum => (forum.forum_name.toUpperCase()).includes(keyword.value.toUpperCase()))
         }
         return ectype
       })
