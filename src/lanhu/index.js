@@ -1,5 +1,10 @@
+// eslint-disable-next-line no-unused-vars
+import { createApp, toRefs, reactive, computed, Transition, TransitionGroup } from 'vue'
 import { parseURL, throttle } from '@/utils'
 import { useGMvalue } from '@/composition/use-gm-value'
+// eslint-disable-next-line no-unused-vars
+import { Button } from '@/components'
+import './index.scss'
 
 const $ = document.querySelector.bind(document)
 const marks = new WeakSet()
@@ -96,10 +101,7 @@ function fixBarHeight() {
 
 /* 记录看过的产品 */
 function createRecorder() {
-  // eslint-disable-next-line no-unused-vars
-  const { Transition, TransitionGroup } = Vue
-
-  const app = Vue.createApp({
+  const app = createApp({
     render() {
       const {
         reversed,
@@ -141,10 +143,11 @@ function createRecorder() {
                         {item.title}
                       </a>
                       <div class="actions" onMouseenter={() => { toggleMoreActions(true) }}>
-                        <button title="移除" onClick={() => { deleteItem(item) }}>×</button>
-                        <button
+                        <Button title="移除" round onClick={() => { deleteItem(item) }}>×</Button>
+                        <Button
                           v-show={moreActionsVisible}
                           title="左击复制链接和密码；右击复制密码"
+                          round
                           onClick={() => { copy('all', item) }}
                           onContextmenu={event => {
                             event.preventDefault()
@@ -152,7 +155,7 @@ function createRecorder() {
                           }}
                         >
                           <svg t="1602929080634" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4117" width="10" height="10"><path d="M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z" p-id="4118"></path></svg>
-                        </button>
+                        </Button>
                       </div>
                     </li>
                   ))
@@ -161,7 +164,7 @@ function createRecorder() {
             </div>
           </Transition>
           <div class="control">
-            <button class="view-btn">打开最近项目</button>
+            <Button class="view-btn" type="primary" shadow>打开最近项目</Button>
             <input
               checked={this.unhidden}
               type="checkbox"
@@ -173,8 +176,6 @@ function createRecorder() {
       )
     },
     setup() {
-      const { toRefs, reactive, computed } = Vue
-
       const state = reactive({
         recordsVisible: false,
         moreActionsVisible: false,
@@ -262,121 +263,6 @@ function createRecorder() {
     })
     GM_setValue('records', records)
   }
-
-  // 添加样式
-  GM_addStyle(`
-    |> {
-        position: fixed;
-        right: 1.5vw;
-        bottom: 8vh;
-        z-index: 1000;
-        width: 240px;
-        padding: 30px 30px 10px;
-        opacity: .5;
-        transition: opacity .1s;
-    }
-    |>:hover {
-        opacity: 1;
-    }
-    |> ul::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-        background: #f2f2f2;
-        padding-right: 2px;
-    }
-    |> ul::-webkit-scrollbar-thumb {
-        border-radius: 3px;
-        border: 0;
-        background: #b4bbc5;
-    }
-    |> ul.more-actions {
-        width: 204px;
-    }
-    |> ul {
-        width: 180px;
-        padding: 5px;
-        max-height: 40vh;
-        overflow-x: hidden;
-        background: rgb(251, 251, 251);
-        box-shadow: 0 1px 6px rgba(0,0,0,.15);
-        transition: width .1s;
-    }
-    |> li {
-        display: flex;
-        align-items: center;
-        padding: 0 5px;
-        transition: all .3s, background 0.1s ease-out;
-    }
-    |> li:hover {
-        background: rgba(220, 237, 251, 0.64);
-    }
-    |> li a {
-        width: 132px;
-        flex: none;
-        line-height: 30px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    |> li .actions {
-        flex: 1 0 auto;
-    }
-    |> li button {
-        width: 20px;
-        line-height: 20px;
-        border: none;
-        border-radius: 50%;
-        color: #ababab;
-        box-shadow: 0 1px 1px rgba(0,0,0,.15);
-        background: #fff;
-        cursor: pointer;
-    }
-    |> li button:nth-of-type(n+2) {
-        margin-left: 4px;
-    }
-    |> .control {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 8px;
-    }
-    |> .control input {
-        margin-left: 6px;
-    }
-    |> .view-btn {
-        padding: 4px 12px;
-        color: #fff;
-        background: #3385ff;
-        box-shadow:0 1px 6px rgba(0,0,0,.2);
-        border: none;
-        border-radius: 2px;
-    }
-    |> svg {
-        fill: currentColor;
-    }
-
-    /* 动画1 */
-    |> .inject-slide-fade-enter-active, |> .inject-slide-fade-leave-active {
-        transition: all .1s;
-    }
-    |> .inject-slide-fade-enter-from,
-    |> .inject-slide-fade-leave-to {
-        transform: translateY(5px);
-        opacity: 0;
-    }
-    /* 动画2 group */
-    |> .inject-slide-hor-fade-move {
-        transition: all .8s;
-    }
-    |> .inject-slide-hor-fade-enter-from,
-    |> .inject-slide-hor-fade-leave-to {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    |> .inject-slide-hor-fade-active {
-        position: absolute;
-    }
-  `.replace(/\|>/g, '#inject-recorder-ui'))
 
   return {
     record,
