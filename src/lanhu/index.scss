@@ -1,0 +1,128 @@
+@import "~@/components/var.scss";
+
+#inject-recorder-ui {
+  position: fixed;
+  right: 1.5vw;
+  bottom: 8vh;
+  z-index: 1000;
+  width: 240px;
+  padding: 30px 30px 10px;
+  opacity: 0.5;
+  transition: opacity 0.1s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  ul::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: #f2f2f2;
+    padding-right: 2px;
+  }
+
+  ul::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    border: 0;
+    background: #b4bbc5;
+  }
+
+  ul.more-actions {
+    width: 204px;
+  }
+
+  ul {
+    width: 180px;
+    padding: 5px;
+    max-height: 40vh;
+    overflow-x: hidden;
+    background: rgb(251, 251, 251);
+    box-shadow: var(--skr-box-shadow-lighten);
+    transition: width 0.1s;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    transition: all var(--skr-transition-duration-normal),
+      background var(--skr-transition-duration-fast) ease-out;
+  }
+
+  li:hover {
+    background: rgba(220, 237, 251, 0.64);
+  }
+
+  li a {
+    width: 132px;
+    flex: none;
+    padding-right: 4px;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  li .actions {
+    flex: 1 0 auto;
+  }
+
+  li button {
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border: none;
+    &:not(:hover) {
+      color: var(--skr-text-secondary-color);
+    }
+  }
+
+  li button:nth-of-type(n + 2) {
+    margin-left: 4px;
+  }
+
+  .control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 8px;
+  }
+
+  .control input {
+    margin-left: 6px;
+  }
+
+  .view-btn {
+    &:not(:focus-visible) {
+      outline: none;
+    }
+  }
+
+  svg {
+    fill: currentColor;
+  }
+
+  /* 动画1 */
+  .inject-slide-fade-enter-active,
+  .inject-slide-fade-leave-active {
+    transition: all 0.1s;
+  }
+  .inject-slide-fade-enter-from,
+  .inject-slide-fade-leave-to {
+    transform: translateY(5px);
+    opacity: 0;
+  }
+
+  /* 动画2 group */
+  .inject-slide-hor-fade-move {
+    transition: all 0.8s;
+  }
+  .inject-slide-hor-fade-active {
+    position: absolute;
+  }
+  .inject-slide-hor-fade-enter-from,
+  .inject-slide-hor-fade-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+}
