@@ -1,3 +1,4 @@
+import { createApp, reactive, toRefs } from 'vue'
 import { once, documentLoaded } from '@/utils'
 import { useGMvalue } from '@/composition/use-gm-value'
 
@@ -1266,10 +1267,9 @@ function createStore(sitename) {
 
 // 宽屏开关 options: store<store>, execute要执行的函数，visible是否可见(后续用show hide控制)，silent是否显示通知
 function createWidescreenControl(options) {
-  const { reactive, toRefs } = Vue
   const { store, execute = () => {}, visible = true, silent = false } = options
 
-  const app = Vue.createApp({
+  const app = createApp({
     render() {
       const { uiVisible, visible, enabled, toggle } = this
 
