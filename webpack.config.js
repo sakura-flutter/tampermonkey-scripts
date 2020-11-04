@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 function getScriptHeader(filename, argvMode) {
-  const filepath = path.join(__dirname, './src/script-header', `${filename}.js`)
+  const filepath = path.join(__dirname, './src/scripts-header', `${filename}.js`)
   const isProd = argvMode === 'production'
   return fs.existsSync(filepath) ? require(filepath)(isProd) : ''
 }
@@ -13,9 +13,9 @@ function getScriptHeader(filename, argvMode) {
 module.exports = (env, argv) => ({
   devtool: false,
   entry: {
-    lanhu: './src/lanhu',
-    widescreen: './src/aggregation/widescreen',
-    tieba: './src/tieba',
+    lanhu: './src/scripts/lanhu',
+    tieba: './src/scripts/tieba',
+    widescreen: './src/scripts/widescreen',
   },
   output: {
     path: path.join(__dirname, 'dist'),

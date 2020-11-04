@@ -1,6 +1,6 @@
 import { parseURL, sleep } from '@/utils'
 import Queue from '@/utils/queue'
-import store from './store'
+import store from '@/store'
 import * as api from './api'
 import { createUI } from './ui'
 
