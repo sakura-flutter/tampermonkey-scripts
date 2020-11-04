@@ -33,21 +33,21 @@ export function stringifyURL(obj) {
 }
 
 export function throttle(fn, delay) {
-  var t = null
-  var begin = new Date().getTime()
+  let t = null
+  let begin = Date.now()
 
   return function(...args) {
-    var _self = this
-    var cur = new Date().getTime()
+    const self = this
+    const cur = Date.now()
 
     clearTimeout(t)
 
     if (cur - begin >= delay) {
-      fn.apply(_self, args)
+      fn.apply(self, args)
       begin = cur
     } else {
       t = setTimeout(function() {
-        fn.apply(_self, args)
+        fn.apply(self, args)
       }, delay)
     }
   }
