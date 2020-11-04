@@ -33,6 +33,7 @@ module.exports = (env, argv) => ({
       {
         test: /\.js$/,
         use: ['babel-loader'],
+        exclude: /node_modules/,
       },
       {
         test: /\.s[ac]ss$/i,
