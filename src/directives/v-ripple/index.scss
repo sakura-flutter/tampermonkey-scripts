@@ -1,4 +1,5 @@
 .skr-ripple-container {
+  contain: strict;
   position: absolute;
   top: 0;
   right: 0;
@@ -9,7 +10,7 @@
   border-radius: inherit !important;
 }
 .skr-ripple {
-  contain: strict;
+  contain: layout;
   position: absolute;
   border-radius: 100%;
   transform: scale(0);
