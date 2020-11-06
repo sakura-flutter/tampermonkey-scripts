@@ -1,4 +1,6 @@
-.skr-ripple-container {
+$prefix-cls: ".skr-ripple";
+
+#{$prefix-cls}-container {
   contain: strict;
   position: absolute;
   top: 0;
@@ -6,12 +8,17 @@
   bottom: 0;
   left: 0;
   overflow: hidden;
+  padding: 0 !important;
+  margin: 0 !important;
   pointer-events: none !important;
   border-radius: inherit !important;
 }
-.skr-ripple {
+
+#{$prefix-cls} {
   contain: layout;
   position: absolute;
+  padding: 0 !important;
+  margin: 0 !important;
   border-radius: 100%;
   transform: scale(0);
   pointer-events: none;
@@ -22,6 +29,7 @@
 
 @keyframes skr-ripple {
   to {
+    // 保证对角线完全能覆盖到
     transform: scale(3);
   }
 }
