@@ -1,4 +1,4 @@
-import { createApp, toRefs, reactive, computed } from 'vue'
+import { createApp, nextTick, toRefs, reactive, computed } from 'vue'
 import { useGMvalue } from '@/composition/use-gm-value'
 // eslint-disable-next-line no-unused-vars
 import { Input, Button } from '@/components'
@@ -50,6 +50,11 @@ export function createUI({
         changeSize,
         onSimulateChange,
       } = this
+      function expTitle(item) {
+        const MAX_EXP_DAILY = 8
+        const needed = item.levelup_score - item.user_exp
+        return `距离升级还需要${needed}经验，若每天+${MAX_EXP_DAILY}，还需要${Math.ceil(needed / MAX_EXP_DAILY)}天`
+      }
 
       return (
         <div id="inject-sign" class={{ 'forums-hide': isForumsHide, cover: isCover, [size]: true }}>
@@ -133,7 +138,7 @@ export function createUI({
                         {item.user_level}级
                       </span>
                       <span class="gain">{item.sign_bonus_point ? ('+' + item.sign_bonus_point) : ''}</span>
-                      <span class="exp" title={'距离升级' + (item.levelup_score - item.user_exp)}>
+                      <span class="exp" title={expTitle(item)}>
                         {item.user_exp}/{item.levelup_score}
                       </span>
                     </li>
@@ -239,8 +244,10 @@ export function createUI({
           store.BDUSS = result
           location.reload()
         } else {
-          state.isSimulate = false
-          store.is_simulate = false
+          nextTick(() => {
+            state.isSimulate = false
+            store.is_simulate = false
+          })
         }
       }
 

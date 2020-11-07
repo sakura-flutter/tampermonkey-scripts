@@ -1,7 +1,9 @@
-@import "~@/components/var.scss";
+@import "~@/components/index.scss";
+@include var;
 
 #inject-sign {
-  @import "~@/components/reset";
+  @include reset;
+
   // 列表宽度
   --container-width: 19vw;
   // 列表距离右边距离
@@ -53,6 +55,7 @@
   // 主按钮
   .control {
     position: fixed;
+    contain: content;
     display: flex;
     z-index: 500;
     bottom: 12px;
@@ -63,7 +66,7 @@
     transform: translateX(50%);
     align-items: center;
     user-select: none;
-    transition: bottom 0.3s;
+    transition: bottom 0.3s, right 0.15s;
 
     label {
       margin-left: 8px;
@@ -89,6 +92,7 @@
   // 列表区域
   .forums-container {
     position: fixed;
+    contain: content;
     display: flex;
     flex-direction: column;
     z-index: 2;
@@ -100,7 +104,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background: #fafafa;
     padding: 5px;
-    transition: transform 0.3s, bottom 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;
 
     &:hover {
       box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
