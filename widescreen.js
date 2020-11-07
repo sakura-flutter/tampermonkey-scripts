@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.15.1
+// @version      1.15.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
@@ -469,7 +469,7 @@ module.exports =
   check(typeof self == 'object' && self) ||
   check(typeof __webpack_require__.g == 'object' && __webpack_require__.g) ||
   // eslint-disable-next-line no-new-func
-  Function('return this')();
+  (function () { return this; })() || Function('return this')();
 
 
 /***/ }),
@@ -558,6 +558,7 @@ var global = __webpack_require__(7854);
 var isObject = __webpack_require__(111);
 var createNonEnumerableProperty = __webpack_require__(8880);
 var objectHas = __webpack_require__(6656);
+var shared = __webpack_require__(5465);
 var sharedKey = __webpack_require__(6200);
 var hiddenKeys = __webpack_require__(3501);
 
@@ -578,11 +579,12 @@ var getterFor = function (TYPE) {
 };
 
 if (NATIVE_WEAK_MAP) {
-  var store = new WeakMap();
+  var store = shared.state || (shared.state = new WeakMap());
   var wmget = store.get;
   var wmhas = store.has;
   var wmset = store.set;
   set = function (it, metadata) {
+    metadata.facade = it;
     wmset.call(store, it, metadata);
     return metadata;
   };
@@ -596,6 +598,7 @@ if (NATIVE_WEAK_MAP) {
   var STATE = sharedKey('state');
   hiddenKeys[STATE] = true;
   set = function (it, metadata) {
+    metadata.facade = it;
     createNonEnumerableProperty(it, STATE, metadata);
     return metadata;
   };
@@ -861,9 +864,15 @@ var TEMPLATE = String(String).split('String');
   var unsafe = options ? !!options.unsafe : false;
   var simple = options ? !!options.enumerable : false;
   var noTargetGet = options ? !!options.noTargetGet : false;
+  var state;
   if (typeof value == 'function') {
-    if (typeof key == 'string' && !has(value, 'name')) createNonEnumerableProperty(value, 'name', key);
-    enforceInternalState(value).source = TEMPLATE.join(typeof key == 'string' ? key : '');
+    if (typeof key == 'string' && !has(value, 'name')) {
+      createNonEnumerableProperty(value, 'name', key);
+    }
+    state = enforceInternalState(value);
+    if (!state.source) {
+      state.source = TEMPLATE.join(typeof key == 'string' ? key : '');
+    }
   }
   if (O === global) {
     if (simple) O[key] = value;
@@ -1131,7 +1140,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.5',
+  version: '3.7.0',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -2925,7 +2934,8 @@ handlers.set('baidu', function () {
       }
       @media screen and (min-width: 1460px) {
         /* 顶部搜索 */
-        #head {
+        // 修复搜索主页换肤后头部异常
+        #head:not(.s-skin-hasbg) {
           background-color: #ffffffd1;
           backdrop-filter: blur(10px);
         }
