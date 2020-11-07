@@ -2,6 +2,7 @@
 @include var;
 
 #inject-recorder-ui {
+  contain: content;
   position: fixed;
   right: 1.5vw;
   bottom: 8vh;

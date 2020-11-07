@@ -1,5 +1,6 @@
 import { parseURL, sleep } from '@/utils'
 import Queue from '@/utils/queue'
+import { checker } from '@/utils/compatibility'
 import store from '@/store'
 import * as api from './api'
 import { createUI } from './ui'
@@ -11,6 +12,8 @@ const $$ = document.querySelectorAll.bind(document)
 let $moreforumEl
 
 async function main() {
+  if (!checker()) return
+
   const { jQuery } = unsafeWindow
   $moreforumEl = jQuery('#moreforum')
   // 未登录时删除已有的BDUSS

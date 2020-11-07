@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { createApp, toRefs, reactive, computed, Transition, TransitionGroup } from 'vue'
 import { parseURL, throttle } from '@/utils'
+import { checker } from '@/utils/compatibility'
 import { useGMvalue } from '@/composition/use-gm-value'
 // eslint-disable-next-line no-unused-vars
 import { Button } from '@/components'
@@ -10,6 +11,8 @@ const $ = document.querySelector.bind(document)
 const marks = new WeakSet()
 
 function main() {
+  if (!checker()) return
+
   updateStorage()
   fixBarHeight()
 
