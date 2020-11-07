@@ -191,6 +191,7 @@ function createRecorder() {
             newRecords.splice(index, 1)
             return true
           }
+          return false
         })
         setRecords(newRecords)
       }
@@ -253,6 +254,7 @@ function createRecorder() {
         records.splice(index, 1)
         return true
       }
+      return false
     })
     // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
     const title = (['蓝湖', '...'].includes(document.title) && oldTitle) ? oldTitle : document.title
