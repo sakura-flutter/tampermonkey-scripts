@@ -1,4 +1,5 @@
-@import "~@/components/var.scss";
+@import "~@/components/index.scss";
+@include var;
 
 #inject-recorder-ui {
   position: fixed;
@@ -15,8 +16,8 @@
   }
 
   ul::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 4px;
+    height: 4px;
     background: #f2f2f2;
     padding-right: 2px;
   }
