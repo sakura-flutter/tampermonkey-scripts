@@ -384,7 +384,8 @@ handlers.set('baidu', function() {
       }
       @media screen and (min-width: 1460px) {
         /* 顶部搜索 */
-        #head {
+        // 修复搜索主页换肤后头部异常
+        #head:not(.s-skin-hasbg) {
           background-color: #ffffffd1;
           backdrop-filter: blur(10px);
         }
