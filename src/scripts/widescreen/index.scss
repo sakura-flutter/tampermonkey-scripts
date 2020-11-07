@@ -8,6 +8,8 @@
   top: 150px;
   right: 7vw;
   opacity: .5;
+  // 防止某些网站button有默认background-image
+  background-image: none !important;
 
   &:hover {
     opacity: 1;
