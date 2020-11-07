@@ -1,13 +1,13 @@
 /**
  * store
- * @param {string} modulename key会加入modulename_前缀
+ * @param {string} modulename key会加入 [[modulename]]- 前缀
  * @param {boolean} local 是否本地存储
  * @return {proxy}
  */
 function createStore(modulename = '', local = true) {
   const getRealProp = property =>
     modulename
-      ? `${modulename}_${property}`
+      ? `[[${modulename}]]-${property}`
       : property
 
   const handler = {

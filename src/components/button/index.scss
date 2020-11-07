@@ -2,8 +2,13 @@
   line-height: 1.5715;
   border: 1px solid;
   border-radius: 2px;
+  cursor: pointer;
   box-shadow: var(--skr-button-box-shadow);
   transition: var(--skr-button-transition);
+
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
 
   &:hover {
     filter: brightness(1.15);

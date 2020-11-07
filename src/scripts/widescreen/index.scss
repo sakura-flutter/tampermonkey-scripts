@@ -1,0 +1,15 @@
+@import "~@/components/index.scss";
+@include var;
+
+.inject-widescreen-js {
+  contain: content;
+  position: fixed;
+  z-index: 99;
+  top: 150px;
+  right: 7vw;
+  opacity: .5;
+
+  &:hover {
+    opacity: 1;
+  }
+}

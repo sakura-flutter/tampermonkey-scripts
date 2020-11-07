@@ -11,7 +11,6 @@ module.exports = isProd =>
 // @compatible   firefox >= Latest
 // @noframes
 // @match        https://lanhuapp.com/web/
-// @grant        unsafeWindow
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addValueChangeListener

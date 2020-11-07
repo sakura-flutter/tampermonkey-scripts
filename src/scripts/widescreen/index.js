@@ -1,8 +1,13 @@
 import { createApp, reactive, toRefs } from 'vue'
 import { once, documentLoaded } from '@/utils'
+import { checker } from '@/utils/compatibility'
+import globalStore, { createStore as _createStore } from '@/store'
 import { useGMvalue } from '@/composition/use-gm-value'
+// eslint-disable-next-line no-unused-vars
+import { Button } from '@/components'
+import './index.scss'
 
-const isDebug = false
+const isDebug = process.env.NODE_ENV !== 'production'
 
 const $ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
@@ -15,26 +20,17 @@ function log(...args) {
 // 主函数
 function main() {
   GM_registerMenuCommand('宽屏通知', function() {
-    const nextStatus = !GM_getValue('notify_enabled', true)
+    const nextStatus = !(globalStore.notify_enabled ?? true)
     Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
-    GM_setValue('notify_enabled', nextStatus)
+    globalStore.notify_enabled = nextStatus
   })
   GM_registerMenuCommand('控制按钮', function() {
-    const nextStatus = !GM_getValue('ui_visible', true)
+    const nextStatus = !(globalStore.ui_visible ?? true)
     Toast.success(nextStatus ? '已显示按钮' : '已隐藏按钮')
-    GM_setValue('ui_visible', nextStatus)
+    globalStore.ui_visible = nextStatus
   })
 
-  // 将之前is_open重新命名成enabled
-  GM_listValues().forEach(key => {
-    if (key.endsWith('_is_open')) {
-      const modulename = key.split('_is_open')[0]
-      GM_setValue(`${modulename}_enabled`, GM_getValue(key))
-      GM_deleteValue(key)
-    }
-  })
-
-  if (!checkCompatibility()) return
+  if (!checker()) return
   const sites = checkWebsites()
   sites.find(site => {
     const hanlder = handlers.get(site)
@@ -42,23 +38,6 @@ function main() {
     hanlder && hanlder()
     return site
   })
-}
-
-// 兼容性判断
-function checkCompatibility() {
-  const { userAgent } = window.navigator
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/) && userAgent.match(/Chrome\/(\d+)/)[1]
-  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/) && userAgent.match(/Firefox\/(\d+)/)[1]
-  let pass = false
-  if (chromeVersion && chromeVersion >= 80) {
-    pass = true
-  } else if (firefoxVersion && firefoxVersion >= 75) {
-    pass = true
-  }
-  if (!pass) {
-    GM_getValue('notify_enabled', true) && Toast.warning('宽屏脚本：哎呀！不支持的浏览器版本，请更新浏览器版本 o(╥﹏╥)o')
-  }
-  return pass
 }
 
 // 检查网站
@@ -1232,36 +1211,18 @@ handlers.set('toutiao', function() {
 // 存储
 function createStore(sitename) {
   if (!sitename) throw new TypeError('缺少sitename，期望<string>')
-  const getRealProp = property => `${sitename}_${property}`
-  const target = {}
+
   const handler = {
     get(target, property) {
-      const realProp = getRealProp(property)
-      let value = target[realProp]
-      if (value == null) {
-        value = GM_getValue(realProp)
+      let value = target[property]
+      if (property === 'enabled') {
         // 默认开启
-        if (value == null && property === 'enabled') {
-          value = true
-        }
-        target[realProp] = value
+        value ??= true
       }
       return value
     },
-    set(target, property, value) {
-      const realProp = getRealProp(property)
-      target[realProp] = value
-      GM_setValue(realProp, value)
-      return true
-    },
-    deleteProperty(target, property) {
-      const realProp = getRealProp(property)
-      const deleted = delete target[realProp]
-      GM_deleteValue(realProp)
-      return deleted
-    },
   }
-  const store = new Proxy(target, handler)
+  const store = new Proxy(_createStore(sitename), handler)
   return store
 }
 
@@ -1274,14 +1235,16 @@ function createWidescreenControl(options) {
       const { uiVisible, visible, enabled, toggle } = this
 
       return (
-        <button
+        <Button
           class="inject-widescreen-js"
           v-show={uiVisible && visible}
           title="注意：页面会被刷新"
+          type="primary"
+          shadow
           onClick={toggle}
         >
           {enabled ? '已开启' : '关闭'}
-        </button>
+        </Button>
       )
     },
     setup() {
@@ -1304,7 +1267,7 @@ function createWidescreenControl(options) {
         state.visible = false
       }
       function notify() {
-        GM_getValue('notify_enabled', true) && Toast('已宽屏处理')
+        (globalStore.notify_enabled ?? true) && Toast('已宽屏处理')
       }
       // private-api
       function toggle() {
@@ -1335,25 +1298,3 @@ function createWidescreenControl(options) {
 }
 
 main()
-
-// 添加按钮样式
-GM_addStyle(`
-  .inject-widescreen-js {
-    position: fixed;
-    z-index: 99;
-    top: 150px;
-    right: 8vw;
-    opacity: .5;
-    border: none;
-    color :#fff;
-    padding: 6px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    background: #3385ff;
-    box-shadow: 0 1px 6px rgba(0,0,0,.2);
-    transition: opacity .3s;
-  }
-  .inject-widescreen-js:hover {
-    opacity: 1;
-  }
-`)
