@@ -3,6 +3,7 @@ const path = require('path')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 function getScriptHeader(filename, argvMode) {
   const filepath = path.join(__dirname, './src/scripts-header', `${filename}.js`)
@@ -47,6 +48,11 @@ module.exports = (env, argv) => ({
       banner: file => getScriptHeader(file.chunk.name, argv.mode),
       raw: true,
       entryOnly: true,
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: path.join(__dirname, './src/helpers/toast.js') },
+      ],
     }),
   ],
   // 遵守Greasy Fork代码规定，不做最小化处理
