@@ -7,7 +7,10 @@ const prefixCls = 'skr-button'
 const rippleColor = 'rgb(255 255 255 / 15%)'
 
 const Button = defineComponent({
-  name: 'skr-button',
+  name: 'SkrButton',
+  directives: {
+    ripple: vRipple,
+  },
   props: {
     type: {
       type: String,
@@ -36,9 +39,6 @@ const Button = defineComponent({
       type: [Boolean, Object],
       default: true,
     },
-  },
-  directives: {
-    ripple: vRipple,
   },
   setup(props, { slots }) {
     const rippleOptions = computed(() => {

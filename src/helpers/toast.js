@@ -24,23 +24,6 @@
     const { createApp, Transition, onMounted, ref } = Vue
     const rootContainer = document.createElement('div')
     const app = createApp({
-      render() {
-        const { h } = Vue
-        const { visible, type, content, closable, close, onAfterLeave } = this
-        return h(Transition, { name: 'inject-toast-slide-fade', appear: true, onAfterLeave }, {
-          default: () => (
-            visible &&
-            h('div', { class: 'inject-toast' },
-              h('div', { class: ['inject-toast-content', `inject-toast-content--${type}`] }, {
-                default: () => [
-                  h('div', { class: 'inject-toast-content-text', innerHTML: content }),
-                  closable && h('button', { class: 'inject-toast-content-close', onClick: close }, '×'),
-                ],
-              }),
-            )
-          ),
-        })
-      },
       setup() {
         const content = ref(options.content)
         const type = ref(options.type)
@@ -71,6 +54,23 @@
           close,
           onAfterLeave,
         }
+      },
+      render() {
+        const { h } = Vue
+        const { visible, type, content, closable, close, onAfterLeave } = this
+        return h(Transition, { name: 'inject-toast-slide-fade', appear: true, onAfterLeave }, {
+          default: () => (
+            visible &&
+            h('div', { class: 'inject-toast' },
+              h('div', { class: ['inject-toast-content', `inject-toast-content--${type}`] }, {
+                default: () => [
+                  h('div', { class: 'inject-toast-content-text', innerHTML: content }),
+                  closable && h('button', { class: 'inject-toast-content-close', onClick: close }, '×'),
+                ],
+              }),
+            )
+          ),
+        })
       },
     })
 
