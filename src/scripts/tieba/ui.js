@@ -1,6 +1,5 @@
 import { createApp, nextTick, toRefs, reactive, computed } from 'vue'
 import { useGMvalue } from '@/composition/use-gm-value'
-// eslint-disable-next-line no-unused-vars
 import { Input, Button } from '@/components'
 import './ui.scss'
 
@@ -29,6 +28,119 @@ export function createUI({
   })()
 
   const app = createApp({
+    setup() {
+      const state = reactive({
+        loading: false,
+        size: sizeTick.next().value,
+        isSimulate: false,
+        isReverse: store.is_reverse || false,
+        likeForums: [],
+      })
+      const { value: keyword, setValue: setKeyword } = useGMvalue('keyword', '')
+      const { value: isComplete, setValue: setComplete } = useGMvalue('is_complete', false)
+      const { value: isForumsHide, setValue: setForumsHide } = useGMvalue('is_forums_hide', false)
+      const { value: isCover, setValue: setCover } = useGMvalue('is_cover', false)
+      const diaplayForums = computed(() => {
+        let ectype = [...state.likeForums]
+        state.isReverse && ectype.reverse()
+        if (keyword.value) {
+          // 忽略大小写
+          ectype = ectype.filter(forum => (forum.forum_name.toUpperCase()).includes(keyword.value.toUpperCase()))
+        }
+        return ectype
+      })
+      const counter = computed(() => ({
+        total: state.likeForums.length,
+        sign: state.likeForums.filter(({ is_sign }) => is_sign).length,
+      }))
+
+      // 勾选模拟APP并且确认有BDUSS 才算开启
+      if (store.is_simulate && store.BDUSS) {
+        state.isSimulate = true
+      }
+      // 自动签到
+      if (isComplete.value) {
+        run()
+      }
+
+      function run() {
+        state.loading = true
+        // TODO: 应该有更好的实现方法
+        const exportApi = {
+          updateLikeForum,
+          checkUnsign,
+        }
+        ;(state.isSimulate ? runByBDUSS : runByWeb)(exportApi).finally(() => {
+          state.loading = false
+        })
+      }
+      function setLikeForums(forums) {
+        state.likeForums = [...forums]
+      }
+      function updateLikeForum(fid, forum) {
+        const index = state.likeForums.findIndex(item => +fid === +item.forum_id)
+        if (index === -1) return
+        const target = {
+          ...state.likeForums[index],
+          ...forum,
+        }
+        if (forum.sign_bonus_point) {
+          target.user_exp = Number(target.user_exp) + Number(forum.sign_bonus_point)
+        }
+        state.likeForums.splice(index, 1, target)
+      }
+      // 未签到的靠前
+      function checkUnsign() {
+        state.likeForums.sort((a, b) => {
+          if (!a.is_sign && b.is_sign) return -1
+          return 0
+        })
+      }
+      function changeReverse() {
+        state.isReverse = !state.isReverse
+        store.is_reverse = state.isReverse
+      }
+      function changeSize() {
+        state.size = sizeTick.next().value
+      }
+      function onSimulateChange({ target: { checked } }) {
+        store.is_simulate = checked
+        if (!checked) return
+
+        const { BDUSS } = store
+        const result = window.prompt('请输入F12->Application->Cookies中的BDUSS', BDUSS || undefined)
+        if (result) {
+          store.BDUSS = result
+          location.reload()
+        } else {
+          nextTick(() => {
+            state.isSimulate = false
+            store.is_simulate = false
+          })
+        }
+      }
+
+      return {
+        ...toRefs(state),
+        keyword,
+        isComplete,
+        isForumsHide,
+        isCover,
+        diaplayForums,
+        counter,
+        run,
+        setLikeForums,
+        updateLikeForum,
+        checkUnsign,
+        setKeyword,
+        setComplete,
+        setForumsHide,
+        setCover,
+        changeReverse,
+        changeSize,
+        onSimulateChange,
+      }
+    },
     render() {
       const {
         loading,
@@ -158,119 +270,6 @@ export function createUI({
           }
         </div>
       )
-    },
-    setup() {
-      const state = reactive({
-        loading: false,
-        size: sizeTick.next().value,
-        isSimulate: false,
-        isReverse: store.is_reverse || false,
-        likeForums: [],
-      })
-      const { value: keyword, setValue: setKeyword } = useGMvalue('keyword', '')
-      const { value: isComplete, setValue: setComplete } = useGMvalue('is_complete', false)
-      const { value: isForumsHide, setValue: setForumsHide } = useGMvalue('is_forums_hide', false)
-      const { value: isCover, setValue: setCover } = useGMvalue('is_cover', false)
-      const diaplayForums = computed(() => {
-        let ectype = [...state.likeForums]
-        state.isReverse && ectype.reverse()
-        if (keyword.value) {
-          // 忽略大小写
-          ectype = ectype.filter(forum => (forum.forum_name.toUpperCase()).includes(keyword.value.toUpperCase()))
-        }
-        return ectype
-      })
-      const counter = computed(() => ({
-        total: state.likeForums.length,
-        sign: state.likeForums.filter(({ is_sign }) => is_sign).length,
-      }))
-
-      // 勾选模拟APP并且确认有BDUSS 才算开启
-      if (store.is_simulate && store.BDUSS) {
-        state.isSimulate = true
-      }
-      // 自动签到
-      if (isComplete.value) {
-        run()
-      }
-
-      function run() {
-        state.loading = true
-        // TODO: 应该有更好的实现方法
-        const exportApi = {
-          updateLikeForum,
-          checkUnsign,
-        }
-        ;(state.isSimulate ? runByBDUSS : runByWeb)(exportApi).finally(() => {
-          state.loading = false
-        })
-      }
-      function setLikeForums(forums) {
-        state.likeForums = [...forums]
-      }
-      function updateLikeForum(fid, forum) {
-        const index = state.likeForums.findIndex(item => +fid === +item.forum_id)
-        if (index === -1) return
-        const target = {
-          ...state.likeForums[index],
-          ...forum,
-        }
-        if (forum.sign_bonus_point) {
-          target.user_exp = Number(target.user_exp) + Number(forum.sign_bonus_point)
-        }
-        state.likeForums.splice(index, 1, target)
-      }
-      // 未签到的靠前
-      function checkUnsign() {
-        state.likeForums.sort((a, b) => {
-          if (!a.is_sign && b.is_sign) return -1
-          return 0
-        })
-      }
-      function changeReverse() {
-        state.isReverse = !state.isReverse
-        store.is_reverse = state.isReverse
-      }
-      function changeSize() {
-        state.size = sizeTick.next().value
-      }
-      function onSimulateChange({ target: { checked } }) {
-        store.is_simulate = checked
-        if (!checked) return
-
-        const { BDUSS } = store
-        const result = window.prompt('请输入F12->Application->Cookies中的BDUSS', BDUSS || undefined)
-        if (result) {
-          store.BDUSS = result
-          location.reload()
-        } else {
-          nextTick(() => {
-            state.isSimulate = false
-            store.is_simulate = false
-          })
-        }
-      }
-
-      return {
-        ...toRefs(state),
-        keyword,
-        isComplete,
-        isForumsHide,
-        isCover,
-        diaplayForums,
-        counter,
-        run,
-        setLikeForums,
-        updateLikeForum,
-        checkUnsign,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
-        changeReverse,
-        changeSize,
-        onSimulateChange,
-      }
     },
   })
   const rootContainer = document.createElement('div')

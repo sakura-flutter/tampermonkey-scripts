@@ -4,7 +4,7 @@ import './index.scss'
 const prefixCls = 'skr-input'
 
 const Input = defineComponent({
-  name: 'skr-input',
+  name: 'SkrInput',
   props: {
     modelValue: {
       type: [String, Number],
@@ -20,7 +20,7 @@ const Input = defineComponent({
       default: false,
     },
   },
-  emit: [
+  emits: [
     'update:modelValue',
   ],
   setup(props, { emit }) {

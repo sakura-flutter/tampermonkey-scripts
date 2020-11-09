@@ -1,9 +1,7 @@
-// eslint-disable-next-line no-unused-vars
 import { createApp, toRefs, reactive, computed, Transition, TransitionGroup } from 'vue'
 import { parseURL, throttle } from '@/utils'
 import { checker } from '@/utils/compatibility'
 import { useGMvalue } from '@/composition/use-gm-value'
-// eslint-disable-next-line no-unused-vars
 import { Button } from '@/components'
 import './index.scss'
 
@@ -105,6 +103,67 @@ function fixBarHeight() {
 /* 记录看过的产品 */
 function createRecorder() {
   const app = createApp({
+    setup() {
+      const state = reactive({
+        recordsVisible: false,
+        moreActionsVisible: false,
+      })
+      const { value: records, setValue: setRecords } = useGMvalue('records', [])
+      const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
+      const reversed = computed(() => [...records.value].reverse())
+
+      function deleteItem(item) {
+        const newRecords = [...records.value]
+        newRecords.find((record, index) => {
+          if (record.pid === item.pid) {
+            newRecords.splice(index, 1)
+            return true
+          }
+          return false
+        })
+        setRecords(newRecords)
+      }
+      function copy(action, item) {
+        let copyString = ''
+        const password = GM_getValue('passwords', {})[item.pid]
+        if (action === 'all') {
+          copyString += `${item.title}`
+          password && (copyString += ` (密码：${password})`)
+          copyString += `\n${item.href}`
+        } else if (action === 'pwd') {
+          if (password) {
+            copyString += password
+          } else {
+            Toast.warning('没有密码！')
+          }
+        }
+
+        if (!copyString) return
+        GM_setClipboard(copyString, 'text')
+        Toast.success('复制成功')
+      }
+      function toggle(visible) {
+        state.recordsVisible = visible
+      }
+      function toggleMoreActions(visible) {
+        state.moreActionsVisible = visible
+      }
+      function onUnhiddenChange(event) {
+        setUnhidden(event.target.checked)
+      }
+
+      return {
+        ...toRefs(state),
+        records,
+        unhidden,
+        reversed,
+        deleteItem,
+        copy,
+        toggle,
+        toggleMoreActions,
+        onUnhiddenChange,
+      }
+    },
     render() {
       const {
         reversed,
@@ -177,67 +236,6 @@ function createRecorder() {
           </div>
         </article>
       )
-    },
-    setup() {
-      const state = reactive({
-        recordsVisible: false,
-        moreActionsVisible: false,
-      })
-      const { value: records, setValue: setRecords } = useGMvalue('records', [])
-      const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
-      const reversed = computed(() => [...records.value].reverse())
-
-      function deleteItem(item) {
-        const newRecords = [...records.value]
-        newRecords.find((record, index) => {
-          if (record.pid === item.pid) {
-            newRecords.splice(index, 1)
-            return true
-          }
-          return false
-        })
-        setRecords(newRecords)
-      }
-      function copy(action, item) {
-        let copyString = ''
-        const password = GM_getValue('passwords', {})[item.pid]
-        if (action === 'all') {
-          copyString += `${item.title}`
-          password && (copyString += ` (密码：${password})`)
-          copyString += `\n${item.href}`
-        } else if (action === 'pwd') {
-          if (password) {
-            copyString += password
-          } else {
-            Toast.warning('没有密码！')
-          }
-        }
-
-        if (!copyString) return
-        GM_setClipboard(copyString, 'text')
-        Toast.success('复制成功')
-      }
-      function toggle(visible) {
-        state.recordsVisible = visible
-      }
-      function toggleMoreActions(visible) {
-        state.moreActionsVisible = visible
-      }
-      function onUnhiddenChange(event) {
-        setUnhidden(event.target.checked)
-      }
-
-      return {
-        ...toRefs(state),
-        records,
-        unhidden,
-        reversed,
-        deleteItem,
-        copy,
-        toggle,
-        toggleMoreActions,
-        onUnhiddenChange,
-      }
     },
   })
   const rootContainer = document.createElement('div')

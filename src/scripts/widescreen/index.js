@@ -3,7 +3,6 @@ import { once, documentLoaded } from '@/utils'
 import { checker } from '@/utils/compatibility'
 import globalStore, { createStore as _createStore } from '@/store'
 import { useGMvalue } from '@/composition/use-gm-value'
-// eslint-disable-next-line no-unused-vars
 import { Button } from '@/components'
 import './index.scss'
 
@@ -1232,22 +1231,6 @@ function createWidescreenControl(options) {
   const { store, execute = () => {}, visible = true, silent = false } = options
 
   const app = createApp({
-    render() {
-      const { uiVisible, visible, enabled, toggle } = this
-
-      return (
-        <Button
-          class="inject-widescreen-js"
-          v-show={uiVisible && visible}
-          title="注意：页面会被刷新"
-          type="primary"
-          shadow
-          onClick={toggle}
-        >
-          {enabled ? '已开启' : '关闭'}
-        </Button>
-      )
-    },
     setup() {
       const state = reactive({
         // 总开关
@@ -1283,6 +1266,22 @@ function createWidescreenControl(options) {
         notify,
         toggle,
       }
+    },
+    render() {
+      const { uiVisible, visible, enabled, toggle } = this
+
+      return (
+        <Button
+          class="inject-widescreen-js"
+          v-show={uiVisible && visible}
+          title="注意：页面会被刷新"
+          type="primary"
+          shadow
+          onClick={toggle}
+        >
+          {enabled ? '已开启' : '关闭'}
+        </Button>
+      )
     },
   })
   const rootContainer = document.createElement('div')
