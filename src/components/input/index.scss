@@ -13,6 +13,7 @@
   }
 
   &:focus {
+    @extend :hover;
     box-shadow: 0 0 0 2px var(--skr-primary-lighten-color);
   }
 
@@ -20,6 +21,13 @@
     padding: {
       top: 2px;
       bottom: 2px;
+    }
+  }
+  &--small#{& + "--scale"} {
+    &:focus {
+      padding-top: 6px;
+      padding-bottom: 6px;
+      font-size: 14px;
     }
   }
 
@@ -36,10 +44,4 @@
       bottom: 10px;
     }
   }
-}
-
-.skr-input--small.skr-input--scale:focus {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  font-size: 14px;
 }
