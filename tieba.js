@@ -1503,7 +1503,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:
 ;
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2385,7 +2385,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-input',
+  name: 'SkrInput',
   props: {
     modelValue: {
       type: [String, Number],
@@ -2401,7 +2401,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
       default: false
     }
   },
-  emit: ['update:modelValue'],
+  emits: ['update:modelValue'],
 
   setup(props, {
     emit
@@ -2643,7 +2643,10 @@ const button_prefixCls = 'skr-button'; // button type非default时覆盖一层�
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
 const Button = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-button',
+  name: 'SkrButton',
+  directives: {
+    ripple: src_directives_v_ripple
+  },
   props: {
     type: {
       type: String,
@@ -2672,9 +2675,6 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       type: [Boolean, Object],
       default: true
     }
-  },
-  directives: {
-    ripple: src_directives_v_ripple
   },
 
   setup(props, {
@@ -2718,7 +2718,6 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 /* harmony default export */ const tieba_ui = (ui/* default.locals */.Z.locals || {});
 // CONCATENATED MODULE: ./src/scripts/tieba/ui.js
 ;
- // eslint-disable-next-line no-unused-vars
 
 
 
@@ -2748,123 +2747,6 @@ function createUI({
   }();
 
   const app = (0,external_Vue_namespaceObject.createApp)({
-    render() {
-      const {
-        loading,
-        size,
-        keyword,
-        isComplete,
-        isForumsHide,
-        isCover,
-        isReverse,
-        counter,
-        likeForums,
-        diaplayForums,
-        run,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
-        changeReverse,
-        changeSize,
-        onSimulateChange
-      } = this;
-
-      function expTitle(item) {
-        const MAX_EXP_DAILY = 8;
-        const needed = item.levelup_score - item.user_exp;
-        return `距离升级还需要${needed}经验，若每天+${MAX_EXP_DAILY}，还需要${Math.ceil(needed / MAX_EXP_DAILY)}天`;
-      }
-
-      return (0,external_Vue_namespaceObject.createVNode)("div", {
-        "id": "inject-sign",
-        "class": {
-          'forums-hide': isForumsHide,
-          cover: isCover,
-          [size]: true
-        }
-      }, [(0,external_Vue_namespaceObject.createVNode)("div", {
-        "class": "control"
-      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "disabled": loading,
-        "type": "primary",
-        "shadow": true,
-        "onClick": run
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u4E00\u952E\u7B7E\u5230")]
-      }), (0,external_Vue_namespaceObject.createVNode)("div", {
-        "class": "label-wrap"
-      }, [(0,external_Vue_namespaceObject.createVNode)("label", {
-        "title": "模拟APP签到可以获得与APP相同的经验，比网页签到经验更多，也提供更多功能，但需要BDUSS，重新登录后需要再次输入，请网上搜索获得方法，不勾选则通过网页签到，此时不需要BDUSS"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.isSimulate,
-        "type": "checkbox",
-        "onChange": onSimulateChange
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u6A21\u62DFAPP")]), (0,external_Vue_namespaceObject.createVNode)("label", {
-        "title": "下次进入贴吧时自动签到，建议同时勾选模拟APP"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": isComplete,
-        "type": "checkbox",
-        "onChange": event => setComplete(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u81EA\u52A8\u7B7E\u5230")]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [(0,external_Vue_namespaceObject.createVNode)("label", {
-        "title": "列表将缩到底部"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.isForumsHide,
-        "type": "checkbox",
-        "onChange": event => setForumsHide(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9690\u85CF\u5217\u8868")]), (0,external_Vue_namespaceObject.createVNode)("label", {
-        "title": "覆盖在页面上显示"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.isCover,
-        "type": "checkbox",
-        "onChange": event => setCover(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9632\u6B62\u906E\u6321")])])])]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)("div", {
-        "class": "forums-container"
-      }, [(0,external_Vue_namespaceObject.createVNode)("header", {
-        "class": "top-btns"
-      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "class": "reverse-btn",
-        "size": "mini",
-        "onClick": changeReverse
-      }, {
-        default: () => [isReverse ? '已倒序' : '普通', (0,external_Vue_namespaceObject.createVNode)("span", {
-          "title": "已签/总数"
-        }, [counter.sign, (0,external_Vue_namespaceObject.createTextVNode)("/"), counter.total])]
-      }), (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "class": "resize-btn",
-        "size": "mini",
-        "onClick": changeSize
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u5927\u5C0F")]
-      })]), (0,external_Vue_namespaceObject.createVNode)("ul", {
-        "class": {
-          [size]: true
-        }
-      }, [diaplayForums.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
-        "key": item.forum_id
-      }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-        "href": '/f?kw=' + item.forum_name,
-        "title": item.forum_name,
-        "target": "_blank"
-      }, [item.forum_name]), (0,external_Vue_namespaceObject.createVNode)("span", {
-        "class": "signed"
-      }, [item.is_sign ? ' √' : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
-        "class": "level",
-        "title": item.level_name
-      }, [item.user_level, (0,external_Vue_namespaceObject.createTextVNode)("\u7EA7")]), (0,external_Vue_namespaceObject.createVNode)("span", {
-        "class": "gain"
-      }, [item.sign_bonus_point ? '+' + item.sign_bonus_point : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
-        "class": "exp",
-        "title": expTitle(item)
-      }, [item.user_exp, (0,external_Vue_namespaceObject.createTextVNode)("/"), item.levelup_score])]))]), likeForums.length > 25 && (0,external_Vue_namespaceObject.createVNode)(src_components_input, {
-        "value": keyword,
-        "placeholder": "搜索",
-        "size": "small",
-        "scale": true,
-        "onInput": event => setKeyword(event.target.value)
-      }, null)])]);
-    },
-
     setup() {
       const state = (0,external_Vue_namespaceObject.reactive)({
         loading: false,
@@ -3005,6 +2887,123 @@ function createUI({
         changeSize,
         onSimulateChange
       };
+    },
+
+    render() {
+      const {
+        loading,
+        size,
+        keyword,
+        isComplete,
+        isForumsHide,
+        isCover,
+        isReverse,
+        counter,
+        likeForums,
+        diaplayForums,
+        run,
+        setKeyword,
+        setComplete,
+        setForumsHide,
+        setCover,
+        changeReverse,
+        changeSize,
+        onSimulateChange
+      } = this;
+
+      function expTitle(item) {
+        const MAX_EXP_DAILY = 8;
+        const needed = item.levelup_score - item.user_exp;
+        return `距离升级还需要${needed}经验，若每天+${MAX_EXP_DAILY}，还需要${Math.ceil(needed / MAX_EXP_DAILY)}天`;
+      }
+
+      return (0,external_Vue_namespaceObject.createVNode)("div", {
+        "id": "inject-sign",
+        "class": {
+          'forums-hide': isForumsHide,
+          cover: isCover,
+          [size]: true
+        }
+      }, [(0,external_Vue_namespaceObject.createVNode)("div", {
+        "class": "control"
+      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "disabled": loading,
+        "type": "primary",
+        "shadow": true,
+        "onClick": run
+      }, {
+        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u4E00\u952E\u7B7E\u5230")]
+      }), (0,external_Vue_namespaceObject.createVNode)("div", {
+        "class": "label-wrap"
+      }, [(0,external_Vue_namespaceObject.createVNode)("label", {
+        "title": "模拟APP签到可以获得与APP相同的经验，比网页签到经验更多，也提供更多功能，但需要BDUSS，重新登录后需要再次输入，请网上搜索获得方法，不勾选则通过网页签到，此时不需要BDUSS"
+      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
+        "checked": this.isSimulate,
+        "type": "checkbox",
+        "onChange": onSimulateChange
+      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u6A21\u62DFAPP")]), (0,external_Vue_namespaceObject.createVNode)("label", {
+        "title": "下次进入贴吧时自动签到，建议同时勾选模拟APP"
+      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
+        "checked": isComplete,
+        "type": "checkbox",
+        "onChange": event => setComplete(event.target.checked)
+      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u81EA\u52A8\u7B7E\u5230")]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [(0,external_Vue_namespaceObject.createVNode)("label", {
+        "title": "列表将缩到底部"
+      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
+        "checked": this.isForumsHide,
+        "type": "checkbox",
+        "onChange": event => setForumsHide(event.target.checked)
+      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9690\u85CF\u5217\u8868")]), (0,external_Vue_namespaceObject.createVNode)("label", {
+        "title": "覆盖在页面上显示"
+      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
+        "checked": this.isCover,
+        "type": "checkbox",
+        "onChange": event => setCover(event.target.checked)
+      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9632\u6B62\u906E\u6321")])])])]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)("div", {
+        "class": "forums-container"
+      }, [(0,external_Vue_namespaceObject.createVNode)("header", {
+        "class": "top-btns"
+      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "class": "reverse-btn",
+        "size": "mini",
+        "onClick": changeReverse
+      }, {
+        default: () => [isReverse ? '已倒序' : '普通', (0,external_Vue_namespaceObject.createVNode)("span", {
+          "title": "已签/总数"
+        }, [counter.sign, (0,external_Vue_namespaceObject.createTextVNode)("/"), counter.total])]
+      }), (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "class": "resize-btn",
+        "size": "mini",
+        "onClick": changeSize
+      }, {
+        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u5927\u5C0F")]
+      })]), (0,external_Vue_namespaceObject.createVNode)("ul", {
+        "class": {
+          [size]: true
+        }
+      }, [diaplayForums.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
+        "key": item.forum_id
+      }, [(0,external_Vue_namespaceObject.createVNode)("a", {
+        "href": '/f?kw=' + item.forum_name,
+        "title": item.forum_name,
+        "target": "_blank"
+      }, [item.forum_name]), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "signed"
+      }, [item.is_sign ? ' √' : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "level",
+        "title": item.level_name
+      }, [item.user_level, (0,external_Vue_namespaceObject.createTextVNode)("\u7EA7")]), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "gain"
+      }, [item.sign_bonus_point ? '+' + item.sign_bonus_point : '']), (0,external_Vue_namespaceObject.createVNode)("span", {
+        "class": "exp",
+        "title": expTitle(item)
+      }, [item.user_exp, (0,external_Vue_namespaceObject.createTextVNode)("/"), item.levelup_score])]))]), likeForums.length > 25 && (0,external_Vue_namespaceObject.createVNode)(src_components_input, {
+        "value": keyword,
+        "placeholder": "搜索",
+        "size": "small",
+        "scale": true,
+        "onInput": event => setKeyword(event.target.value)
+      }, null)])]);
     }
 
   });

@@ -53,7 +53,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:
 ;
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -675,7 +675,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-input',
+  name: 'SkrInput',
   props: {
     modelValue: {
       type: [String, Number],
@@ -691,7 +691,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
       default: false
     }
   },
-  emit: ['update:modelValue'],
+  emits: ['update:modelValue'],
 
   setup(props, {
     emit
@@ -933,7 +933,10 @@ const button_prefixCls = 'skr-button'; // button type非default时覆盖一层�
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
 const Button = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-button',
+  name: 'SkrButton',
+  directives: {
+    ripple: src_directives_v_ripple
+  },
   props: {
     type: {
       type: String,
@@ -962,9 +965,6 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       type: [Boolean, Object],
       default: true
     }
-  },
-  directives: {
-    ripple: src_directives_v_ripple
   },
 
   setup(props, {
@@ -1008,10 +1008,8 @@ var lanhu_update = injectStylesIntoStyleTag_default()(lanhu/* default */.Z, lanh
 /* harmony default export */ const scripts_lanhu = (lanhu/* default.locals */.Z.locals || {});
 // CONCATENATED MODULE: ./src/scripts/lanhu/index.js
 ;
-// eslint-disable-next-line no-unused-vars
 
 
- // eslint-disable-next-line no-unused-vars
 
 
 
@@ -1116,6 +1114,79 @@ function fixBarHeight() {
 
 function createRecorder() {
   const app = (0,external_Vue_namespaceObject.createApp)({
+    setup() {
+      const state = (0,external_Vue_namespaceObject.reactive)({
+        recordsVisible: false,
+        moreActionsVisible: false
+      });
+      const {
+        value: records,
+        setValue: setRecords
+      } = useGMvalue('records', []);
+      const {
+        value: unhidden,
+        setValue: setUnhidden
+      } = useGMvalue('unhidden', false);
+      const reversed = (0,external_Vue_namespaceObject.computed)(() => [...records.value].reverse());
+
+      function deleteItem(item) {
+        const newRecords = [...records.value];
+        newRecords.find((record, index) => {
+          if (record.pid === item.pid) {
+            newRecords.splice(index, 1);
+            return true;
+          }
+
+          return false;
+        });
+        setRecords(newRecords);
+      }
+
+      function copy(action, item) {
+        let copyString = '';
+        const password = GM_getValue('passwords', {})[item.pid];
+
+        if (action === 'all') {
+          copyString += `${item.title}`;
+          password && (copyString += ` (密码：${password})`);
+          copyString += `\n${item.href}`;
+        } else if (action === 'pwd') {
+          if (password) {
+            copyString += password;
+          } else {
+            Toast.warning('没有密码！');
+          }
+        }
+
+        if (!copyString) return;
+        GM_setClipboard(copyString, 'text');
+        Toast.success('复制成功');
+      }
+
+      function toggle(visible) {
+        state.recordsVisible = visible;
+      }
+
+      function toggleMoreActions(visible) {
+        state.moreActionsVisible = visible;
+      }
+
+      function onUnhiddenChange(event) {
+        setUnhidden(event.target.checked);
+      }
+
+      return { ...(0,external_Vue_namespaceObject.toRefs)(state),
+        records,
+        unhidden,
+        reversed,
+        deleteItem,
+        copy,
+        toggle,
+        toggleMoreActions,
+        onUnhiddenChange
+      };
+    },
+
     render() {
       const {
         reversed,
@@ -1206,79 +1277,6 @@ function createRecorder() {
         "title": "固定显示",
         "onChange": onUnhiddenChange
       }, null)])]);
-    },
-
-    setup() {
-      const state = (0,external_Vue_namespaceObject.reactive)({
-        recordsVisible: false,
-        moreActionsVisible: false
-      });
-      const {
-        value: records,
-        setValue: setRecords
-      } = useGMvalue('records', []);
-      const {
-        value: unhidden,
-        setValue: setUnhidden
-      } = useGMvalue('unhidden', false);
-      const reversed = (0,external_Vue_namespaceObject.computed)(() => [...records.value].reverse());
-
-      function deleteItem(item) {
-        const newRecords = [...records.value];
-        newRecords.find((record, index) => {
-          if (record.pid === item.pid) {
-            newRecords.splice(index, 1);
-            return true;
-          }
-
-          return false;
-        });
-        setRecords(newRecords);
-      }
-
-      function copy(action, item) {
-        let copyString = '';
-        const password = GM_getValue('passwords', {})[item.pid];
-
-        if (action === 'all') {
-          copyString += `${item.title}`;
-          password && (copyString += ` (密码：${password})`);
-          copyString += `\n${item.href}`;
-        } else if (action === 'pwd') {
-          if (password) {
-            copyString += password;
-          } else {
-            Toast.warning('没有密码！');
-          }
-        }
-
-        if (!copyString) return;
-        GM_setClipboard(copyString, 'text');
-        Toast.success('复制成功');
-      }
-
-      function toggle(visible) {
-        state.recordsVisible = visible;
-      }
-
-      function toggleMoreActions(visible) {
-        state.moreActionsVisible = visible;
-      }
-
-      function onUnhiddenChange(event) {
-        setUnhidden(event.target.checked);
-      }
-
-      return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-        records,
-        unhidden,
-        reversed,
-        deleteItem,
-        copy,
-        toggle,
-        toggleMoreActions,
-        onUnhiddenChange
-      };
     }
 
   });

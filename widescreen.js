@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.15.2
+// @version      1.15.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
@@ -1523,7 +1523,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:
 ;
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2200,7 +2200,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-input',
+  name: 'SkrInput',
   props: {
     modelValue: {
       type: [String, Number],
@@ -2216,7 +2216,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
       default: false
     }
   },
-  emit: ['update:modelValue'],
+  emits: ['update:modelValue'],
 
   setup(props, {
     emit
@@ -2458,7 +2458,10 @@ const button_prefixCls = 'skr-button'; // button type非default时覆盖一层�
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
 const Button = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'skr-button',
+  name: 'SkrButton',
+  directives: {
+    ripple: src_directives_v_ripple
+  },
   props: {
     type: {
       type: String,
@@ -2487,9 +2490,6 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       type: [Boolean, Object],
       default: true
     }
-  },
-  directives: {
-    ripple: src_directives_v_ripple
   },
 
   setup(props, {
@@ -2537,7 +2537,6 @@ var widescreen_update = injectStylesIntoStyleTag_default()(widescreen/* default 
 
 
 
- // eslint-disable-next-line no-unused-vars
 
 
 
@@ -3002,11 +3001,13 @@ handlers.set('baidu', function () {
           width: 81%;
         }
       }
-    `); // 搜索时百度会清除文档这里需要将样式重新插入
+    `); // 搜索时百度会清除head这里需要将样式重新插入在body处
 
     function redo() {
-      if (document.head.contains(styleSheet)) return;
-      document.head.appendChild(styleSheet);
+      if (document.body.contains(styleSheet) || document.head.contains(styleSheet)) return;
+      const template = document.createElement('template');
+      template.appendChild(styleSheet);
+      document.body.insertAdjacentElement('afterbegin', template);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -3014,8 +3015,9 @@ handlers.set('baidu', function () {
         jQuery
       } = unsafeWindow;
       jQuery(document).ajaxSuccess((event, xhr, settings) => {
-        if (!settings.url.startsWith('/s?')) return;
-        redo();
+        if (settings.url.startsWith('/s?')) {
+          redo();
+        }
       });
     });
     window.addEventListener('popstate', redo);
@@ -3851,24 +3853,6 @@ function createWidescreenControl(options) {
     silent = false
   } = options;
   const app = (0,external_Vue_namespaceObject.createApp)({
-    render() {
-      const {
-        uiVisible,
-        visible,
-        enabled,
-        toggle
-      } = this;
-      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "class": "inject-widescreen-js",
-        "title": "注意：页面会被刷新",
-        "type": "primary",
-        "shadow": true,
-        "onClick": toggle
-      }, {
-        default: () => [enabled ? '已开启' : '关闭']
-      }), [[external_Vue_namespaceObject.vShow, uiVisible && visible]]);
-    },
-
     setup() {
       const state = (0,external_Vue_namespaceObject.reactive)({
         // 总开关
@@ -3907,6 +3891,24 @@ function createWidescreenControl(options) {
         notify,
         toggle
       };
+    },
+
+    render() {
+      const {
+        uiVisible,
+        visible,
+        enabled,
+        toggle
+      } = this;
+      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "class": "inject-widescreen-js",
+        "title": "注意：页面会被刷新",
+        "type": "primary",
+        "shadow": true,
+        "onClick": toggle
+      }, {
+        default: () => [enabled ? '已开启' : '关闭']
+      }), [[external_Vue_namespaceObject.vShow, uiVisible && visible]]);
     }
 
   });
