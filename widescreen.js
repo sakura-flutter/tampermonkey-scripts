@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.15.3
+// @version      1.15.4
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
@@ -2933,7 +2933,7 @@ handlers.set('baidu', function () {
       }
       @media screen and (min-width: 1460px) {
         /* 顶部搜索 */
-        // 修复搜索主页换肤后头部异常
+        /* 修复搜索主页换肤后头部异常 */
         #head:not(.s-skin-hasbg) {
           background-color: #ffffffd1;
           backdrop-filter: blur(10px);
