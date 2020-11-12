@@ -452,16 +452,19 @@ handlers.set('baidu', function() {
         }
       }
     `)
-    // 搜索时百度会清除文档这里需要将样式重新插入
+    // 搜索时百度会清除head这里需要将样式重新插入在body处
     function redo() {
-      if (document.head.contains(styleSheet)) return
-      document.head.appendChild(styleSheet)
+      if (document.body.contains(styleSheet) || document.head.contains(styleSheet)) return
+      const template = document.createElement('template')
+      template.appendChild(styleSheet)
+      document.body.insertAdjacentElement('afterbegin', template)
     }
     window.addEventListener('DOMContentLoaded', () => {
       const { jQuery } = unsafeWindow
       jQuery(document).ajaxSuccess((event, xhr, settings) => {
-        if (!settings.url.startsWith('/s?')) return
-        redo()
+        if (settings.url.startsWith('/s?')) {
+          redo()
+        }
       })
     })
     window.addEventListener('popstate', redo)
