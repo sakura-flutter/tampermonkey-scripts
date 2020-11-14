@@ -1176,10 +1176,13 @@ handlers.set('doubanmovie', function() {
 /* ===今日头条===start */
 handlers.set('toutiao', function() {
   const store = createStore('toutiao')
-  unsafeWindow.document.addEventListener('readystatechange', () => {
-    if (document.readyState !== 'interactive' || !unsafeWindow.Page) return
+  const call = once(() => {
     createWidescreenControl({ store, execute })
   })
+  document.addEventListener('readystatechange', () => {
+    unsafeWindow.Page && call()
+  })
+
   function execute() {
     GM_addStyle(`
       :root {
