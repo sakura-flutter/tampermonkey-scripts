@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.15.4
+// @version      1.15.5
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
@@ -3785,12 +3785,14 @@ handlers.set('doubanmovie', function () {
 
 handlers.set('toutiao', function () {
   const store = widescreen_createStore('toutiao');
-  unsafeWindow.document.addEventListener('readystatechange', () => {
-    if (document.readyState !== 'interactive' || !unsafeWindow.Page) return;
+  const call = once(() => {
     createWidescreenControl({
       store,
       execute
     });
+  });
+  document.addEventListener('readystatechange', () => {
+    unsafeWindow.Page && call();
   });
 
   function execute() {
