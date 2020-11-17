@@ -1,4 +1,4 @@
-import { stringifyURL } from '@/utils'
+import * as qs from '@/utils/querystring'
 import { FAKE_VERSION, makeFakeParams, signature } from './signature'
 
 /**
@@ -46,7 +46,7 @@ request.post = function(url, data, options = {}) {
   if (data) {
     let body = data
     if (options.headers['Content-Type'].includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
-      body = stringifyURL(data)
+      body = qs.stringify(data)
     }
     if (options.headers['Content-Type'].includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
       body = JSON.stringify(data)
@@ -89,7 +89,7 @@ export function getForumLike(params) {
     ...params,
     sign: signature(params),
   }
-  return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', stringifyURL(paramsSigned), {
+  return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', qs.stringify(paramsSigned), {
     headers: {
       'User-agent': `bdtb for Android ${FAKE_VERSION}`,
       Accept: '',
@@ -106,7 +106,7 @@ export function doSign(params) {
     ...params,
     sign: signature(params),
   }
-  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringifyURL(paramsSigned), {
+  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', qs.stringify(paramsSigned), {
     headers: {
       'User-agent': `bdtb for Android ${FAKE_VERSION}`,
       Accept: '',

@@ -1,5 +1,6 @@
 import { createApp, toRefs, reactive, computed, Transition, TransitionGroup } from 'vue'
-import { parseURL, throttle } from '@/utils'
+import { throttle } from '@/utils'
+import * as qs from '@/utils/querystring'
 import { checker } from '@/utils/compatibility'
 import { useGMvalue } from '@/composition/use-gm-value'
 import { Button } from '@/components'
@@ -33,7 +34,7 @@ function autofillPassword() {
   // 停止上次观察
   autofillPassword.observer?.disconnect()
   if (!location.hash.startsWith('#/item/project/door')) return
-  const { pid } = parseURL()
+  const { pid } = qs.parse()
   if (!pid) return
   // 确认登录按钮
   let confirmEl = null
@@ -244,7 +245,7 @@ function createRecorder() {
 
   /* 记录函数 */
   function record() {
-    const { pid } = parseURL()
+    const { pid } = qs.parse()
     if (!pid) return
 
     const records = GM_getValue('records', [])

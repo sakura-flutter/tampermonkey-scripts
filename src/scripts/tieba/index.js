@@ -1,4 +1,5 @@
-import { parseURL, sleep } from '@/utils'
+import { sleep } from '@/utils'
+import * as qs from '@/utils/querystring'
 import Queue from '@/utils/queue'
 import { checker } from '@/utils/compatibility'
 import store from '@/store'
@@ -107,7 +108,7 @@ async function runByBDUSS(ui) {
     limit: 5,
     tasks: allUnsignEls.map(current => {
       return async function() {
-        const { kw } = parseURL(current.href)
+        const { kw } = qs.parse(current.href)
         const { fid } = current.dataset
         try {
           const response = await doSign({ tbs, kw, fid })
@@ -137,7 +138,7 @@ async function runByBDUSS(ui) {
   // 重签
   while (resignEls.length) {
     const current = resignEls.shift()
-    const { kw } = parseURL(current.href)
+    const { kw } = qs.parse(current.href)
     const { fid } = current.dataset
     try {
       const response = await doSign({ tbs, kw, fid })
@@ -186,7 +187,7 @@ async function runByWeb() {
   }
   while (allUnsignEls.length) {
     const current = allUnsignEls.shift()
-    const { kw } = parseURL(current.href)
+    const { kw } = qs.parse(current.href)
     try {
       const response = await doSign({ kw })
       const { no } = response
@@ -208,7 +209,7 @@ async function runByWeb() {
   // 重签
   while (resignEls.length) {
     const current = resignEls.shift()
-    const { kw } = parseURL(current.href)
+    const { kw } = qs.parse(current.href)
     try {
       const response = await doSign({ kw })
       const { no } = response
