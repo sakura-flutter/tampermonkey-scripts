@@ -17,6 +17,7 @@ module.exports = (env, argv) => ({
     lanhu: './src/scripts/lanhu',
     tieba: './src/scripts/tieba',
     widescreen: './src/scripts/widescreen',
+    redirect: './src/scripts/redirect',
   },
   output: {
     path: path.join(__dirname, 'dist'),
