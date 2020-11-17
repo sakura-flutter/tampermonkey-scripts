@@ -12,6 +12,6 @@
   // 顺序执行
   "plugins": [
     "@vue/babel-plugin-jsx",
-    "@babel/plugin-proposal-class-properties"
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ]
 }
