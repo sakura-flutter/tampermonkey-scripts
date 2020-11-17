@@ -21,7 +21,7 @@
       options.closable = true
     }
 
-    const { createApp, Transition, onMounted, ref } = Vue
+    const { createApp, h, ref, onMounted, Transition } = Vue
     const rootContainer = document.createElement('div')
     const app = createApp({
       setup() {
@@ -56,7 +56,6 @@
         }
       },
       render() {
-        const { h } = Vue
         const { visible, type, content, closable, close, onAfterLeave } = this
         return h(Transition, { name: 'inject-toast-slide-fade', appear: true, onAfterLeave }, {
           default: () => (
@@ -99,14 +98,21 @@
   function safeAppendElement(cb) {
     document.body ? cb() : window.addEventListener('DOMContentLoaded', cb)
   }
+
   function insertElementInContainer(elememnt) {
-    if (!insertElementInContainer.el) {
-      const el = insertElementInContainer.el = document.createElement('div')
-      el.classList.add('inject-toast-container')
-      safeAppendElement(() => { document.body.appendChild(el) })
+    function getContainer() {
+      const classname = 'inject-toast-container'
+      let containerEl = document.querySelector('.' + classname)
+      if (containerEl == null) {
+        containerEl = document.createElement('div')
+        containerEl.classList.add(classname)
+        document.body.appendChild(containerEl)
+      }
+      return containerEl
     }
-    const { el } = insertElementInContainer
-    el.appendChild(elememnt)
+    safeAppendElement(() => {
+      getContainer().appendChild(elememnt)
+    })
   }
 
   ;(function addStyle() {
@@ -122,6 +128,7 @@
         text-align: center;
       }
       .inject-toast {
+        contain: content;
         max-height: 100vh;
         transition: all .3s ease-in-out;
       }
