@@ -42,6 +42,6 @@ module.exports = isProd =>
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
 // @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
-// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=862073
+// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=870120
 // ==/UserScript==
 `

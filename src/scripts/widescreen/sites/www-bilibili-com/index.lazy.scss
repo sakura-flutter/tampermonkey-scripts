@@ -1,0 +1,34 @@
+$offset-left: -5vw;
+
+:root {
+  --inject-page-width: min(50vw, 915px);
+}
+@media screen and (min-width: 1350px) {
+  /* 文章 */
+  .page-container {
+    width: var(--inject-page-width) !important;
+    max-width: none !important;
+    padding-right: 0 !important;
+    /* 左边显得空洞，往左偏移一点 */
+    left: $offset-left;
+  }
+  .article-holder,
+  .head-container {
+    width: var(--inject-page-width);
+    max-width: none !important;
+  }
+  .banner-img-holder {
+    width: auto !important;
+    max-width: 100%;
+  }
+  /* 右侧up主等信息 */
+  .up-info-holder {
+    margin-left: 0 !important;
+  }
+  .up-info-holder .fixed-box {
+    left: calc(50% + (var(--inject-page-width) / 2) + #{$offset-left} + 50px);
+    margin-left: 0 !important;
+    /* 避免动画太突兀 */
+    transition: transform 0.2s;
+  }
+}

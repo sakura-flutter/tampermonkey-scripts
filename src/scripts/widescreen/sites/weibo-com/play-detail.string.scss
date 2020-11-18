@@ -1,0 +1,14 @@
+:root {
+  --inject-page-width: min(91vw);
+}
+@media screen and (min-width: 1450px) {
+  [class*="Frame_content2"] {
+    max-width: none;
+    width: var(--inject-page-width);
+  }
+  /* 左列 */
+  [class*="Frame_main2"] {
+    flex-grow: 1;
+    padding-right: 20px;
+  }
+}

@@ -1,0 +1,27 @@
+:root {
+  --inject-page-width: min(77.5vw, 1330px);
+}
+@media screen and (min-width: 1300px) {
+  .WB_frame {
+    display: flex;
+    width: var(--inject-page-width) !important;
+  }
+  /* 内容 */
+  .WB_frame #plc_main {
+    flex: 1;
+    display: flex !important;
+  }
+  .WB_frame_c {
+    flex: 1;
+  }
+  /* 微博类型 (更多-旅游 中出现) */
+  .tab_box {
+    display: flex;
+  }
+  .tab_box::after {
+    content: none;
+  }
+  .tab_box .fr_box {
+    flex: 1;
+  }
+}

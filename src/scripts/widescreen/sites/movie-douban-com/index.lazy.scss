@@ -1,0 +1,26 @@
+:root {
+  --inject-page-width: 82vw;
+}
+@media screen and (min-width: 1300px) {
+  #wrapper {
+    width: var(--inject-page-width);
+  }
+  /* 内容 */
+  #content .article {
+    width: calc(100% - 360px);
+  }
+  /* 电影信息 */
+  #content .article .subject {
+    width: calc(100% - 175px);
+  }
+  #content .article #info {
+    width: calc(100% - 160px);
+    max-width: none;
+  }
+}
+
+@media screen and (min-width: 1610px) {
+  :root {
+    --inject-page-width: 1318px;
+  }
+}

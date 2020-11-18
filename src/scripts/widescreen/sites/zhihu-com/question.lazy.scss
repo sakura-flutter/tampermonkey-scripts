@@ -1,0 +1,39 @@
+$default-width: 694px;
+
+:root {
+  --inject-page-width: min(75vw, 1300px);
+}
+@media screen and (min-width: 1350px) {
+  .QuestionHeader-content,
+  .QuestionHeader-footer {
+    width: var(--inject-page-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .QuestionHeader-footer-inner {
+    width: auto;
+  }
+  .QuestionHeader-footer-main {
+    padding-left: 0;
+  }
+  .QuestionHeader-main {
+    width: 0;
+    flex: 1;
+  }
+  .Question-main {
+    width: var(--inject-page-width);
+  }
+  .Question-main .ListShortcut {
+    flex: 1;
+  }
+  .Question-mainColumn {
+    flex: 1;
+    width: auto;
+    padding-right: 10px;
+  }
+  /* 内容图片 */
+  .ztext .content_image,
+  .ztext .origin_image {
+    max-width: $default-width;
+  }
+}

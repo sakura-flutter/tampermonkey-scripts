@@ -1,0 +1,13 @@
+:root {
+  --inject-page-width: min(82vw, 1350px);
+}
+/* 专栏/问答 */
+@media (min-width: 1390px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl {
+    max-width: var(--inject-page-width);
+  }
+}

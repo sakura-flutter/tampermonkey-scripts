@@ -1,0 +1,21 @@
+:root {
+  --inject-page-width: min(90vw, 1150px);
+}
+@media screen and (min-width: 750px) {
+  /* 文章宽屏 */
+  .rich_media_area_primary_inner {
+    max-width: var(--inject-page-width) !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /* 二维码位置 */
+  #js_pc_qr_code .qr_code_pc {
+    position: fixed;
+    top: 25vh;
+    right: 3vw;
+    opacity: 0.2;
+  }
+  #js_pc_qr_code .qr_code_pc:hover {
+    opacity: 1;
+  }
+}

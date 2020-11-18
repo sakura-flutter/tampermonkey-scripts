@@ -1,0 +1,46 @@
+:root {
+  --inject-page-width: min(80vw, 1250px);
+}
+@media screen and (min-width: 1390px) {
+  /* 头部信息 */
+  .head_main .head_middle,
+  .head_main .head_content {
+    width: var(--inject-page-width) !important;
+  }
+  /* 内容区域 */
+  .content,
+  .foot {
+    width: var(--inject-page-width);
+  }
+  /* 这里的border实际上是这里的背景图 */
+  .forum_content {
+    background: #fff;
+  }
+  #content_wrap {
+    width: calc(100% - 248px);
+    border-right: 1px solid #eee;
+  }
+  /* 每条帖子 */
+  .threadlist_detail {
+    display: flex;
+  }
+  .threadlist_detail .pull_left {
+    flex: auto;
+  }
+  .threadlist_detail .pull_left .threadlist_abs {
+    width: 97%;
+  }
+  /* 发帖区域 */
+  .frs_content_footer_pagelet {
+    width: auto !important;
+  }
+  .tb_rich_poster_container {
+    margin-left: 0 !important;
+  }
+  /* 右侧悬浮按钮 */
+  .tbui_aside_float_bar {
+    left: calc(50% + (var(--inject-page-width) / 2) + 12px) !important;
+    right: auto;
+    margin-left: 0 !important;
+  }
+}
