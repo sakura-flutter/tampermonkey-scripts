@@ -11,5 +11,6 @@ module.exports = isProd =>
 // @run-at       document-start
 // @match        *://www.jianshu.com/go-wild*
 // @match        *://link.zhihu.com/*
+// @match        *://t.cn/*
 // ==/UserScript==
 `

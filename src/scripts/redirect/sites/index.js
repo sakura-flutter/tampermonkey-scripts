@@ -1,5 +1,6 @@
 import { jianshu } from './www-jianshu-com'
 import { zhihu } from './link-zhihu-com'
+import { weibo } from './t-cn'
 
 const sites = [
   {
@@ -13,6 +14,12 @@ const sites = [
     // http://link.zhihu.com/?target=https://www.huawei.com/cn/corporate-information
     test: /link\.zhihu\.com/,
     use: zhihu,
+  },
+  {
+    name: '微博',
+    // http://t.cn/<xxxx>
+    test: /t\.cn\//,
+    use: weibo,
   },
 ]
 
