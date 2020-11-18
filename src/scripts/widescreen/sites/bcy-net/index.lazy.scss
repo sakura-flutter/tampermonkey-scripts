@@ -1,0 +1,19 @@
+:root {
+  --inject-page-width: min(75vw, 1440px);
+}
+@media (min-width: 1580px) {
+  .container .row {
+    width: var(--inject-page-width);
+  }
+  .container .row .col-big {
+    flex: 0.97;
+  }
+  /* 文章头部信息 */
+  .detail-main header {
+    width: auto !important;
+  }
+  /* 相册 */
+  .container .row .col-big .album {
+    width: 100%;
+  }
+}

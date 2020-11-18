@@ -10,7 +10,7 @@ class App {
   }
 
   boot() {
-    const briefURL = location.host + location.pathname
+    const briefURL = location.origin + location.pathname
 
     this.#sites.forEach(async site => {
       const { name, test, use } = site

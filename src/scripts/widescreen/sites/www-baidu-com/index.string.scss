@@ -1,0 +1,75 @@
+$default-width: 560px;
+
+:root {
+  --inject-page-width: min(75vw, 1300px);
+}
+@media screen and (min-width: 1460px) {
+  /* 顶部搜索 */
+  /* 修复搜索主页换肤后头部异常 */
+  #head:not(.s-skin-hasbg) {
+    background-color: #ffffffd1;
+    backdrop-filter: blur(10px);
+  }
+  .head_wrapper .s_form {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    width: -moz-fit-content;
+  }
+  /* 搜索tab */
+  .s_tab {
+    padding-left: 0 !important;
+  }
+  .s_tab {
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    width: -moz-fit-content;
+  }
+  /* 搜索内容 */
+  #container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: var(--inject-page-width) !important;
+  }
+  /* 左侧搜索结果 */
+  #content_left {
+    width: calc(var(--inject-page-width) - 450px) !important;
+  }
+  /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
+  #content_left > div:not([tpl*="img_address"]) {
+    width: 100% !important;
+  }
+  /* 视频宽度限制(搜索：路人女主的养成方法) */
+  .op-bk-polysemy-video__wrap {
+    width: $default-width !important;
+  }
+  #content_left .new-pmd .c-span9 {
+    width: 75%;
+  }
+  #content_left .c-group-wrapper .c-group {
+    width: 95% !important;
+  }
+  /* 分页 */
+  .page-inner {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0 !important;
+    width: var(--inject-page-width);
+  }
+  /* 页脚 */
+  .foot-inner {
+    margin-left: auto;
+    margin-right: auto;
+    width: var(--inject-page-width);
+  }
+  #foot .foot-inner #help {
+    padding-left: 0 !important;
+  }
+}
+
+@media screen and (min-width: 1680px) {
+  #content_left .new-pmd .c-span9 {
+    width: 81%;
+  }
+}

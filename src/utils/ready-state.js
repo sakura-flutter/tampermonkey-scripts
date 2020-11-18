@@ -1,6 +1,7 @@
+import { warn } from '@/utils/log'
 /**
  * 在tampermonkey中，DOMContentLoaded监听后会被缓存，总是会执行
- * readyState的值会因为脚本加载时间多数被抛弃没有版本被监听到
+ * readyState的值会因为脚本加载时间可能被抛弃没有版本被监听到
  *
  * 基于上面原因，pool中的状态区分先后顺序
  * 靠后定义的会自动将靠前定义的但没有监听到的执行一次，但实际上不再是原来的状态
@@ -23,6 +24,7 @@ const execute = readyState => {
   }
 }
 
+warn('document.readyState', document.readyState)
 execute(document.readyState)
 document.readyState !== 'complete' && document.addEventListener('readystatechange', () => execute(document.readyState))
 window.addEventListener('DOMContentLoaded', () => {

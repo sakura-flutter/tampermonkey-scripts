@@ -1,0 +1,64 @@
+$default-width: 550px;
+
+:root {
+  --inject-page-width: min(80vw, 1340px);
+}
+@media screen and (min-width: 1200px) {
+  %hor-center {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    width: var(--inject-page-width) !important;
+  }
+
+  /* 头部注意滚动处理 */
+  .header .header-box {
+    position: relative;
+    padding: 0 5px 45px;
+    @extend %hor-center;
+  }
+  .header,
+  .header.headsearch .header-box {
+    padding-bottom: 0;
+  }
+  .header .header-box .logo {
+    top: -8px;
+  }
+  .headsearch {
+    background-color: #ffffffd1;
+    backdrop-filter: blur(10px);
+  }
+  /* 搜索结果 */
+  #wrapper {
+    display: flex;
+    @extend %hor-center;
+  }
+  #main {
+    flex: 1;
+    width: 0;
+    max-width: none;
+    padding-right: 74px;
+  }
+  #main .results {
+    width: auto;
+  }
+  #main .results > .vrwrap,
+  #main .results > .rb {
+    width: auto !important;
+  }
+  /* 特殊搜索结果恢复原本宽度 */
+  .special-wrap,
+  .vrPicBox {
+    box-sizing: border-box;
+    width: $default-width;
+  }
+  /* 底部 */
+  .hintBox,
+  #pagebar_container,
+  #s_footer > div {
+    @extend %hor-center;
+  }
+  #s_footer {
+    padding-left: 0;
+  }
+}

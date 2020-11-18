@@ -1,0 +1,21 @@
+$default-width: 690px;
+
+:root {
+  --inject-page-width: min(75vw, 1120px);
+}
+@media screen and (min-width: 1000px) {
+  .Post-NormalMain .Post-Header,
+  .Post-NormalMain > div,
+  .Post-NormalSub > div {
+    width: var(--inject-page-width);
+  }
+  /* 内容图片 */
+  .ztext .content_image,
+  .ztext .origin_image {
+    max-width: $default-width;
+  }
+  /* 左侧悬浮按钮 */
+  .Post-SideActions {
+    left: calc(50% - (var(--inject-page-width) / 2) - 120px);
+  }
+}

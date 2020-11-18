@@ -1,0 +1,12 @@
+:root {
+  --inject-page-width: min(91vw, 1295px);
+}
+@media screen and (min-width: 1100px) {
+  .ContentLayout {
+    width: var(--inject-page-width);
+  }
+  /* 内容 */
+  .ContentLayout-mainColumn {
+    flex: 1;
+  }
+}
