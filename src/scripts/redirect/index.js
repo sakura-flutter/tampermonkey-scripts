@@ -1,7 +1,6 @@
 import * as readyState from '@/utils/ready-state'
+import { table as logTable } from '@/utils/log'
 import sites from './sites'
-
-const isDebug = process.env.NODE_ENV !== 'production'
 
 class App {
   #sites = []
@@ -30,7 +29,7 @@ class App {
         redirection = document.querySelector(selector).innerText
       }
 
-      isDebug && console.table({ name, briefURL, redirection })
+      logTable({ name, briefURL, redirection })
       redirection && location.replace(redirection)
     })
   }
