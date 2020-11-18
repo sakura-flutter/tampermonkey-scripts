@@ -39,7 +39,22 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.s[ac]ss$/i,
+        exclude: [
+          /\.lazy\.s[ac]ss$/i,
+          /\.string\.s[ac]ss$/i,
+        ],
         use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
+      {
+        test: /\.lazy\.s[ac]ss$/i,
+        use: [
+          { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
+          'css-loader', 'postcss-loader', 'sass-loader',
+        ],
+      },
+      {
+        test: /\.string\.s[ac]ss$/i,
+        use: ['css-loader', 'postcss-loader', 'sass-loader'],
       },
     ],
   },
