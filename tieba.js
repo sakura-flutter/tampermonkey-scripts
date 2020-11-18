@@ -1480,7 +1480,7 @@ fixRegExpWellKnownSymbolLogic('replace', 2, function (REPLACE, nativeReplace, ma
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:1px solid;border-radius:2px;cursor:pointer;box-shadow:var(--skr-button-box-shadow);transition:var(--skr-button-transition)}.skr-button:focus:not(:focus-visible){outline:0}.skr-button:hover{filter:brightness(1.15)}.skr-button--primary{color:var(--skr-text-inverse-color);background-color:var(--skr-primary-color);border-color:var(--skr-primary-color)}.skr-button--default{color:var(--skr-text-primary-color);background-color:var(--skr-white-color);border-color:var(--skr-border-color)}.skr-button--default:hover{filter:brightness(1);color:var(--skr-primary-color);border-color:currentColor}.skr-button--round{border-radius:50%}.skr-button--shadow{box-shadow:var(--skr-box-shadow-normal)}.skr-button--mini{padding:2px 7px;font-size:12px}.skr-button--small{padding:4px 8px;font-size:12px}.skr-button--normal{padding:4px 15px;font-size:14px}.skr-button--large{padding:10px 20px;font-size:15px}", ""]);
@@ -1500,7 +1500,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
@@ -1520,7 +1520,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;p
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;padding:0 !important;margin:0 !important;pointer-events:none !important;border-radius:inherit !important}.skr-ripple{contain:layout;position:absolute;padding:0 !important;margin:0 !important;border-radius:100%;transform:scale(0);pointer-events:none;background:var(--skr-ripple-color);transition:opacity 2s cubic-bezier(0.23, 1, 0.32, 1);animation:skr-ripple forwards cubic-bezier(0.23, 1, 0.32, 1)}@keyframes skr-ripple{to{transform:scale(3)}}", ""]);
@@ -1540,7 +1540,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;p
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-sign{--container-width: 19vw;--container-right: 10px;box-sizing:border-box;color:var(--skr-text-regular-color)}#inject-sign [class*=skr-]{box-sizing:border-box}#inject-sign.normal,#inject-sign.large{--container-width: 21vw}#inject-sign *::-webkit-scrollbar{width:8px;height:8px;background:#f2f2f2}#inject-sign *::-webkit-scrollbar-thumb{border:0;background:#c1c1c1}#inject-sign a{color:var(--skr-primary-color)}#inject-sign button{background-image:none}#inject-sign.forums-hide .forums-container{bottom:0;transform:translateY(calc(100% - 35px))}#inject-sign.forums-hide .control{bottom:40px}#inject-sign.cover .forums-container{z-index:9999}#inject-sign .control{position:fixed;contain:content;display:flex;z-index:500;bottom:12px;right:max(calc(var(--container-right) + var(--container-width) / 2), 150px);transform:translateX(50%);align-items:center;user-select:none;transition:bottom .3s,right .15s}#inject-sign .control label{margin-left:8px;height:20px;text-shadow:0 1px 3px #fff;cursor:pointer}#inject-sign .control input{margin-right:4px;vertical-align:text-top}#inject-sign .control .label-wrap{display:inline-flex;flex-wrap:wrap;flex:1;max-width:156px;margin-left:10px}#inject-sign .forums-container{position:fixed;contain:content;display:flex;flex-direction:column;z-index:2;bottom:60px;right:var(--container-right);width:var(--container-width);min-width:280px;max-height:calc(100vh - 124px);box-shadow:0 2px 4px rgba(0,0,0,.2);background:#fafafa;padding:5px;transition:transform .3s,bottom .3s,width .15s,box-shadow .3s}#inject-sign .forums-container:hover{box-shadow:0 2px 4px 3px rgba(0,0,0,.1)}#inject-sign header{display:flex;margin-bottom:4px}#inject-sign .reverse-btn{flex:1;text-align:center}#inject-sign .resize-btn{flex:none;margin-left:4px}#inject-sign ul{overflow-x:hidden}#inject-sign ul.small li{height:24px}#inject-sign ul.normal li{height:28px;font-size:13px}#inject-sign ul.large li{height:32px;font-size:14px}#inject-sign li{display:flex;border-bottom:1px solid rgba(221,221,221,.4);cursor:default;transition:height .15s}#inject-sign li:hover{background-color:#f0f8ff}#inject-sign li>*{line-height:2.325em}#inject-sign li a{flex:1;padding-left:.2em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}#inject-sign li .signed{width:.9em}#inject-sign li .level{width:2.4em}#inject-sign li .gain{width:1.8em}#inject-sign li .exp{flex:none;width:6.7em}", ""]);
@@ -1972,41 +1972,7 @@ module.exports = function (list, options) {
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.replace.js
 var es_string_replace = __webpack_require__(5306);
-// CONCATENATED MODULE: ./src/utils/index.js
-/**
- * 解析url上的参数
- * @param {string} href 或 带有参数格式的string；有search则不再hash
- * @return {object}
- */
-function parseURL(href = location.href) {
-  if (!href) return {};
-  let search;
-
-  try {
-    // 链接
-    const url = new URL(href);
-    ({
-      search
-    } = url); // 主要处理对hash的search
-
-    if (!search && url.hash.includes('?')) {
-      search = url.hash.split('?')[1];
-    }
-  } catch {
-    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
-    if (href.includes('?')) {
-      search = href.split('?')[1];
-    } else {
-      search = href;
-    }
-  }
-
-  const searchParams = new URLSearchParams(search);
-  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
-}
-function stringifyURL(obj) {
-  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
-}
+;// CONCATENATED MODULE: ./src/utils/index.js
 function throttle(fn, delay) {
   let t = null;
   let begin = Date.now();
@@ -2057,7 +2023,42 @@ function toFormData(params = {}) {
 
   return formData;
 }
-// CONCATENATED MODULE: ./src/utils/queue.js
+;// CONCATENATED MODULE: ./src/utils/querystring.js
+/**
+ * 解析querystring
+ * @param {string} href 或 带有参数格式的string；有search则不再hash
+ * @return {object}
+ */
+function parse(href = location.href) {
+  if (!href) return {};
+  let search;
+
+  try {
+    // 链接
+    const url = new URL(href);
+    ({
+      search
+    } = url); // 主要处理对hash的search
+
+    if (!search && url.hash.includes('?')) {
+      search = url.hash.split('?')[1];
+    }
+  } catch {
+    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
+    if (href.includes('?')) {
+      search = href.split('?')[1];
+    } else {
+      search = href;
+    }
+  }
+
+  const searchParams = new URLSearchParams(search);
+  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+}
+function stringify(obj) {
+  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+}
+;// CONCATENATED MODULE: ./src/utils/queue.js
 class Queue {
   // 默认同时进行5个任务
   constructor({
@@ -2111,7 +2112,7 @@ class Queue {
   }
 
 }
-// CONCATENATED MODULE: ./src/utils/compatibility.js
+;// CONCATENATED MODULE: ./src/utils/compatibility.js
 /**
  * 兼容性检查
  * @param {object} param0 & param1 版本, notify
@@ -2141,7 +2142,7 @@ function checker({
 
   return pass;
 }
-// CONCATENATED MODULE: ./src/store/index.js
+;// CONCATENATED MODULE: ./src/store/index.js
 /**
  * store
  * @param {string} modulename key会加入 [[modulename]]- 前缀
@@ -2177,7 +2178,7 @@ function createStore(modulename = '', local = true) {
 
 /* harmony default export */ const store = (createStore());
 
-// CONCATENATED MODULE: ./src/scripts/tieba/signature.js
+;// CONCATENATED MODULE: ./src/scripts/tieba/signature.js
 /* global MD5 */
 const FAKE_VERSION = '11.8.8.0';
 function makeFakeParams(obj) {
@@ -2208,8 +2209,8 @@ function signature(payload, isFake = true) {
   str += 'tiebaclient!!!';
   return MD5(str);
 }
-// CONCATENATED MODULE: ./src/scripts/tieba/api.js
-;
+;// CONCATENATED MODULE: ./src/scripts/tieba/api.js
+
 
 /**
  * 跨域请求，依赖GM_xmlhttpRequest
@@ -2263,7 +2264,7 @@ request.post = function (url, data, options = {}) {
     let body = data;
 
     if (options.headers['Content-Type'].includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
-      body = stringifyURL(data);
+      body = stringify(data);
     }
 
     if (options.headers['Content-Type'].includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
@@ -2303,7 +2304,7 @@ function getForumLike(params) {
   const paramsSigned = { ...params,
     sign: signature(params)
   };
-  return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', stringifyURL(paramsSigned), {
+  return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', stringify(paramsSigned), {
     headers: {
       'User-agent': `bdtb for Android ${FAKE_VERSION}`,
       Accept: '',
@@ -2318,7 +2319,7 @@ function api_doSign(params) {
   const paramsSigned = { ...params,
     sign: signature(params)
   };
-  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringifyURL(paramsSigned), {
+  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringify(paramsSigned), {
     headers: {
       'User-agent': `bdtb for Android ${FAKE_VERSION}`,
       Accept: '',
@@ -2328,10 +2329,10 @@ function api_doSign(params) {
     }
   });
 }
-// CONCATENATED MODULE: external "Vue"
+;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
-// CONCATENATED MODULE: ./src/composition/use-gm-value.js
-;
+;// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+
 /**
  * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
  * 暂不提供GM_deleteValue
@@ -2366,8 +2367,8 @@ var injectStylesIntoStyleTag = __webpack_require__(3379);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
 var input = __webpack_require__(9261);
-// CONCATENATED MODULE: ./src/components/input/index.scss
-;
+;// CONCATENATED MODULE: ./src/components/input/index.scss
+
             
 
 var options = {};
@@ -2380,8 +2381,8 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 
 /* harmony default export */ const components_input = (input/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/components/input/index.js
-;
+;// CONCATENATED MODULE: ./src/components/input/index.js
+
 
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
@@ -2418,7 +2419,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
 
 });
 /* harmony default export */ const src_components_input = (Input);
-// CONCATENATED MODULE: ./src/directives/v-ripple/utils.js
+;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.js
 /**
  * 计算一个点离矩形中心点的距离
  * @param {number} width 矩形宽
@@ -2451,8 +2452,8 @@ function closeness(value, extent) {
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/directives/v-ripple/index.scss
 var v_ripple = __webpack_require__(8443);
-// CONCATENATED MODULE: ./src/directives/v-ripple/index.scss
-;
+;// CONCATENATED MODULE: ./src/directives/v-ripple/index.scss
+
             
 
 var v_ripple_options = {};
@@ -2465,8 +2466,8 @@ var v_ripple_update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z
 
 
 /* harmony default export */ const directives_v_ripple = (v_ripple/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/directives/v-ripple/index.js
-;
+;// CONCATENATED MODULE: ./src/directives/v-ripple/index.js
+
 
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
@@ -2617,12 +2618,12 @@ const vRipple = {
 
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
-// CONCATENATED MODULE: ./src/directives/index.js
+;// CONCATENATED MODULE: ./src/directives/index.js
 
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/button/index.scss
 var components_button = __webpack_require__(5482);
-// CONCATENATED MODULE: ./src/components/button/index.scss
-;
+;// CONCATENATED MODULE: ./src/components/button/index.scss
+
             
 
 var button_options = {};
@@ -2635,8 +2636,8 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 /* harmony default export */ const src_components_button = (components_button/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/components/button/index.js
-;
+;// CONCATENATED MODULE: ./src/components/button/index.js
+
 
 
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
@@ -2697,13 +2698,13 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
 
 });
 /* harmony default export */ const src_components_button_0 = (Button);
-// CONCATENATED MODULE: ./src/components/index.js
+;// CONCATENATED MODULE: ./src/components/index.js
 
 
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/tieba/ui.scss
 var ui = __webpack_require__(596);
-// CONCATENATED MODULE: ./src/scripts/tieba/ui.scss
-;
+;// CONCATENATED MODULE: ./src/scripts/tieba/ui.scss
+
             
 
 var ui_options = {};
@@ -2716,8 +2717,8 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 /* harmony default export */ const tieba_ui = (ui/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/scripts/tieba/ui.js
-;
+;// CONCATENATED MODULE: ./src/scripts/tieba/ui.js
+
 
 
 
@@ -3016,8 +3017,9 @@ function createUI({
     checkUnsign: ui.checkUnsign
   };
 }
-// CONCATENATED MODULE: ./src/scripts/tieba/index.js
-;
+;// CONCATENATED MODULE: ./src/scripts/tieba/index.js
+
+
 
 
 
@@ -3143,7 +3145,7 @@ async function runByBDUSS(ui) {
       return async function () {
         const {
           kw
-        } = parseURL(current.href);
+        } = parse(current.href);
         const {
           fid
         } = current.dataset;
@@ -3185,7 +3187,7 @@ async function runByBDUSS(ui) {
     const current = resignEls.shift();
     const {
       kw
-    } = parseURL(current.href);
+    } = parse(current.href);
     const {
       fid
     } = current.dataset;
@@ -3248,7 +3250,7 @@ async function runByWeb() {
     const current = allUnsignEls.shift();
     const {
       kw
-    } = parseURL(current.href);
+    } = parse(current.href);
 
     try {
       const response = await doSign({
@@ -3278,7 +3280,7 @@ async function runByWeb() {
     const current = resignEls.shift();
     const {
       kw
-    } = parseURL(current.href);
+    } = parse(current.href);
 
     try {
       const response = await doSign({

@@ -31,7 +31,7 @@
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:1px solid;border-radius:2px;cursor:pointer;box-shadow:var(--skr-button-box-shadow);transition:var(--skr-button-transition)}.skr-button:focus:not(:focus-visible){outline:0}.skr-button:hover{filter:brightness(1.15)}.skr-button--primary{color:var(--skr-text-inverse-color);background-color:var(--skr-primary-color);border-color:var(--skr-primary-color)}.skr-button--default{color:var(--skr-text-primary-color);background-color:var(--skr-white-color);border-color:var(--skr-border-color)}.skr-button--default:hover{filter:brightness(1);color:var(--skr-primary-color);border-color:currentColor}.skr-button--round{border-radius:50%}.skr-button--shadow{box-shadow:var(--skr-box-shadow-normal)}.skr-button--mini{padding:2px 7px;font-size:12px}.skr-button--small{padding:4px 8px;font-size:12px}.skr-button--normal{padding:4px 15px;font-size:14px}.skr-button--large{padding:10px 20px;font-size:15px}", ""]);
@@ -50,7 +50,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
@@ -69,7 +69,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;p
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;position:absolute;top:0;right:0;bottom:0;left:0;overflow:hidden;padding:0 !important;margin:0 !important;pointer-events:none !important;border-radius:inherit !important}.skr-ripple{contain:layout;position:absolute;padding:0 !important;margin:0 !important;border-radius:100%;transform:scale(0);pointer-events:none;background:var(--skr-ripple-color);transition:opacity 2s cubic-bezier(0.23, 1, 0.32, 1);animation:skr-ripple forwards cubic-bezier(0.23, 1, 0.32, 1)}@keyframes skr-ripple{to{transform:scale(3)}}", ""]);
@@ -88,7 +88,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;p
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
-;
+
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-recorder-ui{contain:content;position:fixed;right:1.5vw;bottom:8vh;z-index:1000;width:240px;padding:30px 30px 10px;opacity:.5;transition:opacity .1s}#inject-recorder-ui:hover{opacity:1}#inject-recorder-ui ul::-webkit-scrollbar{width:4px;height:4px;background:#f2f2f2;padding-right:2px}#inject-recorder-ui ul::-webkit-scrollbar-thumb{border-radius:3px;border:0;background:#b4bbc5}#inject-recorder-ui ul.more-actions{width:204px}#inject-recorder-ui ul{width:180px;padding:5px;max-height:40vh;overflow-x:hidden;background:#fbfbfb;box-shadow:var(--skr-box-shadow-lighten);transition:width .1s}#inject-recorder-ui li{display:flex;align-items:center;padding:0 5px;transition:all var(--skr-transition-duration-normal),background var(--skr-transition-duration-fast) ease-out}#inject-recorder-ui li:hover{background:rgba(220,237,251,.64)}#inject-recorder-ui li a{width:132px;flex:none;padding-right:4px;line-height:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#inject-recorder-ui li .actions{flex:1 0 auto}#inject-recorder-ui li button{padding:0;width:20px;height:20px;line-height:20px;border:none}#inject-recorder-ui li button:not(:hover){color:var(--skr-text-secondary-color)}#inject-recorder-ui li button:nth-of-type(n + 2){margin-left:4px}#inject-recorder-ui .control{display:flex;justify-content:center;align-items:center;padding-top:8px}#inject-recorder-ui .control input{margin-left:6px}#inject-recorder-ui .view-btn:not(:focus-visible){outline:none}#inject-recorder-ui svg{fill:currentColor}#inject-recorder-ui .inject-slide-fade-enter-active,#inject-recorder-ui .inject-slide-fade-leave-active{transition:all .1s}#inject-recorder-ui .inject-slide-fade-enter-from,#inject-recorder-ui .inject-slide-fade-leave-to{transform:translateY(5px);opacity:0}#inject-recorder-ui .inject-slide-hor-fade-move{transition:all .8s}#inject-recorder-ui .inject-slide-hor-fade-active{position:absolute}#inject-recorder-ui .inject-slide-hor-fade-enter-from,#inject-recorder-ui .inject-slide-hor-fade-leave-to{opacity:0;transform:translateX(30px)}", ""]);
@@ -503,43 +503,9 @@ module.exports = function (list, options) {
 /************************************************************************/
 (() => {
 
-// CONCATENATED MODULE: external "Vue"
+;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
-// CONCATENATED MODULE: ./src/utils/index.js
-/**
- * 解析url上的参数
- * @param {string} href 或 带有参数格式的string；有search则不再hash
- * @return {object}
- */
-function parseURL(href = location.href) {
-  if (!href) return {};
-  let search;
-
-  try {
-    // 链接
-    const url = new URL(href);
-    ({
-      search
-    } = url); // 主要处理对hash的search
-
-    if (!search && url.hash.includes('?')) {
-      search = url.hash.split('?')[1];
-    }
-  } catch {
-    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
-    if (href.includes('?')) {
-      search = href.split('?')[1];
-    } else {
-      search = href;
-    }
-  }
-
-  const searchParams = new URLSearchParams(search);
-  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
-}
-function stringifyURL(obj) {
-  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
-}
+;// CONCATENATED MODULE: ./src/utils/index.js
 function throttle(fn, delay) {
   let t = null;
   let begin = Date.now();
@@ -590,7 +556,42 @@ function toFormData(params = {}) {
 
   return formData;
 }
-// CONCATENATED MODULE: ./src/utils/compatibility.js
+;// CONCATENATED MODULE: ./src/utils/querystring.js
+/**
+ * 解析querystring
+ * @param {string} href 或 带有参数格式的string；有search则不再hash
+ * @return {object}
+ */
+function parse(href = location.href) {
+  if (!href) return {};
+  let search;
+
+  try {
+    // 链接
+    const url = new URL(href);
+    ({
+      search
+    } = url); // 主要处理对hash的search
+
+    if (!search && url.hash.includes('?')) {
+      search = url.hash.split('?')[1];
+    }
+  } catch {
+    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
+    if (href.includes('?')) {
+      search = href.split('?')[1];
+    } else {
+      search = href;
+    }
+  }
+
+  const searchParams = new URLSearchParams(search);
+  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+}
+function stringify(obj) {
+  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+}
+;// CONCATENATED MODULE: ./src/utils/compatibility.js
 /**
  * 兼容性检查
  * @param {object} param0 & param1 版本, notify
@@ -620,8 +621,8 @@ function checker({
 
   return pass;
 }
-// CONCATENATED MODULE: ./src/composition/use-gm-value.js
-;
+;// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+
 /**
  * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
  * 暂不提供GM_deleteValue
@@ -656,8 +657,8 @@ var injectStylesIntoStyleTag = __webpack_require__(3379);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
 var input = __webpack_require__(9261);
-// CONCATENATED MODULE: ./src/components/input/index.scss
-;
+;// CONCATENATED MODULE: ./src/components/input/index.scss
+
             
 
 var options = {};
@@ -670,8 +671,8 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 
 
 /* harmony default export */ const components_input = (input/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/components/input/index.js
-;
+;// CONCATENATED MODULE: ./src/components/input/index.js
+
 
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
@@ -708,7 +709,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
 
 });
 /* harmony default export */ const src_components_input = ((/* unused pure expression or super */ null && (Input)));
-// CONCATENATED MODULE: ./src/directives/v-ripple/utils.js
+;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.js
 /**
  * 计算一个点离矩形中心点的距离
  * @param {number} width 矩形宽
@@ -741,8 +742,8 @@ function closeness(value, extent) {
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/directives/v-ripple/index.scss
 var v_ripple = __webpack_require__(8443);
-// CONCATENATED MODULE: ./src/directives/v-ripple/index.scss
-;
+;// CONCATENATED MODULE: ./src/directives/v-ripple/index.scss
+
             
 
 var v_ripple_options = {};
@@ -755,8 +756,8 @@ var v_ripple_update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z
 
 
 /* harmony default export */ const directives_v_ripple = (v_ripple/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/directives/v-ripple/index.js
-;
+;// CONCATENATED MODULE: ./src/directives/v-ripple/index.js
+
 
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
@@ -907,12 +908,12 @@ const vRipple = {
 
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
-// CONCATENATED MODULE: ./src/directives/index.js
+;// CONCATENATED MODULE: ./src/directives/index.js
 
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/button/index.scss
 var components_button = __webpack_require__(5482);
-// CONCATENATED MODULE: ./src/components/button/index.scss
-;
+;// CONCATENATED MODULE: ./src/components/button/index.scss
+
             
 
 var button_options = {};
@@ -925,8 +926,8 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 /* harmony default export */ const src_components_button = (components_button/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/components/button/index.js
-;
+;// CONCATENATED MODULE: ./src/components/button/index.js
+
 
 
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
@@ -987,13 +988,13 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
 
 });
 /* harmony default export */ const src_components_button_0 = (Button);
-// CONCATENATED MODULE: ./src/components/index.js
+;// CONCATENATED MODULE: ./src/components/index.js
 
 
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/lanhu/index.scss
 var lanhu = __webpack_require__(1342);
-// CONCATENATED MODULE: ./src/scripts/lanhu/index.scss
-;
+;// CONCATENATED MODULE: ./src/scripts/lanhu/index.scss
+
             
 
 var lanhu_options = {};
@@ -1006,8 +1007,9 @@ var lanhu_update = injectStylesIntoStyleTag_default()(lanhu/* default */.Z, lanh
 
 
 /* harmony default export */ const scripts_lanhu = (lanhu/* default.locals */.Z.locals || {});
-// CONCATENATED MODULE: ./src/scripts/lanhu/index.js
-;
+;// CONCATENATED MODULE: ./src/scripts/lanhu/index.js
+
+
 
 
 
@@ -1046,7 +1048,7 @@ function autofillPassword() {
   if (!location.hash.startsWith('#/item/project/door')) return;
   const {
     pid
-  } = parseURL();
+  } = parse();
   if (!pid) return; // 确认登录按钮
 
   let confirmEl = null; // 密码框
@@ -1288,7 +1290,7 @@ function createRecorder() {
   function record() {
     const {
       pid
-    } = parseURL();
+    } = parse();
     if (!pid) return;
     const records = GM_getValue('records', []);
     let oldTitle = null;
