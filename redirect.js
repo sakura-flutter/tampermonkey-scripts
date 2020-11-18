@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      0.0.1
+// @version      1.0.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/redirect
@@ -1653,17 +1653,14 @@ const weibo = () => ({
 
 const sites = [{
   name: '简书',
-  // https://www.jianshu.com/go-wild?ac=2&url=https://www.huawei.com/cn/corporate-information
   test: /www\.jianshu\.com\/go-wild/,
   use: jianshu
 }, {
   name: '知乎',
-  // http://link.zhihu.com/?target=https://www.huawei.com/cn/corporate-information
   test: /link\.zhihu\.com/,
   use: zhihu
 }, {
   name: '微博',
-  // http://t.cn/<xxxx>
   test: /t\.cn\//,
   use: weibo
 }];
@@ -1679,7 +1676,7 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 
-const redirect_isDebug = "production" !== 'production';
+
 
 var _sites = _classPrivateFieldLooseKey("sites");
 
@@ -1723,7 +1720,7 @@ class App {
         redirection = document.querySelector(selector).innerText;
       }
 
-      redirect_isDebug && console.table({
+      table({
         name,
         briefURL,
         redirection
