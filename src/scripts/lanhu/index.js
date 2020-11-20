@@ -112,6 +112,7 @@ function createRecorder() {
       const { value: records, setValue: setRecords } = useGMvalue('records', [])
       const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
       const reversed = computed(() => [...records.value].reverse())
+      const passwordsMap = computed(() => new Map(Object.entries(useGMvalue('passwords', []).value.value)))
 
       function deleteItem(item) {
         const newRecords = [...records.value]
@@ -158,6 +159,7 @@ function createRecorder() {
         records,
         unhidden,
         reversed,
+        passwordsMap,
         deleteItem,
         copy,
         toggle,
@@ -171,6 +173,7 @@ function createRecorder() {
         recordsVisible,
         unhidden,
         moreActionsVisible,
+        passwordsMap,
         toggle,
         toggleMoreActions,
         deleteItem,
@@ -198,7 +201,7 @@ function createRecorder() {
               >
                 {
                   reversed.map(item => (
-                    <li key={item.pid}>
+                    <li class={{ 'has-pwd': passwordsMap.has(item.pid) }} key={item.pid}>
                       <a
                         href={item.href}
                         title={item.title}
