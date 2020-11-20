@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.8.0
+// @version      1.9.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/lanhu
@@ -15,7 +15,7 @@
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
 // @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global.js
-// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=862073
+// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=870120
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -91,7 +91,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;p
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-recorder-ui{contain:content;position:fixed;right:1.5vw;bottom:8vh;z-index:1000;width:240px;padding:30px 30px 10px;opacity:.5;transition:opacity .1s}#inject-recorder-ui:hover{opacity:1}#inject-recorder-ui ul::-webkit-scrollbar{width:4px;height:4px;background:#f2f2f2;padding-right:2px}#inject-recorder-ui ul::-webkit-scrollbar-thumb{border-radius:3px;border:0;background:#b4bbc5}#inject-recorder-ui ul.more-actions{width:204px}#inject-recorder-ui ul{width:180px;padding:5px;max-height:40vh;overflow-x:hidden;background:#fbfbfb;box-shadow:var(--skr-box-shadow-lighten);transition:width .1s}#inject-recorder-ui li{display:flex;align-items:center;padding:0 5px;transition:all var(--skr-transition-duration-normal),background var(--skr-transition-duration-fast) ease-out}#inject-recorder-ui li:hover{background:rgba(220,237,251,.64)}#inject-recorder-ui li a{width:132px;flex:none;padding-right:4px;line-height:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#inject-recorder-ui li .actions{flex:1 0 auto}#inject-recorder-ui li button{padding:0;width:20px;height:20px;line-height:20px;border:none}#inject-recorder-ui li button:not(:hover){color:var(--skr-text-secondary-color)}#inject-recorder-ui li button:nth-of-type(n + 2){margin-left:4px}#inject-recorder-ui .control{display:flex;justify-content:center;align-items:center;padding-top:8px}#inject-recorder-ui .control input{margin-left:6px}#inject-recorder-ui .view-btn:not(:focus-visible){outline:none}#inject-recorder-ui svg{fill:currentColor}#inject-recorder-ui .inject-slide-fade-enter-active,#inject-recorder-ui .inject-slide-fade-leave-active{transition:all .1s}#inject-recorder-ui .inject-slide-fade-enter-from,#inject-recorder-ui .inject-slide-fade-leave-to{transform:translateY(5px);opacity:0}#inject-recorder-ui .inject-slide-hor-fade-move{transition:all .8s}#inject-recorder-ui .inject-slide-hor-fade-active{position:absolute}#inject-recorder-ui .inject-slide-hor-fade-enter-from,#inject-recorder-ui .inject-slide-hor-fade-leave-to{opacity:0;transform:translateX(30px)}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-recorder-ui{contain:content;position:fixed;right:1.5vw;bottom:8vh;z-index:1000;width:240px;padding:30px 30px 10px;opacity:.5;transition:opacity .1s}#inject-recorder-ui:hover{opacity:1}#inject-recorder-ui ul{width:180px;padding:5px;max-height:250px;overflow-x:hidden;background:#fbfbfb;box-shadow:var(--skr-box-shadow-lighten);transition:width .1s}#inject-recorder-ui ul::-webkit-scrollbar{width:4px;height:4px;background:#f2f2f2;padding-right:2px}#inject-recorder-ui ul::-webkit-scrollbar-thumb{border-radius:3px;border:0;background:#b4bbc5}#inject-recorder-ui ul.more-actions{width:204px}#inject-recorder-ui li{position:relative;display:flex;align-items:center;padding:0 5px;transition:all var(--skr-transition-duration-normal),background var(--skr-transition-duration-fast) ease-out}#inject-recorder-ui li:hover{background:rgba(220,237,251,.64)}#inject-recorder-ui li.has-pwd::before{position:absolute;left:1px;content:\"\";width:2px;height:50%;background:rgba(7,193,96,.52)}#inject-recorder-ui li a{width:132px;flex:none;padding-right:4px;line-height:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#inject-recorder-ui li .actions{flex:1 0 auto}#inject-recorder-ui li button{padding:0;width:20px;height:20px;line-height:20px;border:none}#inject-recorder-ui li button:not(:hover){color:var(--skr-text-secondary-color)}#inject-recorder-ui li button:nth-of-type(n + 2){margin-left:4px}#inject-recorder-ui .control{display:flex;justify-content:center;align-items:center;padding-top:8px}#inject-recorder-ui .control input{margin-left:6px}#inject-recorder-ui .view-btn:not(:focus-visible){outline:none}#inject-recorder-ui svg{fill:currentColor}#inject-recorder-ui .inject-slide-fade-enter-active,#inject-recorder-ui .inject-slide-fade-leave-active{transition:all .1s}#inject-recorder-ui .inject-slide-fade-enter-from,#inject-recorder-ui .inject-slide-fade-leave-to{transform:translateY(5px);opacity:0}#inject-recorder-ui .inject-slide-hor-fade-move{transition:all .8s}#inject-recorder-ui .inject-slide-hor-fade-active{position:absolute}#inject-recorder-ui .inject-slide-hor-fade-enter-from,#inject-recorder-ui .inject-slide-hor-fade-leave-to{opacity:0;transform:translateX(30px)}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1130,6 +1130,7 @@ function createRecorder() {
         setValue: setUnhidden
       } = useGMvalue('unhidden', false);
       const reversed = (0,external_Vue_namespaceObject.computed)(() => [...records.value].reverse());
+      const passwordsMap = (0,external_Vue_namespaceObject.computed)(() => new Map(Object.entries(useGMvalue('passwords', []).value.value)));
 
       function deleteItem(item) {
         const newRecords = [...records.value];
@@ -1181,6 +1182,7 @@ function createRecorder() {
         records,
         unhidden,
         reversed,
+        passwordsMap,
         deleteItem,
         copy,
         toggle,
@@ -1195,6 +1197,7 @@ function createRecorder() {
         recordsVisible,
         unhidden,
         moreActionsVisible,
+        passwordsMap,
         toggle,
         toggleMoreActions,
         deleteItem,
@@ -1222,6 +1225,9 @@ function createRecorder() {
           "appear": true
         }, {
           default: () => [reversed.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
+            "class": {
+              'has-pwd': passwordsMap.has(item.pid)
+            },
             "key": item.pid
           }, [(0,external_Vue_namespaceObject.createVNode)("a", {
             "href": item.href,
