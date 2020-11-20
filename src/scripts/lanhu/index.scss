@@ -16,72 +16,83 @@
     opacity: 1;
   }
 
-  ul::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-    background: #f2f2f2;
-    padding-right: 2px;
-  }
-
-  ul::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    border: 0;
-    background: #b4bbc5;
-  }
-
-  ul.more-actions {
-    width: 204px;
-  }
-
   ul {
     width: 180px;
     padding: 5px;
-    max-height: 40vh;
+    max-height: 250px;
     overflow-x: hidden;
     background: rgb(251, 251, 251);
     box-shadow: var(--skr-box-shadow-lighten);
     transition: width 0.1s;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      background: #f2f2f2;
+      padding-right: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      border: 0;
+      background: #b4bbc5;
+    }
+
+    &.more-actions {
+      width: 204px;
+    }
   }
 
   li {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 0 5px;
     transition: all var(--skr-transition-duration-normal),
       background var(--skr-transition-duration-fast) ease-out;
-  }
 
-  li:hover {
-    background: rgba(220, 237, 251, 0.64);
-  }
-
-  li a {
-    width: 132px;
-    flex: none;
-    padding-right: 4px;
-    line-height: 30px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  li .actions {
-    flex: 1 0 auto;
-  }
-
-  li button {
-    padding: 0;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    border: none;
-    &:not(:hover) {
-      color: var(--skr-text-secondary-color);
+    &:hover {
+      background: rgba(220, 237, 251, 0.64);
     }
-  }
 
-  li button:nth-of-type(n + 2) {
-    margin-left: 4px;
+    &.has-pwd::before {
+      position: absolute;
+      left: 1px;
+      content: "";
+      width: 2px;
+      height: 50%;
+      background: rgb(7 193 96 / 52%);
+    }
+
+    a {
+      width: 132px;
+      flex: none;
+      padding-right: 4px;
+      line-height: 30px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .actions {
+      flex: 1 0 auto;
+    }
+
+    button {
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      border: none;
+
+      &:not(:hover) {
+        color: var(--skr-text-secondary-color);
+      }
+
+      &:nth-of-type(n + 2) {
+        margin-left: 4px;
+      }
+    }
   }
 
   .control {
@@ -89,10 +100,10 @@
     justify-content: center;
     align-items: center;
     padding-top: 8px;
-  }
 
-  .control input {
-    margin-left: 6px;
+    input {
+      margin-left: 6px;
+    }
   }
 
   .view-btn {
