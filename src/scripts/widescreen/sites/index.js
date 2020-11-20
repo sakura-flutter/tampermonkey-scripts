@@ -57,7 +57,7 @@ const sites = [
   {
     name: '掘金',
     namespace: 'juejin',
-    test: /juejin\.im\/post\//,
+    test: /juejin\.cn\/post\//,
     use: juejin,
   },
   {
