@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.0.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤
+// @version      1.1.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/redirect
 // @license      GPL-3.0
@@ -11,6 +11,7 @@
 // @match        *://www.jianshu.com/go-wild*
 // @match        *://link.zhihu.com/*
 // @match        *://t.cn/*
+// @match        *://mail.qq.com/cgi-bin/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1598,6 +1599,9 @@ const interactive = fn => wrapper('interactive', fn);
 const DOMContentLoaded = fn => wrapper('DOMContentLoaded', fn);
 const complete = fn => wrapper('complete', fn);
 const load = fn => wrapper('load', fn);
+;// CONCATENATED MODULE: ./src/utils/selector.js
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/utils/querystring.js
 /**
  * 解析querystring
@@ -1647,7 +1651,13 @@ const zhihu = () => ({
 const weibo = () => ({
   selector: 'body > .wrap .link'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/mail-qq-com.js
+
+const qqMail = () => ({
+  link: parse().url || parse().gourl
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1662,7 +1672,14 @@ const sites = [{
 }, {
   name: '微博',
   test: /t\.cn\//,
+  readyState: 'interactive',
   use: weibo
+}, {
+  name: 'QQ邮箱',
+  test: [/mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
+  /mail\.qq\.com\/cgi-bin\/mail_spam/ // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
+  ],
+  use: qqMail
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
@@ -1673,6 +1690,7 @@ function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototy
 var id = 0;
 
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
+
 
 
 
@@ -1698,11 +1716,12 @@ class App {
         test,
         use
       } = site;
-
-      if (test instanceof RegExp) {
-        if (test.test(briefURL) === false) return;
-      }
-
+      const some = [].concat(test).some(item => {
+        if (item instanceof RegExp) return item.test(briefURL);
+        if (typeof item === 'boolean') return item;
+        return false;
+      });
+      if (some === false) return;
       const config = use();
       const {
         readyState: state
@@ -1717,7 +1736,7 @@ class App {
       if (link) {
         redirection = link;
       } else if (selector) {
-        redirection = document.querySelector(selector).innerText;
+        redirection = $(selector)?.innerText.trim();
       }
 
       table({
