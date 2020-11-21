@@ -1,4 +1,5 @@
 import * as readyState from '@/utils/ready-state'
+import { $ } from '@/utils/selector'
 import { table as logTable } from '@/utils/log'
 import sites from './sites'
 
@@ -13,9 +14,13 @@ class App {
 
     this.#sites.forEach(async site => {
       const { name, test, use } = site
-      if (test instanceof RegExp) {
-        if (test.test(briefURL) === false) return
-      }
+      const some = [].concat(test).some(item => {
+        if (item instanceof RegExp) return item.test(briefURL)
+        if (typeof item === 'boolean') return item
+
+        return false
+      })
+      if (some === false) return
 
       const config = use()
       const { readyState: state } = config
@@ -26,7 +31,7 @@ class App {
       if (link) {
         redirection = link
       } else if (selector) {
-        redirection = document.querySelector(selector).innerText
+        redirection = $(selector)?.innerText.trim()
       }
 
       logTable({ name, briefURL, redirection })

@@ -1,6 +1,7 @@
 import { jianshu } from './www-jianshu-com'
 import { zhihu } from './link-zhihu-com'
 import { weibo } from './t-cn'
+import { qqMail } from './mail-qq-com'
 
 const sites = [
   {
@@ -16,7 +17,16 @@ const sites = [
   {
     name: '微博',
     test: /t\.cn\//,
+    readyState: 'interactive',
     use: weibo,
+  },
+  {
+    name: 'QQ邮箱',
+    test: [
+      /mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
+      /mail\.qq\.com\/cgi-bin\/mail_spam/, // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
+    ],
+    use: qqMail,
   },
 ]
 
