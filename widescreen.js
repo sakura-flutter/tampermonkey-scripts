@@ -3461,28 +3461,11 @@ function once(fn) {
   };
 }
 /**
- * 有些脚本是在document-start执行的，安全地获得document
- * @param {fn} cb
- */
-
-function documentLoaded(cb) {
-  document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
-}
-/**
  * 延时
  * @param {number} ms 毫秒数
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-function toFormData(params = {}) {
-  const formData = new FormData();
-
-  for (const [key, value] of Object.entries(params)) {
-    formData.append(key, value);
-  }
-
-  return formData;
-}
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-toutiao-com/index.lazy.scss
 var www_toutiao_com_index_lazy = __webpack_require__(5186);
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-toutiao-com/index.lazy.scss

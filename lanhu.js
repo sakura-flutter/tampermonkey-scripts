@@ -534,28 +534,11 @@ function once(fn) {
   };
 }
 /**
- * 有些脚本是在document-start执行的，安全地获得document
- * @param {fn} cb
- */
-
-function documentLoaded(cb) {
-  document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
-}
-/**
  * 延时
  * @param {number} ms 毫秒数
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-function toFormData(params = {}) {
-  const formData = new FormData();
-
-  for (const [key, value] of Object.entries(params)) {
-    formData.append(key, value);
-  }
-
-  return formData;
-}
 ;// CONCATENATED MODULE: ./src/utils/querystring.js
 /**
  * 解析querystring
