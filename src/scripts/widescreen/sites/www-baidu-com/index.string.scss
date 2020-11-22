@@ -18,11 +18,9 @@ $default-width: 560px;
   }
   /* 搜索tab */
   .s_tab {
-    padding-left: 0 !important;
-  }
-  .s_tab {
     margin-left: auto;
     margin-right: auto;
+    padding-left: 0 !important;
     width: fit-content;
     width: -moz-fit-content;
   }
@@ -35,20 +33,32 @@ $default-width: 560px;
   /* 左侧搜索结果 */
   #content_left {
     width: calc(var(--inject-page-width) - 450px) !important;
-  }
-  /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
-  #content_left > div:not([tpl*="img_address"]) {
-    width: 100% !important;
-  }
-  /* 视频宽度限制(搜索：路人女主的养成方法) */
-  .op-bk-polysemy-video__wrap {
-    width: $default-width !important;
-  }
-  #content_left .new-pmd .c-span9 {
-    width: 75%;
-  }
-  #content_left .c-group-wrapper .c-group {
-    width: 95% !important;
+
+    /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
+    > div:not([tpl*="img_address"]) {
+      width: 100% !important;
+    }
+
+    /* 视频宽度限制(搜索：路人女主的养成方法) */
+    .op-bk-polysemy-video__wrap {
+      width: $default-width !important;
+    }
+
+    /* 游戏配置搜索结果卡片中图片的高度处理(搜索：赛博朋克2077配置要求) */
+    .wenda-abstract-img-wrap-new {
+      height: auto;
+    }
+
+    .new-pmd .c-span9 {
+      width: 75%;
+
+      @media (min-width: 1680px) {
+        width: 81%;
+      }
+    }
+    .c-group-wrapper .c-group {
+      width: 95% !important;
+    }
   }
   /* 分页 */
   .page-inner {
@@ -65,11 +75,5 @@ $default-width: 560px;
   }
   #foot .foot-inner #help {
     padding-left: 0 !important;
-  }
-}
-
-@media screen and (min-width: 1680px) {
-  #content_left .new-pmd .c-span9 {
-    width: 81%;
   }
 }
