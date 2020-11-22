@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      1.15.6
+// @version      1.15.7
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
@@ -1824,7 +1824,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--inject-page-width: min(91vw)}@
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root{--inject-page-width: min(75vw, 1300px)}@media screen and (min-width: 1460px){#head:not(.s-skin-hasbg){background-color:#ffffffd1;backdrop-filter:blur(10px)}.head_wrapper .s_form{margin-left:auto;margin-right:auto;width:fit-content;width:-moz-fit-content}.s_tab{padding-left:0 !important}.s_tab{margin-left:auto;margin-right:auto;width:fit-content;width:-moz-fit-content}#container{margin-left:auto !important;margin-right:auto !important;width:var(--inject-page-width) !important}#content_left{width:calc(var(--inject-page-width) - 450px) !important}#content_left>div:not([tpl*=img_address]){width:100% !important}.op-bk-polysemy-video__wrap{width:560px !important}#content_left .new-pmd .c-span9{width:75%}#content_left .c-group-wrapper .c-group{width:95% !important}.page-inner{margin-left:auto;margin-right:auto;padding-left:0 !important;width:var(--inject-page-width)}.foot-inner{margin-left:auto;margin-right:auto;width:var(--inject-page-width)}#foot .foot-inner #help{padding-left:0 !important}}@media screen and (min-width: 1680px){#content_left .new-pmd .c-span9{width:81%}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root{--inject-page-width: min(75vw, 1300px)}@media screen and (min-width: 1460px){#head:not(.s-skin-hasbg){background-color:#ffffffd1;backdrop-filter:blur(10px)}.head_wrapper .s_form{margin-left:auto;margin-right:auto;width:fit-content;width:-moz-fit-content}.s_tab{margin-left:auto;margin-right:auto;padding-left:0 !important;width:fit-content;width:-moz-fit-content}#container{margin-left:auto !important;margin-right:auto !important;width:var(--inject-page-width) !important}#content_left{width:calc(var(--inject-page-width) - 450px) !important}#content_left>div:not([tpl*=img_address]){width:100% !important}#content_left .op-bk-polysemy-video__wrap{width:560px !important}#content_left .wenda-abstract-img-wrap-new{height:auto}#content_left .new-pmd .c-span9{width:75%}}@media screen and (min-width: 1460px)and (min-width: 1680px){#content_left .new-pmd .c-span9{width:81%}}@media screen and (min-width: 1460px){#content_left .c-group-wrapper .c-group{width:95% !important}}@media screen and (min-width: 1460px){.page-inner{margin-left:auto;margin-right:auto;padding-left:0 !important;width:var(--inject-page-width)}}@media screen and (min-width: 1460px){.foot-inner{margin-left:auto;margin-right:auto;width:var(--inject-page-width)}}@media screen and (min-width: 1460px){#foot .foot-inner #help{padding-left:0 !important}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
