@@ -25,7 +25,7 @@
     "core-js": "^3.7.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
+    "@babel/core": "^7.12.7",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.7",
     "@vue/babel-plugin-jsx": "^1.0.0-rc.3",
