@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "webpack --mode=development --progress --watch",
     "build": "webpack --mode=production --progress",
-    "deploy": "npm run build && gh-pages -d ./dist",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d ./dist",
     "lint": "eslint ./ --fix --ext .js"
   },
   "repository": {
