@@ -1,4 +1,4 @@
-import { sleep } from '@/utils'
+import { sleep } from '@/utils/base'
 import * as qs from '@/utils/querystring'
 import Queue from '@/utils/queue'
 import { checker } from '@/utils/compatibility'

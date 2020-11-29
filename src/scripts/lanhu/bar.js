@@ -1,4 +1,4 @@
-import { throttle } from '@/utils'
+import { throttle } from '@/utils/base'
 import { $ } from '@/utils/selector'
 
 /* 更新侧边栏高度 */

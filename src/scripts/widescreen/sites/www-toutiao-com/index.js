@@ -1,4 +1,4 @@
-import { once } from '@/utils'
+import { once } from '@/utils/base'
 import styles from './index.lazy.scss'
 
 export const toutiao = ({ store, createControl }) => ({
