@@ -1,4 +1,4 @@
-import { once } from '@/utils'
+import { once } from '@/utils/base'
 import { $ } from '@/utils/selector'
 import { warn } from '@/utils/log'
 const homeStyles = require('./home.string.scss').default.toString()
