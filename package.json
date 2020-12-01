@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "TampermonkeyScripts",
   "scripts": {
-    "serve": "webpack --mode=development --progress --watch",
-    "build": "webpack --mode=production --progress",
+    "serve": "webpack serve --mode=development",
+    "build": "webpack --progress",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d ./dist",
     "lint": "eslint ./ --fix --ext .js"
@@ -42,6 +42,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-vue": "^7.1.0",
+    "eslint-webpack-plugin": "^2.4.1",
     "gh-pages": "^3.1.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.2",
@@ -51,7 +52,8 @@
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.0.3",
     "webpack": "^5.6.0",
-    "webpack-cli": "^4.2.0"
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^4.0.0-beta.0"
   },
   "husky": {
     "hooks": {
