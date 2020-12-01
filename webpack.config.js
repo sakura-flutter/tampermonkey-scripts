@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 
@@ -60,6 +61,9 @@ module.exports = (env, argv) => ({
   },
   plugins: [
     new CleanWebpackPlugin(), // 默认依赖output path
+    new ESLintPlugin({
+      fix: true,
+    }),
     new webpack.BannerPlugin({
       banner: file => getScriptHeader(file.chunk.name, argv.mode),
       raw: true,
@@ -82,5 +86,13 @@ module.exports = (env, argv) => ({
         },
       },
     })],
+  },
+  devServer: {
+    port: 8886,
+    static: [
+      {
+        directory: path.resolve(__dirname, 'dist'),
+      },
+    ],
   },
 })
