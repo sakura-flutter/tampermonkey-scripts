@@ -22,6 +22,7 @@ module.exports = (env, argv) => ({
   },
   output: {
     path: path.join(__dirname, 'dist'),
+    publicPath: '/',
   },
   externals: {
     vue: 'Vue',
