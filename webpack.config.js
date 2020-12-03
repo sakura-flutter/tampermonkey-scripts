@@ -19,6 +19,7 @@ module.exports = (env, argv) => ({
     tieba: './src/scripts/tieba',
     widescreen: './src/scripts/widescreen',
     redirect: './src/scripts/redirect',
+    'view-ui': './src/scripts/view-ui',
   },
   output: {
     path: path.join(__dirname, 'dist'),
