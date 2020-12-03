@@ -1141,7 +1141,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.7.0',
+  version: '3.8.0',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -3432,7 +3432,7 @@ const doubanMovie = ({
   }
 
 });
-;// CONCATENATED MODULE: ./src/utils/index.js
+;// CONCATENATED MODULE: ./src/utils/base.js
 function throttle(fn, delay) {
   let t = null;
   let begin = Date.now();
