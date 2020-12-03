@@ -4,6 +4,7 @@
   "description": "TampermonkeyScripts",
   "scripts": {
     "serve": "webpack serve --mode=development",
+    "dev": "webpack --mode=development --watch --progress",
     "build": "webpack --progress",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d ./dist",
