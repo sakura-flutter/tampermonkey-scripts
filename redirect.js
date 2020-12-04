@@ -1956,11 +1956,11 @@ class App {
       // eslint-disable-next-line no-new
       new URL(url);
     } catch (error) {
-      warn(error); // 修复某些链接没有origin导致跳转不正确
+      warn(error); // 修复某些链接没有protocol导致跳转不正确
       // https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接/discussions/69178
 
-      const origin = 'http://';
-      url = origin + url;
+      const protocol = 'http:';
+      url = protocol + '//' + url;
     }
 
     return url;
