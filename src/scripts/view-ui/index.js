@@ -19,7 +19,7 @@ function main() {
       const { tagName } = parentNode
       if (tagName === 'A' && parentNode.classList.contains('ivu-menu-item')) {
         // 添加标记
-        parentNode.classList.add('menu-item--hidden')
+        parentNode.dataset.visible = 'hidden'
         break
       }
       if (tagName === 'BODY') break
