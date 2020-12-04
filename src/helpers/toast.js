@@ -1,4 +1,4 @@
-/* Toast 可以直接Toast[type] 调用 */
+/* Toast */
 
 /* global Vue Toast */
 
@@ -195,9 +195,7 @@
         opacity: 0;
       }
     `.replace(/\|>/g, '.inject-toast-content')))
-    safeAppendElement(() => {
-      document.head.appendChild(styleEl)
-    })
+    document.head.appendChild(styleEl)
   })()
 // eslint-disable-next-line semi
 })();
