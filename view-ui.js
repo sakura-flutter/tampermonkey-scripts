@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         View UI
-// @version      1.0.0
-// @description  隐藏文档中菜单项：Pro、物料
+// @version      1.0.1
+// @description  (原iView)隐藏文档中菜单项：Pro、物料
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/view-ui
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/main/src/scripts/view-ui
 // @license      GPL-3.0
 // @compatible   chrome >= Latest
 // @compatible   firefox >= Latest
@@ -88,7 +88,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;p
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".app-left .ivu-menu .ivu-menu-item.menu-item--hidden{display:none}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".app-left .ivu-menu .ivu-menu-item[data-visible=hidden]{display:none}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1017,7 +1017,7 @@ function main() {
 
       if (tagName === 'A' && parentNode.classList.contains('ivu-menu-item')) {
         // 添加标记
-        parentNode.classList.add('menu-item--hidden');
+        parentNode.dataset.visible = 'hidden';
         break;
       }
 

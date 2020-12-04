@@ -3,7 +3,7 @@
 // @version      1.15.7
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/widescreen
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/main/src/scripts/widescreen
 // @license      GPL-3.0
 // @compatible   chrome Latest
 // @compatible   firefox Latest

@@ -3,7 +3,7 @@
 // @version      1.9.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/lanhu
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/main/src/scripts/lanhu
 // @license      GPL-3.0
 // @compatible   chrome >= Latest
 // @compatible   firefox >= Latest

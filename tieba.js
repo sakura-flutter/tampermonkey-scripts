@@ -3,7 +3,7 @@
 // @version      3.2.0
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/master/src/scripts/tieba
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/main/src/scripts/tieba
 // @license      GPL-3.0
 // @compatible   chrome >= Latest
 // @compatible   firefox >= Latest
