@@ -3,7 +3,7 @@
 // @version      1.2.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC
 // @author       sakura-flutter
-// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts/commits/main/src/scripts/redirect
+// @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
 // @compatible   chrome >= Latest
 // @compatible   firefox >= Latest
