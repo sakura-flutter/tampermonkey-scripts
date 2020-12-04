@@ -1,7 +1,7 @@
 module.exports = isProd =>
 `// ==UserScript==
-// @name         View UI
-// @version      1.0.1
+// @name         View UI文档辅助
+// @version      1.0.2
 // @description  (原iView)隐藏文档中菜单项：Pro、物料
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
