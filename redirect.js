@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.2.1
+// @version      1.2.2
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -1947,8 +1947,23 @@ class App {
         briefURL,
         redirection
       });
-      redirection && location.replace(redirection);
+      redirection && location.replace(this.ensure(redirection));
     });
+  }
+
+  ensure(url) {
+    try {
+      // eslint-disable-next-line no-new
+      new URL(url);
+    } catch (error) {
+      warn(error); // 修复某些链接没有origin导致跳转不正确
+      // https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接/discussions/69178
+
+      const origin = 'http://';
+      url = origin + url;
+    }
+
+    return url;
   }
 
 }
