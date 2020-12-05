@@ -8,8 +8,8 @@ module.exports = {
     'standard',
     'plugin:vue/vue3-recommended',
   ],
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    parser: 'babel-eslint',
     ecmaVersion: 12,
     sourceType: 'module',
   },
