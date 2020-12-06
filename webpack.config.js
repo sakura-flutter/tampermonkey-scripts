@@ -20,6 +20,7 @@ module.exports = (env, argv) => ({
     widescreen: './src/scripts/widescreen',
     redirect: './src/scripts/redirect',
     'view-ui': './src/scripts/view-ui',
+    'element-ui': './src/scripts/element-ui',
   },
   output: {
     path: path.join(__dirname, 'dist'),

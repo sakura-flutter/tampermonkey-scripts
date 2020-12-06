@@ -1,0 +1,44 @@
+$primary-color: #1890ff;
+$element-page-width: 1140px;
+
+#catalogue-js {
+  @media (min-width: 1500px) {
+    right: auto;
+    left: calc(50% + #{$element-page-width} / 2 + 40px);
+  }
+
+  contain: content;
+  position: fixed;
+  right: 20px;
+  top: 100px;
+  z-index: 1000;
+
+  /* 列表样式复制ant，仅略微调整 */
+  ul {
+    margin: 0;
+    padding-left: 0;
+    font-size: 12px;
+    list-style: none;
+    border-left: 1px solid #f0f0f0;
+  }
+
+  li {
+    &:hover {
+      color: $primary-color;
+      border-left-color: $primary-color;
+    }
+
+    margin-left: -1px;
+    padding: 2px 0 2px 16px;
+    line-height: 1.5;
+    list-style: none;
+    width: 110px;
+    overflow: hidden;
+    color: rgba(0, 0, 0, 0.85);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-left: 1px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+}
