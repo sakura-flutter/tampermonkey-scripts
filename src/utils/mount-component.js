@@ -4,11 +4,17 @@
 
 import { createApp } from 'vue'
 
+function append(el) {
+  document.body
+    ? document.body.appendChild(el)
+    : window.addEventListener('DOMContentLoaded', () => append(el))
+}
+
 export function mountComponent(RootComponent) {
   const app = createApp(RootComponent)
   const root = document.createElement('div')
 
-  document.body.appendChild(root)
+  append(root)
 
   return {
     instance: app.mount(root),
