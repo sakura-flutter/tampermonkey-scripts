@@ -1,6 +1,6 @@
 import { createApp, toRefs, reactive, computed, Transition, TransitionGroup } from 'vue'
 import * as qs from '@/utils/querystring'
-import { useGMvalue } from '@/composition/use-gm-value'
+import { useGMvalue } from '@/composables/use-gm-value'
 import { Button } from '@/components'
 import './record.scss'
 

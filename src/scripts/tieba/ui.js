@@ -1,5 +1,5 @@
 import { createApp, nextTick, toRefs, reactive, computed } from 'vue'
-import { useGMvalue } from '@/composition/use-gm-value'
+import { useGMvalue } from '@/composables/use-gm-value'
 import { Input, Button } from '@/components'
 import './ui.scss'
 
