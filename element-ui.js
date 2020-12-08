@@ -530,10 +530,15 @@ function table(...args) {
   引用：https://github.com/youzan/vant/blob/dev/src/utils/mount-component.ts
 */
 
+
+function append(el) {
+  document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
+}
+
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
-  document.body.appendChild(root);
+  append(root);
   return {
     instance: app.mount(root),
 
