@@ -1,5 +1,5 @@
 import { createApp, watchEffect } from 'vue'
-import { useGMvalue } from '@/composition/use-gm-value'
+import { useGMvalue } from '@/composables/use-gm-value'
 import { Button } from '@/components'
 import styles from './hide.lazy.scss'
 import './ui.scss'
