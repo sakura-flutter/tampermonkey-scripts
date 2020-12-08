@@ -1,9 +1,8 @@
+@import "../mixins.scss";
+
 $offset-left: -5vw;
 
-:root {
-  --inject-page-width: min(50vw, 915px);
-}
-@media screen and (min-width: 1350px) {
+@include substrate(1350px, 50vw, 915px) {
   /* 文章 */
   .page-container {
     width: var(--inject-page-width) !important;

@@ -2,16 +2,45 @@
 @include var;
 
 .inject-widescreen-js {
-  contain: content;
+  contain: layout;
   position: fixed;
   z-index: 99;
   top: 150px;
   right: 7vw;
-  opacity: .5;
-  // 防止某些网站button有默认background-image
-  background-image: none !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.5;
+  transition: opacity var(--skr-transition-duration-normal);
 
   &:hover {
     opacity: 1;
+
+    label {
+      transform: translateY(100%);
+    }
+  }
+
+  button {
+    // 防止某些网站button有默认background-image
+    background-image: none !important;
+  }
+
+  label {
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    transform: translateY(-10px);
+    transition: transform var(--skr-transition-duration-normal);
+    cursor: pointer;
+  }
+
+  input {
+    margin: 0 2px 0 0;
   }
 }

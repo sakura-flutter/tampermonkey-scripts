@@ -1,7 +1,6 @@
-:root {
-  --inject-page-width: min(77.5vw, 1330px);
-}
-@media screen and (min-width: 1300px) {
+@import "../mixins.scss";
+
+@include substrate(1300px, 77.5vw, 1330px) {
   .WB_frame {
     display: flex;
     width: var(--inject-page-width) !important;

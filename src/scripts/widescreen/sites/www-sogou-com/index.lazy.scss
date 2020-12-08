@@ -1,9 +1,8 @@
+@import "../mixins.scss";
+
 $default-width: 550px;
 
-:root {
-  --inject-page-width: min(80vw, 1340px);
-}
-@media screen and (min-width: 1200px) {
+@include substrate(1200px, 80vw, 1340px) {
   %hor-center {
     margin-left: auto;
     margin-right: auto;
