@@ -1,7 +1,6 @@
-:root {
-  --inject-page-width: 82vw;
-}
-@media screen and (min-width: 1300px) {
+@import "../mixins.scss";
+
+@include substrate(1300px, 82vw, 1318px) {
   #wrapper {
     width: var(--inject-page-width);
   }
@@ -16,11 +15,5 @@
   #content .article #info {
     width: calc(100% - 160px);
     max-width: none;
-  }
-}
-
-@media screen and (min-width: 1610px) {
-  :root {
-    --inject-page-width: 1318px;
   }
 }

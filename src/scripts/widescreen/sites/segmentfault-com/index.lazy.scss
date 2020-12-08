@@ -1,8 +1,7 @@
-:root {
-  --inject-page-width: min(82vw, 1350px);
-}
+@import "../mixins.scss";
+
 /* 专栏/问答 */
-@media (min-width: 1390px) {
+@include substrate(1390px, 82vw, 1350px) {
   .container,
   .container-lg,
   .container-md,

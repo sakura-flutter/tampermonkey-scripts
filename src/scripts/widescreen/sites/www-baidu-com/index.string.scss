@@ -1,9 +1,8 @@
+@import "../mixins.scss";
+
 $default-width: 560px;
 
-:root {
-  --inject-page-width: min(75vw, 1300px);
-}
-@media screen and (min-width: 1460px) {
+@include substrate(1460px, 75vw, 1300px) {
   /* 顶部搜索 */
   /* 修复搜索主页换肤后头部异常 */
   #head:not(.s-skin-hasbg) {

@@ -1,9 +1,8 @@
+@import "../mixins.scss";
+
 $default-width: 690px;
 
-:root {
-  --inject-page-width: min(75vw, 1120px);
-}
-@media screen and (min-width: 1000px) {
+@include substrate(1000px, 75vw, 1120px) {
   .Post-NormalMain .Post-Header,
   .Post-NormalMain > div,
   .Post-NormalSub > div {

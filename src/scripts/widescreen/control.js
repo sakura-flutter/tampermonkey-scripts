@@ -1,5 +1,6 @@
-import { createApp, reactive, toRefs } from 'vue'
-import * as readyState from '@/utils/ready-state'
+import { reactive, watchEffect } from 'vue'
+import { mountComponent } from '@/utils/mount-component'
+import { useExpose } from '@/composition/use-expose'
 import { useGMvalue } from '@/composition/use-gm-value'
 import globalStore from '@/store'
 import { Button } from '@/components'
@@ -9,69 +10,60 @@ import './control.scss'
 export default function createControl(options) {
   const { store, execute = () => {}, visible = true, silent = false } = options
 
-  const app = createApp({
+  const { instance } = mountComponent({
     setup() {
       const state = reactive({
         // 总开关
         uiVisible: useGMvalue('ui_visible', true).value,
         visible,
-        enabled: store.enabled,
+        loose: store.loose || false,
       })
+
+      function notify() {
+        (globalStore.notify_enabled ?? true) && Toast('已宽屏处理')
+      }
+      function toggle() {
+        store.enabled = !store.enabled
+        location.reload()
+      }
+
+      useExpose({
+        notify,
+        show: () => { state.visible = true },
+        hide: () => { state.visible = false },
+      })
+
       if (store.enabled) {
+        watchEffect(() => {
+          store.loose = state.loose
+          document.documentElement.classList[state.loose ? 'add' : 'remove']('inject-widescreen-loose-js')
+        })
         execute()
         !silent && notify()
       }
 
-      // export-api
-      function show() {
-        state.visible = true
-      }
-      function hide() {
-        state.visible = false
-      }
-      function notify() {
-        (globalStore.notify_enabled ?? true) && Toast('已宽屏处理')
-      }
-      // private-api
-      function toggle() {
-        store.enabled = !state.enabled
-        location.reload()
-      }
-
-      return {
-        ...toRefs(state),
-        show,
-        hide,
-        notify,
-        toggle,
-      }
-    },
-    render() {
-      const { uiVisible, visible, enabled, toggle } = this
-
-      return (
-        <Button
-          class="inject-widescreen-js"
-          v-show={uiVisible && visible}
-          title="注意：页面会被刷新"
-          type="primary"
-          shadow
-          onClick={toggle}
-        >
-          {enabled ? '已开启' : '关闭'}
-        </Button>
+      return () => (
+        <div class="inject-widescreen-js">
+          <Button
+            v-show={state.uiVisible && state.visible}
+            title="注意：页面会被刷新"
+            type="primary"
+            shadow
+            onClick={toggle}
+          >
+            {store.enabled ? '已开启' : '关闭'}
+          </Button>
+          {store.enabled && <label title="勾选后不再限制最大宽度，酌情使用">
+            <input
+              v-model={state.loose}
+              type="checkbox"
+            />
+              更宽
+          </label>}
+        </div>
       )
     },
   })
-  const rootContainer = document.createElement('div')
-  const buttonComponent = app.mount(rootContainer)
-  readyState.DOMContentLoaded(() => {
-    document.body.appendChild(rootContainer)
-  })
 
-  return {
-    show: buttonComponent.show,
-    hide: buttonComponent.hide,
-    notify: buttonComponent.notify,
-  }
+  return instance
 }

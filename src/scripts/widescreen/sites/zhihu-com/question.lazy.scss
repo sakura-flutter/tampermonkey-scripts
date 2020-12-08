@@ -1,9 +1,8 @@
+@import "../mixins.scss";
+
 $default-width: 694px;
 
-:root {
-  --inject-page-width: min(75vw, 1300px);
-}
-@media screen and (min-width: 1350px) {
+@include substrate(1350px, 75vw, 1300px) {
   .QuestionHeader-content,
   .QuestionHeader-footer {
     width: var(--inject-page-width);

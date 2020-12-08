@@ -1,7 +1,6 @@
-:root {
-  --inject-page-width: min(91vw, 1360px);
-}
-@media screen and (min-width: 1100px) {
+@import "../mixins.scss";
+
+@include substrate(1100px, 91vw, 1360px) {
   .Topstory-container {
     width: var(--inject-page-width);
   }

@@ -1,8 +1,7 @@
-:root {
-  --inject-page-width: min(82vw, 1230px);
-}
+@import "../mixins.scss";
+
 /* 掘金文章 */
-@media screen and (min-width: 1300px) {
+@include substrate(1300px, 82vw, 1230px) {
   .main-container {
     max-width: var(--inject-page-width);
   }

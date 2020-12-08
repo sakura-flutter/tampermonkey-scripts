@@ -1,7 +1,6 @@
-:root {
-  --inject-page-width: min(75vw, 1440px);
-}
-@media (min-width: 1580px) {
+@import "../mixins.scss";
+
+@include substrate(1580px, 75vw, 1440px) {
   .container .row {
     width: var(--inject-page-width);
   }
