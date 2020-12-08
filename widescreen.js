@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      2.0.0
+// @version      2.0.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -4430,21 +4430,21 @@ function createControl(options) {
         !silent && notify();
       }
 
-      return () => (0,external_Vue_namespaceObject.createVNode)("div", {
+      return () => (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [state.uiVisible && state.visible && (0,external_Vue_namespaceObject.createVNode)("div", {
         "class": "inject-widescreen-js"
-      }, [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
         "title": "注意：页面会被刷新",
         "type": "primary",
         "shadow": true,
         "onClick": toggle
       }, {
         default: () => [store.enabled ? '已开启' : '关闭']
-      }), [[external_Vue_namespaceObject.vShow, state.uiVisible && state.visible]]), store.enabled && (0,external_Vue_namespaceObject.createVNode)("label", {
+      }), store.enabled && (0,external_Vue_namespaceObject.createVNode)("label", {
         "title": "勾选后不再限制最大宽度，酌情使用"
       }, [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
         "onUpdate:modelValue": $event => state.loose = $event,
         "type": "checkbox"
-      }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.loose]]), (0,external_Vue_namespaceObject.createTextVNode)("\u66F4\u5BBD")])]);
+      }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.loose]]), (0,external_Vue_namespaceObject.createTextVNode)("\u66F4\u5BBD")])])]);
     }
 
   });
