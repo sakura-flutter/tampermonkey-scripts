@@ -43,24 +43,25 @@ export default function createControl(options) {
       }
 
       return () => (
-        <div class="inject-widescreen-js">
-          <Button
-            v-show={state.uiVisible && state.visible}
-            title="注意：页面会被刷新"
-            type="primary"
-            shadow
-            onClick={toggle}
-          >
-            {store.enabled ? '已开启' : '关闭'}
-          </Button>
-          {store.enabled && <label title="勾选后不再限制最大宽度，酌情使用">
-            <input
-              v-model={state.loose}
-              type="checkbox"
-            />
-              更宽
-          </label>}
-        </div>
+        <>
+          {state.uiVisible && state.visible && <div class="inject-widescreen-js">
+            <Button
+              title="注意：页面会被刷新"
+              type="primary"
+              shadow
+              onClick={toggle}
+            >
+              {store.enabled ? '已开启' : '关闭'}
+            </Button>
+            {store.enabled && <label title="勾选后不再限制最大宽度，酌情使用">
+              <input
+                v-model={state.loose}
+                type="checkbox"
+              />
+                更宽
+            </label>}
+          </div>}
+        </>
       )
     },
   })
