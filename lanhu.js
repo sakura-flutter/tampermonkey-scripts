@@ -14,8 +14,8 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global.js
-// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=870120
+// @require      https://cdn.jsdelivr.net/npm/vue@3.0.4/dist/vue.runtime.global.js
+// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=876846
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1654,36 +1654,56 @@ function parse(href = location.href) {
 function stringify(obj) {
   return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
 }
-;// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+;// CONCATENATED MODULE: ./src/utils/mount-component.js
+/*
+  引用：https://github.com/youzan/vant/blob/dev/src/utils/mount-component.ts
+*/
+
+
+function append(el) {
+  document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
+}
+
+function mountComponent(RootComponent) {
+  const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
+  const root = document.createElement('div');
+  append(root);
+  return {
+    instance: app.mount(root),
+
+    unmount() {
+      app.unmount(root);
+      document.body.removeChild(root);
+    }
+
+  };
+}
+;// CONCATENATED MODULE: ./src/composables/use-gm-value.js
 
 /**
- * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
- * 暂不提供GM_deleteValue
+ * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
+ * @param {boolean} listening
+ * @return {any}
  */
 
-function useGMvalue(name, defaultValue) {
-  const state = (0,external_Vue_namespaceObject.reactive)({
-    value: GM_getValue(name, defaultValue),
-    old: undefined,
-    name
-  });
-  (0,external_Vue_namespaceObject.onUnmounted)(() => {
-    GM_removeValueChangeListener(id);
-  });
-  const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
-    state.value = newVal;
-    state.old = oldVal;
+function useGMvalue(name, defaultValue, listening = true) {
+  const value = (0,external_Vue_namespaceObject.ref)(GM_getValue(name, defaultValue));
+  (0,external_Vue_namespaceObject.watch)(value, () => {
+    GM_setValue(name, value.value);
   });
 
-  function setValue(val) {
-    GM_setValue(name, val);
+  if (listening) {
+    (0,external_Vue_namespaceObject.onUnmounted)(() => {
+      GM_removeValueChangeListener(id);
+    });
+    const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
+      value.value = newVal;
+    });
   }
 
-  return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-    setValue
-  };
+  return value;
 }
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(3379);
@@ -2046,185 +2066,23 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 
 
+
+const Icon = (0,external_Vue_namespaceObject.createVNode)("svg", {
+  "t": "1602929080634",
+  "viewBox": "0 0 1024 1024",
+  "version": "1.1",
+  "xmlns": "http://www.w3.org/2000/svg",
+  "p-id": "4117",
+  "width": "10",
+  "height": "10"
+}, [(0,external_Vue_namespaceObject.createVNode)("path", {
+  "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
+  "p-id": "4118"
+}, null)]);
 /* 记录看过的产品 */
 
 function createRecorder() {
-  const app = (0,external_Vue_namespaceObject.createApp)({
-    setup() {
-      const state = (0,external_Vue_namespaceObject.reactive)({
-        recordsVisible: false,
-        moreActionsVisible: false
-      });
-      const {
-        value: records,
-        setValue: setRecords
-      } = useGMvalue('records', []);
-      const {
-        value: unhidden,
-        setValue: setUnhidden
-      } = useGMvalue('unhidden', false);
-      const reversed = (0,external_Vue_namespaceObject.computed)(() => [...records.value].reverse());
-      const passwordsMap = (0,external_Vue_namespaceObject.computed)(() => new Map(Object.entries(useGMvalue('passwords', []).value.value)));
-
-      function deleteItem(item) {
-        const newRecords = [...records.value];
-        newRecords.find((record, index) => {
-          if (record.pid === item.pid) {
-            newRecords.splice(index, 1);
-            return true;
-          }
-
-          return false;
-        });
-        setRecords(newRecords);
-      }
-
-      function copy(action, item) {
-        let copyString = '';
-        const password = GM_getValue('passwords', {})[item.pid];
-
-        if (action === 'all') {
-          copyString += `${item.title}`;
-          password && (copyString += ` (密码：${password})`);
-          copyString += `\n${item.href}`;
-        } else if (action === 'pwd') {
-          if (password) {
-            copyString += password;
-          } else {
-            Toast.warning('没有密码！');
-          }
-        }
-
-        if (!copyString) return;
-        GM_setClipboard(copyString, 'text');
-        Toast.success('复制成功');
-      }
-
-      function toggle(visible) {
-        state.recordsVisible = visible;
-      }
-
-      function toggleMoreActions(visible) {
-        state.moreActionsVisible = visible;
-      }
-
-      function onUnhiddenChange(event) {
-        setUnhidden(event.target.checked);
-      }
-
-      return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-        records,
-        unhidden,
-        reversed,
-        passwordsMap,
-        deleteItem,
-        copy,
-        toggle,
-        toggleMoreActions,
-        onUnhiddenChange
-      };
-    },
-
-    render() {
-      const {
-        reversed,
-        recordsVisible,
-        unhidden,
-        moreActionsVisible,
-        passwordsMap,
-        toggle,
-        toggleMoreActions,
-        deleteItem,
-        copy,
-        onUnhiddenChange
-      } = this;
-      return (0,external_Vue_namespaceObject.createVNode)("article", {
-        "id": "inject-recorder-ui",
-        "onMouseenter": () => {
-          toggle(true);
-        },
-        "onMouseleave": () => {
-          toggle(false);
-          toggleMoreActions(false);
-        }
-      }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
-        "name": "inject-slide-fade"
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
-          "class": {
-            'more-actions': moreActionsVisible
-          },
-          "tag": "ul",
-          "name": "inject-slide-hor-fade",
-          "appear": true
-        }, {
-          default: () => [reversed.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
-            "class": {
-              'has-pwd': passwordsMap.has(item.pid)
-            },
-            "key": item.pid
-          }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-            "href": item.href,
-            "title": item.title,
-            "target": "_blank"
-          }, [item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
-            "class": "actions",
-            "onMouseenter": () => {
-              toggleMoreActions(true);
-            }
-          }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-            "title": "移除",
-            "round": true,
-            "onClick": () => {
-              deleteItem(item);
-            }
-          }, {
-            default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
-          }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-            "title": "左击复制链接和密码；右击复制密码",
-            "round": true,
-            "onClick": () => {
-              copy('all', item);
-            },
-            "onContextmenu": event => {
-              event.preventDefault();
-              copy('pwd', item);
-            }
-          }, {
-            default: () => [(0,external_Vue_namespaceObject.createVNode)("svg", {
-              "t": "1602929080634",
-              "viewBox": "0 0 1024 1024",
-              "version": "1.1",
-              "xmlns": "http://www.w3.org/2000/svg",
-              "p-id": "4117",
-              "width": "10",
-              "height": "10"
-            }, [(0,external_Vue_namespaceObject.createVNode)("path", {
-              "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
-              "p-id": "4118"
-            }, null)])]
-          }), [[external_Vue_namespaceObject.vShow, moreActionsVisible]])])]))]
-        })]), [[external_Vue_namespaceObject.vShow, reversed.length && (unhidden || recordsVisible)]])]
-      }), (0,external_Vue_namespaceObject.createVNode)("div", {
-        "class": "control"
-      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "class": "view-btn",
-        "type": "primary",
-        "shadow": true
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u6253\u5F00\u6700\u8FD1\u9879\u76EE")]
-      }), (0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.unhidden,
-        "type": "checkbox",
-        "title": "固定显示",
-        "onChange": onUnhiddenChange
-      }, null)])]);
-    }
-
-  });
-  const rootContainer = document.createElement('div');
-  app.mount(rootContainer);
-  document.body.appendChild(rootContainer);
+  createUI();
   /* 记录函数 */
 
   function record() {
@@ -2256,6 +2114,128 @@ function createRecorder() {
   return {
     record
   };
+}
+
+function createUI() {
+  mountComponent({
+    setup() {
+      const state = (0,external_Vue_namespaceObject.reactive)({
+        recordsVisible: false,
+        moreActionsVisible: false,
+        records: useGMvalue('records', []),
+        unhidden: useGMvalue('unhidden', false),
+        passwords: useGMvalue('passwords', {})
+      });
+      const reversed = (0,external_Vue_namespaceObject.computed)(() => [...state.records].reverse());
+
+      function deleteItem(item) {
+        const ectype = [...state.records];
+        const index = ectype.findIndex(record => record.pid === item.pid);
+        ectype.splice(index, 1);
+        state.records = ectype;
+      }
+
+      function copy(action, item) {
+        let copyString = '';
+        const password = state.passwords[item.pid];
+
+        if (action === 'all') {
+          copyString += `${item.title}`;
+          password && (copyString += ` (密码：${password})`);
+          copyString += `\n${item.href}`;
+        } else if (action === 'pwd') {
+          if (password) {
+            copyString += password;
+          } else {
+            Toast.warning('没有密码！');
+          }
+        }
+
+        if (!copyString) return;
+        GM_setClipboard(copyString, 'text');
+        Toast.success('复制成功');
+      }
+
+      function setRecordsVisible(visible) {
+        state.recordsVisible = visible;
+      }
+
+      function setMoreActionsVisible(visible) {
+        state.moreActionsVisible = visible;
+      }
+
+      return () => (0,external_Vue_namespaceObject.createVNode)("article", {
+        "id": "inject-recorder-ui",
+        "onMouseenter": () => {
+          setRecordsVisible(true);
+        },
+        "onMouseleave": () => {
+          setRecordsVisible(false);
+          setMoreActionsVisible(false);
+        }
+      }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
+        "name": "inject-slide-fade"
+      }, {
+        default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
+          "class": {
+            'more-actions': state.moreActionsVisible
+          },
+          "tag": "ul",
+          "name": "inject-slide-hor-fade",
+          "appear": true
+        }, {
+          default: () => [reversed.value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
+            "class": {
+              'has-pwd': !!state.passwords[item.pid]
+            },
+            "key": item.pid
+          }, [(0,external_Vue_namespaceObject.createVNode)("a", {
+            "href": item.href,
+            "title": item.title,
+            "target": "_blank"
+          }, [item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
+            "class": "actions",
+            "onMouseenter": () => {
+              setMoreActionsVisible(true);
+            }
+          }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "移除",
+            "round": true,
+            "onClick": () => {
+              deleteItem(item);
+            }
+          }, {
+            default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
+          }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "左击复制链接和密码；右击复制密码",
+            "round": true,
+            "onClick": () => {
+              copy('all', item);
+            },
+            "onContextmenu": event => {
+              event.preventDefault();
+              copy('pwd', item);
+            }
+          }, {
+            default: () => [Icon]
+          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))]
+        })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])]
+      }), (0,external_Vue_namespaceObject.createVNode)("div", {
+        "class": "control"
+      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "class": "view-btn",
+        "type": "primary",
+        "shadow": true
+      }, {
+        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u6253\u5F00\u6700\u8FD1\u9879\u76EE")]
+      }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
+        "onUpdate:modelValue": $event => state.unhidden = $event,
+        "type": "checkbox",
+        "title": "固定显示"
+      }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]);
+    }
+
+  });
 }
 
 

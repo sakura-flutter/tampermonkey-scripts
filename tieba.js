@@ -2508,36 +2508,32 @@ function api_doSign(params) {
 }
 ;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
-;// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+;// CONCATENATED MODULE: ./src/composables/use-gm-value.js
 
 /**
- * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
- * 暂不提供GM_deleteValue
+ * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
+ * @param {boolean} listening
+ * @return {any}
  */
 
-function useGMvalue(name, defaultValue) {
-  const state = (0,external_Vue_namespaceObject.reactive)({
-    value: GM_getValue(name, defaultValue),
-    old: undefined,
-    name
-  });
-  (0,external_Vue_namespaceObject.onUnmounted)(() => {
-    GM_removeValueChangeListener(id);
-  });
-  const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
-    state.value = newVal;
-    state.old = oldVal;
+function useGMvalue(name, defaultValue, listening = true) {
+  const value = (0,external_Vue_namespaceObject.ref)(GM_getValue(name, defaultValue));
+  (0,external_Vue_namespaceObject.watch)(value, () => {
+    GM_setValue(name, value.value);
   });
 
-  function setValue(val) {
-    GM_setValue(name, val);
+  if (listening) {
+    (0,external_Vue_namespaceObject.onUnmounted)(() => {
+      GM_removeValueChangeListener(id);
+    });
+    const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
+      value.value = newVal;
+    });
   }
 
-  return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-    setValue
-  };
+  return value;
 }
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(3379);
@@ -2931,31 +2927,19 @@ function createUI({
         size: sizeTick.next().value,
         isSimulate: false,
         isReverse: store.is_reverse || false,
-        likeForums: []
+        likeForums: [],
+        keyword: useGMvalue('keyword', ''),
+        isComplete: useGMvalue('is_complete', false),
+        isForumsHide: useGMvalue('is_forums_hide', false),
+        isCover: useGMvalue('is_cover', false)
       });
-      const {
-        value: keyword,
-        setValue: setKeyword
-      } = useGMvalue('keyword', '');
-      const {
-        value: isComplete,
-        setValue: setComplete
-      } = useGMvalue('is_complete', false);
-      const {
-        value: isForumsHide,
-        setValue: setForumsHide
-      } = useGMvalue('is_forums_hide', false);
-      const {
-        value: isCover,
-        setValue: setCover
-      } = useGMvalue('is_cover', false);
       const diaplayForums = (0,external_Vue_namespaceObject.computed)(() => {
         let ectype = [...state.likeForums];
         state.isReverse && ectype.reverse();
 
-        if (keyword.value) {
+        if (state.keyword) {
           // 忽略大小写
-          ectype = ectype.filter(forum => forum.forum_name.toUpperCase().includes(keyword.value.toUpperCase()));
+          ectype = ectype.filter(forum => forum.forum_name.toUpperCase().includes(state.keyword.toUpperCase()));
         }
 
         return ectype;
@@ -2972,7 +2956,7 @@ function createUI({
       } // 自动签到
 
 
-      if (isComplete.value) {
+      if (state.isComplete) {
         run();
       }
 
@@ -3047,20 +3031,12 @@ function createUI({
       }
 
       return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-        keyword,
-        isComplete,
-        isForumsHide,
-        isCover,
         diaplayForums,
         counter,
         run,
         setLikeForums,
         updateLikeForum,
         checkUnsign,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
         changeReverse,
         changeSize,
         onSimulateChange
@@ -3071,8 +3047,6 @@ function createUI({
       const {
         loading,
         size,
-        keyword,
-        isComplete,
         isForumsHide,
         isCover,
         isReverse,
@@ -3080,10 +3054,6 @@ function createUI({
         likeForums,
         diaplayForums,
         run,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
         changeReverse,
         changeSize,
         onSimulateChange
@@ -3121,23 +3091,20 @@ function createUI({
         "onChange": onSimulateChange
       }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u6A21\u62DFAPP")]), (0,external_Vue_namespaceObject.createVNode)("label", {
         "title": "下次进入贴吧时自动签到，建议同时勾选模拟APP"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": isComplete,
-        "type": "checkbox",
-        "onChange": event => setComplete(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u81EA\u52A8\u7B7E\u5230")]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [(0,external_Vue_namespaceObject.createVNode)("label", {
+      }, [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
+        "onUpdate:modelValue": $event => this.isComplete = $event,
+        "type": "checkbox"
+      }, null), [[external_Vue_namespaceObject.vModelCheckbox, this.isComplete]]), (0,external_Vue_namespaceObject.createTextVNode)("\u81EA\u52A8\u7B7E\u5230")]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [(0,external_Vue_namespaceObject.createVNode)("label", {
         "title": "列表将缩到底部"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.isForumsHide,
-        "type": "checkbox",
-        "onChange": event => setForumsHide(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9690\u85CF\u5217\u8868")]), (0,external_Vue_namespaceObject.createVNode)("label", {
+      }, [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
+        "onUpdate:modelValue": $event => this.isForumsHide = $event,
+        "type": "checkbox"
+      }, null), [[external_Vue_namespaceObject.vModelCheckbox, this.isForumsHide]]), (0,external_Vue_namespaceObject.createTextVNode)("\u9690\u85CF\u5217\u8868")]), (0,external_Vue_namespaceObject.createVNode)("label", {
         "title": "覆盖在页面上显示"
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "checked": this.isCover,
-        "type": "checkbox",
-        "onChange": event => setCover(event.target.checked)
-      }, null), (0,external_Vue_namespaceObject.createTextVNode)("\u9632\u6B62\u906E\u6321")])])])]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)("div", {
+      }, [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
+        "onUpdate:modelValue": $event => this.isCover = $event,
+        "type": "checkbox"
+      }, null), [[external_Vue_namespaceObject.vModelCheckbox, this.isCover]]), (0,external_Vue_namespaceObject.createTextVNode)("\u9632\u6B62\u906E\u6321")])])])]), likeForums.length > 0 && (0,external_Vue_namespaceObject.createVNode)("div", {
         "class": "forums-container"
       }, [(0,external_Vue_namespaceObject.createVNode)("header", {
         "class": "top-btns"
@@ -3176,11 +3143,11 @@ function createUI({
         "class": "exp",
         "title": expTitle(item)
       }, [item.user_exp, (0,external_Vue_namespaceObject.createTextVNode)("/"), item.levelup_score])]))]), likeForums.length > 25 && (0,external_Vue_namespaceObject.createVNode)(src_components_input, {
-        "value": keyword,
+        "modelValue": this.keyword,
+        "onUpdate:modelValue": $event => this.keyword = $event,
         "placeholder": "搜索",
         "size": "small",
-        "scale": true,
-        "onInput": event => setKeyword(event.target.value)
+        "scale": true
       }, null)])]);
     }
 

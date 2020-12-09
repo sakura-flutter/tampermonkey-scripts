@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Element UI文档辅助
-// @version      1.0.0
+// @version      1.0.1
 // @description  在Element UI文档中增加示例目录导航，同时支持v2与v3(element-plus)版本，类似于Ant右侧悬浮的导航
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -711,7 +711,7 @@ function main() {
 } // 非国内链接打开较慢，防止未完成加载
 
 
-setTimeout(main, 500);
+setTimeout(main, 1500);
 })();
 
 /******/ })()

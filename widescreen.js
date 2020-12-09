@@ -3979,7 +3979,7 @@ function mountComponent(RootComponent) {
 
   };
 }
-;// CONCATENATED MODULE: ./src/composition/use-expose.js
+;// CONCATENATED MODULE: ./src/composables/use-expose.js
 /*
   引用：https://github.com/youzan/vant/blob/dev/src/composables/use-expose.ts
 */
@@ -3992,36 +3992,32 @@ function useExpose(apis) {
     Object.assign(instance.proxy, apis);
   }
 }
-;// CONCATENATED MODULE: ./src/composition/use-gm-value.js
+;// CONCATENATED MODULE: ./src/composables/use-gm-value.js
 
 /**
- * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
- * 暂不提供GM_deleteValue
+ * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
+ * @param {boolean} listening
+ * @return {any}
  */
 
-function useGMvalue(name, defaultValue) {
-  const state = (0,external_Vue_namespaceObject.reactive)({
-    value: GM_getValue(name, defaultValue),
-    old: undefined,
-    name
-  });
-  (0,external_Vue_namespaceObject.onUnmounted)(() => {
-    GM_removeValueChangeListener(id);
-  });
-  const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
-    state.value = newVal;
-    state.old = oldVal;
+function useGMvalue(name, defaultValue, listening = true) {
+  const value = (0,external_Vue_namespaceObject.ref)(GM_getValue(name, defaultValue));
+  (0,external_Vue_namespaceObject.watch)(value, () => {
+    GM_setValue(name, value.value);
   });
 
-  function setValue(val) {
-    GM_setValue(name, val);
+  if (listening) {
+    (0,external_Vue_namespaceObject.onUnmounted)(() => {
+      GM_removeValueChangeListener(id);
+    });
+    const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
+      value.value = newVal;
+    });
   }
 
-  return { ...(0,external_Vue_namespaceObject.toRefs)(state),
-    setValue
-  };
+  return value;
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
 var input = __webpack_require__(9261);
@@ -4397,7 +4393,7 @@ function createControl(options) {
     setup() {
       const state = (0,external_Vue_namespaceObject.reactive)({
         // 总开关
-        uiVisible: useGMvalue('ui_visible', true).value,
+        uiVisible: useGMvalue('ui_visible', true),
         visible,
         loose: store.loose || false
       });
