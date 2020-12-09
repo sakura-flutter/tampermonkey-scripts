@@ -46,4 +46,4 @@ function main() {
 }
 
 // 非国内链接打开较慢，防止未完成加载
-setTimeout(main, 500)
+setTimeout(main, 1500)
