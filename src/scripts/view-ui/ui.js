@@ -6,13 +6,13 @@ import './ui.scss'
 
 const app = createApp({
   setup() {
-    const { value: hidden, setValue: setHidden } = useGMvalue('menu_hidden', false)
+    const hidden = useGMvalue('menu_hidden', false)
     watchEffect(() => {
       hidden.value ? styles.use() : styles.unuse()
     })
 
     function toggle() {
-      setHidden(!hidden.value)
+      hidden.value = !hidden.value
     }
 
     return () => (

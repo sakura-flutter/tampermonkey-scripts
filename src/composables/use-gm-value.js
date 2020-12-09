@@ -1,33 +1,24 @@
-import { onUnmounted, reactive, toRefs } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 
 /**
- * 同GM_getValue且在生命周期内自动GM_addValueChangeListener与GM_removeValueChangeListener，亦提供GM_setValue
- * 暂不提供GM_deleteValue
+ * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
+ * @param {boolean} listening
+ * @return {any}
  */
-export function useGMvalue(name, defaultValue) {
-  const state = reactive({
-    value: GM_getValue(name, defaultValue),
-    old: undefined,
-    name,
-  })
+export function useGMvalue(name, defaultValue, listening = true) {
+  const value = ref(GM_getValue(name, defaultValue))
+  watch(value, () => { GM_setValue(name, value.value) })
 
-  onUnmounted(() => {
-    GM_removeValueChangeListener(id)
-  })
-
-  const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
-    state.value = newVal
-    state.old = oldVal
-  })
-
-  function setValue(val) {
-    GM_setValue(name, val)
+  if (listening) {
+    onUnmounted(() => {
+      GM_removeValueChangeListener(id)
+    })
+    const id = GM_addValueChangeListener(name, (name, oldVal, newVal) => {
+      value.value = newVal
+    })
   }
 
-  return {
-    ...toRefs(state),
-    setValue,
-  }
+  return value
 }

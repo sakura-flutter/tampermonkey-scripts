@@ -14,7 +14,7 @@ export default function createControl(options) {
     setup() {
       const state = reactive({
         // 总开关
-        uiVisible: useGMvalue('ui_visible', true).value,
+        uiVisible: useGMvalue('ui_visible', true),
         visible,
         loose: store.loose || false,
       })
