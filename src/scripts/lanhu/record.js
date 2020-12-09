@@ -12,10 +12,11 @@ function createRecorder() {
         recordsVisible: false,
         moreActionsVisible: false,
       })
-      const { value: records, setValue: setRecords } = useGMvalue('records', [])
-      const { value: unhidden, setValue: setUnhidden } = useGMvalue('unhidden', false)
+      const records = useGMvalue('records', [])
+      const unhidden = useGMvalue('unhidden', false)
+      const passwords = useGMvalue('passwords', [])
       const reversed = computed(() => [...records.value].reverse())
-      const passwordsMap = computed(() => new Map(Object.entries(useGMvalue('passwords', []).value.value)))
+      const passwordsMap = computed(() => new Map(Object.entries(passwords.value)))
 
       function deleteItem(item) {
         const newRecords = [...records.value]
@@ -26,7 +27,7 @@ function createRecorder() {
           }
           return false
         })
-        setRecords(newRecords)
+        records.value = newRecords
       }
       function copy(action, item) {
         let copyString = ''
@@ -54,7 +55,7 @@ function createRecorder() {
         state.moreActionsVisible = visible
       }
       function onUnhiddenChange(event) {
-        setUnhidden(event.target.checked)
+        unhidden.value = event.target.checked
       }
 
       return {

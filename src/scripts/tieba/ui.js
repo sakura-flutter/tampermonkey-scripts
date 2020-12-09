@@ -35,17 +35,18 @@ export function createUI({
         isSimulate: false,
         isReverse: store.is_reverse || false,
         likeForums: [],
+        keyword: useGMvalue('keyword', ''),
+        isComplete: useGMvalue('is_complete', false),
+        isForumsHide: useGMvalue('is_forums_hide', false),
+        isCover: useGMvalue('is_cover', false),
       })
-      const { value: keyword, setValue: setKeyword } = useGMvalue('keyword', '')
-      const { value: isComplete, setValue: setComplete } = useGMvalue('is_complete', false)
-      const { value: isForumsHide, setValue: setForumsHide } = useGMvalue('is_forums_hide', false)
-      const { value: isCover, setValue: setCover } = useGMvalue('is_cover', false)
+
       const diaplayForums = computed(() => {
         let ectype = [...state.likeForums]
         state.isReverse && ectype.reverse()
-        if (keyword.value) {
+        if (state.keyword) {
           // 忽略大小写
-          ectype = ectype.filter(forum => (forum.forum_name.toUpperCase()).includes(keyword.value.toUpperCase()))
+          ectype = ectype.filter(forum => (forum.forum_name.toUpperCase()).includes(state.keyword.toUpperCase()))
         }
         return ectype
       })
@@ -59,7 +60,7 @@ export function createUI({
         state.isSimulate = true
       }
       // 自动签到
-      if (isComplete.value) {
+      if (state.isComplete) {
         run()
       }
 
@@ -122,20 +123,12 @@ export function createUI({
 
       return {
         ...toRefs(state),
-        keyword,
-        isComplete,
-        isForumsHide,
-        isCover,
         diaplayForums,
         counter,
         run,
         setLikeForums,
         updateLikeForum,
         checkUnsign,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
         changeReverse,
         changeSize,
         onSimulateChange,
@@ -145,8 +138,6 @@ export function createUI({
       const {
         loading,
         size,
-        keyword,
-        isComplete,
         isForumsHide,
         isCover,
         isReverse,
@@ -154,10 +145,6 @@ export function createUI({
         likeForums,
         diaplayForums,
         run,
-        setKeyword,
-        setComplete,
-        setForumsHide,
-        setCover,
         changeReverse,
         changeSize,
         onSimulateChange,
@@ -190,9 +177,8 @@ export function createUI({
               </label>
               <label title="下次进入贴吧时自动签到，建议同时勾选模拟APP">
                 <input
-                  checked={isComplete}
+                  v-model={this.isComplete}
                   type="checkbox"
-                  onChange={event => setComplete(event.target.checked)}
                 />
                 自动签到
               </label>
@@ -201,17 +187,15 @@ export function createUI({
                   <>
                     <label title="列表将缩到底部">
                       <input
-                        checked={this.isForumsHide}
+                        v-model={this.isForumsHide}
                         type="checkbox"
-                        onChange={event => setForumsHide(event.target.checked)}
                       />
                       隐藏列表
                     </label>
                     <label title="覆盖在页面上显示">
                       <input
-                        checked={this.isCover}
+                        v-model={this.isCover}
                         type="checkbox"
-                        onChange={event => setCover(event.target.checked)}
                       />
                       防止遮挡
                     </label>
@@ -259,11 +243,10 @@ export function createUI({
               </ul>
               {
                 likeForums.length > 25 && <Input
-                  value={keyword}
+                  v-model={this.keyword}
                   placeholder="搜索"
                   size="small"
                   scale
-                  onInput={event => setKeyword(event.target.value)}
                 />
               }
             </div>
