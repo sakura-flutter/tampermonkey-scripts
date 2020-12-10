@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Element UI文档辅助
-// @version      1.0.1
+// @version      1.0.2
 // @description  在Element UI文档中增加示例目录导航，同时支持v2与v3(element-plus)版本，类似于Ant右侧悬浮的导航
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -444,6 +444,40 @@ module.exports = function (list, options) {
 
 ;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
+;// CONCATENATED MODULE: ./src/utils/base.js
+function throttle(fn, delay) {
+  let t = null;
+  let begin = Date.now();
+  return function (...args) {
+    const self = this;
+    const cur = Date.now();
+    clearTimeout(t);
+
+    if (cur - begin >= delay) {
+      fn.apply(self, args);
+      begin = cur;
+    } else {
+      t = setTimeout(function () {
+        fn.apply(self, args);
+      }, delay);
+    }
+  };
+}
+function once(fn) {
+  let called = false;
+  return function (...args) {
+    if (called === false) {
+      called = true;
+      return fn.apply(this, args);
+    }
+  };
+}
+/**
+ * 延时
+ * @param {number} ms 毫秒数
+ */
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 ;// CONCATENATED MODULE: ./src/utils/selector.js
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -669,11 +703,18 @@ var _createUI2 = function _createUI2() {
 
 
 
-function main() {
+
+async function main() {
   if (!checker()) return;
-  const {
-    instance
-  } = getVueRoot($('#app'));
+  let instance = null; // 非国内链接打开较慢，防止未完成加载
+
+  while (instance == null) {
+    ({
+      instance
+    } = getVueRoot($('#app')));
+    await sleep(500);
+  }
+
   if (!instance) return;
   warn(instance);
   const catalogue = new Catalogue({
@@ -708,10 +749,9 @@ function main() {
       catalogue.update();
     };
   }
-} // 非国内链接打开较慢，防止未完成加载
+}
 
-
-setTimeout(main, 1500);
+main();
 })();
 
 /******/ })()
