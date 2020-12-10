@@ -1,14 +1,20 @@
 import { nextTick } from 'vue'
+import { sleep } from '@/utils/base'
 import { $ } from '@/utils/selector'
 import { checker } from '@/utils/compatibility'
 import { getVueRoot } from '@/utils/vue-root'
 import { warn } from '@/utils/log'
 import Catalogue from './catalogue'
 
-function main() {
+async function main() {
   if (!checker()) return
 
-  const { instance } = getVueRoot($('#app'))
+  let instance = null
+  // 非国内链接打开较慢，防止未完成加载
+  while (instance == null) {
+    ({ instance } = getVueRoot($('#app')))
+    await sleep(500)
+  }
   if (!instance) return
   warn(instance)
 
@@ -45,5 +51,4 @@ function main() {
   }
 }
 
-// 非国内链接打开较慢，防止未完成加载
-setTimeout(main, 1500)
+main()
