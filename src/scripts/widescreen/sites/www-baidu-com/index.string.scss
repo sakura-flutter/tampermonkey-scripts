@@ -48,15 +48,21 @@ $default-width: 560px;
       height: auto;
     }
 
+    /* 圆角卡片式，在热榜新闻中偶尔出现 */
+    .c-group-wrapper {
+      .result-op,
+      .c-group {
+        width: 95% !important;
+      }
+    }
+
+    /* 普通列表 */
     .new-pmd .c-span9 {
       width: 75%;
 
       @media (min-width: 1680px) {
         width: 81%;
       }
-    }
-    .c-group-wrapper .c-group {
-      width: 95% !important;
     }
   }
   /* 分页 */
