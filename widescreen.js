@@ -3998,14 +3998,23 @@ function useExpose(apis) {
  * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
- * @param {boolean} listening
+ * @param {boolean | object} options: listening, deep
  * @return {any}
  */
 
-function useGMvalue(name, defaultValue, listening = true) {
+function useGMvalue(name, defaultValue, _options) {
+  const {
+    listening,
+    deep
+  } = Object.assign({
+    listening: typeof _options === 'boolean' ? _options : true,
+    deep: false
+  }, _options);
   const value = (0,external_Vue_namespaceObject.ref)(GM_getValue(name, defaultValue));
   (0,external_Vue_namespaceObject.watch)(value, () => {
     GM_setValue(name, value.value);
+  }, {
+    deep
   });
 
   if (listening) {

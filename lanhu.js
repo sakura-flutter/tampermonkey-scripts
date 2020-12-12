@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.9.1
+// @version      1.10.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -1153,7 +1153,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{contain:strict;p
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-recorder-ui{contain:content;position:fixed;right:1.5vw;bottom:8vh;z-index:1000;width:240px;padding:30px 30px 10px;opacity:.5;transition:opacity .1s}#inject-recorder-ui:hover{opacity:1}#inject-recorder-ui ul{width:180px;padding:5px;max-height:250px;overflow-x:hidden;background:#fbfbfb;box-shadow:var(--skr-box-shadow-lighten);transition:width .1s}#inject-recorder-ui ul::-webkit-scrollbar{width:4px;height:4px;background:#f2f2f2;padding-right:2px}#inject-recorder-ui ul::-webkit-scrollbar-thumb{border-radius:3px;border:0;background:#b4bbc5}#inject-recorder-ui ul.more-actions{width:204px}#inject-recorder-ui li{position:relative;display:flex;align-items:center;padding:0 5px;transition:all var(--skr-transition-duration-normal),background var(--skr-transition-duration-fast) ease-out}#inject-recorder-ui li:hover{background:rgba(220,237,251,.64)}#inject-recorder-ui li.has-pwd::before{position:absolute;left:1px;content:\"\";width:2px;height:50%;background:rgba(7,193,96,.52)}#inject-recorder-ui li a{width:132px;flex:none;padding-right:4px;line-height:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#inject-recorder-ui li .actions{flex:1 0 auto}#inject-recorder-ui li button{padding:0;width:20px;height:20px;line-height:20px;border:none}#inject-recorder-ui li button:not(:hover){color:var(--skr-text-secondary-color)}#inject-recorder-ui li button:nth-of-type(n + 2){margin-left:4px}#inject-recorder-ui .control{display:flex;justify-content:center;align-items:center;padding-top:8px}#inject-recorder-ui .control input{margin-left:6px}#inject-recorder-ui .view-btn:not(:focus-visible){outline:none}#inject-recorder-ui svg{fill:currentColor}#inject-recorder-ui .inject-slide-fade-enter-active,#inject-recorder-ui .inject-slide-fade-leave-active{transition:all .1s}#inject-recorder-ui .inject-slide-fade-enter-from,#inject-recorder-ui .inject-slide-fade-leave-to{transform:translateY(5px);opacity:0}#inject-recorder-ui .inject-slide-hor-fade-move{transition:all .8s}#inject-recorder-ui .inject-slide-hor-fade-active{position:absolute}#inject-recorder-ui .inject-slide-hor-fade-enter-from,#inject-recorder-ui .inject-slide-hor-fade-leave-to{opacity:0;transform:translateX(30px)}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}#inject-recorder-ui{contain:layout;position:fixed;right:30px;bottom:8vh;z-index:1000;width:240px;padding:30px 30px 10px;opacity:.5;transition:opacity .1s}#inject-recorder-ui:hover{opacity:1}#inject-recorder-ui ul{width:-moz-fit-content;width:fit-content;padding:5px;max-height:250px;overflow-x:hidden;background:#fbfbfb;box-shadow:var(--skr-box-shadow-lighten);transition:width .1s}#inject-recorder-ui ul::-webkit-scrollbar{width:4px;height:4px;background:#f2f2f2;padding-right:2px}#inject-recorder-ui ul::-webkit-scrollbar-thumb{border-radius:3px;border:0;background:#b4bbc5}#inject-recorder-ui li{position:relative;box-sizing:content-box;display:flex;align-items:center;padding:0 0 0 5px;transition:all var(--skr-transition-duration-normal),width .15s ease-out,background var(--skr-transition-duration-fast) ease-out}#inject-recorder-ui li:hover{background:rgba(220,237,251,.64)}#inject-recorder-ui li.has-pwd::before{position:absolute;left:1px;content:\"\";width:2px;height:50%;background:rgba(7,193,96,.52)}#inject-recorder-ui li a{width:132px;flex:none;padding-right:4px;line-height:30px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#inject-recorder-ui li .actions{white-space:nowrap}#inject-recorder-ui li button{padding:0;width:20px;height:20px;line-height:20px;border:none}#inject-recorder-ui li button:not(:hover){color:var(--skr-text-secondary-color)}#inject-recorder-ui li button:nth-of-type(n + 2){margin-left:4px}#inject-recorder-ui .control{display:flex;justify-content:center;align-items:center;padding-top:8px}#inject-recorder-ui .control input{margin-left:6px}#inject-recorder-ui .view-btn:not(:focus-visible){outline:none}#inject-recorder-ui svg{fill:currentColor}#inject-recorder-ui .inject-slide-fade-enter-active,#inject-recorder-ui .inject-slide-fade-leave-active{transition:all .1s}#inject-recorder-ui .inject-slide-fade-enter-from,#inject-recorder-ui .inject-slide-fade-leave-to{transform:translateY(5px);opacity:0}#inject-recorder-ui .inject-slide-hor-fade-move{transition:all .8s}#inject-recorder-ui .inject-slide-hor-fade-active{position:absolute}#inject-recorder-ui .inject-slide-hor-fade-enter-from,#inject-recorder-ui .inject-slide-hor-fade-leave-to{opacity:0;transform:translateX(30px)}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1613,10 +1613,10 @@ function checker({
 
   return pass;
 }
-;// CONCATENATED MODULE: external "Vue"
-const external_Vue_namespaceObject = Vue;
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.reduce.js
 var es_array_reduce = __webpack_require__(5827);
+;// CONCATENATED MODULE: external "Vue"
+const external_Vue_namespaceObject = Vue;
 ;// CONCATENATED MODULE: ./src/utils/querystring.js
 
 
@@ -1684,14 +1684,23 @@ function mountComponent(RootComponent) {
  * 同GM_getValue、GM_setValue
  * @param {string} name
  * @param {any} defaultValue
- * @param {boolean} listening
+ * @param {boolean | object} options: listening, deep
  * @return {any}
  */
 
-function useGMvalue(name, defaultValue, listening = true) {
+function useGMvalue(name, defaultValue, _options) {
+  const {
+    listening,
+    deep
+  } = Object.assign({
+    listening: typeof _options === 'boolean' ? _options : true,
+    deep: false
+  }, _options);
   const value = (0,external_Vue_namespaceObject.ref)(GM_getValue(name, defaultValue));
   (0,external_Vue_namespaceObject.watch)(value, () => {
     GM_setValue(name, value.value);
+  }, {
+    deep
   });
 
   if (listening) {
@@ -2067,23 +2076,11 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 
 
-const Icon = (0,external_Vue_namespaceObject.createVNode)("svg", {
-  "t": "1602929080634",
-  "viewBox": "0 0 1024 1024",
-  "version": "1.1",
-  "xmlns": "http://www.w3.org/2000/svg",
-  "p-id": "4117",
-  "width": "10",
-  "height": "10"
-}, [(0,external_Vue_namespaceObject.createVNode)("path", {
-  "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
-  "p-id": "4118"
-}, null)]);
+
 /* 记录看过的产品 */
 
 function createRecorder() {
   createUI();
-  /* 记录函数 */
 
   function record() {
     const {
@@ -2091,10 +2088,10 @@ function createRecorder() {
     } = parse();
     if (!pid) return;
     const records = GM_getValue('records', []);
-    let oldTitle = null;
+    let old = null;
     records.find((item, index) => {
       if (item.pid === pid) {
-        oldTitle = item.title;
+        old = item;
         records.splice(index, 1);
         return true;
       }
@@ -2102,8 +2099,8 @@ function createRecorder() {
       return false;
     }); // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
 
-    const title = ['蓝湖', '...'].includes(document.title) && oldTitle ? oldTitle : document.title;
-    records.push({
+    const title = ['蓝湖', '...'].includes(document.title) && old?.title ? old.title : document.title;
+    records.push({ ...old,
       pid,
       title,
       href: location.href
@@ -2122,17 +2119,35 @@ function createUI() {
       const state = (0,external_Vue_namespaceObject.reactive)({
         recordsVisible: false,
         moreActionsVisible: false,
-        records: useGMvalue('records', []),
+        // 初始宽度
+        width: 160,
+        records: useGMvalue('records', [], {
+          deep: true
+        }),
         unhidden: useGMvalue('unhidden', false),
         passwords: useGMvalue('passwords', {})
       });
+      const lisRef = (0,external_Vue_namespaceObject.ref)([]);
       const reversed = (0,external_Vue_namespaceObject.computed)(() => [...state.records].reverse());
+      (0,external_Vue_namespaceObject.onMounted)(() => {
+        (0,external_Vue_namespaceObject.watch)(() => [state.recordsVisible, state.moreActionsVisible, lisRef], () => {
+          (0,external_Vue_namespaceObject.nextTick)(() => {
+            const [first] = lisRef.value;
+
+            if (first) {
+              const width = [...first.children].reduce((totalWidth, el) => totalWidth + el.getBoundingClientRect().width, 0);
+              state.width = width + 5; // 左边距
+            }
+          });
+        }, {
+          immediate: true,
+          flush: 'post'
+        });
+      });
 
       function deleteItem(item) {
-        const ectype = [...state.records];
-        const index = ectype.findIndex(record => record.pid === item.pid);
-        ectype.splice(index, 1);
-        state.records = ectype;
+        const index = state.records.findIndex(record => record.pid === item.pid);
+        index > -1 && state.records.splice(index, 1);
       }
 
       function copy(action, item) {
@@ -2156,6 +2171,18 @@ function createUI() {
         Toast.success('复制成功');
       }
 
+      function editCustomTitle(item) {
+        // 取消时不操作
+        let result = window.prompt('输入自定义标题，不填则会使用原标题', item.customTitle || item.title || undefined);
+        result && (result = result.trim());
+
+        if (result === '') {
+          delete item.customTitle;
+        } else if (result) {
+          item.customTitle = result;
+        }
+      }
+
       function setRecordsVisible(visible) {
         state.recordsVisible = visible;
       }
@@ -2177,23 +2204,26 @@ function createUI() {
         "name": "inject-slide-fade"
       }, {
         default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
-          "class": {
-            'more-actions': state.moreActionsVisible
-          },
           "tag": "ul",
           "name": "inject-slide-hor-fade",
           "appear": true
         }, {
-          default: () => [reversed.value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
+          default: () => [reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
             "class": {
               'has-pwd': !!state.passwords[item.pid]
             },
-            "key": item.pid
+            "style": {
+              width: `${state.width}px`
+            },
+            "key": item.pid,
+            "ref": el => {
+              el && (lisRef.value[index] = el);
+            }
           }, [(0,external_Vue_namespaceObject.createVNode)("a", {
             "href": item.href,
-            "title": item.title,
+            "title": item.customTitle || item.title,
             "target": "_blank"
-          }, [item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
+          }, [item.customTitle || item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
             "class": "actions",
             "onMouseenter": () => {
               setMoreActionsVisible(true);
@@ -2217,7 +2247,15 @@ function createUI() {
               copy('pwd', item);
             }
           }, {
-            default: () => [Icon]
+            default: () => [IconCopy]
+          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]]), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "添加自定义标题",
+            "round": true,
+            "onClick": () => {
+              editCustomTitle(item);
+            }
+          }, {
+            default: () => [IconEdit]
           }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))]
         })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])]
       }), (0,external_Vue_namespaceObject.createVNode)("div", {
@@ -2238,6 +2276,31 @@ function createUI() {
   });
 }
 
+const IconCopy = (0,external_Vue_namespaceObject.createVNode)("svg", {
+  "t": "1602929080634",
+  "viewBox": "0 0 1024 1024",
+  "version": "1.1",
+  "xmlns": "http://www.w3.org/2000/svg",
+  "p-id": "4117",
+  "width": "10",
+  "height": "10"
+}, [(0,external_Vue_namespaceObject.createVNode)("path", {
+  "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
+  "p-id": "4118"
+}, null)]);
+const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
+  "t": "1607759820549",
+  "class": "icon",
+  "viewBox": "0 0 1024 1024",
+  "version": "1.1",
+  "xmlns": "http://www.w3.org/2000/svg",
+  "p-id": "3701",
+  "width": "10",
+  "height": "10"
+}, [(0,external_Vue_namespaceObject.createVNode)("path", {
+  "d": "M989.29 161.53L861.47 33.71a90.1 90.1 0 0 0-127.28 0l-69.53 69.53a89.24 89.24 0 0 0-4.29 4.64 29.14 29.14 0 0 0-2.85 2.5L16.83 751.06c-0.35 0.35-0.69 0.71-1 1.07l-0.45 0.52-0.51 0.59-0.54 0.69c-0.12 0.15-0.24 0.3-0.35 0.46s-0.37 0.52-0.56 0.78l-0.28 0.41-0.53 0.81c-0.08 0.14-0.17 0.28-0.26 0.42s-0.31 0.54-0.46 0.82l-0.27 0.47-0.4 0.77-0.27 0.55c-0.11 0.24-0.22 0.48-0.32 0.72s-0.19 0.43-0.28 0.65-0.17 0.43-0.26 0.64l-0.28 0.75c-0.07 0.19-0.13 0.38-0.19 0.57s-0.19 0.56-0.27 0.84l-0.15 0.5c-0.08 0.31-0.17 0.61-0.24 0.92s-0.08 0.32-0.11 0.47q-0.12 0.48-0.21 1l-0.09 0.48c-0.06 0.32-0.11 0.64-0.16 1s0 0.37-0.07 0.55-0.08 0.59-0.11 0.9 0 0.49 0 0.74l-0.06 0.72V987a30 30 0 0 0 30 30h209.77a29.87 29.87 0 0 0 19.06-6.84 30.13 30.13 0 0 0 5-4l604-604 36.69-36.69a30.35 30.35 0 0 0 2.5-2.85 89.24 89.24 0 0 0 4.64-4.29l69.53-69.53a90.1 90.1 0 0 0-0.05-127.27zM236.25 957H68.05V784.7l574-574L812.29 381z m710.62-710.62l-69.53 69.53a30.19 30.19 0 0 1-42.43 0L707.09 188.09a30.19 30.19 0 0 1 0-42.43l69.53-69.53a30 30 0 0 1 42.42 0L946.87 204a30 30 0 0 1 0 42.38z",
+  "p-id": "3702"
+}, null)]);
 
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/password.js
 
