@@ -2,9 +2,9 @@
 @include var;
 
 #inject-recorder-ui {
-  contain: content;
+  contain: layout;
   position: fixed;
-  right: 1.5vw;
+  right: 30px;
   bottom: 8vh;
   z-index: 1000;
   width: 240px;
@@ -17,7 +17,7 @@
   }
 
   ul {
-    width: 180px;
+    width: fit-content;
     padding: 5px;
     max-height: 250px;
     overflow-x: hidden;
@@ -37,18 +37,15 @@
       border: 0;
       background: #b4bbc5;
     }
-
-    &.more-actions {
-      width: 204px;
-    }
   }
 
   li {
     position: relative;
+    box-sizing: content-box;
     display: flex;
     align-items: center;
-    padding: 0 5px;
-    transition: all var(--skr-transition-duration-normal),
+    padding: 0 0 0 5px;
+    transition: all var(--skr-transition-duration-normal), width 0.15s ease-out,
       background var(--skr-transition-duration-fast) ease-out;
 
     &:hover {
@@ -75,7 +72,7 @@
     }
 
     .actions {
-      flex: 1 0 auto;
+      white-space: nowrap;
     }
 
     button {
