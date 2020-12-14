@@ -3,6 +3,7 @@ import { zhihu } from './link-zhihu-com'
 import { weibo } from './t-cn'
 import { qqMail } from './mail-qq-com'
 import { qqPC } from './c-pc-qq-com'
+import { yinxiang } from './app-yinxiang-com'
 
 const sites = [
   {
@@ -33,6 +34,11 @@ const sites = [
     name: 'QQPC',
     test: /c\.pc\.qq.com\/middlem\.html/,
     use: qqPC,
+  },
+  {
+    name: '印象笔记',
+    test: /app\.yinxiang\.com\/OutboundRedirect/,
+    use: yinxiang,
   },
 ]
 
