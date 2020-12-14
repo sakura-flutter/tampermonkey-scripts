@@ -57,11 +57,18 @@ $default-width: 560px;
     }
 
     /* 普通列表 */
-    .new-pmd .c-span9 {
-      width: 75%;
+    .new-pmd {
+      .c-span9 {
+        width: 75%;
 
-      @media (min-width: 1680px) {
-        width: 81%;
+        @media (min-width: 1680px) {
+          width: 81%;
+        }
+      }
+
+      /* 百科宽度(搜索：感冒) */
+      .c-span12 {
+        width: 100%;
       }
     }
   }
