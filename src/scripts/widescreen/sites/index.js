@@ -14,6 +14,7 @@ import { doubanMovie } from './movie-douban-com'
 import { toutiao } from './www-toutiao-com'
 import { weibo } from './weibo-com'
 import { weiboDynamic } from './d-weibo-com'
+import { google } from './www-google-com'
 
 const { host, pathname } = location
 
@@ -131,6 +132,12 @@ const sites = [
     namespace: 'weibo',
     test: /d\.weibo\.com/,
     use: weiboDynamic,
+  },
+  {
+    name: '谷歌',
+    namespace: 'google',
+    test: /www\.google\.com\/search/,
+    use: google,
   },
 ]
 

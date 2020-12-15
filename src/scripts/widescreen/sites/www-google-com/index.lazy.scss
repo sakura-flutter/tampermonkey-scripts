@@ -1,0 +1,44 @@
+@import "../mixins.scss";
+
+$default-width: 652px;
+
+@include substrate(1450px, 82vw, 1330px) {
+  .lEXIrb {
+    max-width: none !important;
+  }
+
+  /* 搜索结果 */
+  #center_col {
+    width: calc(var(--inject-page-width) - 480px);
+  }
+  /* 列表 */
+  #rso {
+    > .g {
+      width: 100%;
+
+      /* 描述文本 */
+      .IsZvec {
+        max-width: none;
+      }
+
+      /* 折叠面板 */
+      .kp-blk {
+        width: 100%;
+      }
+
+      /* 反馈 */
+      .kno-ftr {
+        margin-right: 0;
+      }
+    }
+
+    /* 特殊类型还原宽度(搜索：蛇麻花) */
+    g-section-with-header {
+      width: $default-width;
+    }
+  }
+  /* 右侧 */
+  #rhs {
+    margin-left: calc(var(--inject-page-width) - 240px);
+  }
+}
