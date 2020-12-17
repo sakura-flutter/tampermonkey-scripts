@@ -9,5 +9,7 @@ updates:
     # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: "daily"
-    # Disable all pull requests for npm dependencies
-    # open-pull-requests-limit: 0
+      time: "20:00"
+      timezone: "Asia/Shanghai"
+    # Disable all pull requests for npm dependencies: 0
+    open-pull-requests-limit: 100
