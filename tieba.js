@@ -1279,7 +1279,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.8.0',
+  version: '3.8.1',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -2566,6 +2566,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 ;// CONCATENATED MODULE: ./src/components/input/index.js
 
 
+
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrInput',
@@ -2822,6 +2823,9 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
+
+
+
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
@@ -2900,6 +2904,11 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 /* harmony default export */ const tieba_ui = (ui/* default.locals */.Z.locals || {});
 ;// CONCATENATED MODULE: ./src/scripts/tieba/ui.js
+
+
+
+
+
 
 
 

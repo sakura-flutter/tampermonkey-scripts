@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      2.0.3
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条
+// @version      2.1.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -33,6 +33,7 @@
 // @match        https://d.weibo.com/*
 // @match        https://movie.douban.com/subject/*
 // @match        https://www.toutiao.com/*
+// @match        *://www.google.com/search?*
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -47,6 +48,18 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 3099:
+/***/ ((module) => {
+
+module.exports = function (it) {
+  if (typeof it != 'function') {
+    throw TypeError(String(it) + ' is not a function');
+  } return it;
+};
+
+
+/***/ }),
 
 /***/ 1530:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -112,6 +125,105 @@ module.exports = {
   // `Array.prototype.indexOf` method
   // https://tc39.github.io/ecma262/#sec-array.prototype.indexof
   indexOf: createMethod(false)
+};
+
+
+/***/ }),
+
+/***/ 9341:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var fails = __webpack_require__(7293);
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+
+/***/ }),
+
+/***/ 9207:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var DESCRIPTORS = __webpack_require__(9781);
+var fails = __webpack_require__(7293);
+var has = __webpack_require__(6656);
+
+var defineProperty = Object.defineProperty;
+var cache = {};
+
+var thrower = function (it) { throw it; };
+
+module.exports = function (METHOD_NAME, options) {
+  if (has(cache, METHOD_NAME)) return cache[METHOD_NAME];
+  if (!options) options = {};
+  var method = [][METHOD_NAME];
+  var ACCESSORS = has(options, 'ACCESSORS') ? options.ACCESSORS : false;
+  var argument0 = has(options, 0) ? options[0] : thrower;
+  var argument1 = has(options, 1) ? options[1] : undefined;
+
+  return cache[METHOD_NAME] = !!method && !fails(function () {
+    if (ACCESSORS && !DESCRIPTORS) return true;
+    var O = { length: -1 };
+
+    if (ACCESSORS) defineProperty(O, 1, { enumerable: true, get: thrower });
+    else O[1] = 1;
+
+    method.call(O, argument0, argument1);
+  });
+};
+
+
+/***/ }),
+
+/***/ 3671:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var aFunction = __webpack_require__(3099);
+var toObject = __webpack_require__(7908);
+var IndexedObject = __webpack_require__(8361);
+var toLength = __webpack_require__(7466);
+
+// `Array.prototype.{ reduce, reduceRight }` methods implementation
+var createMethod = function (IS_RIGHT) {
+  return function (that, callbackfn, argumentsLength, memo) {
+    aFunction(callbackfn);
+    var O = toObject(that);
+    var self = IndexedObject(O);
+    var length = toLength(O.length);
+    var index = IS_RIGHT ? length - 1 : 0;
+    var i = IS_RIGHT ? -1 : 1;
+    if (argumentsLength < 2) while (true) {
+      if (index in self) {
+        memo = self[index];
+        index += i;
+        break;
+      }
+      index += i;
+      if (IS_RIGHT ? index < 0 : length <= index) {
+        throw TypeError('Reduce of empty array with no initial value');
+      }
+    }
+    for (;IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
+      memo = callbackfn(memo, self[index], index, O);
+    }
+    return memo;
+  };
+};
+
+module.exports = {
+  // `Array.prototype.reduce` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.reduce
+  left: createMethod(false),
+  // `Array.prototype.reduceRight` method
+  // https://tc39.github.io/ecma262/#sec-array.prototype.reduceright
+  right: createMethod(true)
 };
 
 
@@ -208,6 +320,54 @@ var EXISTS = isObject(document) && isObject(document.createElement);
 module.exports = function (it) {
   return EXISTS ? document.createElement(it) : {};
 };
+
+
+/***/ }),
+
+/***/ 5268:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var classof = __webpack_require__(4326);
+var global = __webpack_require__(7854);
+
+module.exports = classof(global.process) == 'process';
+
+
+/***/ }),
+
+/***/ 8113:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var getBuiltIn = __webpack_require__(5005);
+
+module.exports = getBuiltIn('navigator', 'userAgent') || '';
+
+
+/***/ }),
+
+/***/ 7392:
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+var global = __webpack_require__(7854);
+var userAgent = __webpack_require__(8113);
+
+var process = global.process;
+var versions = process && process.versions;
+var v8 = versions && versions.v8;
+var match, version;
+
+if (v8) {
+  match = v8.split('.');
+  version = match[0] + match[1];
+} else if (userAgent) {
+  match = userAgent.match(/Edge\/(\d+)/);
+  if (!match || match[1] >= 74) {
+    match = userAgent.match(/Chrome\/(\d+)/);
+    if (match) version = match[1];
+  }
+}
+
+module.exports = version && +version;
 
 
 /***/ }),
@@ -1141,7 +1301,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.8.0',
+  version: '3.8.1',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -1329,6 +1489,35 @@ module.exports = function (name) {
     else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
+
+
+/***/ }),
+
+/***/ 5827:
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+var $ = __webpack_require__(2109);
+var $reduce = __webpack_require__(3671).left;
+var arrayMethodIsStrict = __webpack_require__(9341);
+var arrayMethodUsesToLength = __webpack_require__(9207);
+var CHROME_VERSION = __webpack_require__(7392);
+var IS_NODE = __webpack_require__(5268);
+
+var STRICT_METHOD = arrayMethodIsStrict('reduce');
+var USES_TO_LENGTH = arrayMethodUsesToLength('reduce', { 1: 0 });
+// Chrome 80-82 has a critical bug
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
+var CHROME_BUG = !IS_NODE && CHROME_VERSION > 79 && CHROME_VERSION < 83;
+
+// `Array.prototype.reduce` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.reduce
+$({ target: 'Array', proto: true, forced: !STRICT_METHOD || !USES_TO_LENGTH || CHROME_BUG }, {
+  reduce: function reduce(callbackfn /* , initialValue */) {
+    return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
+  }
+});
 
 
 /***/ }),
@@ -1845,6 +2034,26 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1460px){
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(50vw, 915px)}.inject-widescreen-loose-js{--inject-page-width:50vw}.page-container{width:var(--inject-page-width) !important;max-width:none !important;padding-right:0 !important;left:-5vw}.article-holder,.head-container{width:var(--inject-page-width);max-width:none !important}.banner-img-holder{width:auto !important;max-width:100%}.up-info-holder{margin-left:0 !important}.up-info-holder .fixed-box{left:calc(50% + (var(--inject-page-width) / 2) + -5vw + 50px);margin-left:0 !important;transition:transform .2s}}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 2797:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1450px){:root{--inject-page-width:min(82vw, 1330px)}.inject-widescreen-loose-js{--inject-page-width:82vw}.lEXIrb{max-width:none !important}#center_col{width:calc(var(--inject-page-width) - 480px)}#rso>.g{width:100%}#rso>.g .IsZvec{max-width:none}#rso>.g .kp-blk{width:100%}#rso>.g .kno-ftr{margin-right:0}#rso g-section-with-header{width:652px}#rhs{margin-left:calc(var(--inject-page-width) - 240px)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3835,7 +4044,99 @@ const weiboDynamic = ({
   }
 
 });
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.reduce.js
+var es_array_reduce = __webpack_require__(5827);
+;// CONCATENATED MODULE: ./src/utils/querystring.js
+
+
+/**
+ * 解析querystring
+ * @param {string} href 或 带有参数格式的string；有search则不再hash
+ * @return {object}
+ */
+function parse(href = location.href) {
+  if (!href) return {};
+  let search;
+
+  try {
+    // 链接
+    const url = new URL(href);
+    ({
+      search
+    } = url); // 主要处理对hash的search
+
+    if (!search && url.hash.includes('?')) {
+      search = url.hash.split('?')[1];
+    }
+  } catch {
+    // 非链接,如：a=1&b=2、?a=1、/foo?a=1、/foo#bar?a=1
+    if (href.includes('?')) {
+      search = href.split('?')[1];
+    } else {
+      search = href;
+    }
+  }
+
+  const searchParams = new URLSearchParams(search);
+  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+}
+function stringify(obj) {
+  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+}
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-google-com/index.lazy.scss
+var www_google_com_index_lazy = __webpack_require__(2797);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-google-com/index.lazy.scss
+
+            
+
+var www_google_com_index_lazy_refs = 0;
+var www_google_com_index_lazy_update;
+var www_google_com_index_lazy_options = {"injectType":"lazyStyleTag"};
+
+www_google_com_index_lazy_options.insert = "head";
+www_google_com_index_lazy_options.singleton = false;
+
+var www_google_com_index_lazy_exported = {};
+
+www_google_com_index_lazy_exported.locals = www_google_com_index_lazy/* default.locals */.Z.locals || {};
+www_google_com_index_lazy_exported.use = function() {
+  if (!(www_google_com_index_lazy_refs++)) {
+    www_google_com_index_lazy_update = injectStylesIntoStyleTag_default()(www_google_com_index_lazy/* default */.Z, www_google_com_index_lazy_options);
+  }
+
+  return www_google_com_index_lazy_exported;
+};
+www_google_com_index_lazy_exported.unuse = function() {
+  if (www_google_com_index_lazy_refs > 0 && !--www_google_com_index_lazy_refs) {
+    www_google_com_index_lazy_update();
+    www_google_com_index_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const sites_www_google_com_index_lazy = (www_google_com_index_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-google-com/index.js
+
+
+const google = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    if (parse().tbm) return; // 选择了tab搜索时终止
+
+    createControl({
+      store,
+      execute: sites_www_google_com_index_lazy.use
+    });
+  }
+
+});
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/index.js
+
 
 
 
@@ -3951,6 +4252,11 @@ const sites = [{
   namespace: 'weibo',
   test: /d\.weibo\.com/,
   use: weiboDynamic
+}, {
+  name: '谷歌',
+  namespace: 'google',
+  test: /www\.google\.com\/search/,
+  use: google
 }];
 /* harmony default export */ const widescreen_sites = (sites);
 ;// CONCATENATED MODULE: external "Vue"
@@ -4045,6 +4351,7 @@ var input_update = injectStylesIntoStyleTag_default()(input/* default */.Z, inpu
 
 /* harmony default export */ const components_input = (input/* default.locals */.Z.locals || {});
 ;// CONCATENATED MODULE: ./src/components/input/index.js
+
 
 
 const prefixCls = 'skr-input';
@@ -4303,6 +4610,9 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
+
+
+
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
@@ -4381,6 +4691,11 @@ var control_update = injectStylesIntoStyleTag_default()(control/* default */.Z, 
 
 /* harmony default export */ const widescreen_control = (control/* default.locals */.Z.locals || {});
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/control.js
+
+
+
+
+
 
 
 

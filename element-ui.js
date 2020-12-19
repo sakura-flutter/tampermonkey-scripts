@@ -616,6 +616,7 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 
+
 var _scope = _classPrivateFieldLooseKey("scope");
 
 var _cat = _classPrivateFieldLooseKey("cat");

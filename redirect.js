@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.3.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记
+// @version      1.4.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -14,6 +14,7 @@
 // @match        *://mail.qq.com/cgi-bin/*
 // @match        *://c.pc.qq.com/middlem.html*
 // @match        *://app.yinxiang.com/OutboundRedirect.action*
+// @match        *://jump2.bdimg.com/safecheck/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1271,7 +1272,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.8.0',
+  version: '3.8.1',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -1860,7 +1861,13 @@ const qqPC = () => ({
 const yinxiang = () => ({
   link: parse().dest
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/jump2-bdimg-com.js
+const tieba = () => ({
+  selector: '.warning_info a:nth-of-type(1)[href]',
+  attr: 'href'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1894,6 +1901,11 @@ const sites = [{
   name: '印象笔记',
   test: /app\.yinxiang\.com\/OutboundRedirect/,
   use: yinxiang
+}, {
+  name: '贴吧',
+  test: /jump2\.bdimg\.com\/safecheck/,
+  readyState: 'interactive',
+  use: tieba
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
@@ -1944,13 +1956,14 @@ class App {
       let redirection = null;
       const {
         link,
-        selector
+        selector,
+        attr
       } = config;
 
       if (link) {
         redirection = link;
       } else if (selector) {
-        redirection = $(selector)?.innerText.trim();
+        redirection = $(selector)?.[attr ?? 'innerText']?.trim();
       }
 
       table({

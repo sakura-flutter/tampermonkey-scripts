@@ -931,7 +931,7 @@ var store = __webpack_require__(5465);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.8.0',
+  version: '3.8.1',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -1736,6 +1736,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 ;// CONCATENATED MODULE: ./src/components/input/index.js
 
 
+
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrInput',
@@ -1992,6 +1993,9 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
+
+
+
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
@@ -2077,7 +2081,17 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 
 
+
+
+
+
+
+
 /* 记录看过的产品 */
+
+function _isSlot(s) {
+  return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !(0,external_Vue_namespaceObject.isVNode)(s);
+}
 
 function createRecorder() {
   createUI();
@@ -2191,86 +2205,90 @@ function createUI() {
         state.moreActionsVisible = visible;
       }
 
-      return () => (0,external_Vue_namespaceObject.createVNode)("article", {
-        "id": "inject-recorder-ui",
-        "onMouseenter": () => {
-          setRecordsVisible(true);
-        },
-        "onMouseleave": () => {
-          setRecordsVisible(false);
-          setMoreActionsVisible(false);
-        }
-      }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
-        "name": "inject-slide-fade"
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
+      return () => {
+        let _slot, _slot2;
+
+        return (0,external_Vue_namespaceObject.createVNode)("article", {
+          "id": "inject-recorder-ui",
+          "onMouseenter": () => {
+            setRecordsVisible(true);
+          },
+          "onMouseleave": () => {
+            setRecordsVisible(false);
+            setMoreActionsVisible(false);
+          }
+        }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
+          "name": "inject-slide-fade"
+        }, _isSlot(_slot2 = (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
           "tag": "ul",
           "name": "inject-slide-hor-fade",
           "appear": true
+        }, _isSlot(_slot = reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
+          "class": {
+            'has-pwd': !!state.passwords[item.pid]
+          },
+          "style": {
+            width: `${state.width}px`
+          },
+          "key": item.pid,
+          "ref": el => {
+            el && (lisRef.value[index] = el);
+          }
+        }, [(0,external_Vue_namespaceObject.createVNode)("a", {
+          "href": item.href,
+          "title": item.customTitle || item.title,
+          "target": "_blank"
+        }, [item.customTitle || item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
+          "class": "actions",
+          "onMouseenter": () => {
+            setMoreActionsVisible(true);
+          }
+        }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+          "title": "移除",
+          "round": true,
+          "onClick": () => {
+            deleteItem(item);
+          }
         }, {
-          default: () => [reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
-            "class": {
-              'has-pwd': !!state.passwords[item.pid]
-            },
-            "style": {
-              width: `${state.width}px`
-            },
-            "key": item.pid,
-            "ref": el => {
-              el && (lisRef.value[index] = el);
-            }
-          }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-            "href": item.href,
-            "title": item.customTitle || item.title,
-            "target": "_blank"
-          }, [item.customTitle || item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
-            "class": "actions",
-            "onMouseenter": () => {
-              setMoreActionsVisible(true);
-            }
-          }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-            "title": "移除",
-            "round": true,
-            "onClick": () => {
-              deleteItem(item);
-            }
-          }, {
-            default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
-          }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-            "title": "左击复制链接和密码；右击复制密码",
-            "round": true,
-            "onClick": () => {
-              copy('all', item);
-            },
-            "onContextmenu": event => {
-              event.preventDefault();
-              copy('pwd', item);
-            }
-          }, {
-            default: () => [IconCopy]
-          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]]), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-            "title": "添加自定义标题",
-            "round": true,
-            "onClick": () => {
-              editCustomTitle(item);
-            }
-          }, {
-            default: () => [IconEdit]
-          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))]
-        })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])]
-      }), (0,external_Vue_namespaceObject.createVNode)("div", {
-        "class": "control"
-      }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "class": "view-btn",
-        "type": "primary",
-        "shadow": true
-      }, {
-        default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u6253\u5F00\u6700\u8FD1\u9879\u76EE")]
-      }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
-        "onUpdate:modelValue": $event => state.unhidden = $event,
-        "type": "checkbox",
-        "title": "固定显示"
-      }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]);
+          default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
+        }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+          "title": "左击复制链接和密码；右击复制密码",
+          "round": true,
+          "onClick": () => {
+            copy('all', item);
+          },
+          "onContextmenu": event => {
+            event.preventDefault();
+            copy('pwd', item);
+          }
+        }, _isSlot(IconCopy) ? IconCopy : {
+          default: () => [IconCopy]
+        }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]]), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+          "title": "添加自定义标题",
+          "round": true,
+          "onClick": () => {
+            editCustomTitle(item);
+          }
+        }, _isSlot(IconEdit) ? IconEdit : {
+          default: () => [IconEdit]
+        }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))) ? _slot : {
+          default: () => [_slot]
+        })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])) ? _slot2 : {
+          default: () => [_slot2]
+        }), (0,external_Vue_namespaceObject.createVNode)("div", {
+          "class": "control"
+        }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+          "class": "view-btn",
+          "type": "primary",
+          "shadow": true
+        }, {
+          default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u6253\u5F00\u6700\u8FD1\u9879\u76EE")]
+        }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("input", {
+          "onUpdate:modelValue": $event => state.unhidden = $event,
+          "type": "checkbox",
+          "title": "固定显示"
+        }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]);
+      };
     }
 
   });
@@ -2288,6 +2306,7 @@ const IconCopy = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
   "p-id": "4118"
 }, null)]);
+
 const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "t": "1607759820549",
   "class": "icon",
@@ -2301,6 +2320,7 @@ const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "d": "M989.29 161.53L861.47 33.71a90.1 90.1 0 0 0-127.28 0l-69.53 69.53a89.24 89.24 0 0 0-4.29 4.64 29.14 29.14 0 0 0-2.85 2.5L16.83 751.06c-0.35 0.35-0.69 0.71-1 1.07l-0.45 0.52-0.51 0.59-0.54 0.69c-0.12 0.15-0.24 0.3-0.35 0.46s-0.37 0.52-0.56 0.78l-0.28 0.41-0.53 0.81c-0.08 0.14-0.17 0.28-0.26 0.42s-0.31 0.54-0.46 0.82l-0.27 0.47-0.4 0.77-0.27 0.55c-0.11 0.24-0.22 0.48-0.32 0.72s-0.19 0.43-0.28 0.65-0.17 0.43-0.26 0.64l-0.28 0.75c-0.07 0.19-0.13 0.38-0.19 0.57s-0.19 0.56-0.27 0.84l-0.15 0.5c-0.08 0.31-0.17 0.61-0.24 0.92s-0.08 0.32-0.11 0.47q-0.12 0.48-0.21 1l-0.09 0.48c-0.06 0.32-0.11 0.64-0.16 1s0 0.37-0.07 0.55-0.08 0.59-0.11 0.9 0 0.49 0 0.74l-0.06 0.72V987a30 30 0 0 0 30 30h209.77a29.87 29.87 0 0 0 19.06-6.84 30.13 30.13 0 0 0 5-4l604-604 36.69-36.69a30.35 30.35 0 0 0 2.5-2.85 89.24 89.24 0 0 0 4.64-4.29l69.53-69.53a90.1 90.1 0 0 0-0.05-127.27zM236.25 957H68.05V784.7l574-574L812.29 381z m710.62-710.62l-69.53 69.53a30.19 30.19 0 0 1-42.43 0L707.09 188.09a30.19 30.19 0 0 1 0-42.43l69.53-69.53a30 30 0 0 1 42.42 0L946.87 204a30 30 0 0 1 0 42.38z",
   "p-id": "3702"
 }, null)]);
+
 
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/password.js
 

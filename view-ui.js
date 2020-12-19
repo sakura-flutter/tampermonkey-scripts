@@ -594,6 +594,7 @@ var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
 ;// CONCATENATED MODULE: ./src/components/input/index.js
 
 
+
 const prefixCls = 'skr-input';
 const Input = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrInput',
@@ -850,6 +851,9 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
+
+
+
 const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
@@ -968,6 +972,14 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
+
+
+
+
+function _isSlot(s) {
+  return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !(0,external_Vue_namespaceObject.isVNode)(s);
+}
+
 const app = (0,external_Vue_namespaceObject.createApp)({
   setup() {
     const hidden = useGMvalue('menu_hidden', false);
@@ -979,14 +991,18 @@ const app = (0,external_Vue_namespaceObject.createApp)({
       hidden.value = !hidden.value;
     }
 
-    return () => (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-      "id": "hide-menu-control-js",
-      "size": "mini",
-      "shadow": true,
-      "onClick": toggle
-    }, {
-      default: () => [(0,external_Vue_namespaceObject.createVNode)("p", null, [(0,external_Vue_namespaceObject.createTextVNode)("\u5207\u6362")])]
-    });
+    return () => {
+      let _slot;
+
+      return (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+        "id": "hide-menu-control-js",
+        "size": "mini",
+        "shadow": true,
+        "onClick": toggle
+      }, _isSlot(_slot = (0,external_Vue_namespaceObject.createVNode)("p", null, [(0,external_Vue_namespaceObject.createTextVNode)("\u5207\u6362")])) ? _slot : {
+        default: () => [_slot]
+      });
+    };
   }
 
 });
