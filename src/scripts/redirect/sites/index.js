@@ -4,6 +4,7 @@ import { weibo } from './t-cn'
 import { qqMail } from './mail-qq-com'
 import { qqPC } from './c-pc-qq-com'
 import { yinxiang } from './app-yinxiang-com'
+import { tieba } from './jump2-bdimg-com'
 
 const sites = [
   {
@@ -39,6 +40,12 @@ const sites = [
     name: '印象笔记',
     test: /app\.yinxiang\.com\/OutboundRedirect/,
     use: yinxiang,
+  },
+  {
+    name: '贴吧',
+    test: /jump2\.bdimg\.com\/safecheck/,
+    readyState: 'interactive',
+    use: tieba,
   },
 ]
 
