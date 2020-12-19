@@ -27,11 +27,11 @@ class App {
       if (state) await readyState[state]()
 
       let redirection = null
-      const { link, selector } = config
+      const { link, selector, attr } = config
       if (link) {
         redirection = link
       } else if (selector) {
-        redirection = $(selector)?.innerText.trim()
+        redirection = $(selector)?.[attr ?? 'innerText']?.trim()
       }
 
       logTable({ name, briefURL, redirection })
