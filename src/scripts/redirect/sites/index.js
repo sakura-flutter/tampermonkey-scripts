@@ -5,6 +5,7 @@ import { qqMail } from './mail-qq-com'
 import { qqPC } from './c-pc-qq-com'
 import { yinxiang } from './app-yinxiang-com'
 import { tieba } from './jump2-bdimg-com'
+import { csdn } from './link-csdn-net'
 
 const sites = [
   {
@@ -46,6 +47,11 @@ const sites = [
     test: /jump2\.bdimg\.com\/safecheck/,
     readyState: 'interactive',
     use: tieba,
+  },
+  {
+    name: 'CSDN',
+    test: /link\.csdn\.net/,
+    use: csdn,
   },
 ]
 
