@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.4.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧
+// @version      1.5.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -15,6 +15,7 @@
 // @match        *://c.pc.qq.com/middlem.html*
 // @match        *://app.yinxiang.com/OutboundRedirect.action*
 // @match        *://jump2.bdimg.com/safecheck/*
+// @match        *://link.csdn.net/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1866,7 +1867,13 @@ const tieba = () => ({
   selector: '.warning_info a:nth-of-type(1)[href]',
   attr: 'href'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/link-csdn-net.js
+
+const csdn = () => ({
+  link: parse().target
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1906,6 +1913,10 @@ const sites = [{
   test: /jump2\.bdimg\.com\/safecheck/,
   readyState: 'interactive',
   use: tieba
+}, {
+  name: 'CSDN',
+  test: /link\.csdn\.net/,
+  use: csdn
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
