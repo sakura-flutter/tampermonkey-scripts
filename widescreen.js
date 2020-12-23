@@ -33,7 +33,7 @@
 // @match        https://d.weibo.com/*
 // @match        https://movie.douban.com/subject/*
 // @match        https://www.toutiao.com/*
-// @match        *://www.google.com/search?*
+// @include      /^https://www.google.com(.)*search/
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -4255,7 +4255,7 @@ const sites = [{
 }, {
   name: '谷歌',
   namespace: 'google',
-  test: /www\.google\.com\/search/,
+  test: /www\.google\.com(.)*search/,
   use: google
 }];
 /* harmony default export */ const widescreen_sites = (sites);
