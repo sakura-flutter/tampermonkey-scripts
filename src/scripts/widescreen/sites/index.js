@@ -136,7 +136,7 @@ const sites = [
   {
     name: '谷歌',
     namespace: 'google',
-    test: /www\.google\.com\/search/,
+    test: /www\.google\.com(.)*search/,
     use: google,
   },
 ]
