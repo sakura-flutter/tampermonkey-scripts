@@ -36,3 +36,7 @@ npm run serve
 // 输出到dist目录
 npm run build
 ```
+
+## Thanks
+
+[![JetBrains](https://avatars0.githubusercontent.com/u/878437)](https://www.jetbrains.com/?from=tampermonkey-scripts)
