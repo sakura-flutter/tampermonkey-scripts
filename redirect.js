@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.5.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN
+// @version      1.6.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -16,6 +16,7 @@
 // @match        *://app.yinxiang.com/OutboundRedirect.action*
 // @match        *://jump2.bdimg.com/safecheck/*
 // @match        *://link.csdn.net/*
+// @match        *://www.youtube.com/redirect*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1872,7 +1873,13 @@ const tieba = () => ({
 const csdn = () => ({
   link: parse().target
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-youtube-com.js
+
+const youtube = () => ({
+  link: parse().q
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1917,6 +1924,10 @@ const sites = [{
   name: 'CSDN',
   test: /link\.csdn\.net/,
   use: csdn
+}, {
+  name: 'YouTube',
+  test: /www\.youtube\.com\/redirect/,
+  use: youtube
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js

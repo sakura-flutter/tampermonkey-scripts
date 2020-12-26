@@ -536,6 +536,30 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
+;// CONCATENATED MODULE: ./src/utils/mount-component.js
+/*
+  引用：https://github.com/youzan/vant/blob/dev/src/utils/mount-component.ts
+*/
+
+
+function append(el) {
+  document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
+}
+
+function mountComponent(RootComponent) {
+  const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
+  const root = document.createElement('div');
+  append(root);
+  return {
+    instance: app.mount(root),
+
+    unmount() {
+      app.unmount(root);
+      document.body.removeChild(root);
+    }
+
+  };
+}
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.js
 
 /**
@@ -976,11 +1000,12 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
+
 function _isSlot(s) {
   return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !(0,external_Vue_namespaceObject.isVNode)(s);
 }
 
-const app = (0,external_Vue_namespaceObject.createApp)({
+mountComponent({
   setup() {
     const hidden = useGMvalue('menu_hidden', false);
     (0,external_Vue_namespaceObject.watchEffect)(() => {
@@ -1006,9 +1031,6 @@ const app = (0,external_Vue_namespaceObject.createApp)({
   }
 
 });
-const rootContainer = document.createElement('div');
-app.mount(rootContainer);
-document.body.appendChild(rootContainer);
 ;// CONCATENATED MODULE: ./src/scripts/view-ui/index.js
 
 
