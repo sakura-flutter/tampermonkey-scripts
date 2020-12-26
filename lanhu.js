@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.10.0
+// @version      1.10.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -2144,13 +2144,13 @@ function createUI() {
       const lisRef = (0,external_Vue_namespaceObject.ref)([]);
       const reversed = (0,external_Vue_namespaceObject.computed)(() => [...state.records].reverse());
       (0,external_Vue_namespaceObject.onMounted)(() => {
-        (0,external_Vue_namespaceObject.watch)(() => [state.recordsVisible, state.moreActionsVisible, lisRef], () => {
+        (0,external_Vue_namespaceObject.watch)([() => state.recordsVisible, () => state.moreActionsVisible, () => state.unhidden, lisRef], () => {
           (0,external_Vue_namespaceObject.nextTick)(() => {
             const [first] = lisRef.value;
 
             if (first) {
               const width = [...first.children].reduce((totalWidth, el) => totalWidth + el.getBoundingClientRect().width, 0);
-              state.width = width + 5; // 左边距
+              state.width = 5 + width; // 左边距
             }
           });
         }, {
@@ -2326,11 +2326,16 @@ const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
 
 
 const marks = new WeakSet();
+let observer = null;
 /* 填充密码 */
 
 function autofill() {
   // 停止上次观察
-  autofill.observer?.disconnect();
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
+
   if (!location.hash.startsWith('#/item/project/door')) return;
   const {
     pid
@@ -2349,7 +2354,7 @@ function autofill() {
     });
   }
 
-  const observer = autofill.observer = new MutationObserver((mutationsList, observer) => {
+  observer = new MutationObserver((mutationsList, observer) => {
     let filled = false; // eslint-disable-next-line no-unused-vars
 
     for (const _ of mutationsList) {
