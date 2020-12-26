@@ -22,12 +22,11 @@ class App {
       })
       if (some === false) return
 
-      const config = use()
-      const { readyState: state } = config
+      const { readyState: state } = site
       if (state) await readyState[state]()
 
       let redirection = null
-      const { link, selector, attr } = config
+      const { link, selector, attr } = use()
       if (link) {
         redirection = link
       } else if (selector) {
