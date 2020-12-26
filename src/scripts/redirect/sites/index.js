@@ -6,6 +6,7 @@ import { qqPC } from './c-pc-qq-com'
 import { yinxiang } from './app-yinxiang-com'
 import { tieba } from './jump2-bdimg-com'
 import { csdn } from './link-csdn-net'
+import { youtube } from './www-youtube-com'
 
 const sites = [
   {
@@ -52,6 +53,11 @@ const sites = [
     name: 'CSDN',
     test: /link\.csdn\.net/,
     use: csdn,
+  },
+  {
+    name: 'YouTube',
+    test: /www\.youtube\.com\/redirect/,
+    use: youtube,
   },
 ]
 
