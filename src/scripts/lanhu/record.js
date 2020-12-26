@@ -55,15 +55,22 @@ function createUI() {
       const reversed = computed(() => [...state.records].reverse())
 
       onMounted(() => {
-        watch(() => [state.recordsVisible, state.moreActionsVisible, lisRef], () => {
-          nextTick(() => {
-            const [first] = lisRef.value
-            if (first) {
-              const width = [...first.children].reduce((totalWidth, el) => totalWidth + el.getBoundingClientRect().width, 0)
-              state.width = width + 5 // 左边距
-            }
-          })
-        }, { immediate: true, flush: 'post' })
+        watch(
+          [
+            () => state.recordsVisible,
+            () => state.moreActionsVisible,
+            () => state.unhidden,
+            lisRef,
+          ],
+          () => {
+            nextTick(() => {
+              const [first] = lisRef.value
+              if (first) {
+                const width = [...first.children].reduce((totalWidth, el) => totalWidth + el.getBoundingClientRect().width, 0)
+                state.width = 5 + width // 左边距
+              }
+            })
+          }, { immediate: true, flush: 'post' })
       })
 
       function deleteItem(item) {
