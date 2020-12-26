@@ -2,11 +2,15 @@ import * as qs from '@/utils/querystring'
 import { $ } from '@/utils/selector'
 
 const marks = new WeakSet()
+let observer = null
 
 /* 填充密码 */
 function autofill() {
   // 停止上次观察
-  autofill.observer?.disconnect()
+  if (observer) {
+    observer.disconnect()
+    observer = null
+  }
   if (!location.hash.startsWith('#/item/project/door')) return
   const { pid } = qs.parse()
   if (!pid) return
@@ -25,7 +29,7 @@ function autofill() {
     })
   }
 
-  const observer = autofill.observer = new MutationObserver((mutationsList, observer) => {
+  observer = new MutationObserver((mutationsList, observer) => {
     let filled = false
     // eslint-disable-next-line no-unused-vars
     for (const _ of mutationsList) {
