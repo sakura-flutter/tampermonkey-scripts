@@ -1,10 +1,11 @@
-import { createApp, watchEffect } from 'vue'
+import { watchEffect } from 'vue'
+import { mountComponent } from '@/utils/mount-component'
 import { useGMvalue } from '@/composables/use-gm-value'
 import { Button } from '@/components'
 import styles from './hide.lazy.scss'
 import './ui.scss'
 
-const app = createApp({
+mountComponent({
   setup() {
     const hidden = useGMvalue('menu_hidden', false)
     watchEffect(() => {
@@ -27,7 +28,3 @@ const app = createApp({
     )
   },
 })
-
-const rootContainer = document.createElement('div')
-app.mount(rootContainer)
-document.body.appendChild(rootContainer)
