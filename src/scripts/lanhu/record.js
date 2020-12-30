@@ -2,11 +2,18 @@ import { onMounted, nextTick, ref, reactive, computed, watch, Transition, Transi
 import * as qs from '@/utils/querystring'
 import { mountComponent } from '@/utils/mount-component'
 import { useGMvalue } from '@/composables/use-gm-value'
+import store from '@/store'
 import { Button } from '@/components'
 import './record.scss'
 
 /* 记录看过的产品 */
 function createRecorder() {
+  GM_registerMenuCommand('显示/隐藏 最近项目', function() {
+    const next = !(store.recorder_visible ?? true)
+    !next && Toast('已隐藏', 1000)
+    store.recorder_visible = next
+  })
+
   createUI()
 
   function record() {
@@ -51,6 +58,7 @@ function createUI() {
         unhidden: useGMvalue('unhidden', false),
         passwords: useGMvalue('passwords', {}),
       })
+      const recorderVisible = useGMvalue('recorder_visible', true)
       const lisRef = ref([])
       const reversed = computed(() => [...state.records].reverse())
 
@@ -59,8 +67,9 @@ function createUI() {
           [
             () => state.recordsVisible,
             () => state.moreActionsVisible,
+            () => state.records,
             () => state.unhidden,
-            lisRef,
+            recorderVisible,
           ],
           () => {
             nextTick(() => {
@@ -118,6 +127,7 @@ function createUI() {
 
       return () => (
         <article
+          v-show={recorderVisible.value}
           id="inject-recorder-ui"
           onMouseenter={() => { setRecordsVisible(true) }}
           onMouseleave={() => {
