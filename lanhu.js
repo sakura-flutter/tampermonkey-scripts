@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.10.1
+// @version      1.11.0
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -9,6 +9,7 @@
 // @compatible   firefox >= Latest
 // @noframes
 // @match        https://lanhuapp.com/web/
+// @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addValueChangeListener
@@ -1714,6 +1715,42 @@ function useGMvalue(name, defaultValue, _options) {
 
   return value;
 }
+;// CONCATENATED MODULE: ./src/store/index.js
+/**
+ * store
+ * @param {string} modulename key会加入 [[modulename]]- 前缀
+ * @param {boolean} local 是否本地存储
+ * @return {proxy}
+ */
+function createStore(modulename = '', local = true) {
+  const getRealProp = property => modulename ? `[[${modulename}]]-${property}` : property;
+
+  const handler = {
+    get(target, property) {
+      const realProp = getRealProp(property);
+      const value = local ? GM_getValue(realProp) : target[realProp];
+      return value;
+    },
+
+    set(target, property, value) {
+      const realProp = getRealProp(property);
+      local ? GM_setValue(realProp, value) : target[realProp] = value;
+      return true;
+    },
+
+    deleteProperty(target, property) {
+      const realProp = getRealProp(property);
+      local ? GM_deleteValue(realProp) : delete target[realProp];
+      return true;
+    }
+
+  };
+  const store = new Proxy({}, handler);
+  return store;
+}
+
+/* harmony default export */ const store = (createStore());
+
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(3379);
 var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
@@ -2087,6 +2124,7 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 
 
+
 /* 记录看过的产品 */
 
 function _isSlot(s) {
@@ -2094,6 +2132,11 @@ function _isSlot(s) {
 }
 
 function createRecorder() {
+  GM_registerMenuCommand('显示/隐藏 最近项目', function () {
+    const next = !(store.recorder_visible ?? true);
+    !next && Toast('已隐藏', 1000);
+    store.recorder_visible = next;
+  });
   createUI();
 
   function record() {
@@ -2141,10 +2184,11 @@ function createUI() {
         unhidden: useGMvalue('unhidden', false),
         passwords: useGMvalue('passwords', {})
       });
+      const recorderVisible = useGMvalue('recorder_visible', true);
       const lisRef = (0,external_Vue_namespaceObject.ref)([]);
       const reversed = (0,external_Vue_namespaceObject.computed)(() => [...state.records].reverse());
       (0,external_Vue_namespaceObject.onMounted)(() => {
-        (0,external_Vue_namespaceObject.watch)([() => state.recordsVisible, () => state.moreActionsVisible, () => state.unhidden, lisRef], () => {
+        (0,external_Vue_namespaceObject.watch)([() => state.recordsVisible, () => state.moreActionsVisible, () => state.records, () => state.unhidden, recorderVisible], () => {
           (0,external_Vue_namespaceObject.nextTick)(() => {
             const [first] = lisRef.value;
 
@@ -2208,7 +2252,7 @@ function createUI() {
       return () => {
         let _slot, _slot2;
 
-        return (0,external_Vue_namespaceObject.createVNode)("article", {
+        return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("article", {
           "id": "inject-recorder-ui",
           "onMouseenter": () => {
             setRecordsVisible(true);
@@ -2287,7 +2331,7 @@ function createUI() {
           "onUpdate:modelValue": $event => state.unhidden = $event,
           "type": "checkbox",
           "title": "固定显示"
-        }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]);
+        }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]), [[external_Vue_namespaceObject.vShow, recorderVisible.value]]);
       };
     }
 
