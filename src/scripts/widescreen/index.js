@@ -10,7 +10,7 @@ function main() {
   if (!checker()) return
 
   GM_registerMenuCommand('宽屏通知', function() {
-    const nextStatus = !(globalStore.notify_enabled ?? true)
+    const nextStatus = !(globalStore.notify_enabled ?? false)
     Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
     globalStore.notify_enabled = nextStatus
   })
@@ -47,11 +47,11 @@ class App {
         createControl,
         store: createStore(namespace),
       })
-      const { readyState: state, handler } = config
+      const { readyState: state } = site
       if (state) await readyState[state]()
 
       warn(name)
-      handler()
+      config.handler()
     })
   }
 }
