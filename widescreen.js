@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         论坛文章页宽屏
-// @version      2.1.0
+// @version      2.1.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -4723,7 +4723,7 @@ function createControl(options) {
       });
 
       function notify() {
-        (src_store.notify_enabled ?? true) && Toast('已宽屏处理');
+        (src_store.notify_enabled ?? false) && Toast('已宽屏处理');
       }
 
       function toggle() {
@@ -4787,7 +4787,7 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 function main() {
   if (!checker()) return;
   GM_registerMenuCommand('宽屏通知', function () {
-    const nextStatus = !(src_store.notify_enabled ?? true);
+    const nextStatus = !(src_store.notify_enabled ?? false);
     Toast.success(nextStatus ? '已开启通知' : '已关闭通知');
     src_store.notify_enabled = nextStatus;
   });
@@ -4832,12 +4832,11 @@ class App {
         store: widescreen_createStore(namespace)
       });
       const {
-        readyState: state,
-        handler
-      } = config;
+        readyState: state
+      } = site;
       if (state) await ready_state_namespaceObject[state]();
       warn(name);
-      handler();
+      config.handler();
     });
   }
 
