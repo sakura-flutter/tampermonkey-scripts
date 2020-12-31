@@ -20,7 +20,7 @@ export default function createControl(options) {
       })
 
       function notify() {
-        (globalStore.notify_enabled ?? true) && Toast('已宽屏处理')
+        (globalStore.notify_enabled ?? false) && Toast('已宽屏处理')
       }
       function toggle() {
         store.enabled = !store.enabled
