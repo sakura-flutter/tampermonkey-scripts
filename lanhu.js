@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 lanhu
-// @version      1.11.0
+// @version      1.11.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -15,7 +15,7 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @require      https://cdn.jsdelivr.net/npm/vue@3.0.4/dist/vue.runtime.global.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3.0.5/dist/vue.runtime.global.prod.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=876846
 // ==/UserScript==
 
