@@ -16,6 +16,7 @@
 - [宽屏](https://greasyfork.org/zh-CN/scripts/411260-论坛文章页宽屏)
 - [tieba签到](https://greasyfork.org/zh-CN/scripts/410874-百度贴吧签到)
 - [重定向](https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接)
+- [Pixiv](https://greasyfork.org/zh-CN/scripts/419761-pixiv-工具箱)
 - [蓝湖](https://greasyfork.org/zh-CN/scripts/411030-蓝湖-lanhu)
 - [Element UI文档辅助](https://greasyfork.org/zh-CN/scripts/418173-element-ui文档辅助)
 - [View UI文档辅助](https://greasyfork.org/zh-CN/scripts/417770-view-ui文档辅助)
