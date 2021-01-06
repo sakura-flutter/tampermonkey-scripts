@@ -19,6 +19,7 @@ module.exports = (env, argv) => ({
     tieba: './src/scripts/tieba',
     widescreen: './src/scripts/widescreen',
     redirect: './src/scripts/redirect',
+    pixiv: './src/scripts/pixiv',
     'view-ui': './src/scripts/view-ui',
     'element-ui': './src/scripts/element-ui',
   },

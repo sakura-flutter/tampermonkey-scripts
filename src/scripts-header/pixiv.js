@@ -1,7 +1,7 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         Pixiv 工具箱
-// @version      0.0.1
+// @version      1.0.0
 // @description  增强P站查看原图功能
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts

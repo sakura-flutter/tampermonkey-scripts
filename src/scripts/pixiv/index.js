@@ -5,6 +5,8 @@ import { warn } from '@/utils/log'
 
 function main() {
   GM_addStyle(GM_getResourceText('viewerCSS'))
+  // 背景暗一点
+  GM_addStyle('.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }')
 
   // eslint-disable-next-line no-new
   new Previewer('figure [role="presentation"] a img', {
@@ -39,18 +41,29 @@ class Previewer {
   }
 
   #process = function(event) {
+    /* 这么多的判断多数是没有意义的
+     * 只是为了日后可能失效，尽量避免影响原点击事件
+     */
     if (!this.#options.includePathname.test(location.pathname)) return
     const artworks = this.#getArtworks()
     if (artworks.length === 0) return
-    const index = event.composedPath().findIndex(target => artworks.includes(target))
-    if (index === -1) return
+    let index = -1
+    // 比较5层深度应该足够了
+    event.composedPath().slice(0, 5).find(target => {
+      index = artworks.findIndex(artwork => artwork === target)
+      return index > -1
+    })
     warn(event, index)
+    if (index === -1) return
+    const originalArtworks = this.#createOriginalImgEls(artworks)
+    if (originalArtworks.length === 0) return
 
     event.preventDefault()
     event.stopPropagation()
     event.stopImmediatePropagation()
-
-    this.#viewer = this.#preview(this.#createOriginalImgEls(artworks), {
+    // 释放上一次
+    this.#viewer?.destroy()
+    this.#viewer = this.#preview(originalArtworks, {
       initialViewIndex: index,
     })
   }
@@ -77,6 +90,7 @@ class Previewer {
       if (parentNode.tagName !== 'A') continue
       const image = new Image()
       image.src = parentNode.href
+      image.alt = img.alt
       originalImgEls.push(image)
     }
     return originalImgEls
@@ -93,6 +107,12 @@ class Previewer {
     container.append(...imgEls)
     viewerOpts = Object.assign({
       navbar: imgEls.length > 1,
+      loop: false,
+      zoomRatio: 0.5,
+      minZoomRatio: 0.1,
+      viewed() {
+        this.viewer.tooltip()
+      },
     }, viewerOpts)
     const viewer = new Viewer(container, viewerOpts)
     viewer.show()
