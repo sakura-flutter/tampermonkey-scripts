@@ -30,8 +30,9 @@ class App {
       if (link) {
         redirection = link
       } else if (selector) {
-        redirection = $(selector)?.[attr ?? 'innerText']?.trim()
+        redirection = $(selector)?.[attr ?? 'innerText']
       }
+      redirection &&= redirection.trim()
 
       logTable({ name, briefURL, redirection })
       redirection && location.replace(this.ensure(redirection))
