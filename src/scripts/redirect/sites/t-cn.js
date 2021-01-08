@@ -1,3 +1,4 @@
 export const weibo = () => ({
-  selector: 'body > .wrap .link',
+  selector: '.open-url a[href]',
+  attr: 'href',
 })
