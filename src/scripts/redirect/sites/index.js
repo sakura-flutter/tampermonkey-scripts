@@ -7,6 +7,7 @@ import { yinxiang } from './app-yinxiang-com'
 import { tieba } from './jump2-bdimg-com'
 import { csdn } from './link-csdn-net'
 import { youtube } from './www-youtube-com'
+import { weixin } from './weixin110-qq-com'
 
 const sites = [
   {
@@ -58,6 +59,12 @@ const sites = [
     name: 'YouTube',
     test: /www\.youtube\.com\/redirect/,
     use: youtube,
+  },
+  {
+    name: '微信',
+    test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
+    readyState: 'interactive',
+    use: weixin,
   },
 ]
 

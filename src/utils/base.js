@@ -34,3 +34,7 @@ export function once(fn) {
  * @param {number} ms 毫秒数
  */
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+export function isFunction(value) {
+  return typeof value === 'function'
+}
