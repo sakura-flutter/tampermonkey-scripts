@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.6.2
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube
+// @version      1.7.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -17,6 +17,7 @@
 // @match        *://jump2.bdimg.com/safecheck/*
 // @match        *://link.csdn.net/*
 // @match        *://www.youtube.com/redirect*
+// @match        *://weixin110.qq.com/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1548,6 +1549,43 @@ __webpack_require__.d(ready_state_namespaceObject, {
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.string.replace.js
 var es_string_replace = __webpack_require__(5306);
+;// CONCATENATED MODULE: ./src/utils/base.js
+function throttle(fn, delay) {
+  let t = null;
+  let begin = Date.now();
+  return function (...args) {
+    const self = this;
+    const cur = Date.now();
+    clearTimeout(t);
+
+    if (cur - begin >= delay) {
+      fn.apply(self, args);
+      begin = cur;
+    } else {
+      t = setTimeout(function () {
+        fn.apply(self, args);
+      }, delay);
+    }
+  };
+}
+function once(fn) {
+  let called = false;
+  return function (...args) {
+    if (called === false) {
+      called = true;
+      return fn.apply(this, args);
+    }
+  };
+}
+/**
+ * 延时
+ * @param {number} ms 毫秒数
+ */
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function isFunction(value) {
+  return typeof value === 'function';
+}
 ;// CONCATENATED MODULE: ./src/utils/log.js
 const isDebug = "production" !== 'production';
 
@@ -1687,7 +1725,35 @@ const csdn = () => ({
 const youtube = () => ({
   link: parse().q
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weixin110-qq-com.js
+
+
+/* eslint-disable camelcase */
+
+const weixin = () => {
+  const {
+    main_type
+  } = parse();
+
+  switch (main_type) {
+    case '1':
+      return {
+        selector: '.weui-msg__text-area .ui-ellpisis-content p'
+      };
+
+    case '2':
+      {
+        const url = new URL(location); // 转为1可还原链接
+
+        url.searchParams.set('main_type', '1');
+        location.replace(url.toString());
+      }
+  }
+
+  return {};
+};
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1737,6 +1803,11 @@ const sites = [{
   name: 'YouTube',
   test: /www\.youtube\.com\/redirect/,
   use: youtube
+}, {
+  name: '微信',
+  test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
+  readyState: 'interactive',
+  use: weixin
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
@@ -1747,6 +1818,7 @@ function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototy
 var id = 0;
 
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
+
 
 
 
@@ -1791,7 +1863,7 @@ class App {
       } = use();
 
       if (link) {
-        redirection = link;
+        redirection = isFunction(link) ? link() : link;
       } else if (selector) {
         redirection = $(selector)?.[attr ?? 'innerText'];
       }

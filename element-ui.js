@@ -478,6 +478,9 @@ function once(fn) {
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function isFunction(value) {
+  return typeof value === 'function';
+}
 ;// CONCATENATED MODULE: ./src/utils/selector.js
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);

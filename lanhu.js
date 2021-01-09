@@ -1387,6 +1387,9 @@ function once(fn) {
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function isFunction(value) {
+  return typeof value === 'function';
+}
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/bar.js
 
 

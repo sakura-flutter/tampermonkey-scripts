@@ -2006,6 +2006,9 @@ function once(fn) {
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function isFunction(value) {
+  return typeof value === 'function';
+}
 ;// CONCATENATED MODULE: ./src/utils/querystring.js
 /**
  * 解析querystring
