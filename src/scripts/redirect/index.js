@@ -1,3 +1,4 @@
+import { isFunction } from '@/utils/base'
 import * as readyState from '@/utils/ready-state'
 import { $ } from '@/utils/selector'
 import { warn, table as logTable } from '@/utils/log'
@@ -28,7 +29,7 @@ class App {
       let redirection = null
       const { link, selector, attr } = use()
       if (link) {
-        redirection = link
+        redirection = isFunction(link) ? link() : link
       } else if (selector) {
         redirection = $(selector)?.[attr ?? 'innerText']
       }
