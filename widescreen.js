@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         论坛文章页宽屏
-// @version      2.1.1
+// @name         网页宽屏
+// @version      2.1.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -42,7 +42,7 @@
 // @grant        GM_deleteValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdn.jsdelivr.net/npm/vue@3.0.4/dist/vue.runtime.global.prod.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=876846
 // ==/UserScript==
 
@@ -1905,7 +1905,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1200px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(90vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:90vw}.detail-content-wrapper{width:var(--inject-page-width)}.detail-article-container{display:flex}.article-content{flex:auto;margin-right:60px}.footer-feed{width:auto;margin-right:60px}.feedbox-wrapper{width:auto}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(90vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:90vw}.detail-content-wrapper{width:var(--inject-page-width)}.article-content{width:calc(var(--inject-page-width) - 110px - 340px - 85px) !important}.footer-feed{width:auto;margin-right:60px}.feedbox-wrapper{width:auto}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
