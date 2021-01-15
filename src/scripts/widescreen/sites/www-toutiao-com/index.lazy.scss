@@ -5,12 +5,10 @@
     width: var(--inject-page-width);
   }
   /* 内容 */
-  .detail-article-container {
-    display: flex;
-  }
+  // 不要使用flex，头条的布局都是浮动的
   .article-content {
-    flex: auto;
-    margin-right: 60px;
+    // 左侧 + 右侧 + 间距保留
+    width: calc(var(--inject-page-width) - 110px - 340px - 85px) !important;
   }
   /* 相关推荐 */
   .footer-feed {
