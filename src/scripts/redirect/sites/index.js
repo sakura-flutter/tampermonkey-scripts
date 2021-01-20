@@ -8,6 +8,7 @@ import { tieba } from './jump2-bdimg-com'
 import { csdn } from './link-csdn-net'
 import { youtube } from './www-youtube-com'
 import { weixin } from './weixin110-qq-com'
+import { itdaan } from './www-itdaan-com'
 
 const sites = [
   {
@@ -65,6 +66,12 @@ const sites = [
     test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
     use: weixin,
+  },
+  {
+    name: '开发者知识库',
+    test: /www\.itdaan.com\/link/,
+    readyState: 'interactive',
+    use: itdaan,
   },
 ]
 
