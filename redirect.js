@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.7.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信
+// @version      1.8.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、开发者知识库
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -18,6 +18,7 @@
 // @match        *://link.csdn.net/*
 // @match        *://www.youtube.com/redirect*
 // @match        *://weixin110.qq.com/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi*
+// @match        *://www.itdaan.com/link/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1642,9 +1643,6 @@ const interactive = fn => wrapper('interactive', fn);
 const DOMContentLoaded = fn => wrapper('DOMContentLoaded', fn);
 const complete = fn => wrapper('complete', fn);
 const load = fn => wrapper('load', fn);
-;// CONCATENATED MODULE: ./src/utils/selector.js
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/utils/querystring.js
 /**
  * 解析querystring
@@ -1680,15 +1678,16 @@ function parse(href = location.href) {
 function stringify(obj) {
   return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
 }
+;// CONCATENATED MODULE: ./src/utils/selector.js
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-jianshu-com.js
-
 const jianshu = () => ({
-  link: parse().url
+  query: 'url'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/link-zhihu-com.js
-
 const zhihu = () => ({
-  link: parse().target
+  query: 'target'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/t-cn.js
 const weibo = () => ({
@@ -1701,14 +1700,12 @@ const qqMail = () => ({
   link: parse().url || parse().gourl
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/c-pc-qq-com.js
-
 const qqPC = () => ({
-  link: parse().pfurl
+  query: 'pfurl'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/app-yinxiang-com.js
-
 const yinxiang = () => ({
-  link: parse().dest
+  query: 'dest'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/jump2-bdimg-com.js
 const tieba = () => ({
@@ -1716,14 +1713,12 @@ const tieba = () => ({
   attr: 'href'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/link-csdn-net.js
-
 const csdn = () => ({
-  link: parse().target
+  query: 'target'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-youtube-com.js
-
 const youtube = () => ({
-  link: parse().q
+  query: 'q'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weixin110-qq-com.js
 
@@ -1752,7 +1747,12 @@ const weixin = () => {
 
   return {};
 };
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-itdaan-com.js
+const itdaan = () => ({
+  selector: '.safety-url'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -1808,6 +1808,11 @@ const sites = [{
   test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
   readyState: 'interactive',
   use: weixin
+}, {
+  name: '开发者知识库',
+  test: /www\.itdaan.com\/link/,
+  readyState: 'interactive',
+  use: itdaan
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
@@ -1825,10 +1830,26 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 
+
 var _sites = _classPrivateFieldLooseKey("sites");
+
+var _includes = _classPrivateFieldLooseKey("includes");
+
+var _parse = _classPrivateFieldLooseKey("parse");
+
+var _ensure = _classPrivateFieldLooseKey("ensure");
 
 class App {
   constructor(sites) {
+    Object.defineProperty(this, _ensure, {
+      value: _ensure2
+    });
+    Object.defineProperty(this, _parse, {
+      value: _parse2
+    });
+    Object.defineProperty(this, _includes, {
+      value: _includes2
+    });
     Object.defineProperty(this, _sites, {
       writable: true,
       value: []
@@ -1845,55 +1866,68 @@ class App {
         test,
         use
       } = site;
-      const some = [].concat(test).some(item => {
-        if (item instanceof RegExp) return item.test(briefURL);
-        if (typeof item === 'boolean') return item;
-        return false;
-      });
-      if (some === false) return;
+      if (!_classPrivateFieldLooseBase(this, _includes)[_includes](test, briefURL)) return;
       const {
         readyState: state
       } = site;
       if (state) await ready_state_namespaceObject[state]();
-      let redirection = null;
-      const {
-        link,
-        selector,
-        attr
-      } = use();
 
-      if (link) {
-        redirection = isFunction(link) ? link() : link;
-      } else if (selector) {
-        redirection = $(selector)?.[attr ?? 'innerText'];
-      }
+      const redirection = _classPrivateFieldLooseBase(this, _parse)[_parse](use);
 
-      redirection && (redirection = redirection.trim());
       table({
         name,
         briefURL,
         redirection
       });
-      redirection && location.replace(this.ensure(redirection));
+      redirection && location.replace(redirection);
     });
   }
 
-  ensure(url) {
-    try {
-      // eslint-disable-next-line no-new
-      new URL(url);
-    } catch (error) {
-      warn(error); // 修复某些链接没有protocol导致跳转不正确
-      // https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接/discussions/69178
+}
 
-      const protocol = 'http:';
-      url = protocol + '//' + url;
-    }
+var _includes2 = function _includes2(test, url) {
+  return [].concat(test).some(item => {
+    if (item instanceof RegExp) return item.test(url);
+    if (typeof item === 'boolean') return item;
+    return false;
+  });
+};
 
-    return url;
+var _parse2 = function _parse2(use) {
+  const {
+    query,
+    link,
+    selector,
+    attr
+  } = use();
+  let redirection = null;
+
+  if (query) {
+    redirection = parse()[query];
+  } else if (link) {
+    redirection = isFunction(link) ? link() : link;
+  } else if (selector) {
+    redirection = $(selector)?.[attr ?? 'innerText'];
   }
 
-}
+  redirection && (redirection = _classPrivateFieldLooseBase(this, _ensure)[_ensure](redirection.trim()));
+  return redirection;
+};
+
+var _ensure2 = function _ensure2(url) {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(url);
+  } catch (error) {
+    warn(error); // 修复某些链接没有protocol导致跳转不正确
+    // https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接/discussions/69178
+
+    const protocol = 'http:';
+    url = protocol + '//' + url;
+  }
+
+  return url;
+};
 
 new App(redirect_sites).boot();
 })();
