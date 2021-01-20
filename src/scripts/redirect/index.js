@@ -1,5 +1,6 @@
 import { isFunction } from '@/utils/base'
 import * as readyState from '@/utils/ready-state'
+import { parse } from '@/utils/querystring'
 import { $ } from '@/utils/selector'
 import { warn, table as logTable } from '@/utils/log'
 import sites from './sites'
@@ -15,32 +16,42 @@ class App {
 
     this.#sites.forEach(async site => {
       const { name, test, use } = site
-      const some = [].concat(test).some(item => {
-        if (item instanceof RegExp) return item.test(briefURL)
-        if (typeof item === 'boolean') return item
-
-        return false
-      })
-      if (some === false) return
+      if (!this.#includes(test, briefURL)) return
 
       const { readyState: state } = site
       if (state) await readyState[state]()
 
-      let redirection = null
-      const { link, selector, attr } = use()
-      if (link) {
-        redirection = isFunction(link) ? link() : link
-      } else if (selector) {
-        redirection = $(selector)?.[attr ?? 'innerText']
-      }
-      redirection &&= redirection.trim()
-
+      const redirection = this.#parse(use)
       logTable({ name, briefURL, redirection })
-      redirection && location.replace(this.ensure(redirection))
+      redirection && location.replace(redirection)
     })
   }
 
-  ensure(url) {
+  #includes(test, url) {
+    return [].concat(test).some(item => {
+      if (item instanceof RegExp) return item.test(url)
+      if (typeof item === 'boolean') return item
+      return false
+    })
+  }
+
+  #parse(use) {
+    const { query, link, selector, attr } = use()
+    let redirection = null
+
+    if (query) {
+      redirection = parse()[query]
+    } else if (link) {
+      redirection = isFunction(link) ? link() : link
+    } else if (selector) {
+      redirection = $(selector)?.[attr ?? 'innerText']
+    }
+
+    redirection &&= this.#ensure(redirection.trim())
+    return redirection
+  }
+
+  #ensure(url) {
     try {
       // eslint-disable-next-line no-new
       new URL(url)
