@@ -1,8 +1,8 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         redirect 自动跳转到目标链接
-// @version      1.7.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信
+// @version      1.8.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、开发者知识库
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -19,5 +19,6 @@ module.exports = isProd =>
 // @match        *://link.csdn.net/*
 // @match        *://www.youtube.com/redirect*
 // @match        *://weixin110.qq.com/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi*
+// @match        *://www.itdaan.com/link/*
 // ==/UserScript==
 `
