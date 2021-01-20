@@ -3,7 +3,7 @@ import * as qs from '@/utils/querystring'
 import { mountComponent } from '@/utils/mount-component'
 import { useGMvalue } from '@/composables/use-gm-value'
 import store from '@/store'
-import { Button } from '@/components'
+import Button from '@/components/button'
 import './record.scss'
 
 /* 记录看过的产品 */
