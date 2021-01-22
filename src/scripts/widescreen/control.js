@@ -3,7 +3,7 @@ import { mountComponent } from '@/utils/mount-component'
 import { useExpose } from '@/composables/use-expose'
 import { useGMvalue } from '@/composables/use-gm-value'
 import globalStore from '@/store'
-import { Button } from '@/components'
+import Button from '@/components/button'
 import './control.scss'
 
 // 宽屏开关 options: store<store>, execute要执行的函数，visible是否可见(后续用show hide控制)，silent是否显示通知
