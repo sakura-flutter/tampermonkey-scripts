@@ -34,24 +34,25 @@ class App {
 
     this.#sites.forEach(async site => {
       const { name, namespace, test, use } = site
-      // 一个符合就可以了
-      const some = [].concat(test).some(item => {
-        if (item instanceof RegExp) return item.test(briefURL)
-        if (typeof item === 'boolean') return item
+      if (!this.#includes(test, briefURL)) return
 
-        return false
-      })
-      if (some === false) return
+      const { readyState: state } = site
+      if (state) await readyState[state]()
 
       const config = use({
         createControl,
         store: createStore(namespace),
       })
-      const { readyState: state } = site
-      if (state) await readyState[state]()
-
       warn(name)
       config.handler()
+    })
+  }
+
+  #includes(test, url) {
+    return [].concat(test).some(item => {
+      if (item instanceof RegExp) return item.test(url)
+      if (typeof item === 'boolean') return item
+      return false
     })
   }
 }
