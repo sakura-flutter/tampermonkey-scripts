@@ -5,3 +5,5 @@ export const bilibiliDynamic = ({ store, createControl }) => ({
     createControl({ store, execute: styles.use })
   },
 })
+
+export { bilibiliDynamicDetail } from './detail'

@@ -9,7 +9,8 @@ import { tieba, tiebaForum } from './tieba-baidu-com'
 import { sougou } from './www-sogou-com'
 import { segmentfault } from './segmentfault-com'
 import { bilibili } from './www-bilibili-com'
-import { bilibiliDynamic } from './t-bilibili-com'
+import { bilibiliDynamic, bilibiliDynamicDetail } from './t-bilibili-com'
+import { bilibiliSpace } from './space-bilibili-com'
 import { doubanMovie } from './movie-douban-com'
 import { toutiao } from './www-toutiao-com'
 import { weibo } from './weibo-com'
@@ -104,10 +105,22 @@ const sites = [
     use: bilibili,
   },
   {
-    name: 'bilibili动态',
+    name: 'bilibili 动态',
     namespace: 'bilibili',
-    test: /t\.bilibili\.com/.test(host) && pathname === '/',
+    test: /t\.bilibili\.com\/$/,
     use: bilibiliDynamic,
+  },
+  {
+    name: 'bilibili 动态详情',
+    namespace: 'bilibili',
+    test: /t\.bilibili\.com\/\d+$/,
+    use: bilibiliDynamicDetail,
+  },
+  {
+    name: 'bilibili 空间',
+    namespace: 'bilibili',
+    test: /space\.bilibili\.com\/212535360/,
+    use: bilibiliSpace,
   },
   {
     name: '豆瓣电影',
