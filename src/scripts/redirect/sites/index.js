@@ -8,6 +8,7 @@ import { tieba } from './jump2-bdimg-com'
 import { csdn } from './link-csdn-net'
 import { youtube } from './www-youtube-com'
 import { weixin } from './weixin110-qq-com'
+import { weixinDevelopers } from './developers-weixin-qq-com'
 import { itdaan } from './www-itdaan-com'
 
 const sites = [
@@ -66,6 +67,11 @@ const sites = [
     test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
     use: weixin,
+  },
+  {
+    name: '微信开放社区',
+    test: /developers\.weixin\.qq\.com\/community\/middlepage\/href/,
+    use: weixinDevelopers,
   },
   {
     name: '开发者知识库',
