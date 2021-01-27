@@ -1,18 +1,19 @@
 // ==UserScript==
 // @name         View UI文档辅助
-// @version      1.0.2
+// @version      1.0.3
 // @description  (原iView)隐藏文档中菜单项：Pro、物料
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
-// @compatible   chrome >= Latest
-// @compatible   firefox >= Latest
+// @compatible   chrome Latest
+// @compatible   firefox Latest
+// @compatible   edge Latest
 // @match        https://www.iviewui.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdn.jsdelivr.net/npm/vue@3.0.4/dist/vue.runtime.global.prod.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.js
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -32,25 +33,6 @@
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".skr-button{line-height:1.5715;border:1px solid;border-radius:2px;cursor:pointer;box-shadow:var(--skr-button-box-shadow);transition:var(--skr-button-transition)}.skr-button:focus:not(:focus-visible){outline:0}.skr-button:hover{filter:brightness(1.15)}.skr-button--primary{color:var(--skr-text-inverse-color);background-color:var(--skr-primary-color);border-color:var(--skr-primary-color)}.skr-button--default{color:var(--skr-text-primary-color);background-color:var(--skr-white-color);border-color:var(--skr-border-color)}.skr-button--default:hover{filter:brightness(1);color:var(--skr-primary-color);border-color:currentColor}.skr-button--round{border-radius:50%}.skr-button--shadow{box-shadow:var(--skr-box-shadow-normal)}.skr-button--mini{padding:2px 7px;font-size:12px}.skr-button--small{padding:4px 8px;font-size:12px}.skr-button--normal{padding:4px 15px;font-size:14px}.skr-button--large{padding:10px 20px;font-size:15px}", ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ 261:
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Z": () => __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, ".skr-input{margin-top:5px;width:100%;padding-left:8px;padding-right:8px;border:1px solid #d9d9d9;transition:all .3s}.skr-input:hover,.skr-input:focus{border-color:var(--skr-primary-color)}.skr-input:focus{box-shadow:0 0 0 2px var(--skr-primary-lighten-color)}.skr-input--small{padding-top:2px;padding-bottom:2px}.skr-input--small.skr-input--scale:focus{padding-top:6px;padding-bottom:6px;font-size:14px}.skr-input--normal{padding-top:6px;padding-bottom:6px}.skr-input--large{padding-top:10px;padding-bottom:10px}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -596,64 +578,6 @@ function useGMvalue(name, defaultValue, _options) {
 
   return value;
 }
-// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
-var injectStylesIntoStyleTag = __webpack_require__(379);
-var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
-var input = __webpack_require__(261);
-;// CONCATENATED MODULE: ./src/components/input/index.scss
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = injectStylesIntoStyleTag_default()(input/* default */.Z, options);
-
-
-
-/* harmony default export */ const components_input = (input/* default.locals */.Z.locals || {});
-;// CONCATENATED MODULE: ./src/components/input/index.js
-
-
-
-const prefixCls = 'skr-input';
-const Input = (0,external_Vue_namespaceObject.defineComponent)({
-  name: 'SkrInput',
-  props: {
-    modelValue: {
-      type: [String, Number],
-      default: ''
-    },
-    size: {
-      type: String,
-      validator: value => ['small', 'normal', 'large'].includes(value),
-      default: 'normal'
-    },
-    scale: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['update:modelValue'],
-
-  setup(props, {
-    emit
-  }) {
-    return () => (0,external_Vue_namespaceObject.createVNode)("input", {
-      "class": [prefixCls, `${prefixCls}--${props.size}`, {
-        [`${prefixCls}--scale`]: props.scale
-      }],
-      "value": props.modelValue,
-      "type": "text",
-      "onInput": event => emit('update:modelValue', event.target.value)
-    }, null);
-  }
-
-});
-/* harmony default export */ const src_components_input = ((/* unused pure expression or super */ null && (Input)));
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.js
 /**
  * 计算一个点离矩形中心点的距离
@@ -685,18 +609,21 @@ function closeness(value, extent) {
   const half = extent / 2;
   return value <= half ? value / half : 1 - value / extent;
 }
+// EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
+var injectStylesIntoStyleTag = __webpack_require__(379);
+var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/directives/v-ripple/index.scss
 var v_ripple = __webpack_require__(443);
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/index.scss
 
             
 
-var v_ripple_options = {};
+var options = {};
 
-v_ripple_options.insert = "head";
-v_ripple_options.singleton = false;
+options.insert = "head";
+options.singleton = false;
 
-var v_ripple_update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z, v_ripple_options);
+var update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z, options);
 
 
 
@@ -876,7 +803,7 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-const button_prefixCls = 'skr-button'; // button type非default时覆盖一层白色
+const prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
 const Button = (0,external_Vue_namespaceObject.defineComponent)({
@@ -925,18 +852,15 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       } : props.ripple);
     });
     return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-      "class": [button_prefixCls, `${button_prefixCls}--${props.type}`, {
-        [`${button_prefixCls}--round`]: props.round,
-        [`${button_prefixCls}--shadow`]: props.shadow
-      }, `${button_prefixCls}--${props.size}`]
+      "class": [prefixCls, `${prefixCls}--${props.type}`, {
+        [`${prefixCls}--round`]: props.round,
+        [`${prefixCls}--shadow`]: props.shadow
+      }, `${prefixCls}--${props.size}`]
     }, [slots.default()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
 
 });
 /* harmony default export */ const src_components_button_0 = (Button);
-;// CONCATENATED MODULE: ./src/components/index.js
-
-
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/view-ui/hide.lazy.scss
 var hide_lazy = __webpack_require__(850);
 ;// CONCATENATED MODULE: ./src/scripts/view-ui/hide.lazy.scss
