@@ -6,8 +6,10 @@
         "modules": false,
         "useBuiltIns": "usage",
         "corejs": 3,
+        "bugfixes": true,
         "exclude": [
-          "es.array.reduce"
+          "es.array.reduce",
+          "es.string.replace"
         ]
       }
     ]
