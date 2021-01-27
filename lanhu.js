@@ -876,8 +876,6 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-
-
 const prefixCls = 'skr-button'; // button type非default时覆盖一层白色
 
 const rippleColor = 'rgb(255 255 255 / 15%)';
@@ -953,11 +951,6 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 /* harmony default export */ const lanhu_record = (record/* default.locals */.Z.locals || {});
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/record.js
-
-
-
-
-
 
 
 
