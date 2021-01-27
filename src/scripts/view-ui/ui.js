@@ -1,7 +1,7 @@
 import { watchEffect } from 'vue'
 import { mountComponent } from '@/utils/mount-component'
 import { useGMvalue } from '@/composables/use-gm-value'
-import { Button } from '@/components'
+import Button from '@/components/button'
 import styles from './hide.lazy.scss'
 import './ui.scss'
 
