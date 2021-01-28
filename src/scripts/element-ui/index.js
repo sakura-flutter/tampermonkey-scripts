@@ -15,8 +15,9 @@ async function main() {
     ({ instance } = getVueRoot($('#app')))
     await sleep(500)
   }
-  if (!instance) return
   warn(instance)
+  // element-plus 已支持
+  if ($('#app').__vue_app__) return
 
   const catalogue = new Catalogue({
     // 注意：选择器要同时兼容element与element plus文档
