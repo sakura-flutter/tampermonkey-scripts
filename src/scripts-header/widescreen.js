@@ -3,13 +3,14 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         网页宽屏
-// @version      2.2.1
+// @version      2.2.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
 // @compatible   chrome Latest
 // @compatible   firefox Latest
+// @compatible   edge Latest
 // @run-at       document-start
 // @noframes
 // @match        https://bcy.net/item/detail/*
