@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.2.1
+// @version      2.2.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
 // @compatible   chrome Latest
 // @compatible   firefox Latest
+// @compatible   edge Latest
 // @run-at       document-start
 // @noframes
 // @match        https://bcy.net/item/detail/*
@@ -424,7 +425,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1450px){:root{--inject-page-width:min(82vw, 1330px)}.inject-widescreen-loose-js{--inject-page-width:82vw}.lEXIrb{max-width:none !important}#center_col{width:calc(var(--inject-page-width) - 480px)}#rso>.g{width:100%}#rso>.g .IsZvec{max-width:none}#rso>.g .kp-blk{width:100%}#rso>.g .kno-ftr{margin-right:0}#rso g-section-with-header{width:652px}#rhs{margin-left:calc(var(--inject-page-width) - 240px)}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1450px){:root{--inject-page-width:min(82vw, 1330px)}.inject-widescreen-loose-js{--inject-page-width:82vw}.lEXIrb{max-width:none !important}#center_col{width:calc(var(--inject-page-width) - 480px)}#rso .g{width:100%}#rso .g .IsZvec{max-width:none}#rso .g .kp-blk{width:100%}#rso .g .kno-ftr{margin-right:0}#rso g-section-with-header{width:652px}#rhs{margin-left:calc(var(--inject-page-width) - 240px)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -500,7 +501,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1100px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(75vw, 1300px)}.inject-widescreen-loose-js{--inject-page-width:75vw}.QuestionHeader-content,.QuestionHeader-footer{width:var(--inject-page-width);margin-left:auto;margin-right:auto}.QuestionHeader-footer-inner{width:auto}.QuestionHeader-footer-main{padding-left:0}.QuestionHeader-main{width:0;flex:1}.Question-main{width:var(--inject-page-width)}.Question-main .ListShortcut{flex:1}.Question-mainColumn{flex:1;padding-right:10px}.ztext .content_image,.ztext .origin_image{max-width:694px}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(75vw, 1300px)}.inject-widescreen-loose-js{--inject-page-width:75vw}.QuestionHeader-content,.QuestionHeader-footer{width:var(--inject-page-width);margin-left:auto;margin-right:auto}.QuestionHeader-footer-inner{width:auto}.QuestionHeader-footer-main{padding-left:0}.QuestionHeader-main{width:0;flex:1}.Question-main{width:var(--inject-page-width)}.Question-main>.ListShortcut{flex:1}.Question-main>.ListShortcut>.Question-mainColumn[data-zop-questionanswerlist]{width:auto;padding-right:10px}.Question-main>.Question-mainColumn{flex:1;padding-right:10px}.ztext .content_image,.ztext .origin_image{max-width:694px}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
