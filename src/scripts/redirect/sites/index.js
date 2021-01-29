@@ -10,6 +10,7 @@ import { youtube } from './www-youtube-com'
 import { weixin } from './weixin110-qq-com'
 import { weixinDevelopers } from './developers-weixin-qq-com'
 import { itdaan } from './www-itdaan-com'
+import { douban } from './www-douban-com'
 
 const sites = [
   {
@@ -78,6 +79,11 @@ const sites = [
     test: /www\.itdaan.com\/link/,
     readyState: 'interactive',
     use: itdaan,
+  },
+  {
+    name: '豆瓣',
+    test: /www\.douban.com\/link2\//,
+    use: douban,
   },
 ]
 
