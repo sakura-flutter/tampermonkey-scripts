@@ -2,7 +2,7 @@ import { banciyuan } from './bcy-net'
 import { weixin } from './mp-weixin-qq-com'
 import { zhihuZhuanlan } from './zhuanlan-zhihu-com'
 import { zhihuQuestion, zhihuHome, zhihuTopic } from './zhihu-com'
-import { juejin } from './juejin-im'
+import { juejin } from './juejin-cn'
 import { jianshu } from './jianshu-com'
 import { baidu } from './www-baidu-com'
 import { tieba, tiebaForum } from './tieba-baidu-com'
@@ -11,7 +11,7 @@ import { segmentfault } from './segmentfault-com'
 import { bilibili } from './www-bilibili-com'
 import { bilibiliDynamic, bilibiliDynamicDetail } from './t-bilibili-com'
 import { bilibiliSpace } from './space-bilibili-com'
-import { doubanMovie } from './movie-douban-com'
+import { doubanSubject, doubanReview } from './movie-douban-com'
 import { toutiao } from './www-toutiao-com'
 import { weibo } from './weibo-com'
 import { weiboDynamic } from './d-weibo-com'
@@ -123,10 +123,16 @@ const sites = [
     use: bilibiliSpace,
   },
   {
-    name: '豆瓣电影',
+    name: '豆瓣电影 详情',
     namespace: 'doubanmovie',
-    test: /movie\.douban\.com/,
-    use: doubanMovie,
+    test: /movie\.douban\.com\/subject\//, // 与剧评相关 movie.douban.com/subject/${id}/${xxx}
+    use: doubanSubject,
+  },
+  {
+    name: '豆瓣电影 剧评详情',
+    namespace: 'doubanmovie',
+    test: /movie\.douban\.com\/review\//,
+    use: doubanReview,
   },
   {
     name: '头条',
