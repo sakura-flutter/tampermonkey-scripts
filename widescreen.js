@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.2.2
+// @version      2.3.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -34,6 +34,7 @@
 // @match        https://weibo.com/*
 // @match        https://d.weibo.com/*
 // @match        https://movie.douban.com/subject/*
+// @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
 // @include      /^https://www.google.com(.)*search/
 // @grant        unsafeWindow
@@ -166,7 +167,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1250px){
 
 /***/ }),
 
-/***/ 584:
+/***/ 32:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -185,7 +186,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){
 
 /***/ }),
 
-/***/ 108:
+/***/ 587:
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -197,7 +198,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){:root{--inject-page-width:min(82vw, 1318px)}.inject-widescreen-loose-js{--inject-page-width:82vw}#wrapper{width:var(--inject-page-width)}#content .article{width:calc(100% - 360px)}#content .article .subject{width:calc(100% - 175px)}#content .article #info{width:calc(100% - 160px);max-width:none}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){:root{--inject-page-width:min(82vw, 1318px)}.inject-widescreen-loose-js{--inject-page-width:82vw}#wrapper{width:var(--inject-page-width)}#content .article{width:calc(100% - 360px)}#content .article .subject{width:calc(100% - 175px)}#content .article .subject #info{width:calc(100% - 160px);max-width:none}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1474,42 +1475,42 @@ const zhihuTopic = ({
 
 
 
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/juejin-im/index.lazy.scss
-var juejin_im_index_lazy = __webpack_require__(584);
-;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/juejin-im/index.lazy.scss
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/juejin-cn/index.lazy.scss
+var juejin_cn_index_lazy = __webpack_require__(32);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/juejin-cn/index.lazy.scss
 
             
 
-var juejin_im_index_lazy_refs = 0;
-var juejin_im_index_lazy_update;
-var juejin_im_index_lazy_options = {"injectType":"lazyStyleTag"};
+var juejin_cn_index_lazy_refs = 0;
+var juejin_cn_index_lazy_update;
+var juejin_cn_index_lazy_options = {"injectType":"lazyStyleTag"};
 
-juejin_im_index_lazy_options.insert = "head";
-juejin_im_index_lazy_options.singleton = false;
+juejin_cn_index_lazy_options.insert = "head";
+juejin_cn_index_lazy_options.singleton = false;
 
-var juejin_im_index_lazy_exported = {};
+var juejin_cn_index_lazy_exported = {};
 
-juejin_im_index_lazy_exported.locals = juejin_im_index_lazy/* default.locals */.Z.locals || {};
-juejin_im_index_lazy_exported.use = function() {
-  if (!(juejin_im_index_lazy_refs++)) {
-    juejin_im_index_lazy_update = injectStylesIntoStyleTag_default()(juejin_im_index_lazy/* default */.Z, juejin_im_index_lazy_options);
+juejin_cn_index_lazy_exported.locals = juejin_cn_index_lazy/* default.locals */.Z.locals || {};
+juejin_cn_index_lazy_exported.use = function() {
+  if (!(juejin_cn_index_lazy_refs++)) {
+    juejin_cn_index_lazy_update = injectStylesIntoStyleTag_default()(juejin_cn_index_lazy/* default */.Z, juejin_cn_index_lazy_options);
   }
 
-  return juejin_im_index_lazy_exported;
+  return juejin_cn_index_lazy_exported;
 };
-juejin_im_index_lazy_exported.unuse = function() {
-  if (juejin_im_index_lazy_refs > 0 && !--juejin_im_index_lazy_refs) {
-    juejin_im_index_lazy_update();
-    juejin_im_index_lazy_update = null;
+juejin_cn_index_lazy_exported.unuse = function() {
+  if (juejin_cn_index_lazy_refs > 0 && !--juejin_cn_index_lazy_refs) {
+    juejin_cn_index_lazy_update();
+    juejin_cn_index_lazy_update = null;
   }
 };
 
 
 
 ;
-       /* harmony default export */ const sites_juejin_im_index_lazy = (juejin_im_index_lazy_exported);
+       /* harmony default export */ const sites_juejin_cn_index_lazy = (juejin_cn_index_lazy_exported);
 
-;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/juejin-im/index.js
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/juejin-cn/index.js
 
 const juejin = ({
   store,
@@ -1518,7 +1519,7 @@ const juejin = ({
   handler() {
     createControl({
       store,
-      execute: sites_juejin_im_index_lazy.use
+      execute: sites_juejin_cn_index_lazy.use
     });
   }
 
@@ -2120,55 +2121,73 @@ const bilibiliSpace = ({
   handler() {}
 
 });
-// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/movie-douban-com/index.lazy.scss
-var movie_douban_com_index_lazy = __webpack_require__(108);
-;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/index.lazy.scss
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/movie-douban-com/subject.lazy.scss
+var subject_lazy = __webpack_require__(587);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/subject.lazy.scss
 
             
 
-var movie_douban_com_index_lazy_refs = 0;
-var movie_douban_com_index_lazy_update;
-var movie_douban_com_index_lazy_options = {"injectType":"lazyStyleTag"};
+var subject_lazy_refs = 0;
+var subject_lazy_update;
+var subject_lazy_options = {"injectType":"lazyStyleTag"};
 
-movie_douban_com_index_lazy_options.insert = "head";
-movie_douban_com_index_lazy_options.singleton = false;
+subject_lazy_options.insert = "head";
+subject_lazy_options.singleton = false;
 
-var movie_douban_com_index_lazy_exported = {};
+var subject_lazy_exported = {};
 
-movie_douban_com_index_lazy_exported.locals = movie_douban_com_index_lazy/* default.locals */.Z.locals || {};
-movie_douban_com_index_lazy_exported.use = function() {
-  if (!(movie_douban_com_index_lazy_refs++)) {
-    movie_douban_com_index_lazy_update = injectStylesIntoStyleTag_default()(movie_douban_com_index_lazy/* default */.Z, movie_douban_com_index_lazy_options);
+subject_lazy_exported.locals = subject_lazy/* default.locals */.Z.locals || {};
+subject_lazy_exported.use = function() {
+  if (!(subject_lazy_refs++)) {
+    subject_lazy_update = injectStylesIntoStyleTag_default()(subject_lazy/* default */.Z, subject_lazy_options);
   }
 
-  return movie_douban_com_index_lazy_exported;
+  return subject_lazy_exported;
 };
-movie_douban_com_index_lazy_exported.unuse = function() {
-  if (movie_douban_com_index_lazy_refs > 0 && !--movie_douban_com_index_lazy_refs) {
-    movie_douban_com_index_lazy_update();
-    movie_douban_com_index_lazy_update = null;
+subject_lazy_exported.unuse = function() {
+  if (subject_lazy_refs > 0 && !--subject_lazy_refs) {
+    subject_lazy_update();
+    subject_lazy_update = null;
   }
 };
 
 
 
 ;
-       /* harmony default export */ const sites_movie_douban_com_index_lazy = (movie_douban_com_index_lazy_exported);
+       /* harmony default export */ const movie_douban_com_subject_lazy = (subject_lazy_exported);
 
-;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/index.js
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/subject.js
 
-const doubanMovie = ({
+const doubanSubject = ({
   store,
   createControl
 }) => ({
   handler() {
     createControl({
       store,
-      execute: sites_movie_douban_com_index_lazy.use
+      execute: movie_douban_com_subject_lazy.use
     });
   }
 
 });
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/review.js
+// 貌似样式一样的，直接用subject的吧
+
+const doubanReview = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    createControl({
+      store,
+      execute: movie_douban_com_subject_lazy.use
+    });
+  }
+
+});
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/index.js
+
+
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-toutiao-com/index.lazy.scss
 var www_toutiao_com_index_lazy = __webpack_require__(186);
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-toutiao-com/index.lazy.scss
@@ -2731,10 +2750,16 @@ const sites = [{
   test: /space\.bilibili\.com\/212535360/,
   use: bilibiliSpace
 }, {
-  name: '豆瓣电影',
+  name: '豆瓣电影 详情',
   namespace: 'doubanmovie',
-  test: /movie\.douban\.com/,
-  use: doubanMovie
+  test: /movie\.douban\.com\/subject\//,
+  // 与剧评相关 movie.douban.com/subject/${id}/${xxx}
+  use: doubanSubject
+}, {
+  name: '豆瓣电影 剧评详情',
+  namespace: 'doubanmovie',
+  test: /movie\.douban\.com\/review\//,
+  use: doubanReview
 }, {
   name: '头条',
   namespace: 'toutiao',
