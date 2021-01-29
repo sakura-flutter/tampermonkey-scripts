@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.9.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库
+// @version      1.10.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
-// @compatible   chrome >= Latest
-// @compatible   firefox >= Latest
+// @compatible   chrome Latest
+// @compatible   firefox Latest
+// @compatible   edge Latest
 // @run-at       document-start
 // @match        *://www.jianshu.com/go-wild*
 // @match        *://link.zhihu.com/*
@@ -20,6 +21,7 @@
 // @match        *://weixin110.qq.com/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi*
 // @match        *://developers.weixin.qq.com/community/middlepage/href*
 // @match        *://www.itdaan.com/link/*
+// @match        *://www.douban.com/link2/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -272,7 +274,12 @@ const weixinDevelopers = () => ({
 const itdaan = () => ({
   selector: '.safety-url'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-douban-com.js
+const douban = () => ({
+  query: 'url'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -339,6 +346,10 @@ const sites = [{
   test: /www\.itdaan.com\/link/,
   readyState: 'interactive',
   use: itdaan
+}, {
+  name: '豆瓣',
+  test: /www\.douban.com\/link2\//,
+  use: douban
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
