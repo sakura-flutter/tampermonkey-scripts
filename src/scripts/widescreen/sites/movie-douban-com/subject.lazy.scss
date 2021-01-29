@@ -2,7 +2,7 @@
 
 @include substrate(1300px, 82vw, 1318px) {
   #wrapper {
-    width: var(--inject-page-width);
+    width: var(--inject-page-width) !important;
   }
   /* 内容 */
   #content {
