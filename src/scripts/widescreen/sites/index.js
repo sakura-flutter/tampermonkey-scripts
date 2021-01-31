@@ -143,7 +143,7 @@ const sites = [
   {
     name: '微博',
     namespace: 'weibo',
-    test: /\/\/weibo.com/,
+    test: /\/\/(www\.)?weibo.com/,
     use: weibo,
   },
   {
