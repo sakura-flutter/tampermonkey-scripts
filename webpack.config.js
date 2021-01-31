@@ -22,6 +22,7 @@ module.exports = (env, argv) => ({
     pixiv: './src/scripts/pixiv',
     'view-ui': './src/scripts/view-ui',
     'element-ui': './src/scripts/element-ui',
+    'mdn-web-docs': './src/scripts/mdn-web-docs',
   },
   output: {
     path: path.join(__dirname, 'dist'),
