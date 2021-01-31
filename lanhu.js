@@ -1,12 +1,13 @@
 // ==UserScript==
-// @name         蓝湖 lanhu
-// @version      1.11.2
-// @description  自动填充填写过的产品密码(不是蓝湖账户)；查看打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
+// @name         蓝湖 工具箱
+// @version      1.11.3
+// @description  自动填充填写过的产品密码(不是蓝湖账户)；记录打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
 // @compatible   chrome Latest
 // @compatible   firefox Latest
+// @compatible   edge Latest
 // @noframes
 // @match        https://lanhuapp.com/web/
 // @grant        GM_registerMenuCommand
