@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.3.2
+// @version      2.3.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -982,25 +982,28 @@ __webpack_require__.d(ready_state_namespaceObject, {
  * @return {boolean} 是否通过
  */
 function checker({
-  chrome = 80,
   firefox = 75,
+  edge = 80,
+  chrome = 80,
+  safari = 14,
   notify = true
 } = {}) {
   const {
     userAgent
   } = window.navigator;
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
   const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
+  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
+  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
+  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
+
   let pass = false;
 
-  if (chromeVersion && chromeVersion >= chrome) {
-    pass = true;
-  } else if (firefoxVersion && firefoxVersion >= firefox) {
+  if (firefoxVersion && firefoxVersion >= firefox || edgeVersion && edgeVersion >= edge || chromeVersion && chromeVersion >= chrome || safariVersion && safariVersion >= safari) {
     pass = true;
   }
 
   if (!pass) {
-    notify && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
+    notify && window.Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
 
   return pass;
