@@ -44,7 +44,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -64,11 +64,11 @@
 var ready_state_namespaceObject = {};
 __webpack_require__.r(ready_state_namespaceObject);
 __webpack_require__.d(ready_state_namespaceObject, {
-  "DOMContentLoaded": () => DOMContentLoaded,
-  "complete": () => complete,
-  "interactive": () => interactive,
-  "load": () => load,
-  "loading": () => loading
+  "DOMContentLoaded": () => (DOMContentLoaded),
+  "complete": () => (complete),
+  "interactive": () => (interactive),
+  "load": () => (load),
+  "loading": () => (loading)
 });
 
 ;// CONCATENATED MODULE: ./src/utils/base.js
