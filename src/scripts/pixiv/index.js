@@ -5,8 +5,10 @@ import { warn } from '@/utils/log'
 
 function main() {
   GM_addStyle(GM_getResourceText('viewerCSS'))
-  // 背景暗一点
-  GM_addStyle('.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }')
+  GM_addStyle([
+    '.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
+    '.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }', // 添加标题阴影 在图片是白底时显示得清楚点
+  ].join(''))
 
   // eslint-disable-next-line no-new
   new Previewer('figure [role="presentation"] a img', {
@@ -82,18 +84,18 @@ class Previewer {
    * @return {nodes}
    */
   #createOriginalImgEls(imgEls) {
-    /* 不要用reduce，webpack生成的代码太多 */
-    const originalImgEls = []
-    for (const img of imgEls) {
-      // 原图在其父级a标签href上
+    return imgEls.reduce((acc, img) => {
       const { parentNode } = img
-      if (parentNode.tagName !== 'A') continue
-      const image = new Image()
-      image.src = parentNode.href
-      image.alt = img.alt
-      originalImgEls.push(image)
-    }
-    return originalImgEls
+      // 原图在其父级a标签href上
+      if (parentNode.tagName === 'A') {
+        const image = new Image()
+        image.src = parentNode.href
+        image.alt = img.alt
+        acc.push(image)
+      }
+
+      return acc
+    }, [])
   }
 
   /**
@@ -110,6 +112,7 @@ class Previewer {
       loop: false,
       zoomRatio: 0.5,
       minZoomRatio: 0.1,
+      maxZoomRatio: 1.5,
       viewed() {
         this.viewer.tooltip()
       },
