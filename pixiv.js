@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Pixiv 工具箱
-// @version      1.0.0
+// @version      1.1.0
 // @description  增强P站查看原图功能
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
 // @compatible   chrome Latest
 // @compatible   firefox Latest
+// @compatible   edge Latest
 // @noframes
 // @match        https://www.pixiv.net
 // @match        https://www.pixiv.net/*
@@ -47,9 +48,10 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 /* global Viewer */
 
 function main() {
-  GM_addStyle(GM_getResourceText('viewerCSS')); // 背景暗一点
-
-  GM_addStyle('.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }'); // eslint-disable-next-line no-new
+  GM_addStyle(GM_getResourceText('viewerCSS'));
+  GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
+  '.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }' // 添加标题阴影 在图片是白底时显示得清楚点
+  ].join('')); // eslint-disable-next-line no-new
 
   new Previewer('figure [role="presentation"] a img', {
     includePathname: /^\/artworks\/(\w)+/
@@ -160,22 +162,20 @@ var _getArtworks2 = function _getArtworks2() {
 };
 
 var _createOriginalImgEls2 = function _createOriginalImgEls2(imgEls) {
-  /* 不要用reduce，webpack生成的代码太多 */
-  const originalImgEls = [];
-
-  for (const img of imgEls) {
-    // 原图在其父级a标签href上
+  return imgEls.reduce((acc, img) => {
     const {
       parentNode
-    } = img;
-    if (parentNode.tagName !== 'A') continue;
-    const image = new Image();
-    image.src = parentNode.href;
-    image.alt = img.alt;
-    originalImgEls.push(image);
-  }
+    } = img; // 原图在其父级a标签href上
 
-  return originalImgEls;
+    if (parentNode.tagName === 'A') {
+      const image = new Image();
+      image.src = parentNode.href;
+      image.alt = img.alt;
+      acc.push(image);
+    }
+
+    return acc;
+  }, []);
 };
 
 var _preview2 = function _preview2(imgEls, viewerOpts) {
@@ -186,6 +186,7 @@ var _preview2 = function _preview2(imgEls, viewerOpts) {
     loop: false,
     zoomRatio: 0.5,
     minZoomRatio: 0.1,
+    maxZoomRatio: 1.5,
 
     viewed() {
       this.viewer.tooltip();
