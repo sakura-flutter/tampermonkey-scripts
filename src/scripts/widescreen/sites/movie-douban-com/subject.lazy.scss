@@ -1,5 +1,7 @@
 @import "../mixins.scss";
 
+$default-width: 675px;
+
 @include substrate(1300px, 82vw, 1318px) {
   #wrapper {
     width: var(--inject-page-width) !important;
@@ -16,6 +18,13 @@
         #info {
           width: calc(100% - 160px);
           max-width: none;
+        }
+      }
+      /* 剧照 */
+      #related-pic {
+        > ul {
+          // 应该是定死的，宽了不好看
+          width: $default-width;
         }
       }
     }
