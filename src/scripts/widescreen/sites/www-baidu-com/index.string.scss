@@ -10,10 +10,12 @@ $default-width: 560px;
     backdrop-filter: blur(10px);
   }
   .head_wrapper .s_form {
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-    width: -moz-fit-content;
+    // 1921px时本身会居中
+    @media (max-width: 1920px) {
+      margin-left: auto;
+      margin-right: auto;
+      width: fit-content;
+    }
   }
   /* 搜索tab */
   .s_tab {
@@ -21,7 +23,6 @@ $default-width: 560px;
     margin-right: auto;
     padding-left: 0 !important;
     width: fit-content;
-    width: -moz-fit-content;
   }
   /* 搜索内容 */
   #container {
