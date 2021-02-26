@@ -12,7 +12,8 @@
           "es.string.replace"
         ]
       }
-    ]
+    ],
+    "@babel/preset-typescript"
   ],
   // 顺序执行
   "plugins": [

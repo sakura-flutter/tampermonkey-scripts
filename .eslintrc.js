@@ -8,11 +8,32 @@ module.exports = {
     'standard',
     'plugin:vue/vue3-recommended',
   ],
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
     sourceType: 'module',
   },
+  overrides: [
+    // 为了兼容原有js文件
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: [
+        'plugin:@typescript-eslint/recommended',
+      ],
+      plugins: [
+        '@typescript-eslint', // 同 @typescript-eslint/eslint-plugin
+      ],
+      parserOptions: {
+        project: './tsconfig.json',
+        // ecmaFeatures: {
+        //   jsx: true,
+        // },
+      },
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+  ],
   globals: {
     unsafeWindow: 'readonly',
     GM_registerMenuCommand: 'readonly',
