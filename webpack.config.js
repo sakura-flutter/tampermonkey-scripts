@@ -3,6 +3,7 @@ const path = require('path')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
+const StylelintPlugin = require('stylelint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 
@@ -69,6 +70,9 @@ module.exports = (env, argv) => ({
     new CleanWebpackPlugin(), // 默认依赖output path
     new ESLintPlugin({
       extensions: ['js', 'ts', 'tsx'],
+      fix: true,
+    }),
+    new StylelintPlugin({
       fix: true,
     }),
     new webpack.BannerPlugin({
