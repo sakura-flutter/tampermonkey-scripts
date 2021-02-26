@@ -32,6 +32,7 @@ module.exports = (env, argv) => ({
     vue: 'Vue',
   },
   resolve: {
+    extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
       '@': path.join(__dirname, './src'),
     },
@@ -39,7 +40,7 @@ module.exports = (env, argv) => ({
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|ts|tsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader'],
       },
@@ -67,6 +68,7 @@ module.exports = (env, argv) => ({
   plugins: [
     new CleanWebpackPlugin(), // 默认依赖output path
     new ESLintPlugin({
+      extensions: ['js', 'ts', 'tsx'],
       fix: true,
     }),
     new webpack.BannerPlugin({
