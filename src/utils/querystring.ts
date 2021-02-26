@@ -1,9 +1,13 @@
+interface IObject {
+  [index: string]: string | number
+}
+
 /**
  * 解析querystring
  * @param {string} href 或 带有参数格式的string；有search则不再hash
  * @return {object}
  */
-export function parse(href = location.href) {
+export function parse(href: string | null = location.href): IObject {
   if (!href) return {}
 
   let search
@@ -25,9 +29,9 @@ export function parse(href = location.href) {
   }
 
   const searchParams = new URLSearchParams(search)
-  return [...searchParams.entries()].reduce((acc, [key, value]) => (((acc[key] = value), acc)), {})
+  return [...searchParams.entries()].reduce((acc: IObject, [key, value]) => (((acc[key] = value), acc)), {})
 }
 
-export function stringify(obj) {
+export function stringify(obj: IObject): string {
   return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&')
 }

@@ -1,3 +1,11 @@
+interface IOptions {
+  firefox?: number
+  edge?: number
+  chrome?: number
+  safari?: number
+  notify?: boolean
+}
+
 /**
  * 兼容性检查
  * @param {object} param0 & param1 版本, notify
@@ -9,7 +17,7 @@ export function checker({
   chrome = 80,
   safari = 14,
   notify = true,
-} = {}) {
+}: IOptions = {}): boolean {
   const { userAgent } = window.navigator
   const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1]
   const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1]
@@ -18,10 +26,10 @@ export function checker({
 
   let pass = false
   if (
-    (firefoxVersion && firefoxVersion >= firefox) ||
-    (edgeVersion && edgeVersion >= edge) ||
-    (chromeVersion && chromeVersion >= chrome) ||
-    (safariVersion && safariVersion >= safari)
+    (firefoxVersion && Number(firefoxVersion) >= firefox) ||
+    (edgeVersion && Number(edgeVersion) >= edge) ||
+    (chromeVersion && Number(chromeVersion) >= chrome) ||
+    (safariVersion && Number(safariVersion) >= safari)
   ) {
     pass = true
   }
