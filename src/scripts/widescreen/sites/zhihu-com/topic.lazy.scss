@@ -1,9 +1,10 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(1100px, 91vw, 1295px) {
   .ContentLayout {
     width: var(--inject-page-width);
   }
+
   /* 内容 */
   .ContentLayout-mainColumn {
     flex: 1;

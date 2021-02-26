@@ -1,33 +1,34 @@
 .skr-button {
-  line-height: 1.5715;
   border: 1px solid;
   border-radius: 2px;
-  cursor: pointer;
   box-shadow: var(--skr-button-box-shadow);
+  cursor: pointer;
+  line-height: 1.5715;
   transition: var(--skr-button-transition);
-
-  &:focus:not(:focus-visible) {
-    outline: 0;
-  }
 
   &:hover {
     filter: brightness(1.15);
   }
 
+  &:focus:not(:focus-visible) {
+    outline: 0;
+  }
+
   &--primary {
-    color: var(--skr-text-inverse-color);
     background-color: var(--skr-primary-color);
     border-color: var(--skr-primary-color);
+    color: var(--skr-text-inverse-color);
   }
 
   &--default {
-    color: var(--skr-text-primary-color);
     background-color: var(--skr-white-color);
     border-color: var(--skr-border-color);
+    color: var(--skr-text-primary-color);
+
     &:hover {
-      filter: brightness(1);
-      color: var(--skr-primary-color);
       border-color: currentColor;
+      color: var(--skr-primary-color);
+      filter: brightness(1);
     }
   }
 
@@ -40,22 +41,22 @@
   }
 
   &--mini {
-    padding: 2px 7px;
     font-size: 12px;
+    padding: 2px 7px;
   }
 
   &--small {
-    padding: 4px 8px;
     font-size: 12px;
+    padding: 4px 8px;
   }
 
   &--normal {
-    padding: 4px 15px;
     font-size: 14px;
+    padding: 4px 15px;
   }
 
   &--large {
-    padding: 10px 20px;
     font-size: 15px;
+    padding: 10px 20px;
   }
 }

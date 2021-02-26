@@ -1,4 +1,4 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 $default-width: 675px;
 
@@ -6,6 +6,7 @@ $default-width: 675px;
   #wrapper {
     width: var(--inject-page-width) !important;
   }
+
   /* 内容 */
   #content {
     .article {
@@ -16,10 +17,11 @@ $default-width: 675px;
         width: calc(100% - 175px);
 
         #info {
-          width: calc(100% - 160px);
           max-width: none;
+          width: calc(100% - 160px);
         }
       }
+
       /* 剧照 */
       #related-pic {
         > ul {

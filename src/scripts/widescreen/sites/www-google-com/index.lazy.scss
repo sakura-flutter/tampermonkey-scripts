@@ -1,4 +1,4 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 $default-width: 652px;
 
@@ -12,6 +12,7 @@ $default-width: 652px;
     #center_col {
       width: calc(var(--inject-page-width) - 480px);
     }
+
     /* 列表 */
     #rso {
       .g {
@@ -34,10 +35,12 @@ $default-width: 652px;
       }
 
       /* 特殊类型还原宽度(搜索：蛇麻花) */
+      /* stylelint-disable-next-line selector-type-no-unknown */
       g-section-with-header {
         width: $default-width;
       }
     }
+
     /* 右侧 */
     #rhs {
       margin-left: calc(var(--inject-page-width) - 240px);

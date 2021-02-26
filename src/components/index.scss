@@ -1,5 +1,5 @@
 /* var */
-@mixin var($selector: ":root") {
+@mixin var($selector: ':root') {
   #{$selector} {
     --skr-primary-color: #2878ff;
     --skr-primary-lighten-color: rgba(24, 144, 255, 0.2);
@@ -33,7 +33,7 @@
 
 /* reset */
 @mixin reset {
-  [class*="skr-"] {
+  [class*='skr-'] {
     box-sizing: border-box;
   }
 }

@@ -1,16 +1,18 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(1100px, 91vw, 1360px) {
   .Topstory-container {
     width: var(--inject-page-width);
   }
+
   /* 内容 */
   .Topstory-mainColumn {
     flex: 1;
   }
+
   /* 右侧 */
   .GlobalSideBar {
-    width: 296px;
     flex: initial;
+    width: 296px;
   }
 }

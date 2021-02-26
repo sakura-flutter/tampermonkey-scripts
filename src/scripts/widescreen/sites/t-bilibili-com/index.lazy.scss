@@ -1,24 +1,28 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(1380px, 85vw, 1454px) {
   /* 容器 */
   .home-content {
     width: var(--inject-page-width) !important;
   }
+
   .center-panel {
     width: calc(100% - 524px) !important;
   }
+
   /* item */
   .main-content {
-    width: auto !important;
     margin-right: 20px;
+    width: auto !important;
   }
+
   .live-container,
   .video-container,
   .bangumi-container,
   .shop-panel {
     width: auto !important;
   }
+
   .video-container .text-area {
     width: calc(100% - 233px) !important;
   }
