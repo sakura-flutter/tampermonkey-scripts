@@ -8,6 +8,7 @@
     :root {
       #{$property-name}: min(#{$page-width}, #{$page-max-width});
     }
+
     .inject-widescreen-loose-js {
       #{$property-name}: $page-width;
     }

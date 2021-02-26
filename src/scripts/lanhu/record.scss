@@ -1,51 +1,54 @@
-@import "~@/components/index.scss";
+@import '~@/components/index';
+
 @include var;
 
 #inject-recorder-ui {
+  bottom: 8vh;
   contain: layout;
+  opacity: 0.5;
+  padding: 30px 30px 10px;
   position: fixed;
   right: 30px;
-  bottom: 8vh;
-  z-index: 1000;
-  width: 240px;
-  padding: 30px 30px 10px;
-  opacity: 0.5;
   transition: opacity 0.1s;
+  width: 240px;
+  z-index: 1000;
 
   &:hover {
     opacity: 1;
   }
 
   ul {
-    width: fit-content;
-    padding: 5px;
-    max-height: 250px;
-    overflow-x: hidden;
     background: rgb(251, 251, 251);
     box-shadow: var(--skr-box-shadow-lighten);
+    max-height: 250px;
+    overflow-x: hidden;
+    padding: 5px;
     transition: width 0.1s;
+    width: fit-content;
 
     &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
       background: #f2f2f2;
+      height: 4px;
       padding-right: 2px;
+      width: 4px;
     }
 
     &::-webkit-scrollbar-thumb {
-      border-radius: 3px;
-      border: 0;
       background: #b4bbc5;
+      border: 0;
+      border-radius: 3px;
     }
   }
 
   li {
-    position: relative;
+    align-items: center;
     box-sizing: content-box;
     display: flex;
-    align-items: center;
     padding: 0 0 0 5px;
-    transition: all var(--skr-transition-duration-normal), width 0.15s ease-out,
+    position: relative;
+    transition:
+      all var(--skr-transition-duration-normal),
+      width 0.15s ease-out,
       background var(--skr-transition-duration-fast) ease-out;
 
     &:hover {
@@ -53,22 +56,22 @@
     }
 
     &.has-pwd::before {
-      position: absolute;
-      left: 1px;
-      content: "";
-      width: 2px;
-      height: 50%;
       background: rgb(7 193 96 / 52%);
+      content: '';
+      height: 50%;
+      left: 1px;
+      position: absolute;
+      width: 2px;
     }
 
     a {
-      width: 132px;
       flex: none;
-      padding-right: 4px;
       line-height: 30px;
       overflow: hidden;
+      padding-right: 4px;
       text-overflow: ellipsis;
       white-space: nowrap;
+      width: 132px;
     }
 
     .actions {
@@ -76,11 +79,11 @@
     }
 
     button {
-      padding: 0;
-      width: 20px;
+      border: none;
       height: 20px;
       line-height: 20px;
-      border: none;
+      padding: 0;
+      width: 20px;
 
       &:not(:hover) {
         color: var(--skr-text-secondary-color);
@@ -93,9 +96,9 @@
   }
 
   .control {
+    align-items: center;
     display: flex;
     justify-content: center;
-    align-items: center;
     padding-top: 8px;
 
     input {
@@ -118,19 +121,22 @@
   .inject-slide-fade-leave-active {
     transition: all 0.1s;
   }
+
   .inject-slide-fade-enter-from,
   .inject-slide-fade-leave-to {
-    transform: translateY(5px);
     opacity: 0;
+    transform: translateY(5px);
   }
 
   /* 动画2 group */
   .inject-slide-hor-fade-move {
     transition: all 0.8s;
   }
+
   .inject-slide-hor-fade-active {
     position: absolute;
   }
+
   .inject-slide-hor-fade-enter-from,
   .inject-slide-hor-fade-leave-to {
     opacity: 0;

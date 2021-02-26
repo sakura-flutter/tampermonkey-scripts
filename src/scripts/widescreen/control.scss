@@ -1,17 +1,32 @@
-@import "~@/components/index.scss";
+@import '~@/components/index';
+
 @include var;
 
 .inject-widescreen-js {
+  align-items: center;
   contain: layout;
-  position: fixed;
-  z-index: 99;
-  top: 150px;
-  right: 7vw;
   display: flex;
   flex-direction: column;
-  align-items: center;
   opacity: 0.5;
+  position: fixed;
+  right: 7vw;
+  top: 150px;
   transition: opacity var(--skr-transition-duration-normal);
+  z-index: 99;
+
+  label {
+    align-items: center;
+    bottom: 0;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    transform: translateY(-10px);
+    transition: transform var(--skr-transition-duration-normal);
+    z-index: -1;
+  }
 
   &:hover {
     opacity: 1;
@@ -24,20 +39,6 @@
   button {
     // 防止某些网站button有默认background-image
     background-image: none !important;
-  }
-
-  label {
-    position: absolute;
-    bottom: 0;
-    z-index: -1;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    transform: translateY(-10px);
-    transition: transform var(--skr-transition-duration-normal);
-    cursor: pointer;
   }
 
   input {

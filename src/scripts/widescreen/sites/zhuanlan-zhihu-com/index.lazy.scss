@@ -1,4 +1,4 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 $default-width: 690px;
 
@@ -8,11 +8,13 @@ $default-width: 690px;
   .Post-NormalSub > div {
     width: var(--inject-page-width);
   }
+
   /* 内容图片 */
   .ztext .content_image,
   .ztext .origin_image {
     max-width: $default-width;
   }
+
   /* 左侧悬浮按钮 */
   .Post-SideActions {
     left: calc(50% - (var(--inject-page-width) / 2) - 120px);

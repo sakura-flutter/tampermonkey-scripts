@@ -9,7 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d ./dist",
     "lint": "eslint ./ --ext .js,.ts,.tsx",
-    "stylelint": "stylelint **/*.{scss}"
+    "stylelint": "stylelint **/*.scss"
   },
   "repository": {
     "type": "git",

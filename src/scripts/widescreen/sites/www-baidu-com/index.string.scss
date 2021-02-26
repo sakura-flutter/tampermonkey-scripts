@@ -1,14 +1,16 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 $default-width: 560px;
 
 @include substrate(1460px, 75vw, 1300px) {
   /* 顶部搜索 */
+
   /* 修复搜索主页换肤后头部异常 */
   #head:not(.s-skin-hasbg) {
-    background-color: #ffffffd1;
     backdrop-filter: blur(10px);
+    background-color: #ffffffd1;
   }
+
   .head_wrapper .s_form {
     // 1921px时本身会居中
     @media (max-width: 1920px) {
@@ -17,6 +19,7 @@ $default-width: 560px;
       width: fit-content;
     }
   }
+
   /* 搜索tab */
   .s_tab {
     margin-left: auto;
@@ -24,18 +27,20 @@ $default-width: 560px;
     padding-left: 0 !important;
     width: fit-content;
   }
+
   /* 搜索内容 */
   #container {
     margin-left: auto !important;
     margin-right: auto !important;
     width: var(--inject-page-width) !important;
   }
+
   /* 左侧搜索结果 */
   #content_left {
     width: calc(var(--inject-page-width) - 450px) !important;
 
     /* [tpl*=img_address]忽略图片区域，防止宽屏后排版混乱(搜索：樱花) */
-    > div:not([tpl*="img_address"]) {
+    > div:not([tpl*='img_address']) {
       width: 100% !important;
     }
 
@@ -73,6 +78,7 @@ $default-width: 560px;
       }
     }
   }
+
   /* 分页 */
   .page-inner {
     margin-left: auto;
@@ -80,12 +86,14 @@ $default-width: 560px;
     padding-left: 0 !important;
     width: var(--inject-page-width);
   }
+
   /* 页脚 */
   .foot-inner {
     margin-left: auto;
     margin-right: auto;
     width: var(--inject-page-width);
   }
+
   #foot .foot-inner #help {
     padding-left: 0 !important;
   }

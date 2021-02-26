@@ -1,47 +1,48 @@
 .skr-input {
+  border: 1px solid #d9d9d9;
   margin-top: 5px;
+  transition: all 0.3s;
   width: 100%;
   padding: {
     left: 8px;
     right: 8px;
   }
-  border: 1px solid #d9d9d9;
-  transition: all 0.3s;
 
   &:hover {
     border-color: var(--skr-primary-color);
   }
 
   &:focus {
-    @extend :hover;
+    @extend:hover;
+
     box-shadow: 0 0 0 2px var(--skr-primary-lighten-color);
   }
 
   &--small {
     padding: {
-      top: 2px;
       bottom: 2px;
+      top: 2px;
     }
   }
   &--small#{& + "--scale"} {
     &:focus {
-      padding-top: 6px;
-      padding-bottom: 6px;
       font-size: 14px;
+      padding-bottom: 6px;
+      padding-top: 6px;
     }
   }
 
   &--normal {
     padding: {
-      top: 6px;
       bottom: 6px;
+      top: 6px;
     }
   }
 
   &--large {
     padding: {
-      top: 10px;
       bottom: 10px;
+      top: 10px;
     }
   }
 }

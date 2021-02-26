@@ -1,13 +1,14 @@
-@import "~@/components/index.scss";
+@import '~@/components/index';
+
 @include var;
 
 #hide-menu-control-js {
-  contain: content;
-  position: fixed;
   bottom: 40px;
+  contain: content;
   left: 0;
-  z-index: 50;
   padding: 10px 0;
+  position: fixed;
+  z-index: 50;
 
   p {
     writing-mode: vertical-lr;

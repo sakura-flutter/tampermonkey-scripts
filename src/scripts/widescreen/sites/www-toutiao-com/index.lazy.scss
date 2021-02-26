@@ -1,20 +1,23 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(1350px, 90vw, 1470px) {
   .detail-content-wrapper {
     width: var(--inject-page-width);
   }
+
   /* 内容 */
   // 不要使用flex，头条的布局都是浮动的
   .article-content {
     // 左侧 + 右侧 + 间距保留
     width: calc(var(--inject-page-width) - 110px - 340px - 85px) !important;
   }
+
   /* 相关推荐 */
   .footer-feed {
-    width: auto;
     margin-right: 60px;
+    width: auto;
   }
+
   .feedbox-wrapper {
     width: auto;
   }

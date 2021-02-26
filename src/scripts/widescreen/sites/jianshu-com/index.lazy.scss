@@ -1,13 +1,15 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 /* 简书文章 */
 @include substrate(1250px, 85vw, 1280px) {
-  [role="main"] {
+  [role='main'] {
     width: var(--inject-page-width);
   }
-  [role="main"] > div:first-child {
+
+  [role='main'] > div:first-child {
     flex: 1;
   }
+
   /* 左侧悬浮按钮 */
   #__next > div:last-child {
     left: calc(50% - (var(--inject-page-width) / 2) - 80px);

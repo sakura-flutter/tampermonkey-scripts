@@ -1,13 +1,14 @@
-@import "~@/components/index.scss";
+@import '~@/components/index';
+
 @include var;
 
 #inject-sign {
-  @include reset;
-
   // 列表宽度
   --container-width: 19vw;
   // 列表距离右边距离
   --container-right: 10px;
+
+  @include reset;
 
   box-sizing: border-box;
   color: var(--skr-text-regular-color);
@@ -17,14 +18,15 @@
     --container-width: 21vw;
   }
 
-  & *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  *::-webkit-scrollbar {
     background: #f2f2f2;
+    height: 8px;
+    width: 8px;
   }
-  & *::-webkit-scrollbar-thumb {
-    border: 0;
+
+  *::-webkit-scrollbar-thumb {
     background: #c1c1c1;
+    border: 0;
   }
 
   a {
@@ -33,6 +35,62 @@
 
   button {
     background-image: none;
+  }
+
+  // 主按钮
+  .control {
+    align-items: center;
+    bottom: 12px;
+    contain: content;
+    display: flex;
+    position: fixed;
+    right: max(calc(var(--container-right) + var(--container-width) / 2), 150px);
+    transform: translateX(50%);
+    transition: bottom 0.3s, right 0.15s;
+    user-select: none;
+    z-index: 500;
+
+    label {
+      cursor: pointer;
+      height: 20px;
+      margin-left: 8px;
+      text-shadow: 0 1px 3px #fff;
+    }
+
+    input {
+      margin-right: 4px;
+      vertical-align: text-top;
+    }
+
+    .label-wrap {
+      display: inline-flex;
+      flex: 1;
+      flex-wrap: wrap;
+      margin-left: 10px;
+      max-width: 156px;
+    }
+  }
+
+  // 列表区域
+  .forums-container {
+    background: #fafafa;
+    bottom: 60px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    contain: content;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 124px);
+    min-width: 280px;
+    padding: 5px;
+    position: fixed;
+    right: var(--container-right);
+    transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;
+    width: var(--container-width);
+    z-index: 2;
+
+    &:hover {
+      box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
+    }
   }
 
   &.forums-hide {
@@ -52,65 +110,6 @@
     }
   }
 
-  // 主按钮
-  .control {
-    position: fixed;
-    contain: content;
-    display: flex;
-    z-index: 500;
-    bottom: 12px;
-    right: max(
-      calc(var(--container-right) + var(--container-width) / 2),
-      150px
-    );
-    transform: translateX(50%);
-    align-items: center;
-    user-select: none;
-    transition: bottom 0.3s, right 0.15s;
-
-    label {
-      margin-left: 8px;
-      height: 20px;
-      text-shadow: 0 1px 3px #fff;
-      cursor: pointer;
-    }
-
-    input {
-      margin-right: 4px;
-      vertical-align: text-top;
-    }
-
-    .label-wrap {
-      display: inline-flex;
-      flex-wrap: wrap;
-      flex: 1;
-      max-width: 156px;
-      margin-left: 10px;
-    }
-  }
-
-  // 列表区域
-  .forums-container {
-    position: fixed;
-    contain: content;
-    display: flex;
-    flex-direction: column;
-    z-index: 2;
-    bottom: 60px;
-    right: var(--container-right);
-    width: var(--container-width);
-    min-width: 280px;
-    max-height: calc(100vh - 124px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background: #fafafa;
-    padding: 5px;
-    transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);
-    }
-  }
-
   header {
     display: flex;
     margin-bottom: 4px;
@@ -126,32 +125,10 @@
     margin-left: 4px;
   }
 
-  ul {
-    overflow-x: hidden;
-
-    &.small {
-      li {
-        height: 24px;
-      }
-    }
-    &.normal {
-      li {
-        height: 28px;
-        font-size: 13px;
-      }
-    }
-    &.large {
-      li {
-        height: 32px;
-        font-size: 14px;
-      }
-    }
-  }
-
   li {
-    display: flex;
     border-bottom: 1px solid rgb(221 221 221 / 0.4);
     cursor: default;
+    display: flex;
     transition: height 0.15s;
 
     &:hover {
@@ -164,23 +141,51 @@
 
     a {
       flex: 1;
-      padding-left: 0.2em;
       overflow: hidden;
-      white-space: nowrap;
+      padding-left: 0.2em;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
+
     .signed {
       width: 0.9em;
     }
+
     .level {
       width: 2.4em;
     }
+
     .gain {
       width: 1.8em;
     }
+
     .exp {
       flex: none;
       width: 6.7em;
+    }
+  }
+
+  ul {
+    overflow-x: hidden;
+
+    &.small {
+      li {
+        height: 24px;
+      }
+    }
+
+    &.normal {
+      li {
+        font-size: 13px;
+        height: 28px;
+      }
+    }
+
+    &.large {
+      li {
+        font-size: 14px;
+        height: 32px;
+      }
     }
   }
 }

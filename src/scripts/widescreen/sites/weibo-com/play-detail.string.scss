@@ -1,12 +1,13 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(1450px, 91vw, 91vw) {
-  [class*="Frame_content2"] {
+  [class*='Frame_content2'] {
     max-width: none;
     width: var(--inject-page-width);
   }
+
   /* 左列 */
-  [class*="Frame_main2"] {
+  [class*='Frame_main2'] {
     flex-grow: 1;
     padding-right: 20px;
   }

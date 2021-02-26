@@ -1,30 +1,30 @@
-$prefix-cls: ".skr-ripple";
+$prefix-cls: '.skr-ripple';
 
 #{$prefix-cls}-container {
-  contain: strict;
-  position: absolute;
-  top: 0;
-  right: 0;
+  border-radius: inherit !important;
   bottom: 0;
+  contain: strict;
   left: 0;
+  margin: 0 !important;
   overflow: hidden;
   padding: 0 !important;
-  margin: 0 !important;
   pointer-events: none !important;
-  border-radius: inherit !important;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 #{$prefix-cls} {
-  contain: layout;
-  position: absolute;
-  padding: 0 !important;
-  margin: 0 !important;
-  border-radius: 100%;
-  transform: scale(0);
-  pointer-events: none;
-  background: var(--skr-ripple-color);
-  transition: opacity 2s cubic-bezier(0.23, 1, 0.32, 1); // 时长不能短于animation的时长
   animation: skr-ripple forwards cubic-bezier(0.23, 1, 0.32, 1);
+  background: var(--skr-ripple-color);
+  border-radius: 100%;
+  contain: layout;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none;
+  position: absolute;
+  transform: scale(0);
+  transition: opacity 2s cubic-bezier(0.23, 1, 0.32, 1); // 时长不能短于animation的时长
 }
 
 @keyframes skr-ripple {

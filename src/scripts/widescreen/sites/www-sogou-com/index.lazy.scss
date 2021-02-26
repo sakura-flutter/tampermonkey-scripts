@@ -1,4 +1,4 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 $default-width: 550px;
 
@@ -12,51 +12,63 @@ $default-width: 550px;
 
   /* 头部注意滚动处理 */
   .header .header-box {
-    position: relative;
-    padding: 0 5px 45px;
     @extend %hor-center;
+
+    padding: 0 5px 45px;
+    position: relative;
+
+    .logo {
+      top: -8px;
+    }
   }
+
   .header,
   .header.headsearch .header-box {
     padding-bottom: 0;
   }
-  .header .header-box .logo {
-    top: -8px;
-  }
+
   .headsearch {
-    background-color: #ffffffd1;
     backdrop-filter: blur(10px);
+    background-color: #ffffffd1;
   }
+
   /* 搜索结果 */
   #wrapper {
-    display: flex;
     @extend %hor-center;
+
+    display: flex;
   }
+
   #main {
     flex: 1;
-    width: 0;
     max-width: none;
     padding-right: 74px;
+    width: 0;
+
+    .results {
+      width: auto;
+
+      > .vrwrap,
+      > .rb {
+        width: auto !important;
+      }
+    }
   }
-  #main .results {
-    width: auto;
-  }
-  #main .results > .vrwrap,
-  #main .results > .rb {
-    width: auto !important;
-  }
+
   /* 特殊搜索结果恢复原本宽度 */
   .special-wrap,
   .vrPicBox {
     box-sizing: border-box;
     width: $default-width;
   }
+
   /* 底部 */
   .hintBox,
   #pagebar_container,
   #s_footer > div {
     @extend %hor-center;
   }
+
   #s_footer {
     padding-left: 0;
   }

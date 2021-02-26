@@ -1,13 +1,14 @@
-@import "../mixins.scss";
+@import '../mixins';
 
 @include substrate(900px, 75vw, 1039px) {
   /* 容器 */
   .detail-card {
     width: var(--inject-page-width) !important;
   }
+
   /* up主内容 */
   .main-content {
-    width: auto !important;
     padding-right: 10px;
+    width: auto !important;
   }
 }
