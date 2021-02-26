@@ -11,6 +11,7 @@ import { weixin } from './weixin110-qq-com'
 import { weixinDevelopers } from './developers-weixin-qq-com'
 import { itdaan } from './www-itdaan-com'
 import { douban } from './www-douban-com'
+import { doc360 } from './www-360doc-com'
 
 const sites = [
   {
@@ -84,6 +85,12 @@ const sites = [
     name: '豆瓣',
     test: /www\.douban.com\/link2\//,
     use: douban,
+  },
+  {
+    name: '个人图书馆',
+    test: /www\.360doc.com\/content\//,
+    readyState: 'interactive',
+    use: doc360,
   },
 ]
 
