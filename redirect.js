@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.10.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣
+// @version      1.11.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -22,6 +22,7 @@
 // @match        *://developers.weixin.qq.com/community/middlepage/href*
 // @match        *://www.itdaan.com/link/*
 // @match        *://www.douban.com/link2/*
+// @match        *://www.360doc.com/content/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -108,7 +109,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
 }
-;// CONCATENATED MODULE: ./src/utils/log.js
+;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 
 function warn(...args) {
@@ -164,7 +165,7 @@ const interactive = fn => wrapper('interactive', fn);
 const DOMContentLoaded = fn => wrapper('DOMContentLoaded', fn);
 const complete = fn => wrapper('complete', fn);
 const load = fn => wrapper('load', fn);
-;// CONCATENATED MODULE: ./src/utils/querystring.js
+;// CONCATENATED MODULE: ./src/utils/querystring.ts
 /**
  * 解析querystring
  * @param {string} href 或 带有参数格式的string；有search则不再hash
@@ -199,7 +200,7 @@ function parse(href = location.href) {
 function stringify(obj) {
   return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
 }
-;// CONCATENATED MODULE: ./src/utils/selector.js
+;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-jianshu-com.js
@@ -278,7 +279,29 @@ const itdaan = () => ({
 const douban = () => ({
   query: 'url'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-360doc-com.js
+
+
+const doc360 = () => {
+  $('#artContent').addEventListener('click', event => {
+    const {
+      target
+    } = event;
+    const {
+      href
+    } = target;
+    warn(target);
+    if (target.nodeName !== 'A') return;
+    if (!href) return; // 是否本站
+
+    if (new RegExp(location.host).test(new URL(href).host)) return;
+    event.stopPropagation();
+    window.open(href);
+  }, true);
+  return {};
+};
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -350,6 +373,11 @@ const sites = [{
   name: '豆瓣',
   test: /www\.douban.com\/link2\//,
   use: douban
+}, {
+  name: '个人图书馆',
+  test: /www\.360doc.com\/content\//,
+  readyState: 'interactive',
+  use: doc360
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js

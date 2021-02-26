@@ -21,10 +21,10 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// CONCATENATED MODULE: ./src/utils/selector.js
+;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/utils/log.js
+;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 
 function warn(...args) {

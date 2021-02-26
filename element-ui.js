@@ -31,7 +31,7 @@
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#catalogue-js{contain:content;position:fixed;right:20px;top:100px;z-index:1000}@media(min-width: 1500px){#catalogue-js{right:auto;left:calc(50% + 1140px / 2 + 40px)}}#catalogue-js ul{margin:0;padding-left:0;font-size:12px;list-style:none;border-left:1px solid #f0f0f0}#catalogue-js li{margin-left:-1px;padding:2px 0 2px 16px;line-height:1.5;list-style:none;width:110px;overflow:hidden;color:rgba(0,0,0,.85);white-space:nowrap;text-overflow:ellipsis;border-left:1px solid transparent;transition:all .3s ease;cursor:pointer}#catalogue-js li:hover{color:#1890ff;border-left-color:#1890ff}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#catalogue-js{contain:content;position:fixed;right:20px;top:100px;z-index:1000}@media(min-width: 1500px){#catalogue-js{left:calc(50% + 1140px / 2 + 40px);right:auto}}#catalogue-js ul{border-left:1px solid #f0f0f0;font-size:12px;list-style:none;margin:0;padding-left:0}#catalogue-js li{border-left:1px solid transparent;color:rgba(0,0,0,.85);cursor:pointer;line-height:1.5;list-style:none;margin-left:-1px;overflow:hidden;padding:2px 0 2px 16px;text-overflow:ellipsis;transition:all .3s ease;white-space:nowrap;width:110px}#catalogue-js li:hover{border-left-color:#1890ff;color:#1890ff}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -482,10 +482,10 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
 }
-;// CONCATENATED MODULE: ./src/utils/selector.js
+;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/utils/compatibility.js
+;// CONCATENATED MODULE: ./src/utils/compatibility.ts
 /**
  * 兼容性检查
  * @param {object} param0 & param1 版本, notify
@@ -508,7 +508,7 @@ function checker({
 
   let pass = false;
 
-  if (firefoxVersion && firefoxVersion >= firefox || edgeVersion && edgeVersion >= edge || chromeVersion && chromeVersion >= chrome || safariVersion && safariVersion >= safari) {
+  if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
     pass = true;
   }
 
@@ -518,7 +518,7 @@ function checker({
 
   return pass;
 }
-;// CONCATENATED MODULE: ./src/utils/vue-root.js
+;// CONCATENATED MODULE: ./src/utils/vue-root.ts
 function getVueRoot(rootContainer) {
   if (isVue2(rootContainer)) return getVue2Instance(rootContainer);
   if (isVue3(rootContainer)) return getVue3Instance(rootContainer);
@@ -549,12 +549,12 @@ function getVue3Instance(rootContainer) {
     // _vnode.component.proxy获取实例，应该就是app.mount返回的
     // https://github.com/vuejs/vue-next/blob/a66e53a24f445b688eef6812ecb872dc53cf2702/packages/runtime-core/src/apiCreateApp.ts#L258
     // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L2198
-    instance: rootContainer._vnode.component.proxy
+    instance: rootContainer._vnode && rootContainer._vnode.component.proxy
   };
 }
 
 
-;// CONCATENATED MODULE: ./src/utils/log.js
+;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 
 function warn(...args) {
