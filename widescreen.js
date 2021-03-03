@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.5.0
+// @version      2.5.1
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -37,8 +37,8 @@
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
-// @include      /^https://www.google.com(.)*search/
-// @include      /^https://blog.csdn.net/(w|-)+/article/details//
+// @include      /^https:\/\/www\.google\.com(.)*search/
+// @include      /^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -143,7 +143,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1580px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html body{height:auto}#csdn-toolbar{position:sticky !important;z-index:1}#passportbox,.login-mark{display:none !important}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html body{height:auto}#csdn-toolbar{position:sticky !important;top:0;z-index:1}#passportbox,.login-mark{display:none !important}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
