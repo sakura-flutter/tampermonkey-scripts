@@ -1,0 +1,15 @@
+/* 处理滚动后页面抖动 */
+html body {
+  height: auto;
+}
+
+#csdn-toolbar {
+  position: sticky !important;
+  z-index: 1;
+}
+
+/* 烦人的登录弹窗 [○･｀Д´･ ○] , 必要时battle cookies中的unlogin_scroll_step */
+#passportbox,
+.login-mark {
+  display: none !important;
+}
