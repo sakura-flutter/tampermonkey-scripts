@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.4.1
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google
+// @version      2.5.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -38,6 +38,7 @@
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
 // @include      /^https://www.google.com(.)*search/
+// @include      /^https://blog.csdn.net/(w|-)+/article/details//
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
@@ -124,6 +125,25 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--s
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1580px){:root{--inject-page-width:min(75vw, 1440px)}.inject-widescreen-loose-js{--inject-page-width:75vw}.container .row{width:var(--inject-page-width)}.container .row .col-big{flex:.97}.detail-main header{width:auto !important}.container .row .col-big .album{width:100%}}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 880:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "html body{height:auto}#csdn-toolbar{position:sticky !important;z-index:1}#passportbox,.login-mark{display:none !important}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2645,7 +2665,54 @@ const google = ({
   }
 
 });
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/blog-csdn-net/index.lazy.scss
+var blog_csdn_net_index_lazy = __webpack_require__(880);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/blog-csdn-net/index.lazy.scss
+
+            
+
+var blog_csdn_net_index_lazy_refs = 0;
+var blog_csdn_net_index_lazy_update;
+var blog_csdn_net_index_lazy_options = {"injectType":"lazyStyleTag"};
+
+blog_csdn_net_index_lazy_options.insert = "head";
+blog_csdn_net_index_lazy_options.singleton = false;
+
+var blog_csdn_net_index_lazy_exported = {};
+
+blog_csdn_net_index_lazy_exported.locals = blog_csdn_net_index_lazy/* default.locals */.Z.locals || {};
+blog_csdn_net_index_lazy_exported.use = function() {
+  if (!(blog_csdn_net_index_lazy_refs++)) {
+    blog_csdn_net_index_lazy_update = injectStylesIntoStyleTag_default()(blog_csdn_net_index_lazy/* default */.Z, blog_csdn_net_index_lazy_options);
+  }
+
+  return blog_csdn_net_index_lazy_exported;
+};
+blog_csdn_net_index_lazy_exported.unuse = function() {
+  if (blog_csdn_net_index_lazy_refs > 0 && !--blog_csdn_net_index_lazy_refs) {
+    blog_csdn_net_index_lazy_update();
+    blog_csdn_net_index_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const sites_blog_csdn_net_index_lazy = (blog_csdn_net_index_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/blog-csdn-net/index.js
+
+const csdn = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    sites_blog_csdn_net_index_lazy.use();
+  }
+
+});
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/index.js
+
 
 
 
@@ -2784,6 +2851,11 @@ const sites = [{
   namespace: 'google',
   test: /www\.google\.com(.)*search/,
   use: google
+}, {
+  name: 'CSDN',
+  namespace: 'csdn',
+  test: /blog\.csdn\.net\/(\w|-)+\/article\/details\//,
+  use: csdn
 }];
 /* harmony default export */ const widescreen_sites = (sites);
 ;// CONCATENATED MODULE: external "Vue"
