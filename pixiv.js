@@ -20,6 +20,7 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);

@@ -60,6 +60,7 @@
 /******/ 	})();
 /******/ 	
 /************************************************************************/
+var __webpack_exports__ = {};
 
 // NAMESPACE OBJECT: ./src/utils/ready-state.js
 var ready_state_namespaceObject = {};

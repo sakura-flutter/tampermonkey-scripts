@@ -499,6 +499,8 @@ module.exports = function (list, options) {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 
 ;// CONCATENATED MODULE: ./src/utils/log.ts
