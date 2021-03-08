@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.5.1
+// @version      2.5.2
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -37,7 +37,7 @@
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
-// @include      /^https:\/\/www\.google\.com(.)*search/
+// @include      /^https:\/\/www\.google\.com?(.)*search/
 // @include      /^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
@@ -2795,7 +2795,7 @@ const sites = [{
 }, {
   name: '搜狗',
   namespace: 'sougou',
-  test: /www\.sogou\.com\/web?/,
+  test: /www\.sogou\.com\/web/,
   use: sougou
 }, {
   name: 'segmentfault',
@@ -2851,7 +2851,7 @@ const sites = [{
 }, {
   name: '谷歌',
   namespace: 'google',
-  test: /www\.google\.com(.)*search/,
+  test: /www\.google\.com?(.)*search/,
   use: google
 }, {
   name: 'CSDN',
