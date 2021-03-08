@@ -24,6 +24,7 @@ module.exports = (env, argv) => ({
     'view-ui': './src/scripts/view-ui',
     'element-ui': './src/scripts/element-ui',
     'mdn-web-docs': './src/scripts/mdn-web-docs',
+    'google-redirect': './src/scripts/google-redirect',
   },
   output: {
     path: path.join(__dirname, 'dist'),
