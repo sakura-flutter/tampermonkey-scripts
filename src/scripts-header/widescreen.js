@@ -4,7 +4,7 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         网页宽屏
-// @version      2.5.2
+// @version      2.5.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -24,9 +24,9 @@ module.exports = isProd =>
 // @match        https://www.zhihu.com/topic*
 // @match        https://juejin.cn/post/*
 // @match        https://www.jianshu.com/p/*
-// @match        https://www.baidu.com/s?*
-// @match        https://www.baidu.com/
+// @match        https://www.baidu.com/s*
 // @match        https://www.baidu.com/?*
+// @match        https://www.baidu.com/
 // @match        https://www.sogou.com/web*
 // @match        https://tieba.baidu.com/p/*
 // @match        https://tieba.baidu.com/f?*
@@ -41,7 +41,7 @@ module.exports = isProd =>
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
-// @include      ${/^https:\/\/www\.google\.com?(.)*search/}
+// @include      ${/^https:\/\/www\.google\..{2,7}search/}
 // @include      ${/^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//}
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand

@@ -30,7 +30,7 @@ class App {
   }
 
   boot() {
-    const briefURL = location.origin + location.pathname
+    const briefURL = location.host + location.pathname
 
     this.#sites.forEach(async site => {
       const { name, namespace, test, use } = site
