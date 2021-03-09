@@ -16,79 +16,79 @@ import { doc360 } from './www-360doc-com'
 const sites = [
   {
     name: '简书',
-    test: /www\.jianshu\.com\/go-wild/,
+    test: /^www\.jianshu\.com\/go-wild$/,
     use: jianshu,
   },
   {
     name: '知乎',
-    test: /link\.zhihu\.com/,
+    test: /^link\.zhihu\.com\/$/,
     use: zhihu,
   },
   {
     name: '微博',
-    test: /t\.cn\//,
+    test: /^t\.cn\//,
     readyState: 'interactive',
     use: weibo,
   },
   {
     name: 'QQ邮箱',
     test: [
-      /mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
-      /mail\.qq\.com\/cgi-bin\/mail_spam/, // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
+      /^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
+      /^mail\.qq\.com\/cgi-bin\/mail_spam/, // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
     ],
     use: qqMail,
   },
   {
     name: 'QQPC',
-    test: /c\.pc\.qq.com\/middlem\.html/,
+    test: /^c\.pc\.qq.com\/middlem\.html$/,
     use: qqPC,
   },
   {
     name: '印象笔记',
-    test: /app\.yinxiang\.com\/OutboundRedirect/,
+    test: /^app\.yinxiang\.com\/OutboundRedirect/,
     use: yinxiang,
   },
   {
     name: '贴吧',
-    test: /jump2\.bdimg\.com\/safecheck/,
+    test: /^jump2\.bdimg\.com\/safecheck/,
     readyState: 'interactive',
     use: tieba,
   },
   {
     name: 'CSDN',
-    test: /link\.csdn\.net/,
+    test: /^link\.csdn\.net\/$/,
     use: csdn,
   },
   {
     name: 'YouTube',
-    test: /www\.youtube\.com\/redirect/,
+    test: /^www\.youtube\.com\/redirect$/,
     use: youtube,
   },
   {
     name: '微信',
-    test: /weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
+    test: /^weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
     use: weixin,
   },
   {
     name: '微信开放社区',
-    test: /developers\.weixin\.qq\.com\/community\/middlepage\/href/,
+    test: /^developers\.weixin\.qq\.com\/community\/middlepage\/href$/,
     use: weixinDevelopers,
   },
   {
     name: '开发者知识库',
-    test: /www\.itdaan.com\/link/,
+    test: /^www\.itdaan.com\/link\//,
     readyState: 'interactive',
     use: itdaan,
   },
   {
     name: '豆瓣',
-    test: /www\.douban.com\/link2\//,
+    test: /^www\.douban.com\/link2/,
     use: douban,
   },
   {
     name: '个人图书馆',
-    test: /www\.360doc.com\/content\//,
+    test: /^www\.360doc.com\/content\//,
     readyState: 'interactive',
     use: doc360,
   },
