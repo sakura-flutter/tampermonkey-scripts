@@ -28,7 +28,7 @@ const sites = [
   {
     name: '微信',
     namespace: 'weixin',
-    test: /^mp\.weixin\.qq\.com\/s$/,
+    test: /^mp\.weixin\.qq\.com\/s/,
     use: weixin,
   },
   {
