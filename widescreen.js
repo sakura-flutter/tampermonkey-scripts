@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.5.3
+// @version      2.5.4
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -2741,7 +2741,7 @@ const sites = [{
 }, {
   name: '微信',
   namespace: 'weixin',
-  test: /^mp\.weixin\.qq\.com\/s$/,
+  test: /^mp\.weixin\.qq\.com\/s/,
   use: weixin
 }, {
   name: '知乎专栏',
