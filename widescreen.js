@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.5.2
+// @version      2.5.3
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -20,9 +20,9 @@
 // @match        https://www.zhihu.com/topic*
 // @match        https://juejin.cn/post/*
 // @match        https://www.jianshu.com/p/*
-// @match        https://www.baidu.com/s?*
-// @match        https://www.baidu.com/
+// @match        https://www.baidu.com/s*
 // @match        https://www.baidu.com/?*
+// @match        https://www.baidu.com/
 // @match        https://www.sogou.com/web*
 // @match        https://tieba.baidu.com/p/*
 // @match        https://tieba.baidu.com/f?*
@@ -37,7 +37,7 @@
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
-// @include      /^https:\/\/www\.google\.com?(.)*search/
+// @include      /^https:\/\/www\.google\..{2,7}search/
 // @include      /^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//
 // @grant        unsafeWindow
 // @grant        GM_registerMenuCommand
@@ -2733,130 +2733,127 @@ const csdn = ({
 
 
 
-const {
-  host,
-  pathname
-} = location;
 const sites = [{
   name: '半次元',
   namespace: 'banciyuan',
-  test: /bcy\.net\/item\/detail\//,
+  test: /^bcy\.net\/item\/detail\//,
   use: banciyuan
 }, {
   name: '微信',
   namespace: 'weixin',
-  test: /mp\.weixin\.qq\.com\/s/,
+  test: /^mp\.weixin\.qq\.com\/s$/,
   use: weixin
 }, {
   name: '知乎专栏',
   namespace: 'zhihu',
-  test: /zhuanlan\.zhihu\.com\/p\//,
+  test: /^zhuanlan\.zhihu\.com\/p\//,
   use: zhihuZhuanlan
 }, {
   name: '知乎问答',
   namespace: 'zhihu',
-  test: /zhihu\.com\/question\//,
+  test: /^www\.zhihu\.com\/question\//,
   use: zhihuQuestion
 }, {
   name: '知乎',
   namespace: 'zhihu',
-  test: /www\.zhihu\.com/.test(host) && /^\/(follow|hot)?$/.test(pathname),
+  test: /^www\.zhihu\.com\/(follow|hot)?$/,
   use: zhihuHome
 }, {
   name: '知乎话题',
   namespace: 'zhihu',
-  test: /www\.zhihu\.com\/topic\//,
+  test: /^www\.zhihu\.com\/topic\//,
   use: zhihuTopic
 }, {
   name: '掘金',
   namespace: 'juejin',
-  test: /juejin\.cn\/post\//,
+  test: /^juejin\.cn\/post\//,
   use: juejin
 }, {
   name: '简书',
   namespace: 'jianshu',
-  test: /jianshu\.com\/p\//,
+  test: /^www\.jianshu\.com\/p\//,
   use: jianshu
 }, {
   name: '百度',
   namespace: 'baidu',
-  test: /www\.baidu\.com\/s?/,
+  test: /^www\.baidu\.com\/s?$/,
   use: baidu
 }, {
   name: '贴吧',
   namespace: 'tieba',
-  test: /tieba\.baidu\.com\/p\//,
+  test: /^tieba\.baidu\.com\/p\//,
   use: tieba
 }, {
   name: '贴吧吧页',
   namespace: 'tieba',
-  test: /tieba\.baidu\.com\/f/,
+  test: /^tieba\.baidu\.com\/f$/,
   use: tiebaForum
 }, {
   name: '搜狗',
   namespace: 'sougou',
-  test: /www\.sogou\.com\/web/,
+  test: /^www\.sogou\.com\/web$/,
   use: sougou
 }, {
   name: 'segmentfault',
   namespace: 'segmentfault',
-  test: /segmentfault\.com/,
+  test: /^segmentfault\.com\/(a|q)\//,
   use: segmentfault
 }, {
   name: 'bilibili',
   namespace: 'bilibili',
-  test: /www\.bilibili\.com\/read\/cv/,
+  test: /^www\.bilibili\.com\/read\/cv/,
   use: bilibili
 }, {
   name: 'bilibili 动态',
   namespace: 'bilibili',
-  test: /t\.bilibili\.com\/$/,
+  test: /^t\.bilibili\.com\/$/,
   use: bilibiliDynamic
 }, {
   name: 'bilibili 动态详情',
   namespace: 'bilibili',
-  test: /t\.bilibili\.com\/\d+$/,
+  test: /^t\.bilibili\.com\/\d+$/,
   use: bilibiliDynamicDetail
 }, {
   name: 'bilibili 空间',
   namespace: 'bilibili',
-  test: /space\.bilibili\.com\/212535360/,
+  test: /^space\.bilibili\.com\/212535360$/,
   use: bilibiliSpace
 }, {
   name: '豆瓣电影 详情',
   namespace: 'doubanmovie',
-  test: /movie\.douban\.com\/subject\//,
+  test: /^movie\.douban\.com\/subject\//,
   // 与剧评相关 movie.douban.com/subject/${id}/${xxx}
   use: doubanSubject
 }, {
   name: '豆瓣电影 剧评详情',
   namespace: 'doubanmovie',
-  test: /movie\.douban\.com\/review\//,
+  test: /^movie\.douban\.com\/review\//,
   use: doubanReview
 }, {
   name: '头条',
   namespace: 'toutiao',
-  test: /www\.toutiao\.com/,
+  test: /^www\.toutiao\.com\//,
   use: toutiao
 }, {
   name: '微博',
   namespace: 'weibo',
-  test: /\/\/(www\.)?weibo.com/,
+  test: /^(www\.)?weibo.com\//,
   use: weibo
 }, {
   name: '微博动态',
   namespace: 'weibo',
-  test: /d\.weibo\.com/,
+  test: /^d\.weibo\.com\//,
   use: weiboDynamic
 }, {
   name: '谷歌',
   namespace: 'google',
-  test: /www\.google\.com?(.)*search/,
+  test: /^www\.google\..{2,7}search$/,
+  // 应该足够覆盖各个域名
   use: google
 }, {
   name: 'CSDN',
   namespace: 'csdn',
-  test: /blog\.csdn\.net\/(\w|-)+\/article\/details\//,
+  test: /^blog\.csdn\.net\/(\w|-)+\/article\/details\//,
   use: csdn
 }];
 /* harmony default export */ const widescreen_sites = (sites);
@@ -3353,7 +3350,7 @@ class App {
   }
 
   boot() {
-    const briefURL = location.origin + location.pathname;
+    const briefURL = location.host + location.pathname;
 
     _classPrivateFieldLooseBase(this, _sites)[_sites].forEach(async site => {
       const {
