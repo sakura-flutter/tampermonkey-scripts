@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.11.1
+// @version      1.12.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -73,43 +73,6 @@ __webpack_require__.d(ready_state_namespaceObject, {
   "loading": () => (loading)
 });
 
-;// CONCATENATED MODULE: ./src/utils/base.js
-function throttle(fn, delay) {
-  let t = null;
-  let begin = Date.now();
-  return function (...args) {
-    const self = this;
-    const cur = Date.now();
-    clearTimeout(t);
-
-    if (cur - begin >= delay) {
-      fn.apply(self, args);
-      begin = cur;
-    } else {
-      t = setTimeout(function () {
-        fn.apply(self, args);
-      }, delay);
-    }
-  };
-}
-function once(fn) {
-  let called = false;
-  return function (...args) {
-    if (called === false) {
-      called = true;
-      return fn.apply(this, args);
-    }
-  };
-}
-/**
- * 延时
- * @param {number} ms 毫秒数
- */
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-function isFunction(value) {
-  return typeof value === 'function';
-}
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 
@@ -213,10 +176,14 @@ const zhihu = () => ({
   query: 'target'
 });
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/t-cn.js
-const weibo = () => ({
-  selector: '.open-url a[href]',
-  attr: 'href'
-});
+
+const weibo = async () => {
+  let link = $('.open-url a[href]')?.href;
+  link || (link = await fetch(location.href).then(response => response.headers.get('location')));
+  return {
+    link
+  };
+};
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/mail-qq-com.js
 
 const qqMail = () => ({
@@ -394,7 +361,6 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 
-
 var _sites = _classPrivateFieldLooseKey("sites");
 
 var _includes = _classPrivateFieldLooseKey("includes");
@@ -435,9 +401,7 @@ class App {
         readyState: state
       } = site;
       if (state) await ready_state_namespaceObject[state]();
-
-      const redirection = _classPrivateFieldLooseBase(this, _parse)[_parse](use);
-
+      const redirection = await _classPrivateFieldLooseBase(this, _parse)[_parse](use);
       table({
         name,
         briefURL,
@@ -457,19 +421,19 @@ var _includes2 = function _includes2(test, url) {
   });
 };
 
-var _parse2 = function _parse2(use) {
+var _parse2 = async function _parse2(use) {
   const {
     query,
     link,
     selector,
     attr
-  } = use();
+  } = await use();
   let redirection = null;
 
   if (query) {
     redirection = parse()[query];
   } else if (link) {
-    redirection = isFunction(link) ? link() : link;
+    redirection = link;
   } else if (selector) {
     redirection = $(selector)?.[attr ?? 'innerText'];
   }
