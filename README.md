@@ -41,4 +41,4 @@ npm run build
 
 ## Thanks
 
-[![JetBrains](https://avatars0.githubusercontent.com/u/878437)](https://www.jetbrains.com/?from=tampermonkey-scripts)
+[![JetBrains](https://avatars0.githubusercontent.com/u/878437?s=120&v=4)](https://www.jetbrains.com/?from=tampermonkey-scripts)
