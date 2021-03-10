@@ -1,4 +1,3 @@
-import { isFunction } from '@/utils/base'
 import * as readyState from '@/utils/ready-state'
 import { parse } from '@/utils/querystring'
 import { $ } from '@/utils/selector'
@@ -21,7 +20,7 @@ class App {
       const { readyState: state } = site
       if (state) await readyState[state]()
 
-      const redirection = this.#parse(use)
+      const redirection = await this.#parse(use)
       logTable({ name, briefURL, redirection })
       redirection && location.replace(redirection)
     })
@@ -35,14 +34,14 @@ class App {
     })
   }
 
-  #parse(use) {
-    const { query, link, selector, attr } = use()
+  async #parse(use) {
+    const { query, link, selector, attr } = await use()
     let redirection = null
 
     if (query) {
       redirection = parse()[query]
     } else if (link) {
-      redirection = isFunction(link) ? link() : link
+      redirection = link
     } else if (selector) {
       redirection = $(selector)?.[attr ?? 'innerText']
     }
