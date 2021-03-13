@@ -12,6 +12,7 @@ import { weixinDevelopers } from './developers-weixin-qq-com'
 import { itdaan } from './www-itdaan-com'
 import { douban } from './www-douban-com'
 import { doc360 } from './www-360doc-com'
+import { pixiv } from './www-pixiv-net'
 
 const sites = [
   {
@@ -91,6 +92,11 @@ const sites = [
     test: /^www\.360doc.com\/content\//,
     readyState: 'interactive',
     use: doc360,
+  },
+  {
+    name: 'Pixiv',
+    test: /^www\.pixiv\.net\/jump.php$/,
+    use: pixiv,
   },
 ]
 
