@@ -1,8 +1,8 @@
 # tampermonkey-scripts
 
-<img src="https://img.shields.io/badge/Firefox-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Chrome-Latest-brightgreen?style=flat-square" alt="Chrome version">
+<img src="https://img.shields.io/badge/Firefox-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Edge-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Chrome-Latest-brightgreen?style=flat-square" alt="Chrome version">
 
-仅在最新版Firefox和Chrome上通过，如果使用其它浏览器**必须要保证Chromium版本80+**，理论上也可以用于Chromium版的Edge
+仅在最新版上通过，如果使用其它浏览器**必须要保证Chromium版本80+**
 
 ## 使用
 
@@ -17,6 +17,7 @@
 - [tieba 签到](https://greasyfork.org/zh-CN/scripts/410874-百度贴吧签到)
 - [重定向](https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转)
 - [Pixiv](https://greasyfork.org/zh-CN/scripts/419761-pixiv-工具箱)
+- [Github](https://greasyfork.org/zh-CN/scripts/423178-github-工具箱)
 - [蓝湖](https://greasyfork.org/zh-CN/scripts/411030-蓝湖-lanhu)
 - [MDN Web Dosc 文档辅助](https://greasyfork.org/zh-CN/scripts/420958-mdn-文档辅助)
 - [Element UI 文档辅助](https://greasyfork.org/zh-CN/scripts/418173-element-ui文档辅助)
