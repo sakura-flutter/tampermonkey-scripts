@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MDN 文档辅助
-// @version      1.1.0
-// @description  在提供切换中文语言的页面自动切换为中文
+// @version      1.1.1
+// @description  在提供中文语言的页面自动切换为中文
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -40,6 +40,7 @@ warn(docsLang);
 warn(supports);
 
 function main() {
+  if (!supports.length) return;
   window.addEventListener('click', event => {
     // 标记是否自行切换语言
     if (event.target === $('.language-menu button[type="submit"]')) {
@@ -74,18 +75,18 @@ function addLangButton() {
   }
 
   warn(values);
-  if (values.length < 2) return;
-  const a = document.createElement('a');
-  a.innerText = '中-英';
-  a.href = isChinese(docsLang) ? values[1] : values[0];
-  a.classList.add('button');
-  a.style = ['position: fixed', 'right: 0', 'bottom: 15vh', 'min-height: auto', 'padding: 0px 2px', 'font-size: 12px', 'letter-spacing: 2px'].join(';');
+  if (values.filter(Boolean).length < 2) return;
+  const button = document.createElement('a');
+  button.innerText = '中-英';
+  button.href = isChinese(docsLang) ? values[1] : values[0];
+  button.classList.add('button');
+  button.style = ['position: fixed', 'right: 0', 'bottom: 15vh', 'min-height: auto', 'padding: 0px 2px', 'font-size: 12px', 'letter-spacing: 2px'].join(';');
 
-  a.onclick = function () {
+  button.onclick = function () {
     sessionStorage.setItem('hand-control-language', true);
   };
 
-  document.body.append(a);
+  document.body.append(button);
 }
 
 function matchLang(str) {
@@ -103,7 +104,7 @@ function isEnglish(lang) {
 }
 
 function getSupports() {
-  return [...$('#language-selector').options].map(opt => opt.value);
+  return [...($('#language-selector')?.options || [])].map(opt => opt.value);
 }
 
 main();
