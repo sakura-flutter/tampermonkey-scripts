@@ -1,0 +1,9 @@
+@import '../mixins';
+
+/* crates.io package */
+@include substrate(1300px, 82vw, 1400px) {
+  // 内容区整体宽度
+  body > main > div:first-of-type {
+    width: var(--inject-page-width);
+  }
+}

@@ -3,6 +3,7 @@ import { weixin } from './mp-weixin-qq-com'
 import { zhihuZhuanlan } from './zhuanlan-zhihu-com'
 import { zhihuQuestion, zhihuHome, zhihuTopic } from './zhihu-com'
 import { juejin } from './juejin-cn'
+import { crates } from './crates-io'
 import { jianshu } from './jianshu-com'
 import { baidu } from './www-baidu-com'
 import { tieba, tiebaForum } from './tieba-baidu-com'
@@ -60,6 +61,12 @@ const sites = [
     namespace: 'juejin',
     test: /^juejin\.cn\/post\//,
     use: juejin,
+  },
+  {
+    name: 'Crates.io',
+    namespace: 'crates',
+    test: /^crates\.io\/crates\//,
+    use: crates,
   },
   {
     name: '简书',
