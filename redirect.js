@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.13.0
+// @version      1.14.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -15,6 +15,7 @@
 // @match        *://mail.qq.com/cgi-bin/*
 // @match        *://c.pc.qq.com/middlem.html*
 // @match        *://app.yinxiang.com/OutboundRedirect.action*
+// @match        *://jump.bdimg.com/safecheck/*
 // @match        *://jump2.bdimg.com/safecheck/*
 // @match        *://link.csdn.net/*
 // @match        *://www.youtube.com/redirect*
@@ -334,7 +335,8 @@ const sites = [{
   use: yinxiang
 }, {
   name: '贴吧',
-  test: /^jump2\.bdimg\.com\/safecheck/,
+  test: /^jump2?\.bdimg\.com\/safecheck/,
+  // 以前的地址没有 2
   readyState: 'interactive',
   use: tieba
 }, {

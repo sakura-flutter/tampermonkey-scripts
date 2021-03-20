@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.5.4
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN
+// @version      2.6.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN、crates.io
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -37,6 +37,7 @@
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
+// @match        https://crates.io/crates/*
 // @include      /^https:\/\/www\.google\..{2,7}search/
 // @include      /^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//
 // @grant        unsafeWindow
@@ -144,6 +145,25 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1580px){
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "html body{height:auto}#csdn-toolbar{position:sticky !important;top:0;z-index:1}#passportbox,.login-mark{display:none !important}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 759:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){:root{--inject-page-width:min(82vw, 1400px)}.inject-widescreen-loose-js{--inject-page-width:82vw}body>main>div:first-of-type{width:var(--inject-page-width)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1550,6 +1570,55 @@ const juejin = ({
   }
 
 });
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/crates-io/index.lazy.scss
+var crates_io_index_lazy = __webpack_require__(759);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/crates-io/index.lazy.scss
+
+            
+
+var crates_io_index_lazy_refs = 0;
+var crates_io_index_lazy_update;
+var crates_io_index_lazy_options = {"injectType":"lazyStyleTag"};
+
+crates_io_index_lazy_options.insert = "head";
+crates_io_index_lazy_options.singleton = false;
+
+var crates_io_index_lazy_exported = {};
+
+crates_io_index_lazy_exported.locals = crates_io_index_lazy/* default.locals */.Z.locals || {};
+crates_io_index_lazy_exported.use = function() {
+  if (!(crates_io_index_lazy_refs++)) {
+    crates_io_index_lazy_update = injectStylesIntoStyleTag_default()(crates_io_index_lazy/* default */.Z, crates_io_index_lazy_options);
+  }
+
+  return crates_io_index_lazy_exported;
+};
+crates_io_index_lazy_exported.unuse = function() {
+  if (crates_io_index_lazy_refs > 0 && !--crates_io_index_lazy_refs) {
+    crates_io_index_lazy_update();
+    crates_io_index_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const sites_crates_io_index_lazy = (crates_io_index_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/crates-io/index.js
+
+const crates = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    createControl({
+      store,
+      execute: sites_crates_io_index_lazy.use
+    });
+  }
+
+});
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/jianshu-com/index.lazy.scss
 var jianshu_com_index_lazy = __webpack_require__(502);
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/jianshu-com/index.lazy.scss
@@ -2733,6 +2802,7 @@ const csdn = ({
 
 
 
+
 const sites = [{
   name: '半次元',
   namespace: 'banciyuan',
@@ -2768,6 +2838,11 @@ const sites = [{
   namespace: 'juejin',
   test: /^juejin\.cn\/post\//,
   use: juejin
+}, {
+  name: 'Crates.io',
+  namespace: 'crates',
+  test: /^crates\.io\/crates\//,
+  use: crates
 }, {
   name: '简书',
   namespace: 'jianshu',
