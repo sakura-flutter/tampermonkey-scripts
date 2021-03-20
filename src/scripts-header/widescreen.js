@@ -41,6 +41,7 @@ module.exports = isProd =>
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
+// @match        https://crates.io/crates/*
 // @include      ${/^https:\/\/www\.google\..{2,7}search/}
 // @include      ${/^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//}
 // @grant        unsafeWindow
