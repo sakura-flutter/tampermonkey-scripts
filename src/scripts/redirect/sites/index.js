@@ -51,7 +51,7 @@ const sites = [
   },
   {
     name: '贴吧',
-    test: /^jump2\.bdimg\.com\/safecheck/,
+    test: /^jump2?\.bdimg\.com\/safecheck/, // 以前的地址没有 2
     readyState: 'interactive',
     use: tieba,
   },
