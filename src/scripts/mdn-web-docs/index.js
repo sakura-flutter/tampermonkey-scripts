@@ -7,6 +7,8 @@ warn(docsLang)
 warn(supports)
 
 function main() {
+  if (!supports.length) return
+
   window.addEventListener('click', event => {
     // 标记是否自行切换语言
     if (event.target === $('.language-menu button[type="submit"]')) {
@@ -39,13 +41,13 @@ function addLangButton() {
     }
   }
   warn(values)
-  if (values.length < 2) return
+  if (values.filter(Boolean).length < 2) return
 
-  const a = document.createElement('a')
-  a.innerText = '中-英'
-  a.href = isChinese(docsLang) ? values[1] : values[0]
-  a.classList.add('button')
-  a.style = [
+  const button = document.createElement('a')
+  button.innerText = '中-英'
+  button.href = isChinese(docsLang) ? values[1] : values[0]
+  button.classList.add('button')
+  button.style = [
     'position: fixed',
     'right: 0',
     'bottom: 15vh',
@@ -54,10 +56,10 @@ function addLangButton() {
     'font-size: 12px',
     'letter-spacing: 2px',
   ].join(';')
-  a.onclick = function() {
+  button.onclick = function() {
     sessionStorage.setItem('hand-control-language', true)
   }
-  document.body.append(a)
+  document.body.append(button)
 }
 
 function matchLang(str) {
@@ -75,7 +77,7 @@ function isEnglish(lang) {
 }
 
 function getSupports() {
-  return [...$('#language-selector').options].map(opt => opt.value)
+  return [...($('#language-selector')?.options || [])].map(opt => opt.value)
 }
 
 main()
