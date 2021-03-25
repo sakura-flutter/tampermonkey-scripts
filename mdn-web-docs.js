@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MDN 文档辅助
-// @version      1.1.1
+// @version      1.2.0
 // @description  在提供中文语言的页面自动切换为中文
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -9,6 +9,7 @@
 // @compatible   firefox Latest
 // @compatible   edge Latest
 // @noframes
+// @grant        window.onurlchange
 // @match        https://developer.mozilla.org/*
 // ==/UserScript==
 
@@ -34,17 +35,31 @@ function table(...args) {
 ;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/index.js
 
 
-const docsLang = matchLang(location.pathname);
+const langElement = {
+  get selector() {
+    return $('#language-selector');
+  },
+
+  get submit() {
+    return $('.language-menu button[type="submit"]');
+  }
+
+};
+let docsLang = matchLang(location.pathname);
 const supports = getSupports();
 warn(docsLang);
 warn(supports);
 
 function main() {
   if (!supports.length) return;
-  window.addEventListener('click', event => {
-    // 标记是否自行切换语言
-    if (event.target === $('.language-menu button[type="submit"]')) {
+  window.addEventListener('urlchange', () => {
+    docsLang = matchLang(location.pathname);
+  });
+  window.addEventListener('click', function listener(event) {
+    if (event.target === langElement.submit) {
+      // 标记是否自行切换语言
       sessionStorage.setItem('hand-control-language', true);
+      window.removeEventListener('click', listener, true);
     }
   }, true);
   changeLang();
@@ -57,8 +72,16 @@ function changeLang() {
   if (sessionStorage.getItem('hand-control-language') === 'true') return;
 
   for (const item of supports) {
-    isChinese(matchLang(item)) && location.replace(item);
+    isChinese(matchLang(item)) && selectLang(item);
   }
+}
+
+function selectLang(value) {
+  langElement.selector.value = value;
+  langElement.selector.dispatchEvent(new Event('change', {
+    bubbles: true
+  }));
+  langElement.submit.click();
 }
 
 function addLangButton() {
@@ -76,14 +99,13 @@ function addLangButton() {
 
   warn(values);
   if (values.filter(Boolean).length < 2) return;
-  const button = document.createElement('a');
+  const button = document.createElement('button');
   button.innerText = '中-英';
-  button.href = isChinese(docsLang) ? values[1] : values[0];
   button.classList.add('button');
   button.style = ['position: fixed', 'right: 0', 'bottom: 15vh', 'min-height: auto', 'padding: 0px 2px', 'font-size: 12px', 'letter-spacing: 2px'].join(';');
 
   button.onclick = function () {
-    sessionStorage.setItem('hand-control-language', true);
+    selectLang(isChinese(docsLang) ? values[1] : values[0]);
   };
 
   document.body.append(button);
@@ -91,12 +113,12 @@ function addLangButton() {
 
 function matchLang(str) {
   // 匹配 pathname 或字符串
-  // /en-US/docs/Web/API/ 或 en-us
+  // /en-US/docs/Web/API/ 或 en-US
   return str.match(/^\/?([\w-]+)/)?.[1];
 }
 
 function isChinese(lang) {
-  return /zh-cn/i.test(lang);
+  return /zh-CN/i.test(lang);
 }
 
 function isEnglish(lang) {
@@ -104,7 +126,7 @@ function isEnglish(lang) {
 }
 
 function getSupports() {
-  return [...($('#language-selector')?.options || [])].map(opt => opt.value);
+  return [...(langElement.selector?.options || [])].map(opt => opt.value);
 }
 
 main();
