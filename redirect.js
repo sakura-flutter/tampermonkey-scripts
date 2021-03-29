@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.14.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv
+// @version      1.15.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -25,6 +25,9 @@
 // @match        *://www.douban.com/link2/*
 // @match        *://www.360doc.com/content/*
 // @match        *://www.pixiv.net/jump.php*
+// @match        *://m.sogou.com/*/tc*
+// @match        *://m.sogou.com*/tc*
+// @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -290,7 +293,17 @@ const pixiv = () => {
     link
   };
 };
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/m-sogou-com.js
+const sogou = () => ({
+  query: 'url'
+});
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-google-com.js
+const google = () => ({
+  query: 'url'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
+
 
 
 
@@ -374,6 +387,14 @@ const sites = [{
   name: 'Pixiv',
   test: /^www\.pixiv\.net\/jump.php$/,
   use: pixiv
+}, {
+  name: '搜狗',
+  test: /^m\.sogou\.com.*tc$/,
+  use: sogou
+}, {
+  name: 'Google',
+  test: /^www\.google\..{2,7}url$/,
+  use: google
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
