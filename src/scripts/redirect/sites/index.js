@@ -13,6 +13,8 @@ import { itdaan } from './www-itdaan-com'
 import { douban } from './www-douban-com'
 import { doc360 } from './www-360doc-com'
 import { pixiv } from './www-pixiv-net'
+import { sogou } from './m-sogou-com'
+import { google } from './www-google-com'
 
 const sites = [
   {
@@ -97,6 +99,16 @@ const sites = [
     name: 'Pixiv',
     test: /^www\.pixiv\.net\/jump.php$/,
     use: pixiv,
+  },
+  {
+    name: '搜狗',
+    test: /^m\.sogou\.com.*tc$/,
+    use: sogou,
+  },
+  {
+    name: 'Google',
+    test: /^www\.google\..{2,7}url$/,
+    use: google,
   },
 ]
 
