@@ -35,7 +35,7 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-typescript": "^7.12.16",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
+    "@typescript-eslint/parser": "^4.20.0",
     "@vue/babel-plugin-jsx": "^1.0.2",
     "autoprefixer": "^10.2.5",
     "babel-loader": "^8.2.2",
