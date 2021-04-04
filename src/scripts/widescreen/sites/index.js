@@ -12,6 +12,7 @@ import { segmentfault } from './segmentfault-com'
 import { bilibili } from './www-bilibili-com'
 import { bilibiliDynamic, bilibiliDynamicDetail } from './t-bilibili-com'
 import { bilibiliSpace } from './space-bilibili-com'
+import { douban } from './www-douban-com'
 import { doubanSubject, doubanReview } from './movie-douban-com'
 import { toutiao } from './www-toutiao-com'
 import { weibo } from './weibo-com'
@@ -127,6 +128,16 @@ const sites = [
     namespace: 'bilibili',
     test: /^space\.bilibili\.com\/212535360$/,
     use: bilibiliSpace,
+  },
+  {
+    name: '豆瓣',
+    namespace: 'douban',
+    test: [
+      /^www\.douban\.com\/gallery\/$/,
+      /^www\.douban\.com\/gallery\/topic\/.+?/,
+      /^www\.douban\.com\/note\/.+?/,
+    ],
+    use: douban,
   },
   {
     name: '豆瓣电影 详情',
