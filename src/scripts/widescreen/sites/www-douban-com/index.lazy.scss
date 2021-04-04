@@ -1,0 +1,20 @@
+@import '../mixins';
+
+$default-width: 675px;
+
+@include substrate(1300px, 82vw, 1318px) {
+  #wrapper {
+    width: var(--inject-page-width) !important;
+  }
+
+  /* 内容 */
+  #content {
+    .grid-16-8 {
+      $right-width: 360px;
+
+      .article {
+        width: calc(100% - #{$right-width}) !important;
+      }
+    }
+  }
+}
