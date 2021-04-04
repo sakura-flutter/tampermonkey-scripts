@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.6.0
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣电影、今日头条、Google、CSDN、crates.io
+// @version      2.7.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -34,6 +34,8 @@
 // @match        https://www.weibo.com/*
 // @match        https://weibo.com/*
 // @match        https://d.weibo.com/*
+// @match        https://www.douban.com/gallery/*
+// @match        https://www.douban.com/note/*
 // @match        https://movie.douban.com/subject/*
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
@@ -449,6 +451,25 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1460px){
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(50vw, 915px)}.inject-widescreen-loose-js{--inject-page-width:50vw}.page-container{left:-5vw;max-width:none !important;padding-right:0 !important;width:var(--inject-page-width) !important}.article-holder,.head-container{max-width:none !important;width:var(--inject-page-width)}.banner-img-holder{max-width:100%;width:auto !important}.up-info-holder{margin-left:0 !important}.up-info-holder .fixed-box{left:calc(50% + (var(--inject-page-width) / 2) + -5vw + 50px);margin-left:0 !important;transition:transform .2s}}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 201:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){:root{--inject-page-width:min(82vw, 1318px)}.inject-widescreen-loose-js{--inject-page-width:82vw}#wrapper{width:var(--inject-page-width) !important}#content .grid-16-8 .article{width:calc(100% - 360px) !important}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2216,6 +2237,55 @@ const bilibiliSpace = ({
   handler() {}
 
 });
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-douban-com/index.lazy.scss
+var www_douban_com_index_lazy = __webpack_require__(201);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-douban-com/index.lazy.scss
+
+            
+
+var www_douban_com_index_lazy_refs = 0;
+var www_douban_com_index_lazy_update;
+var www_douban_com_index_lazy_options = {"injectType":"lazyStyleTag"};
+
+www_douban_com_index_lazy_options.insert = "head";
+www_douban_com_index_lazy_options.singleton = false;
+
+var www_douban_com_index_lazy_exported = {};
+
+www_douban_com_index_lazy_exported.locals = www_douban_com_index_lazy/* default.locals */.Z.locals || {};
+www_douban_com_index_lazy_exported.use = function() {
+  if (!(www_douban_com_index_lazy_refs++)) {
+    www_douban_com_index_lazy_update = injectStylesIntoStyleTag_default()(www_douban_com_index_lazy/* default */.Z, www_douban_com_index_lazy_options);
+  }
+
+  return www_douban_com_index_lazy_exported;
+};
+www_douban_com_index_lazy_exported.unuse = function() {
+  if (www_douban_com_index_lazy_refs > 0 && !--www_douban_com_index_lazy_refs) {
+    www_douban_com_index_lazy_update();
+    www_douban_com_index_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const sites_www_douban_com_index_lazy = (www_douban_com_index_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-douban-com/index.js
+
+const douban = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    createControl({
+      store,
+      execute: sites_www_douban_com_index_lazy.use
+    });
+  }
+
+});
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/movie-douban-com/subject.lazy.scss
 var subject_lazy = __webpack_require__(587);
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/subject.lazy.scss
@@ -2803,6 +2873,7 @@ const csdn = ({
 
 
 
+
 const sites = [{
   name: '半次元',
   namespace: 'banciyuan',
@@ -2893,6 +2964,11 @@ const sites = [{
   namespace: 'bilibili',
   test: /^space\.bilibili\.com\/212535360$/,
   use: bilibiliSpace
+}, {
+  name: '豆瓣',
+  namespace: 'douban',
+  test: [/^www\.douban\.com\/gallery\/$/, /^www\.douban\.com\/gallery\/topic\/.+?/, /^www\.douban\.com\/note\/.+?/],
+  use: douban
 }, {
   name: '豆瓣电影 详情',
   namespace: 'doubanmovie',
