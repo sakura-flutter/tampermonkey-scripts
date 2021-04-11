@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pixiv 工具箱
-// @version      1.1.0
+// @version      1.2.0
 // @description  增强P站查看原图功能
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -51,7 +51,8 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 function main() {
   GM_addStyle(GM_getResourceText('viewerCSS'));
   GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
-  '.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }' // 添加标题阴影 在图片是白底时显示得清楚点
+  '.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }', // 添加标题阴影 在图片是白底时显示得清楚点
+  '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }' // 加大导航栏
   ].join('')); // eslint-disable-next-line no-new
 
   new Previewer('figure [role="presentation"] a img', {
