@@ -8,6 +8,7 @@ function main() {
   GM_addStyle([
     '.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
     '.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }', // 添加标题阴影 在图片是白底时显示得清楚点
+    '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }', // 加大导航栏
   ].join(''))
 
   // eslint-disable-next-line no-new
