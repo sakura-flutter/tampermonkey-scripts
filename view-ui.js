@@ -507,7 +507,7 @@ var __webpack_exports__ = {};
 const isDebug = "production" !== 'production';
 
 function warn(...args) {
-  isDebug && console.warn(...args);
+  isDebug && console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 }
 
 function table(...args) {
