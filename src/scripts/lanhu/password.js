@@ -12,8 +12,9 @@ function autofill() {
     observer = null
   }
   if (!location.hash.startsWith('#/item/project/door')) return
-  const { pid } = qs.parse()
-  if (!pid) return
+  const { pid, pwd } = qs.parse()
+  // 有些链接自带密码 如果保存过密码但链接自带新密码会有问题
+  if (!pid || pwd) return
 
   // 确认登录按钮
   let confirmEl = null
