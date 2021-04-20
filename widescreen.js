@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.7.0
+// @version      2.8.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -203,7 +203,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1250px){:root{--inject-page-width:min(85vw, 1280px)}.inject-widescreen-loose-js{--inject-page-width:85vw}[role=main]{width:var(--inject-page-width)}[role=main]>div:first-child{flex:1}#__next>div:last-child{left:calc(50% - (var(--inject-page-width) / 2) - 80px)}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1250px){:root{--inject-page-width:min(85vw, 1280px)}.inject-widescreen-loose-js{--inject-page-width:85vw}#__next>div:last-child{left:calc(50% - (var(--inject-page-width) / 2) - 80px)}#__next [role=main]{width:var(--inject-page-width)}#__next [role=main]>div:first-child{flex:1}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
