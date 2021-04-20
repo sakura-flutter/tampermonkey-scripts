@@ -1,7 +1,7 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         蓝湖 工具箱
-// @version      1.11.3
+// @version      1.11.4
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；记录打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
