@@ -2,16 +2,19 @@
 
 /* 简书文章 */
 @include substrate(1250px, 85vw, 1280px) {
-  [role='main'] {
-    width: var(--inject-page-width);
-  }
+  #__next {
+    /* 左侧悬浮按钮 */
+    > div:last-child {
+      left: calc(50% - (var(--inject-page-width) / 2) - 80px);
+    }
 
-  [role='main'] > div:first-child {
-    flex: 1;
-  }
+    [role='main'] {
+      width: var(--inject-page-width);
 
-  /* 左侧悬浮按钮 */
-  #__next > div:last-child {
-    left: calc(50% - (var(--inject-page-width) / 2) - 80px);
+      /* 内容 */
+      > div:first-child {
+        flex: 1;
+      }
+    }
   }
 }
