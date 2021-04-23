@@ -104,15 +104,15 @@ module.exports = function (cssWithMappingToString) {
       }
 
       return content;
-    }).join('');
+    }).join("");
   }; // import a list of modules into the list
   // eslint-disable-next-line func-names
 
 
   list.i = function (modules, mediaQuery, dedupe) {
-    if (typeof modules === 'string') {
+    if (typeof modules === "string") {
       // eslint-disable-next-line no-param-reassign
-      modules = [[null, modules, '']];
+      modules = [[null, modules, ""]];
     }
 
     var alreadyImportedModules = {};
@@ -436,8 +436,9 @@ module.exports = function (list, options) {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -1090,7 +1091,7 @@ function createUI() {
       }
 
       return () => {
-        let _slot, _slot2;
+        let _slot;
 
         return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("article", {
           "id": "inject-recorder-ui",
@@ -1103,62 +1104,62 @@ function createUI() {
           }
         }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
           "name": "inject-slide-fade"
-        }, _isSlot(_slot2 = (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
-          "tag": "ul",
-          "name": "inject-slide-hor-fade",
-          "appear": true
-        }, _isSlot(_slot = reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
-          "class": {
-            'has-pwd': !!state.passwords[item.pid]
-          },
-          "style": {
-            width: `${state.width}px`
-          },
-          "key": item.pid,
-          "ref": el => {
-            el && (lisRef.value[index] = el);
-          }
-        }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-          "href": item.href,
-          "title": item.customTitle || item.title,
-          "target": "_blank"
-        }, [item.customTitle || item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
-          "class": "actions",
-          "onMouseenter": () => {
-            setMoreActionsVisible(true);
-          }
-        }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-          "title": "移除",
-          "round": true,
-          "onClick": () => {
-            deleteItem(item);
-          }
         }, {
-          default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
-        }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-          "title": "左击复制链接和密码；右击复制密码",
-          "round": true,
-          "onClick": () => {
-            copy('all', item);
-          },
-          "onContextmenu": event => {
-            event.preventDefault();
-            copy('pwd', item);
-          }
-        }, _isSlot(IconCopy) ? IconCopy : {
-          default: () => [IconCopy]
-        }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]]), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-          "title": "添加自定义标题",
-          "round": true,
-          "onClick": () => {
-            editCustomTitle(item);
-          }
-        }, _isSlot(IconEdit) ? IconEdit : {
-          default: () => [IconEdit]
-        }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))) ? _slot : {
-          default: () => [_slot]
-        })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])) ? _slot2 : {
-          default: () => [_slot2]
+          default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
+            "tag": "ul",
+            "name": "inject-slide-hor-fade",
+            "appear": true
+          }, _isSlot(_slot = reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
+            "class": {
+              'has-pwd': !!state.passwords[item.pid]
+            },
+            "style": {
+              width: `${state.width}px`
+            },
+            "key": item.pid,
+            "ref": el => {
+              el && (lisRef.value[index] = el);
+            }
+          }, [(0,external_Vue_namespaceObject.createVNode)("a", {
+            "href": item.href,
+            "title": item.customTitle || item.title,
+            "target": "_blank"
+          }, [item.customTitle || item.title]), (0,external_Vue_namespaceObject.createVNode)("div", {
+            "class": "actions",
+            "onMouseenter": () => {
+              setMoreActionsVisible(true);
+            }
+          }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "移除",
+            "round": true,
+            "onClick": () => {
+              deleteItem(item);
+            }
+          }, {
+            default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")]
+          }), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "左击复制链接和密码；右击复制密码",
+            "round": true,
+            "onClick": () => {
+              copy('all', item);
+            },
+            "onContextmenu": event => {
+              event.preventDefault();
+              copy('pwd', item);
+            }
+          }, _isSlot(IconCopy) ? IconCopy : {
+            default: () => [IconCopy]
+          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]]), (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+            "title": "添加自定义标题",
+            "round": true,
+            "onClick": () => {
+              editCustomTitle(item);
+            }
+          }, _isSlot(IconEdit) ? IconEdit : {
+            default: () => [IconEdit]
+          }), [[external_Vue_namespaceObject.vShow, state.moreActionsVisible]])])]))) ? _slot : {
+            default: () => [_slot]
+          })]), [[external_Vue_namespaceObject.vShow, reversed.value.length && (state.unhidden || state.recordsVisible)]])]
         }), (0,external_Vue_namespaceObject.createVNode)("div", {
           "class": "control"
         }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {

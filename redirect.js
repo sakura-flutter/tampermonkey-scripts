@@ -462,15 +462,15 @@ class App {
 
 }
 
-var _includes2 = function _includes2(test, url) {
+function _includes2(test, url) {
   return [].concat(test).some(item => {
     if (item instanceof RegExp) return item.test(url);
     if (typeof item === 'boolean') return item;
     return false;
   });
-};
+}
 
-var _parse2 = async function _parse2(use) {
+async function _parse2(use) {
   const {
     query,
     link,
@@ -489,9 +489,9 @@ var _parse2 = async function _parse2(use) {
 
   redirection && (redirection = _classPrivateFieldLooseBase(this, _ensure)[_ensure](redirection.trim()));
   return redirection;
-};
+}
 
-var _ensure2 = function _ensure2(url) {
+function _ensure2(url) {
   try {
     // eslint-disable-next-line no-new
     new URL(url);
@@ -504,7 +504,7 @@ var _ensure2 = function _ensure2(url) {
   }
 
   return url;
-};
+}
 
 new App(redirect_sites).boot();
 /******/ })()

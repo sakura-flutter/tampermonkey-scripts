@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pixiv 工具箱
-// @version      1.3.0
+// @version      1.4.0
 // @description  增强P站查看原图功能；显示原图尺寸
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -138,19 +138,19 @@ class Previewer {
 
 }
 
-var _init2 = function _init2() {
+function _init2() {
   window.addEventListener('click', _classPrivateFieldLooseBase(this, _process)[_process], true);
   window.addEventListener('urlchange', info => {
     warn('urlchange', info);
     _classPrivateFieldLooseBase(this, _viewer)[_viewer]?.hide();
   });
-};
+}
 
-var _getArtworks2 = function _getArtworks2() {
+function _getArtworks2() {
   return [...$$(_classPrivateFieldLooseBase(this, _el)[_el])];
-};
+}
 
-var _createOriginalImgEls2 = function _createOriginalImgEls2(imgEls) {
+function _createOriginalImgEls2(imgEls) {
   return imgEls.reduce((acc, img) => {
     const {
       parentNode
@@ -165,9 +165,9 @@ var _createOriginalImgEls2 = function _createOriginalImgEls2(imgEls) {
 
     return acc;
   }, []);
-};
+}
 
-var _preview2 = function _preview2(imgEls, viewerOpts) {
+function _preview2(imgEls, viewerOpts) {
   const self = this;
   const container = document.createElement('div');
   container.append(...imgEls);
@@ -196,13 +196,38 @@ var _preview2 = function _preview2(imgEls, viewerOpts) {
   viewer.show();
   warn('viewer:', container, viewer);
   return viewer;
-};
+}
+;// CONCATENATED MODULE: ./src/utils/visibility-state.js
+// 页面 visible 时执行 setInterval
+// 参数同 setInterval，返回终止函数
+function onVisible(callback, delay = 500, ...rest) {
+  let intervalId;
+
+  function listener() {
+    clearInterval(intervalId);
+    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line node/no-callback-literal
+
+    callback(...rest);
+    intervalId = setInterval(callback, delay, ...rest);
+  }
+
+  listener();
+  document.addEventListener('visibilitychange', listener);
+  return function abort() {
+    clearInterval(intervalId);
+    document.removeEventListener('visibilitychange', listener);
+  };
+}
 ;// CONCATENATED MODULE: ./src/scripts/pixiv/pixels.js
 
-function attachPixels(el) {
-  const ws = new WeakSet();
 
-  function handler() {
+function attachPixels(el, options) {
+  options = Object.assign({
+    includePathname: null
+  }, options);
+  const ws = new WeakSet();
+  onVisible(() => {
+    if (!options.includePathname.test(location.pathname)) return;
     $$(el).forEach(img => {
       if (ws.has(img)) return; // 获取原尺寸
 
@@ -211,23 +236,10 @@ function attachPixels(el) {
       [width, height] = [+width, +height];
       img.parentElement.style.position = 'relative';
       const elem = createPixelsElement(img.parentElement);
-      elem.innerText = `${width} × ${height} (${calcRectPercent(width, height)})`;
+      elem.innerText = `${width} × ${height} (${calcRectCoincide(width, height).percent})`;
       ws.add(img);
     });
-  }
-
-  const scheduling = function () {
-    let intervalId;
-    return function () {
-      clearInterval(intervalId);
-      if (document.visibilityState === 'hidden') return;
-      handler();
-      intervalId = setInterval(handler, 800);
-    };
-  }();
-
-  scheduling();
-  document.addEventListener('visibilitychange', scheduling);
+  });
 }
 
 function createPixelsElement(parentElement) {
@@ -243,20 +255,43 @@ function createPixelsElement(parentElement) {
   elem.style = ['position: absolute', 'z-index: 1', 'top: 32px', 'right: 8px', 'padding: 0 4px', 'border-radius: 8px', 'font-size: 12px', 'line-height: initial', 'color: #fff', 'background: rgb(0 0 0 / 0.32)'].join(';');
   parentElement.prepend(elem);
   return elem;
-} // 计算图片屏占比
+} // 计算图片与屏幕吻合度
 
 
-function calcRectPercent(width, height) {
-  const [sw, sh] = [screen.width, screen.height];
-  let ratio;
+function calcRectCoincide(width, height) {
+  const {
+    width: sw,
+    height: sh
+  } = window.screen;
+  const rectRate = width / height;
+  const screenRate = sw / sh;
+  let rate;
 
-  if (width >= sw || height >= sh) {
-    ratio = width / height / (sw / sh);
+  if (rectRate >= screenRate) {
+    rate = screenRate / rectRate;
   } else {
-    ratio = width * height / (sw * sh);
+    rate = rectRate / screenRate;
+  } // 图片小于屏幕尺寸，降低值
+
+
+  if (width < sw && height < sh) {
+    rate *= width / sw * (height / sh);
+  } // 符合屏幕比例且超过屏幕尺寸的图片，提高值
+  // 接近比例也算符合
+
+
+  if (rate >= 0.99) {
+    if (width > sw) {
+      rate *= width / sw;
+    } else if (height > sh) {
+      rate *= height / sh;
+    }
   }
 
-  return (ratio * 100).toFixed(0) + '%';
+  return {
+    rate,
+    percent: (rate * 100).toFixed(0) + '%'
+  };
 }
 ;// CONCATENATED MODULE: ./src/scripts/pixiv/index.js
 
@@ -265,6 +300,8 @@ function calcRectPercent(width, height) {
 new Previewer('figure [role="presentation"] a img', {
   includePathname: /^\/artworks\/(\w)+/
 });
-attachPixels('figure [role="presentation"] a img');
+attachPixels('figure [role="presentation"] a img', {
+  includePathname: /^\/artworks\/(\w)+/
+});
 /******/ })()
 ;

@@ -119,15 +119,15 @@ module.exports = function (cssWithMappingToString) {
       }
 
       return content;
-    }).join('');
+    }).join("");
   }; // import a list of modules into the list
   // eslint-disable-next-line func-names
 
 
   list.i = function (modules, mediaQuery, dedupe) {
-    if (typeof modules === 'string') {
+    if (typeof modules === "string") {
       // eslint-disable-next-line no-param-reassign
-      modules = [[null, modules, '']];
+      modules = [[null, modules, ""]];
     }
 
     var alreadyImportedModules = {};
@@ -451,8 +451,9 @@ module.exports = function (list, options) {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -922,11 +923,6 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
-
-function _isSlot(s) {
-  return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !(0,external_Vue_namespaceObject.isVNode)(s);
-}
-
 mountComponent({
   setup() {
     const hidden = useGMvalue('menu_hidden', false);
@@ -938,18 +934,14 @@ mountComponent({
       hidden.value = !hidden.value;
     }
 
-    return () => {
-      let _slot;
-
-      return (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
-        "id": "hide-menu-control-js",
-        "size": "mini",
-        "shadow": true,
-        "onClick": toggle
-      }, _isSlot(_slot = (0,external_Vue_namespaceObject.createVNode)("p", null, [(0,external_Vue_namespaceObject.createTextVNode)("\u5207\u6362")])) ? _slot : {
-        default: () => [_slot]
-      });
-    };
+    return () => (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
+      "id": "hide-menu-control-js",
+      "size": "mini",
+      "shadow": true,
+      "onClick": toggle
+    }, {
+      default: () => [(0,external_Vue_namespaceObject.createVNode)("p", null, [(0,external_Vue_namespaceObject.createTextVNode)("\u5207\u6362")])]
+    });
   }
 
 });
