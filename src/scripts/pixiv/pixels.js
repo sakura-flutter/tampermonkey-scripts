@@ -1,8 +1,15 @@
 import { $$ } from '@/utils/selector'
+import { onVisible } from '@/utils/visibility-state'
 
-export default function attachPixels(el) {
+export default function attachPixels(el, options) {
+  options = Object.assign({
+    includePathname: null,
+  }, options)
   const ws = new WeakSet()
-  function handler() {
+
+  onVisible(() => {
+    if (!options.includePathname.test(location.pathname)) return
+
     $$(el).forEach(img => {
       if (ws.has(img)) return
 
@@ -16,23 +23,10 @@ export default function attachPixels(el) {
       [width, height] = [+width, +height]
       img.parentElement.style.position = 'relative'
       const elem = createPixelsElement(img.parentElement)
-      elem.innerText = `${width} × ${height} (${calcRectPercent(width, height)})`
+      elem.innerText = `${width} × ${height} (${calcRectCoincide(width, height).percent})`
       ws.add(img)
     })
-  }
-
-  const scheduling = (function() {
-    let intervalId
-    return function() {
-      clearInterval(intervalId)
-      if (document.visibilityState === 'hidden') return
-      handler()
-      intervalId = setInterval(handler, 800)
-    }
-  })()
-
-  scheduling()
-  document.addEventListener('visibilitychange', scheduling)
+  })
 }
 
 function createPixelsElement(parentElement) {
@@ -61,14 +55,36 @@ function createPixelsElement(parentElement) {
   return elem
 }
 
-// 计算图片屏占比
-function calcRectPercent(width, height) {
-  const [sw, sh] = [screen.width, screen.height]
-  let ratio
-  if (width >= sw || height >= sh) {
-    ratio = (width / height) / (sw / sh)
+// 计算图片与屏幕吻合度
+function calcRectCoincide(width, height) {
+  const { width: sw, height: sh } = window.screen
+  const rectRate = width / height
+  const screenRate = sw / sh
+  let rate
+
+  if (rectRate >= screenRate) {
+    rate = screenRate / rectRate
   } else {
-    ratio = (width * height) / (sw * sh)
+    rate = rectRate / screenRate
   }
-  return (ratio * 100).toFixed(0) + '%'
+
+  // 图片小于屏幕尺寸，降低值
+  if (width < sw && height < sh) {
+    rate *= (width / sw) * (height / sh)
+  }
+
+  // 符合屏幕比例且超过屏幕尺寸的图片，提高值
+  // 接近比例也算符合
+  if (rate >= 0.99) {
+    if (width > sw) {
+      rate *= width / sw
+    } else if (height > sh) {
+      rate *= height / sh
+    }
+  }
+
+  return {
+    rate,
+    percent: (rate * 100).toFixed(0) + '%',
+  }
 }

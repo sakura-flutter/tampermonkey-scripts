@@ -6,4 +6,6 @@ new Previewer('figure [role="presentation"] a img', {
   includePathname: /^\/artworks\/(\w)+/,
 })
 
-attachPixels('figure [role="presentation"] a img')
+attachPixels('figure [role="presentation"] a img', {
+  includePathname: /^\/artworks\/(\w)+/,
+})
