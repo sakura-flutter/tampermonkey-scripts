@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.8.0
+// @version      2.9.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -375,6 +375,25 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1390px){
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1390px){:root{--inject-page-width:min(80vw, 1250px)}.inject-widescreen-loose-js{--inject-page-width:80vw}#container{width:var(--inject-page-width)}#container>.content{width:100%}.nav_wrap,.p_thread,.pb_content,.core_title_wrap_bright,.core_reply_wrapper,.l_post_bright .core_reply_wrapper,.pb_footer{width:100%}.core_title_absolute_bright{width:calc(var(--inject-page-width) - 240px)}.pb_content{background-size:100%;display:flex}.pb_content::after{content:none}.pb_content .replace_div{width:-moz-fit-content !important;width:fit-content !important}.pb_content .replace_div .replace_tip{width:100% !important}.left_section{border-right:2px solid #e4e6eb;flex:1}.l_post_bright{display:flex;width:100% !important}.l_post_bright .d_post_content_main{flex:1;width:0}.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-down,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-up,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-action{right:180px !important}.tbui_aside_float_bar{left:calc(50% + (var(--inject-page-width) / 2) + 12px);margin-left:0;right:auto}}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 28:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1150px){:root{--inject-page-width:min(90vw, 1380px)}.inject-widescreen-loose-js{--inject-page-width:90vw}#articleRoot .WB_frame{width:var(--inject-page-width)}#articleRoot #plc_main{max-width:100%;width:auto}#articleRoot .WB_frame_a,#articleRoot .WB_artical{max-width:100%;width:auto}#articleRoot .main_toppic{margin-left:auto;margin-right:auto}#articleRoot .WB_editor_iframe_new{width:auto}.B_artical [node-type=sidebar]>.W_gotop{left:calc(50% + var(--inject-page-width) / 2);margin-left:0}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2409,6 +2428,55 @@ const toutiao = ({
   }
 
 });
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/weibo-com/article.lazy.scss
+var article_lazy = __webpack_require__(28);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/weibo-com/article.lazy.scss
+
+            
+
+var article_lazy_refs = 0;
+var article_lazy_update;
+var article_lazy_options = {"injectType":"lazyStyleTag"};
+
+article_lazy_options.insert = "head";
+article_lazy_options.singleton = false;
+
+var article_lazy_exported = {};
+
+article_lazy_exported.locals = article_lazy/* default.locals */.Z.locals || {};
+article_lazy_exported.use = function() {
+  if (!(article_lazy_refs++)) {
+    article_lazy_update = injectStylesIntoStyleTag_default()(article_lazy/* default */.Z, article_lazy_options);
+  }
+
+  return article_lazy_exported;
+};
+article_lazy_exported.unuse = function() {
+  if (article_lazy_refs > 0 && !--article_lazy_refs) {
+    article_lazy_update();
+    article_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const weibo_com_article_lazy = (article_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/weibo-com/article.js
+
+const weiboArticle = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    createControl({
+      store,
+      execute: weibo_com_article_lazy.use
+    });
+  }
+
+});
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/weibo-com/index.js
 
 
@@ -2417,6 +2485,7 @@ const toutiao = ({
 const homeStyles = __webpack_require__(258)/* .default.toString */ .Z.toString();
 
 const playDetailStyles = __webpack_require__(184)/* .default.toString */ .Z.toString();
+
 
 const weibo = ({
   store,
@@ -2442,16 +2511,16 @@ const weibo = ({
         if (!unsafeWindow.$CONFIG) return;
         if (proxyConfig && proxyConfig === unsafeWindow.$CONFIG) return;
         const handler = {
-          set(target, property, value) {
+          set(target, property, value, receiver) {
             const oldVal = target[property];
-            target[property] = value;
+            const succeeded = Reflect.set(target, property, value, receiver);
 
             if (property === 'location' && value !== oldVal) {
               warn('script：reinsert styleSheet');
               addStyle();
             }
 
-            return true;
+            return succeeded;
           }
 
         };
@@ -2474,9 +2543,26 @@ const weibo = ({
 
       let styleSheet;
       warn('新版本', app);
-      const pageStyleMap = new Map([// 首页、首页左侧分组、博主主页、博主主页(名称)、自定义主页、微博详情、at我的、评论、赞、我的关注、粉丝、收藏、赞、热门内容、相关用户、实时微博、[我关注的、视频、图片、话题]、热门微博、热门榜单、话题榜、热搜榜
-      [['home', 'mygroups', 'profile', 'nameProfile', 'customProfile', 'bidDetail', 'atWeibo', 'cmtInbox', 'likeInbox', 'follow', 'collect', 'like', 'sweiboDefault', 'suserDefault', 'sweibo', 'weibo', 'list', 'topic', 'searchResult'], () => GM_addStyle(homeStyles)], // 视频详情
-      [['Playdetail'], () => GM_addStyle(playDetailStyles)]]);
+      const pageStyleMap = new Map([[['home', // 首页
+      'mygroups', // 首页左侧分组
+      'profile', // 博主主页
+      'nameProfile', // 博主主页(名称)
+      'customProfile', // 自定义主页
+      'bidDetail', // 微博详情
+      'atWeibo', // 消息 at我的
+      'cmtInbox', // 消息 评论
+      'likeInbox', // 消息 赞
+      'follow', // 我的关注、我的粉丝
+      'myFollowTab', // 我的关注tab栏
+      'fav', // 我的收藏
+      'like', // 我的赞
+      'weibo', // 热门微博
+      'list', // 热门榜单
+      'topic', // 话题榜
+      'search', // 热搜榜
+      'searchResult' // 搜索结果
+      ], () => GM_addStyle(homeStyles)], [['Playdetail' // 视频详情
+      ], () => GM_addStyle(playDetailStyles)]]);
       const notify = once(() => {
         uiControl.notify();
       });
@@ -2485,12 +2571,12 @@ const weibo = ({
         warn('route changed', to);
         uiControl.hide();
 
-        for (const [routenames, fn] of pageStyleMap.entries()) {
+        for (const [routenames, addStyle] of pageStyleMap.entries()) {
           if (routenames.includes(to.name)) {
             uiControl.show();
 
             if (store.enabled) {
-              styleSheet = fn();
+              styleSheet = addStyle();
               notify();
             }
 
@@ -2991,6 +3077,11 @@ const sites = [{
   namespace: 'weibo',
   test: /^(www\.)?weibo.com\//,
   use: weibo
+}, {
+  name: '微博文章',
+  namespace: 'weibo',
+  test: /^(www\.)?weibo.com\/ttarticle\/p\/show$/,
+  use: weiboArticle
 }, {
   name: '微博动态',
   namespace: 'weibo',
