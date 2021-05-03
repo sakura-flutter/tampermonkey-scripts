@@ -4,6 +4,8 @@ import { warn } from '@/utils/log'
 const homeStyles = require('./home.string.scss').default.toString()
 const playDetailStyles = require('./play-detail.string.scss').default.toString()
 
+export { weiboArticle } from './article'
+
 export const weibo = ({ store, createControl }) => ({
   handler() {
     const uiControl = createControl({ store, visible: false, silent: true })
@@ -21,14 +23,14 @@ export const weibo = ({ store, createControl }) => ({
         if (proxyConfig && proxyConfig === unsafeWindow.$CONFIG) return
 
         const handler = {
-          set(target, property, value) {
+          set(target, property, value, receiver) {
             const oldVal = target[property]
-            target[property] = value
+            const succeeded = Reflect.set(target, property, value, receiver)
             if (property === 'location' && value !== oldVal) {
               warn('script：reinsert styleSheet')
               addStyle()
             }
-            return true
+            return succeeded
           },
         }
         proxyConfig = new Proxy(unsafeWindow.$CONFIG, handler)
@@ -45,10 +47,35 @@ export const weibo = ({ store, createControl }) => ({
       let styleSheet
       warn('新版本', app)
       const pageStyleMap = new Map([
-        // 首页、首页左侧分组、博主主页、博主主页(名称)、自定义主页、微博详情、at我的、评论、赞、我的关注、粉丝、收藏、赞、热门内容、相关用户、实时微博、[我关注的、视频、图片、话题]、热门微博、热门榜单、话题榜、热搜榜
-        [['home', 'mygroups', 'profile', 'nameProfile', 'customProfile', 'bidDetail', 'atWeibo', 'cmtInbox', 'likeInbox', 'follow', 'collect', 'like', 'sweiboDefault', 'suserDefault', 'sweibo', 'weibo', 'list', 'topic', 'searchResult'], () => GM_addStyle(homeStyles)],
-        // 视频详情
-        [['Playdetail'], () => GM_addStyle(playDetailStyles)],
+        [
+          [
+            'home', // 首页
+            'mygroups', // 首页左侧分组
+            'profile', // 博主主页
+            'nameProfile', // 博主主页(名称)
+            'customProfile', // 自定义主页
+            'bidDetail', // 微博详情
+            'atWeibo', // 消息 at我的
+            'cmtInbox', // 消息 评论
+            'likeInbox', // 消息 赞
+            'follow', // 我的关注、我的粉丝
+            'myFollowTab', // 我的关注tab栏
+            'fav', // 我的收藏
+            'like', // 我的赞
+            'weibo', // 热门微博
+            'list', // 热门榜单
+            'topic', // 话题榜
+            'search', // 热搜榜
+            'searchResult', // 搜索结果
+          ],
+          () => GM_addStyle(homeStyles),
+        ],
+        [
+          [
+            'Playdetail', // 视频详情
+          ],
+          () => GM_addStyle(playDetailStyles),
+        ],
       ])
 
       const notify = once(() => {
@@ -58,11 +85,11 @@ export const weibo = ({ store, createControl }) => ({
         styleSheet?.remove()
         warn('route changed', to)
         uiControl.hide()
-        for (const [routenames, fn] of pageStyleMap.entries()) {
+        for (const [routenames, addStyle] of pageStyleMap.entries()) {
           if (routenames.includes(to.name)) {
             uiControl.show()
             if (store.enabled) {
-              styleSheet = fn()
+              styleSheet = addStyle()
               notify()
             }
             break
