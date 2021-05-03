@@ -15,7 +15,7 @@ import { bilibiliSpace } from './space-bilibili-com'
 import { douban } from './www-douban-com'
 import { doubanSubject, doubanReview } from './movie-douban-com'
 import { toutiao } from './www-toutiao-com'
-import { weibo } from './weibo-com'
+import { weibo, weiboArticle } from './weibo-com'
 import { weiboDynamic } from './d-weibo-com'
 import { google } from './www-google-com'
 import { csdn } from './blog-csdn-net'
@@ -162,6 +162,12 @@ const sites = [
     namespace: 'weibo',
     test: /^(www\.)?weibo.com\//,
     use: weibo,
+  },
+  {
+    name: '微博文章',
+    namespace: 'weibo',
+    test: /^(www\.)?weibo.com\/ttarticle\/p\/show$/,
+    use: weiboArticle,
   },
   {
     name: '微博动态',

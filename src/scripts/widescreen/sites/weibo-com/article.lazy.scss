@@ -1,0 +1,42 @@
+@import '../mixins';
+
+@include substrate(1150px, 90vw, 1380px) {
+  #articleRoot {
+    .WB_frame {
+      width: var(--inject-page-width);
+    }
+
+    #plc_main {
+      max-width: 100%;
+      width: auto;
+    }
+
+    /* 内容 */
+    .WB_frame_a,
+    .WB_artical {
+      max-width: 100%;
+      width: auto;
+    }
+
+    /* 顶部图片 */
+    .main_toppic {
+      margin: {
+        left: auto;
+        right: auto;
+      }
+    }
+
+    /* 文章 */
+    .WB_editor_iframe_new {
+      width: auto;
+    }
+  }
+
+  /* 右下角浮动按钮 */
+  .B_artical [node-type='sidebar'] {
+    > .W_gotop {
+      left: calc(50% + var(--inject-page-width) / 2);
+      margin-left: 0;
+    }
+  }
+}
