@@ -22,6 +22,7 @@ module.exports = (env, argv) => ({
     redirect: './src/scripts/redirect',
     pixiv: './src/scripts/pixiv',
     github: './src/scripts/github',
+    bilibili: './src/scripts/bilibili',
     'view-ui': './src/scripts/view-ui',
     'element-ui': './src/scripts/element-ui',
     'mdn-web-docs': './src/scripts/mdn-web-docs',
