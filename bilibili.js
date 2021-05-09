@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.0.0
+// @version      1.0.1
 // @description  将播放页中视频快捷键在整个页面上生效
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -26,6 +26,6 @@ function attachVideoShortcutKeysInPage() {
   });
 }
 
-attachVideoShortcutKeysInPage();
+setTimeout(attachVideoShortcutKeysInPage, 500);
 /******/ })()
 ;
