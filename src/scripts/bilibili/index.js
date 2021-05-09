@@ -9,4 +9,4 @@ function attachVideoShortcutKeysInPage() {
   })
 }
 
-setTimeout(attachVideoShortcutKeysInPage, 500)
+setTimeout(attachVideoShortcutKeysInPage, 1500)
