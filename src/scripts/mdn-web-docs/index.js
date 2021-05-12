@@ -64,7 +64,7 @@ function addLangButton() {
   const button = document.createElement('button')
   button.innerText = '中-英'
   button.classList.add('button')
-  button.style = [
+  button.style.cssText = [
     'position: fixed',
     'right: 0',
     'bottom: 15vh',
