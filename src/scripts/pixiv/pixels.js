@@ -39,7 +39,7 @@ function createPixelsElement(parentElement) {
   // 没有则插入一个
   const elem = document.createElement('span')
   elem.classList.add(classname)
-  elem.style = [
+  elem.style.cssText = [
     'position: absolute',
     'z-index: 1',
     'top: 32px',
