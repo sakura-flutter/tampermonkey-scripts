@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.9.0
+// @version      2.10.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -2935,7 +2935,16 @@ const csdn = ({
   createControl
 }) => ({
   handler() {
-    sites_blog_csdn_net_index_lazy.use();
+    createControl({
+      store,
+
+      execute() {
+        // 关闭登录弹窗
+        document.cookie = `unlogin_scroll_step=${Date.now()};domain=.csdn.net;path=/`;
+        sites_blog_csdn_net_index_lazy.use();
+      }
+
+    });
   }
 
 });

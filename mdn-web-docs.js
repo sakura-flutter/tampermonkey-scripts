@@ -102,7 +102,7 @@ function addLangButton() {
   const button = document.createElement('button');
   button.innerText = '中-英';
   button.classList.add('button');
-  button.style = ['position: fixed', 'right: 0', 'bottom: 15vh', 'min-height: auto', 'padding: 0px 2px', 'font-size: 12px', 'letter-spacing: 2px'].join(';');
+  button.style.cssText = ['position: fixed', 'right: 0', 'bottom: 15vh', 'min-height: auto', 'padding: 0px 2px', 'font-size: 12px', 'letter-spacing: 2px'].join(';');
 
   button.onclick = function () {
     selectLang(isChinese(docsLang) ? values[1] : values[0]);

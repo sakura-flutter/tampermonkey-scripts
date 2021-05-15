@@ -252,7 +252,7 @@ function createPixelsElement(parentElement) {
 
   const elem = document.createElement('span');
   elem.classList.add(classname);
-  elem.style = ['position: absolute', 'z-index: 1', 'top: 32px', 'right: 8px', 'padding: 0 4px', 'border-radius: 8px', 'font-size: 12px', 'line-height: initial', 'color: #fff', 'background: rgb(0 0 0 / 0.32)'].join(';');
+  elem.style.cssText = ['position: absolute', 'z-index: 1', 'top: 32px', 'right: 8px', 'padding: 0 4px', 'border-radius: 8px', 'font-size: 12px', 'line-height: initial', 'color: #fff', 'background: rgb(0 0 0 / 0.32)'].join(';');
   parentElement.prepend(elem);
   return elem;
 } // 计算图片与屏幕吻合度
