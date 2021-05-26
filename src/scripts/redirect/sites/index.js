@@ -15,6 +15,7 @@ import { doc360 } from './www-360doc-com'
 import { pixiv } from './www-pixiv-net'
 import { sogou } from './m-sogou-com'
 import { google } from './www-google-com'
+import { chinaz } from './www-chinaz-com'
 
 const sites = [
   {
@@ -109,6 +110,11 @@ const sites = [
     name: 'Google',
     test: /^www\.google\..{2,7}url$/,
     use: google,
+  },
+  {
+    name: '站长之家',
+    test: /^www\.chinaz\.com\/go\.shtml$/,
+    use: chinaz,
   },
 ]
 
