@@ -4,8 +4,8 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         网页宽屏
-// @version      2.10.0
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
+// @version      2.11.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -44,6 +44,7 @@ module.exports = isProd =>
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
 // @match        https://crates.io/crates/*
+// @match        https://bbs.mihoyo.com/*
 // @include      ${/^https:\/\/www\.google\..{2,7}search/}
 // @include      ${/^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//}
 // @grant        unsafeWindow
