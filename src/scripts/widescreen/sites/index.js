@@ -19,6 +19,7 @@ import { weibo, weiboArticle } from './weibo-com'
 import { weiboDynamic } from './d-weibo-com'
 import { google } from './www-google-com'
 import { csdn } from './blog-csdn-net'
+import { mihoyoBBS } from './bbs-mihoyo-com'
 
 const sites = [
   {
@@ -186,6 +187,14 @@ const sites = [
     namespace: 'csdn',
     test: /^blog\.csdn\.net\/(\w|-)+\/article\/details\//,
     use: csdn,
+  },
+  {
+    name: '米游社',
+    namespace: 'mihoyoBBS',
+    // ys|bh2|bh3|wd|dby 对应：原神 崩坏2 崩坏3 未定 大别野
+    // 只用到原神，暂不对其它作处理
+    test: /^bbs.mihoyo.com\/(ys)\/article\//,
+    use: mihoyoBBS,
   },
 ]
 
