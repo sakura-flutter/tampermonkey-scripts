@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.10.0
-// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io
+// @version      2.11.0
+// @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -40,6 +40,7 @@
 // @match        https://movie.douban.com/review/*
 // @match        https://www.toutiao.com/*
 // @match        https://crates.io/crates/*
+// @match        https://bbs.mihoyo.com/*
 // @include      /^https:\/\/www\.google\..{2,7}search/
 // @include      /^https:\/\/blog\.csdn\.net\/(\w|-)+\/article\/details\//
 // @grant        unsafeWindow
@@ -109,6 +110,25 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".skr-ripple-container{border-radius:in
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ":root{--skr-primary-color: #2878ff;--skr-primary-lighten-color: rgba(24, 144, 255, 0.2);--skr-white-color: #fff;--skr-transition-duration-fast: 0.1s;--skr-transition-duration-normal: 0.3s;--skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);--skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);--skr-border-color: #d9d9d9;--skr-text-primary-color: #303133;--skr-text-regular-color: #666;--skr-text-secondary-color: #909399;--skr-text-inverse-color: var(--skr-white-color);--skr-button-transition: all var(--skr-transition-duration-normal);--skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);--skr-ripple-color: rgb(138 218 255 / 20%)}.inject-widescreen-js{align-items:center;contain:layout;display:flex;flex-direction:column;opacity:.5;position:fixed;right:7vw;top:150px;transition:opacity var(--skr-transition-duration-normal);z-index:99}.inject-widescreen-js label{align-items:center;bottom:0;cursor:pointer;display:flex;font-size:14px;margin:0;padding:0;position:absolute;transform:translateY(-10px);transition:transform var(--skr-transition-duration-normal);z-index:-1}.inject-widescreen-js:hover{opacity:1}.inject-widescreen-js:hover label{transform:translateY(100%)}.inject-widescreen-js button{background-image:none !important}.inject-widescreen-js input{margin:0 2px 0 0}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ 534:
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1320px){:root{--inject-page-width:min(82vw, 1330px)}.inject-widescreen-loose-js{--inject-page-width:82vw}.root-page-container>.mhy-article-page{display:flex;width:var(--inject-page-width)}.root-page-container>.mhy-article-page .mhy-layout__main{flex:1;padding-right:20px}.root-page-container .mhy-article-actions{margin-left:calc(var(--inject-page-width) / 2 * -1);transform:translate(calc(-100% - 10px))}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2948,7 +2968,97 @@ const csdn = ({
   }
 
 });
+;// CONCATENATED MODULE: ./src/utils/visibility-state.js
+// 页面 visible 时执行 setInterval
+// 参数同 setInterval，返回终止函数
+function onVisible(callback, delay = 500, ...rest) {
+  let intervalId;
+
+  function listener() {
+    clearInterval(intervalId);
+    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line node/no-callback-literal
+
+    callback(...rest);
+    intervalId = setInterval(callback, delay, ...rest);
+  }
+
+  listener();
+  document.addEventListener('visibilitychange', listener);
+  return function abort() {
+    clearInterval(intervalId);
+    document.removeEventListener('visibilitychange', listener);
+  };
+}
+// EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/bbs-mihoyo-com/index.lazy.scss
+var bbs_mihoyo_com_index_lazy = __webpack_require__(534);
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/bbs-mihoyo-com/index.lazy.scss
+
+            
+
+var bbs_mihoyo_com_index_lazy_refs = 0;
+var bbs_mihoyo_com_index_lazy_update;
+var bbs_mihoyo_com_index_lazy_options = {"injectType":"lazyStyleTag"};
+
+bbs_mihoyo_com_index_lazy_options.insert = "head";
+bbs_mihoyo_com_index_lazy_options.singleton = false;
+
+var bbs_mihoyo_com_index_lazy_exported = {};
+
+bbs_mihoyo_com_index_lazy_exported.locals = bbs_mihoyo_com_index_lazy/* default.locals */.Z.locals || {};
+bbs_mihoyo_com_index_lazy_exported.use = function() {
+  if (!(bbs_mihoyo_com_index_lazy_refs++)) {
+    bbs_mihoyo_com_index_lazy_update = injectStylesIntoStyleTag_default()(bbs_mihoyo_com_index_lazy/* default */.Z, bbs_mihoyo_com_index_lazy_options);
+  }
+
+  return bbs_mihoyo_com_index_lazy_exported;
+};
+bbs_mihoyo_com_index_lazy_exported.unuse = function() {
+  if (bbs_mihoyo_com_index_lazy_refs > 0 && !--bbs_mihoyo_com_index_lazy_refs) {
+    bbs_mihoyo_com_index_lazy_update();
+    bbs_mihoyo_com_index_lazy_update = null;
+  }
+};
+
+
+
+;
+       /* harmony default export */ const sites_bbs_mihoyo_com_index_lazy = (bbs_mihoyo_com_index_lazy_exported);
+
+;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/bbs-mihoyo-com/index.js
+
+
+
+const mihoyoBBS = ({
+  store,
+  createControl
+}) => ({
+  handler() {
+    function replaceImgURL() {
+      onVisible(() => {
+        // 文章中的图片原图显示
+        $$('.mhy-article-page__content .ql-image-box img:not([replaced=true])').forEach(img => {
+          const original = img.getAttribute('large');
+          if (!original) return;
+          img.src = original;
+          img.setAttribute('replaced', 'true'); // 标记
+        });
+      });
+    }
+
+    createControl({
+      store,
+
+      execute() {
+        replaceImgURL();
+        sites_bbs_mihoyo_com_index_lazy.use();
+      }
+
+    });
+  }
+
+});
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/index.js
+
 
 
 
@@ -3107,6 +3217,13 @@ const sites = [{
   namespace: 'csdn',
   test: /^blog\.csdn\.net\/(\w|-)+\/article\/details\//,
   use: csdn
+}, {
+  name: '米游社',
+  namespace: 'mihoyoBBS',
+  // ys|bh2|bh3|wd|dby 对应：原神 崩坏2 崩坏3 未定 大别野
+  // 只用到原神，暂不对其它作处理
+  test: /^bbs.mihoyo.com\/(ys)\/article\//,
+  use: mihoyoBBS
 }];
 /* harmony default export */ const widescreen_sites = (sites);
 ;// CONCATENATED MODULE: external "Vue"
