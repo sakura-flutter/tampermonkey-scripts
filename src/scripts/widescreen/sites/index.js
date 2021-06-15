@@ -155,7 +155,7 @@ const sites = [
   {
     name: '头条',
     namespace: 'toutiao',
-    test: /^www\.toutiao\.com\//,
+    test: /^www\.toutiao\.com\/(a|i)\d+\/?$/, // a6884536349483860492、i6971382481899536933
     use: toutiao,
   },
   {

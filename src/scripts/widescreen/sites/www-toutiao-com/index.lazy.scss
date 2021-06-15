@@ -1,24 +1,27 @@
 @import '../mixins';
 
-@include substrate(1350px, 90vw, 1470px) {
-  .detail-content-wrapper {
-    width: var(--inject-page-width);
-  }
+$default-width: 676px;
 
-  /* 内容 */
-  // 不要使用flex，头条的布局都是浮动的
-  .article-content {
-    // 左侧 + 右侧 + 间距保留
-    width: calc(var(--inject-page-width) - 110px - 340px - 85px) !important;
-  }
+@include substrate(1350px, 88vw, 1470px) {
+  .article-detail-container {
+    width: var(--inject-page-width) !important;
 
-  /* 相关推荐 */
-  .footer-feed {
-    margin-right: 60px;
-    width: auto;
-  }
+    /* 内容 */
+    // 不要使用flex，头条的布局都是浮动的
+    > .main {
+      width: calc(var(--inject-page-width) - 298px - 60px - 48px * 2) !important; // 右侧 + 右侧间距保留 + 父元素内间距
 
-  .feedbox-wrapper {
-    width: auto;
+      /* 评论 */
+      .ttp-comment-block {
+        width: auto;
+      }
+    }
+
+    /* 底部信息流 */
+    .detail-end-feed {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $default-width;
+    }
   }
 }
