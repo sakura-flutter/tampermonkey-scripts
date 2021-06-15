@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.11.0
+// @version      2.12.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -565,7 +565,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1200px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(90vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:90vw}.detail-content-wrapper{width:var(--inject-page-width)}.article-content{width:calc(var(--inject-page-width) - 110px - 340px - 85px) !important}.footer-feed{margin-right:60px;width:auto}.feedbox-wrapper{width:auto}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(88vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:88vw}.article-detail-container{width:var(--inject-page-width) !important}.article-detail-container>.main{width:calc(var(--inject-page-width) - 298px - 60px - 48px * 2) !important}.article-detail-container>.main .ttp-comment-block{width:auto}.article-detail-container .detail-end-feed{margin-left:auto;margin-right:auto;max-width:676px}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2430,20 +2430,14 @@ www_toutiao_com_index_lazy_exported.unuse = function() {
 
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-toutiao-com/index.js
 
-
 const toutiao = ({
   store,
   createControl
 }) => ({
   handler() {
-    const call = once(() => {
-      createControl({
-        store,
-        execute: sites_www_toutiao_com_index_lazy.use
-      });
-    });
-    document.addEventListener('readystatechange', () => {
-      unsafeWindow.Page && call();
+    createControl({
+      store,
+      execute: sites_www_toutiao_com_index_lazy.use
     });
   }
 
@@ -3189,7 +3183,8 @@ const sites = [{
 }, {
   name: '头条',
   namespace: 'toutiao',
-  test: /^www\.toutiao\.com\//,
+  test: /^www\.toutiao\.com\/(a|i)\d+\/?$/,
+  // a6884536349483860492、i6971382481899536933
   use: toutiao
 }, {
   name: '微博',
