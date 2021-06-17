@@ -1,7 +1,23 @@
+import { $$ } from '@/utils/selector'
+import * as readyState from '@/utils/ready-state'
 import styles from './index.lazy.scss'
 
 export const bilibili = ({ store, createControl }) => ({
   handler() {
-    createControl({ store, execute: styles.use })
+    function execute() {
+      /* 替换为原图 */
+      // 稍微延时，待哔哩哔哩处理图片
+      readyState.DOMContentLoaded(() => {
+        $$('#article-content .img-box img[data-type="preview"][data-src]').forEach(img => {
+          const { src } = img.dataset
+          const original = src.replace(/@[0-9a-z]+_[0-9a-z]+_/i, '@')
+          img.dataset.src = original
+        })
+      })
+
+      styles.use()
+    }
+
+    createControl({ store, execute })
   },
 })
