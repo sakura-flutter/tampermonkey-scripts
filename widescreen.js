@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.12.0
+// @version      2.13.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -489,7 +489,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1460px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(50vw, 915px)}.inject-widescreen-loose-js{--inject-page-width:50vw}.page-container{left:-5vw;max-width:none !important;padding-right:0 !important;width:var(--inject-page-width) !important}.article-holder,.head-container{max-width:none !important;width:var(--inject-page-width)}.banner-img-holder{max-width:100%;width:auto !important}.up-info-holder{margin-left:0 !important}.up-info-holder .fixed-box{left:calc(50% + (var(--inject-page-width) / 2) + -5vw + 50px);margin-left:0 !important;transition:transform .2s}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1120px){:root{--inject-page-width:min(83vw, 1160px)}.inject-widescreen-loose-js{--inject-page-width:83vw}#app .article-detail{width:var(--inject-page-width)}#app #article-content .img-box img[data-type=preview]{height:auto !important;max-width:100%;width:auto !important}#app .right-side-bar{margin-left:calc(var(--inject-page-width) + 25px);transition-property:bottom}#app .activty-image .card-image{margin:auto}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -2039,14 +2039,31 @@ www_bilibili_com_index_lazy_exported.unuse = function() {
 
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-bilibili-com/index.js
 
+
+
 const bilibili = ({
   store,
   createControl
 }) => ({
   handler() {
+    function execute() {
+      /* 替换为原图 */
+      // 稍微延时，待哔哩哔哩处理图片
+      DOMContentLoaded(() => {
+        $$('#article-content .img-box img[data-type="preview"][data-src]').forEach(img => {
+          const {
+            src
+          } = img.dataset;
+          const original = src.replace(/@[0-9a-z]+_[0-9a-z]+_/i, '@');
+          img.dataset.src = original;
+        });
+      });
+      sites_www_bilibili_com_index_lazy.use();
+    }
+
     createControl({
       store,
-      execute: sites_www_bilibili_com_index_lazy.use
+      execute
     });
   }
 
