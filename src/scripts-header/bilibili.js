@@ -1,7 +1,7 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.0.3
+// @version      1.1.0
 // @description  将播放页中视频快捷键在整个页面上生效
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -11,6 +11,7 @@ module.exports = isProd =>
 // @compatible   edge Latest
 // @noframes
 // @match        https://www.bilibili.com/video/*
+// @match        https://www.bilibili.com/bangumi/play/*
 // @grant        unsafeWindow
 // ==/UserScript==
 `
