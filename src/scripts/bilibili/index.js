@@ -5,8 +5,13 @@ function attachVideoShortcutKeysInPage() {
   // 或调用 seekFromArrowLeft 等函数
   // fix: click 会在切换视频后失效，不知道为什么就是很奇怪😮，用 keydown 替代
   window.addEventListener('keydown', () => {
+    const selectors = [
+      '.bilibili-player-video-wrap', // 视频
+      '.bpx-player-sending-area', // 番剧
+    ]
+
     // 用第一种方式简单点
-    unsafeWindow.$('.bilibili-player-video-wrap').trigger('click.bilibiliplayer')
+    unsafeWindow.$(selectors.join()).trigger('click.bilibiliplayer')
   }, true)
 }
 
