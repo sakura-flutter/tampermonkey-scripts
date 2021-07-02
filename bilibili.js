@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.0.3
+// @version      1.1.0
 // @description  将播放页中视频快捷键在整个页面上生效
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -10,6 +10,7 @@
 // @compatible   edge Latest
 // @noframes
 // @match        https://www.bilibili.com/video/*
+// @match        https://www.bilibili.com/bangumi/play/*
 // @grant        unsafeWindow
 // ==/UserScript==
 
@@ -22,8 +23,11 @@ function attachVideoShortcutKeysInPage() {
   // 或调用 seekFromArrowLeft 等函数
   // fix: click 会在切换视频后失效，不知道为什么就是很奇怪😮，用 keydown 替代
   window.addEventListener('keydown', () => {
-    // 用第一种方式简单点
-    unsafeWindow.$('.bilibili-player-video-wrap').trigger('click.bilibiliplayer');
+    const selectors = ['.bilibili-player-video-wrap', // 视频
+    '.bpx-player-sending-area' // 番剧
+    ]; // 用第一种方式简单点
+
+    unsafeWindow.$(selectors.join()).trigger('click.bilibiliplayer');
   }, true);
 }
 
