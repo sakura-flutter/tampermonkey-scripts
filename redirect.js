@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.16.0
+// @version      1.17.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -12,6 +12,7 @@
 // @match        *://www.jianshu.com/go-wild*
 // @match        *://link.zhihu.com/*
 // @match        *://t.cn/*
+// @match        *://weibo.cn/sinaurl*
 // @match        *://mail.qq.com/cgi-bin/*
 // @match        *://c.pc.qq.com/middlem.html*
 // @match        *://app.yinxiang.com/OutboundRedirect.action*
@@ -190,6 +191,10 @@ const weibo = async () => {
     link
   };
 };
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weibo-cn.js
+const weibo_cn_weibo = () => ({
+  query: 'toasturl'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/mail-qq-com.js
 
 const qqMail = () => ({
@@ -325,6 +330,7 @@ const chinaz = () => ({
 
 
 
+
 const sites = [{
   name: '简书',
   test: /^www\.jianshu\.com\/go-wild$/,
@@ -338,6 +344,11 @@ const sites = [{
   test: /^t\.cn\//,
   readyState: 'interactive',
   use: weibo
+}, {
+  name: '微博',
+  // 不同规则
+  test: /^weibo\.cn\/sinaurl$/,
+  use: weibo_cn_weibo
 }, {
   name: 'QQ邮箱',
   test: [/^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
