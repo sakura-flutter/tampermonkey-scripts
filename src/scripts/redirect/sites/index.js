@@ -1,6 +1,7 @@
 import { jianshu } from './www-jianshu-com'
 import { zhihu } from './link-zhihu-com'
 import { weibo } from './t-cn'
+import { weibo as weibo2 } from './weibo-cn'
 import { qqMail } from './mail-qq-com'
 import { qqPC } from './c-pc-qq-com'
 import { yinxiang } from './app-yinxiang-com'
@@ -33,6 +34,11 @@ const sites = [
     test: /^t\.cn\//,
     readyState: 'interactive',
     use: weibo,
+  },
+  {
+    name: '微博', // 不同规则
+    test: /^weibo\.cn\/sinaurl$/,
+    use: weibo2,
   },
   {
     name: 'QQ邮箱',
