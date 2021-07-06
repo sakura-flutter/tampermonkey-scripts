@@ -35,7 +35,7 @@
     "@babel/plugin-proposal-private-methods": "^7.13.0",
     "@babel/preset-env": "^7.14.4",
     "@babel/preset-typescript": "^7.13.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.26.0",
     "@vue/babel-plugin-jsx": "^1.0.6",
     "autoprefixer": "^10.2.6",
