@@ -17,6 +17,7 @@ import { pixiv } from './www-pixiv-net'
 import { sogou } from './m-sogou-com'
 import { google } from './www-google-com'
 import { chinaz } from './www-chinaz-com'
+import { oschina } from './www-oschina-net'
 
 const sites = [
   {
@@ -121,6 +122,11 @@ const sites = [
     name: '站长之家',
     test: /^www\.chinaz\.com\/go\.shtml$/,
     use: chinaz,
+  },
+  {
+    name: 'OSCHINA',
+    test: /^www\.oschina\.net\/action\/GoToLink$/,
+    use: oschina,
   },
 ]
 

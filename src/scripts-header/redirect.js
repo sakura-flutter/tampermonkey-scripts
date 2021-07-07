@@ -1,8 +1,8 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.17.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家
+// @version      1.18.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -30,6 +30,7 @@ module.exports = isProd =>
 // @match        *://m.sogou.com/*/tc*
 // @match        *://m.sogou.com*/tc*
 // @match        *://www.chinaz.com/go.shtml*
+// @match        *://www.oschina.net/action/GoToLink*
 // @include      ${/^https?:\/\/www\.google\..{2,7}url/}
 // ==/UserScript==
 `
