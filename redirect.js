@@ -527,8 +527,8 @@ function _ensure2(url) {
     // eslint-disable-next-line no-new
     new URL(url);
   } catch (error) {
-    warn(error); // 修复某些链接没有protocol导致跳转不正确
-    // https://greasyfork.org/zh-CN/scripts/416338-redirect-自动跳转到目标链接/discussions/69178
+    warn(error); // 修复某些链接没有 protocol 导致跳转不正确
+    // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
 
     const protocol = 'http:';
     url = protocol + '//' + url;
