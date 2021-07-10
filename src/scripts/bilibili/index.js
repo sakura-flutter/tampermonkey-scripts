@@ -1,3 +1,7 @@
+import speed from './speed'
+
+speed()
+
 // 让视频的快捷键在整个页面上都生效，不局限于只能点击视频区域才能使用
 function attachVideoShortcutKeysInPage() {
   // jsc-player:formatted 约 37833、38867 行，事件疑似经过 M.event 3023 行包装
