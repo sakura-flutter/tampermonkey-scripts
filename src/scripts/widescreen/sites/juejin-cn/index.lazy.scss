@@ -2,11 +2,13 @@
 
 /* 掘金文章 */
 @include substrate(1300px, 82vw, 1230px) {
-  .main-container {
-    max-width: var(--inject-page-width);
-  }
+  #juejin {
+    .main-container {
+      max-width: var(--inject-page-width);
 
-  .main-container .main-area {
-    width: calc(100% - 21rem);
+      .main-area {
+        width: calc(100% - 21rem);
+      }
+    }
   }
 }
