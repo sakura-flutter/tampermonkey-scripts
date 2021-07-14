@@ -18,6 +18,7 @@ import { sogou } from './m-sogou-com'
 import { google } from './www-google-com'
 import { chinaz } from './www-chinaz-com'
 import { oschina } from './www-oschina-net'
+import { juejin } from './link-juejin-cn'
 
 const sites = [
   {
@@ -127,6 +128,11 @@ const sites = [
     name: 'OSCHINA',
     test: /^www\.oschina\.net\/action\/GoToLink$/,
     use: oschina,
+  },
+  {
+    name: '掘金',
+    test: /^link\.juejin\.cn\/$/,
+    use: juejin,
   },
 ]
 
