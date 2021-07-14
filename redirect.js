@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.18.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA
+// @version      1.19.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -30,6 +30,7 @@
 // @match        *://m.sogou.com*/tc*
 // @match        *://www.chinaz.com/go.shtml*
 // @match        *://www.oschina.net/action/GoToLink*
+// @match        *://link.juejin.cn/*
 // @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
@@ -316,7 +317,12 @@ const chinaz = () => ({
 const oschina = () => ({
   query: 'url'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/link-juejin-cn.js
+const juejin = () => ({
+  query: 'target'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -426,6 +432,10 @@ const sites = [{
   name: 'OSCHINA',
   test: /^www\.oschina\.net\/action\/GoToLink$/,
   use: oschina
+}, {
+  name: '掘金',
+  test: /^link\.juejin\.cn\/$/,
+  use: juejin
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
