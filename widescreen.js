@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.13.1
+// @version      2.14.0
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -1313,14 +1313,30 @@ index_lazy_exported.unuse = function() {
 
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/mp-weixin-qq-com/index.js
 
+
+
 const weixin = ({
   store,
   createControl
 }) => ({
   handler() {
+    function execute() {
+      interactive(() => {
+        // 原图处理
+        $$('img').forEach(img => {
+          const dataSrc = img.dataset.src;
+          if (!dataSrc) return;
+          const url = new URL(dataSrc);
+          url.pathname = url.pathname.replace('/640', '/');
+          img.dataset.src = url.href;
+        });
+      });
+      sites_mp_weixin_qq_com_index_lazy.use();
+    }
+
     createControl({
       store,
-      execute: sites_mp_weixin_qq_com_index_lazy.use
+      execute
     });
   }
 
