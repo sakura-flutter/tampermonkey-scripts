@@ -2,7 +2,7 @@ import { $ } from '@/utils/selector'
 
 export default function speed() {
   longPress('KeyS', () => {
-    const video = $('#bilibiliPlayer video')
+    const video = $('#bilibili-player video')
     const oldPlaybackRate = video.playbackRate
     video.playbackRate = 3
 
