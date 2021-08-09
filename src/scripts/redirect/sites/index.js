@@ -4,6 +4,7 @@ import { weibo } from './t-cn'
 import { weibo as weibo2 } from './weibo-cn'
 import { qqMail } from './mail-qq-com'
 import { qqPC } from './c-pc-qq-com'
+import { qqDocs } from './docs-qq-com'
 import { yinxiang } from './app-yinxiang-com'
 import { tieba } from './jump2-bdimg-com'
 import { csdn } from './link-csdn-net'
@@ -54,6 +55,11 @@ const sites = [
     name: 'QQPC',
     test: /^c\.pc\.qq.com\/middlem\.html$/,
     use: qqPC,
+  },
+  {
+    name: '腾讯文档',
+    test: /^docs\.qq\.com\/scenario\/link\.html$/,
+    use: qqDocs,
   },
   {
     name: '印象笔记',
