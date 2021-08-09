@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.19.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金
+// @version      1.20.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -31,6 +31,7 @@
 // @match        *://www.chinaz.com/go.shtml*
 // @match        *://www.oschina.net/action/GoToLink*
 // @match        *://link.juejin.cn/*
+// @match        *://docs.qq.com/scenario/link.html*
 // @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
@@ -206,6 +207,10 @@ const qqMail = () => ({
 const qqPC = () => ({
   query: 'pfurl'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/docs-qq-com.js
+const qqDocs = () => ({
+  query: 'url'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/app-yinxiang-com.js
 const yinxiang = () => ({
   query: 'dest'
@@ -343,6 +348,7 @@ const juejin = () => ({
 
 
 
+
 const sites = [{
   name: '简书',
   test: /^www\.jianshu\.com\/go-wild$/,
@@ -371,6 +377,10 @@ const sites = [{
   name: 'QQPC',
   test: /^c\.pc\.qq.com\/middlem\.html$/,
   use: qqPC
+}, {
+  name: '腾讯文档',
+  test: /^docs\.qq\.com\/scenario\/link\.html$/,
+  use: qqDocs
 }, {
   name: '印象笔记',
   test: /^app\.yinxiang\.com\/OutboundRedirect/,
