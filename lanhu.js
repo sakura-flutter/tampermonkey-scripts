@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         蓝湖 工具箱
-// @version      1.11.4
+// @version      1.11.5
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；记录打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -492,6 +492,43 @@ var __webpack_exports__ = {};
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
+;// CONCATENATED MODULE: ./src/utils/base.js
+function throttle(fn, delay) {
+  let t = null;
+  let begin = Date.now();
+  return function (...args) {
+    const self = this;
+    const cur = Date.now();
+    clearTimeout(t);
+
+    if (cur - begin >= delay) {
+      fn.apply(self, args);
+      begin = cur;
+    } else {
+      t = setTimeout(function () {
+        fn.apply(self, args);
+      }, delay);
+    }
+  };
+}
+function once(fn) {
+  let called = false;
+  return function (...args) {
+    if (called === false) {
+      called = true;
+      return fn.apply(this, args);
+    }
+  };
+}
+/**
+ * 延时
+ * @param {number} ms 毫秒数
+ */
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+function isFunction(value) {
+  return typeof value === 'function';
+}
 ;// CONCATENATED MODULE: ./src/utils/compatibility.ts
 /**
  * 兼容性检查
@@ -1278,43 +1315,6 @@ function autofill() {
 }
 
 
-;// CONCATENATED MODULE: ./src/utils/base.js
-function throttle(fn, delay) {
-  let t = null;
-  let begin = Date.now();
-  return function (...args) {
-    const self = this;
-    const cur = Date.now();
-    clearTimeout(t);
-
-    if (cur - begin >= delay) {
-      fn.apply(self, args);
-      begin = cur;
-    } else {
-      t = setTimeout(function () {
-        fn.apply(self, args);
-      }, delay);
-    }
-  };
-}
-function once(fn) {
-  let called = false;
-  return function (...args) {
-    if (called === false) {
-      called = true;
-      return fn.apply(this, args);
-    }
-  };
-}
-/**
- * 延时
- * @param {number} ms 毫秒数
- */
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-function isFunction(value) {
-  return typeof value === 'function';
-}
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/bar.js
 
 
@@ -1339,15 +1339,15 @@ function fixBarHeight() {
 
 
 
-function main() {
+
+async function main() {
   if (!checker()) return;
   fixBarHeight();
+  let app = null; // 不确保一次可以获取到
 
-  const app = $('.whole').__vue__;
-
-  if (!app) {
-    console.warn('蓝湖脚本：获取vue失败');
-    return;
+  while (!app) {
+    app = $('.whole')?.__vue__;
+    await sleep(500);
   }
 
   const recorder = createRecorder();
