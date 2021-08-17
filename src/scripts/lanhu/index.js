@@ -1,19 +1,22 @@
 import { $ } from '@/utils/selector'
+import { sleep } from '@/utils/base'
 import { checker } from '@/utils/compatibility'
 import { createRecorder } from './record'
 import { autofill } from './password'
 import { fixBarHeight } from './bar'
 
-function main() {
+async function main() {
   if (!checker()) return
 
   fixBarHeight()
 
-  const app = $('.whole').__vue__
-  if (!app) {
-    console.warn('蓝湖脚本：获取vue失败')
-    return
+  let app = null
+  // 不确保一次可以获取到
+  while (!app) {
+    app = $('.whole')?.__vue__
+    await sleep(500)
   }
+
   const recorder = createRecorder()
 
   app.$watch('$route', function(to, from) {
