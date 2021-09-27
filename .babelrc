@@ -1,4 +1,8 @@
 {
+  "assumptions": {
+    // Babel 7.13.0 起取代了之前 plugins 中的 loose 选项
+    "privateFieldsAsProperties": true
+  },
   // 逆序执行
   "presets": [
     [
@@ -18,7 +22,7 @@
   // 顺序执行
   "plugins": [
     "@vue/babel-plugin-jsx",
-    ["@babel/plugin-proposal-class-properties", { "loose": true }],
-    ["@babel/plugin-proposal-private-methods", { "loose": true }]
+    ["@babel/plugin-proposal-class-properties"],
+    ["@babel/plugin-proposal-private-methods"]
   ]
 }
