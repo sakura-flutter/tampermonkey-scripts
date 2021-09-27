@@ -1,4 +1,5 @@
 # Basic dependabot.yml file
+# https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates
 
 version: 2
 updates:
@@ -8,7 +9,9 @@ updates:
     directory: "/"
     # Check the npm registry for updates every day (weekdays)
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      # Check for npm updates on Friday
+      day: "friday"
       time: "20:00"
       timezone: "Asia/Shanghai"
     # Disable all pull requests for npm dependencies: 0
