@@ -9,6 +9,16 @@ $default-width: 690px;
     width: var(--inject-page-width);
   }
 
+  .Post-NormalMain {
+    .Post-Header {
+      /* 文章头部作者 */
+      .AuthorInfo {
+        max-width: none;
+        width: 0;
+      }
+    }
+  }
+
   /* 内容图片 */
   .ztext .content_image,
   .ztext .origin_image {
