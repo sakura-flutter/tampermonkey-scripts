@@ -54,21 +54,21 @@ GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背�
 '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }' // 加大导航栏
 ].join(''));
 
-var _el = _classPrivateFieldLooseKey("el");
+var _el = /*#__PURE__*/_classPrivateFieldLooseKey("el");
 
-var _viewer = _classPrivateFieldLooseKey("viewer");
+var _viewer = /*#__PURE__*/_classPrivateFieldLooseKey("viewer");
 
-var _options = _classPrivateFieldLooseKey("options");
+var _options = /*#__PURE__*/_classPrivateFieldLooseKey("options");
 
-var _init = _classPrivateFieldLooseKey("init");
+var _init = /*#__PURE__*/_classPrivateFieldLooseKey("init");
 
-var _process = _classPrivateFieldLooseKey("process");
+var _process = /*#__PURE__*/_classPrivateFieldLooseKey("process");
 
-var _getArtworks = _classPrivateFieldLooseKey("getArtworks");
+var _getArtworks = /*#__PURE__*/_classPrivateFieldLooseKey("getArtworks");
 
-var _createOriginalImgEls = _classPrivateFieldLooseKey("createOriginalImgEls");
+var _createOriginalImgEls = /*#__PURE__*/_classPrivateFieldLooseKey("createOriginalImgEls");
 
-var _preview = _classPrivateFieldLooseKey("preview");
+var _preview = /*#__PURE__*/_classPrivateFieldLooseKey("preview");
 
 class Previewer {
   constructor(el, options) {
