@@ -14,5 +14,3 @@ updates:
       day: "friday"
       time: "20:00"
       timezone: "Asia/Shanghai"
-    # Disable all pull requests for npm dependencies: 0
-    open-pull-requests-limit: 100
