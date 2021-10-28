@@ -28,6 +28,7 @@ class App {
 
   #includes(test, url) {
     return [].concat(test).some(item => {
+      if (typeof item === 'string') return item === url
       if (item instanceof RegExp) return item.test(url)
       if (typeof item === 'boolean') return item
       return false
