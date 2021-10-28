@@ -24,12 +24,12 @@ import { juejin } from './link-juejin-cn'
 const sites = [
   {
     name: '简书',
-    test: /^www\.jianshu\.com\/go-wild$/,
+    test: 'www.jianshu.com/go-wild',
     use: jianshu,
   },
   {
     name: '知乎',
-    test: /^link\.zhihu\.com\/$/,
+    test: 'link.zhihu.com/',
     use: zhihu,
   },
   {
@@ -40,7 +40,7 @@ const sites = [
   },
   {
     name: '微博', // 不同规则
-    test: /^weibo\.cn\/sinaurl$/,
+    test: 'weibo.cn/sinaurl',
     use: weibo2,
   },
   {
@@ -53,12 +53,12 @@ const sites = [
   },
   {
     name: 'QQPC',
-    test: /^c\.pc\.qq.com\/middlem\.html$/,
+    test: 'c.pc.qq.com/middlem.html',
     use: qqPC,
   },
   {
     name: '腾讯文档',
-    test: /^docs\.qq\.com\/scenario\/link\.html$/,
+    test: 'docs.qq.com/scenario/link.html',
     use: qqDocs,
   },
   {
@@ -74,12 +74,12 @@ const sites = [
   },
   {
     name: 'CSDN',
-    test: /^link\.csdn\.net\/$/,
+    test: 'link.csdn.net/',
     use: csdn,
   },
   {
     name: 'YouTube',
-    test: /^www\.youtube\.com\/redirect$/,
+    test: 'www.youtube.com/redirect',
     use: youtube,
   },
   {
@@ -90,7 +90,7 @@ const sites = [
   },
   {
     name: '微信开放社区',
-    test: /^developers\.weixin\.qq\.com\/community\/middlepage\/href$/,
+    test: 'developers.weixin.qq.com/community/middlepage/href',
     use: weixinDevelopers,
   },
   {
@@ -101,7 +101,7 @@ const sites = [
   },
   {
     name: '豆瓣',
-    test: /^www\.douban.com\/link2/,
+    test: 'www.douban.com/link2/',
     use: douban,
   },
   {
@@ -112,7 +112,7 @@ const sites = [
   },
   {
     name: 'Pixiv',
-    test: /^www\.pixiv\.net\/jump.php$/,
+    test: 'www.pixiv.net/jump.php',
     use: pixiv,
   },
   {
@@ -127,17 +127,17 @@ const sites = [
   },
   {
     name: '站长之家',
-    test: /^www\.chinaz\.com\/go\.shtml$/,
+    test: 'www.chinaz.com/go.shtml',
     use: chinaz,
   },
   {
     name: 'OSCHINA',
-    test: /^www\.oschina\.net\/action\/GoToLink$/,
+    test: 'www.oschina.net/action/GoToLink',
     use: oschina,
   },
   {
     name: '掘金',
-    test: /^link\.juejin\.cn\/$/,
+    test: 'link.juejin.cn/',
     use: juejin,
   },
 ]
