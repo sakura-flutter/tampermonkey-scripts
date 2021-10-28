@@ -20,6 +20,7 @@ import { google } from './www-google-com'
 import { chinaz } from './www-chinaz-com'
 import { oschina } from './www-oschina-net'
 import { juejin } from './link-juejin-cn'
+import { pc6 } from './www-pc6-com'
 
 const sites = [
   {
@@ -139,6 +140,11 @@ const sites = [
     name: '掘金',
     test: 'link.juejin.cn/',
     use: juejin,
+  },
+  {
+    name: 'pc6下载站',
+    test: 'www.pc6.com/goread.html',
+    use: pc6,
   },
 ]
 
