@@ -7,12 +7,15 @@
   "presets": [
     [
       "@babel/preset-env", {
+        // "debug": true,
         "modules": false,
         "useBuiltIns": "usage",
         "corejs": 3,
         "bugfixes": true,
         "exclude": [
           "es.array.reduce",
+          "es.regexp.constructor",
+          "es.regexp.exec",
           "es.string.replace"
         ]
       }
