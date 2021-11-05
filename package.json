@@ -27,7 +27,7 @@
   "homepage": "https://github.com/sakura-flutter/tampermonkey-scripts#readme",
   "dependencies": {
     "core-js": "^3.18.1",
-    "vue": "^3.2.19"
+    "vue": "^3.2.21"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
