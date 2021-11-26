@@ -52,7 +52,7 @@
     "eslint-webpack-plugin": "^3.0.1",
     "gh-pages": "^3.2.3",
     "husky": "^7.0.2",
-    "lint-staged": "^11.1.2",
+    "lint-staged": "^12.1.2",
     "postcss-loader": "^6.1.1",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
