@@ -4,6 +4,13 @@ import { $ } from '@/utils/selector'
 import { warn, table as logTable } from '@/utils/log'
 import sites from './sites'
 
+function hidePage() {
+  function hide() {
+    document.body.style.cssText = 'display:none !important;'
+  }
+  document.body ? hide() : readyState.interactive(hide)
+}
+
 class App {
   #sites = []
   constructor(sites) {
@@ -22,7 +29,11 @@ class App {
 
       const redirection = await this.#parse(use)
       logTable({ name, briefURL, redirection })
-      redirection && location.replace(redirection)
+      if (!redirection) return
+      location.replace(redirection)
+      // 为什么要这样做？
+      // 只是为了避免被问”哎！怎么好像没有跳转啊？！“的烦恼（实际上跳转了只是外链打开慢）(x_x)
+      hidePage()
     })
   }
 
