@@ -21,6 +21,7 @@ import { chinaz } from './www-chinaz-com'
 import { oschina } from './www-oschina-net'
 import { juejin } from './link-juejin-cn'
 import { pc6 } from './www-pc6-com'
+import { afdian } from './afdian-net'
 
 const sites = [
   {
@@ -145,6 +146,11 @@ const sites = [
     name: 'pc6下载站',
     test: 'www.pc6.com/goread.html',
     use: pc6,
+  },
+  {
+    name: '爱发电',
+    test: 'afdian.net/link',
+    use: afdian,
   },
 ]
 
