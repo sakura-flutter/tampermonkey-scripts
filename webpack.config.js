@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const StylelintPlugin = require('stylelint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+// const CopyPlugin = require('copy-webpack-plugin')
 
 function getScriptHeader(filename, argvMode) {
   const filepath = path.join(__dirname, './src/scripts-header', `${filename}.js`)
@@ -27,6 +27,7 @@ module.exports = (env, argv) => ({
     'element-ui': './src/scripts/element-ui',
     'mdn-web-docs': './src/scripts/mdn-web-docs',
     'google-redirect': './src/scripts/google-redirect',
+    toast: './src/helpers/toast',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -83,11 +84,11 @@ module.exports = (env, argv) => ({
       raw: true,
       entryOnly: true,
     }),
-    new CopyPlugin({
-      patterns: [
-        { from: path.join(__dirname, './src/helpers/toast.js') },
-      ],
-    }),
+    // new CopyPlugin({
+    //   patterns: [
+    //     { from: path.join(__dirname, './src/helpers/toast.js') },
+    //   ],
+    // }),
   ],
   // 遵守Greasy Fork代码规定，不做最小化处理
   // https://greasyfork.org/zh-CN/help/code-rules
