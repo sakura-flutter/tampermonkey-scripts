@@ -51,7 +51,7 @@
 // @grant        GM_deleteValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdn.jsdelivr.net/npm/vue@^3.2.23/dist/vue.runtime.global.prod.min.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.min.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=994674
 // ==/UserScript==
 
