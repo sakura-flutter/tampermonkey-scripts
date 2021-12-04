@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.21.1
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站
+// @version      1.22.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、爱发电Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -33,6 +33,7 @@
 // @match        *://link.juejin.cn/*
 // @match        *://docs.qq.com/scenario/link.html*
 // @match        *://www.pc6.com/goread.html*
+// @match        *://afdian.net/link*
 // @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
@@ -331,7 +332,12 @@ const juejin = () => ({
 const pc6 = () => ({
   query: 'gourl'
 });
+;// CONCATENATED MODULE: ./src/scripts/redirect/sites/afdian-net.js
+const afdian = () => ({
+  query: 'target'
+});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.js
+
 
 
 
@@ -456,6 +462,10 @@ const sites = [{
   name: 'pc6下载站',
   test: 'www.pc6.com/goread.html',
   use: pc6
+}, {
+  name: '爱发电',
+  test: 'afdian.net/link',
+  use: afdian
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.js
