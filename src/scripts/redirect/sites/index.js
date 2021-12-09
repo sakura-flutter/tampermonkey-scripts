@@ -22,6 +22,7 @@ import { oschina } from './www-oschina-net'
 import { juejin } from './link-juejin-cn'
 import { pc6 } from './www-pc6-com'
 import { afdian } from './afdian-net'
+import { gitee } from './gitee-com'
 
 const sites = [
   {
@@ -151,6 +152,11 @@ const sites = [
     name: '爱发电',
     test: 'afdian.net/link',
     use: afdian,
+  },
+  {
+    name: 'Gitee',
+    test: 'gitee.com/link',
+    use: gitee,
   },
 ]
 
