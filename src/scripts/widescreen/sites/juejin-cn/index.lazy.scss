@@ -1,13 +1,13 @@
 @import '../mixins';
 
 /* 掘金文章 */
-@include substrate(1300px, 82vw, 1230px) {
+@include substrate(1400px, 82vw, 1300px) {
   #juejin {
     .main-container {
-      max-width: var(--inject-page-width);
+      max-width: var(--inject-page-width) !important;
 
       .main-area {
-        width: calc(100% - 21rem);
+        width: calc(100% - 25rem - 20px);
       }
     }
   }
