@@ -1,29 +1,31 @@
 @import '../mixins';
 
 @include substrate(1380px, 85vw, 1454px) {
-  /* 容器 */
-  .home-content {
-    width: var(--inject-page-width) !important;
-  }
+  #app {
+    /* 容器 */
+    .home-content {
+      width: var(--inject-page-width) !important;
+    }
 
-  .center-panel {
-    width: calc(100% - 524px) !important;
-  }
+    .center-panel {
+      width: calc(100% - 524px) !important;
+    }
 
-  /* item */
-  .main-content {
-    margin-right: 20px;
-    width: auto !important;
-  }
+    /* item */
+    .main-content {
+      margin-right: 20px;
+      width: auto !important;
+    }
 
-  .live-container,
-  .video-container,
-  .bangumi-container,
-  .shop-panel {
-    width: auto !important;
-  }
+    .live-container,
+    .video-container,
+    .bangumi-container,
+    .shop-panel {
+      width: auto !important;
+    }
 
-  .video-container .text-area {
-    width: calc(100% - 233px) !important;
+    .video-container .text-area {
+      width: calc(100% - 233px) !important;
+    }
   }
 }
