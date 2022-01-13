@@ -23,6 +23,7 @@ import { juejin } from './link-juejin-cn'
 import { pc6 } from './www-pc6-com'
 import { afdian } from './afdian-net'
 import { gitee } from './gitee-com'
+import { tianyancha } from './www-tianyancha-com'
 
 const sites = [
   {
@@ -157,6 +158,11 @@ const sites = [
     name: 'Gitee',
     test: 'gitee.com/link',
     use: gitee,
+  },
+  {
+    name: '天眼查',
+    test: 'www.tianyancha.com/security',
+    use: tianyancha,
   },
 ]
 
