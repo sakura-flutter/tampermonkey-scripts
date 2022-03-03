@@ -32,6 +32,7 @@ $default-width: 694px;
     /* 简短回答 */
     > .ListShortcut {
       flex: 1;
+      width: 0;
 
       > .Question-mainColumn[data-zop-questionanswerlist] {
         padding-right: 10px;
