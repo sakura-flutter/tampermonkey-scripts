@@ -1,14 +1,8 @@
 import { $ } from '@/utils/selector'
 import { warn } from '@/utils/log'
+import { getSupports, matchLang, isChinese, isEnglish, getLangMenus } from './utils'
+import './style'
 
-const langElement = {
-  get selector() {
-    return $('#language-selector')
-  },
-  get submit() {
-    return $('.language-menu button[type="submit"]')
-  },
-}
 let docsLang = matchLang(location.pathname)
 const supports = getSupports()
 warn(docsLang)
@@ -21,18 +15,21 @@ function main() {
     docsLang = matchLang(location.pathname)
   })
   window.addEventListener('click', function listener(event) {
-    if (event.target === langElement.submit) {
-      // 标记是否自行切换语言
+    if (!event.isTrusted) return
+
+    const isInLangMenu = $('.languages-switcher-menu .language-menu')?.contains(event.target)
+    if (isInLangMenu) {
+      // 标记自行切换语言
       sessionStorage.setItem('hand-control-language', true)
       window.removeEventListener('click', listener, true)
     }
   }, true)
 
-  changeLang()
+  setLocale()
   addLangButton()
 }
 
-function changeLang() {
+function setLocale() {
   if (isChinese(docsLang)) return
   // 是否自行切换过语言
   if (sessionStorage.getItem('hand-control-language') === 'true') return
@@ -43,13 +40,18 @@ function changeLang() {
 }
 
 function selectLang(value) {
-  langElement.selector.value = value
-  langElement.selector.dispatchEvent(new Event('change', { bubbles: true }))
-  langElement.submit.click()
+  getLangMenus(buttons => {
+    for (const button of buttons) {
+      if (button.getAttribute('name') === value) {
+        button.click()
+        return false
+      }
+    }
+  })
 }
 
 function addLangButton() {
-  const values = [] // 中英 排序
+  const values = [] // [0]中 [1]英 排序
   for (const item of supports) {
     const lang = matchLang(item)
     if (isChinese(lang)) {
@@ -58,43 +60,34 @@ function addLangButton() {
       values[1] = item
     }
   }
+  if (isChinese(docsLang)) values[0] = docsLang
+  if (isEnglish(docsLang)) values[1] = docsLang
   warn(values)
   if (values.filter(Boolean).length < 2) return
 
+  // bug: 会出现一种进来时有翻译，换了另一篇后没翻译，这时按钮仍然显示的问题
   const button = document.createElement('button')
   button.innerText = '中-英'
   button.classList.add('button')
+  button.classList.add('action')
   button.style.cssText = [
     'position: fixed',
     'right: 0',
     'bottom: 15vh',
-    'min-height: auto',
-    'padding: 0px 2px',
+    'line-height: 2em',
+    'padding: 2px 10px',
     'font-size: 12px',
     'letter-spacing: 2px',
+    'border: 1px solid var(--border-secondary)',
+    'background-color: var(--button-bg)',
+    'box-shadow: var(--shadow-01)',
   ].join(';')
   button.onclick = function() {
+    sessionStorage.setItem('hand-control-language', true)
     selectLang(isChinese(docsLang) ? values[1] : values[0])
   }
+
   document.body.append(button)
-}
-
-function matchLang(str) {
-  // 匹配 pathname 或字符串
-  // /en-US/docs/Web/API/ 或 en-US
-  return str.match(/^\/?([\w-]+)/)?.[1]
-}
-
-function isChinese(lang) {
-  return /zh-CN/i.test(lang)
-}
-
-function isEnglish(lang) {
-  return /en-US/i.test(lang)
-}
-
-function getSupports() {
-  return [...(langElement.selector?.options || [])].map(opt => opt.value)
 }
 
 main()
