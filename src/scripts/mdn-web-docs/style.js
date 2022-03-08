@@ -9,6 +9,10 @@ header.top-navigation {
   top: 65px;
   max-height: calc(100vh - 65px);/* 减去顶部高度 */
 }
+
+.toc > .document-toc-container {
+  top: 7.1rem;
+}
 `
 
 const style = document.createElement('style')
