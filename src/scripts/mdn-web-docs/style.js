@@ -11,7 +11,7 @@ header.top-navigation {
 }
 
 .toc > .document-toc-container {
-  top: 7.1rem;
+  top: 7.1rem !important;
 }
 `
 
