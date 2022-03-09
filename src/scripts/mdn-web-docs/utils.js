@@ -20,15 +20,15 @@ export function isEnglish(lang) {
  * callback 返回一个布尔确认操作完后是否自动关闭
  */
 export function getLangMenus(callback) {
-  const trigger = $('button.languages-switcher-menu')
+  const toggle = $('button.languages-switcher-menu')
   // 存在没有翻译的情况
-  if (trigger == null) return []
+  if (toggle == null) return []
 
-  trigger.click()
+  toggle.click()
   // 不要返回 NodeList，和空时返回同样的类型
   const buttons = [...$$('.language-menu button[name]')]
   const off = callback?.(buttons) ?? true
-  off && trigger.click()
+  off && toggle.click()
   return buttons
 }
 
