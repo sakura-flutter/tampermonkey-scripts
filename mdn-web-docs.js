@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MDN 文档辅助
-// @version      2.1.1
+// @version      2.2.0
 // @description  在提供中文语言的页面自动切换为中文
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -14,64 +14,8 @@
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 829:
-/***/ (() => {
-
-const stylesheet = `
-header.top-navigation {
-  position: sticky;/* 顶部吸顶 */
-  top: 0;
-}
-
-#sidebar-quicklinks {
-  position: sticky;
-  top: 65px;
-  max-height: calc(100vh - 65px);/* 减去顶部高度 */
-}
-
-.toc > .document-toc-container {
-  top: 7.1rem !important;
-}
-`;
-const style = document.createElement('style');
-style.appendChild(document.createTextNode(stylesheet));
-document.head.appendChild(style);
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
+/******/ 	"use strict";
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
 
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
@@ -108,22 +52,55 @@ function isEnglish(lang) {
  */
 
 function getLangMenus(callback) {
-  const trigger = $('button.languages-switcher-menu'); // 存在没有翻译的情况
+  const toggle = $('button.languages-switcher-menu'); // 存在没有翻译的情况
 
-  if (trigger == null) return [];
-  trigger.click(); // 不要返回 NodeList，和空时返回同样的类型
+  if (toggle == null) return [];
+  toggle.click(); // 不要返回 NodeList，和空时返回同样的类型
 
   const buttons = [...$$('.language-menu button[name]')];
   const off = callback?.(buttons) ?? true;
-  off && trigger.click();
+  off && toggle.click();
   return buttons;
 }
 function getSupports() {
   const langs = getLangMenus().map(button => button.getAttribute('name'));
   return langs;
 }
-// EXTERNAL MODULE: ./src/scripts/mdn-web-docs/style.js
-var style = __webpack_require__(829);
+;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/style.js
+
+const stylesheet = `
+header.top-navigation {
+  position: sticky;/* 顶部吸顶 */
+  top: 0;
+}
+
+#sidebar-quicklinks {
+  position: sticky;
+  top: 65px;
+  max-height: calc(100vh - 65px);/* 减去顶部高度 */
+}
+
+.toc > .document-toc-container {
+  top: 7.1rem !important;
+}
+
+/* 显示被隐藏的按钮 */
+.top-navigation-main.has-search-open .theme-toggle {
+  display: flex;
+}
+`;
+const style = document.createElement('style');
+style.appendChild(document.createTextNode(stylesheet));
+document.head.appendChild(style); // 显示搜索
+
+function showSearch() {
+  if ($('.top-navigation-main.has-search-open') === null) {
+    $('.top-navigation-main .toggle-search-button')?.click();
+  }
+}
+
+showSearch();
+window.addEventListener('urlchange', () => showSearch());
 ;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/index.js
 
 
@@ -207,7 +184,5 @@ function addLangButton() {
 }
 
 main();
-})();
-
 /******/ })()
 ;
