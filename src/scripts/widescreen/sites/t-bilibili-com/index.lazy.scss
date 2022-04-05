@@ -1,31 +1,22 @@
 @import '../mixins';
 
 @include substrate(1380px, 85vw, 1454px) {
-  #app {
-    /* 容器 */
-    .home-content {
-      width: var(--inject-page-width) !important;
+  #app .bili-dyn-home--member {
+    width: var(--inject-page-width) !important;
+
+    /* 内容 */
+    > main {
+      flex: 1;
+
+      /* up 列表 */
+      .bili-dyn-up-list {
+        width: auto;
+      }
     }
 
-    .center-panel {
-      width: calc(100% - 524px) !important;
-    }
-
-    /* item */
-    .main-content {
-      margin-right: 20px;
+    .bili-dyn-content,
+    .bili-dyn-content__orig__major {
       width: auto !important;
-    }
-
-    .live-container,
-    .video-container,
-    .bangumi-container,
-    .shop-panel {
-      width: auto !important;
-    }
-
-    .video-container .text-area {
-      width: calc(100% - 233px) !important;
     }
   }
 }
