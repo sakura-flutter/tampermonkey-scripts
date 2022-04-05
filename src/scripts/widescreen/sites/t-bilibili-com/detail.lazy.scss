@@ -1,14 +1,15 @@
 @import '../mixins';
 
 @include substrate(900px, 75vw, 1039px) {
-  /* 容器 */
-  .detail-card {
-    width: var(--inject-page-width) !important;
-  }
+  #app {
+    /* 容器 */
+    .content .card {
+      width: var(--inject-page-width) !important;
+    }
 
-  /* up主内容 */
-  .main-content {
-    padding-right: 10px;
-    width: auto !important;
+    /* up主内容 */
+    .bili-dyn-content {
+      width: auto !important;
+    }
   }
 }
