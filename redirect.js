@@ -175,11 +175,11 @@ function parse(href = location.href) {
     }
   }
 
-  const searchParams = new URLSearchParams(search);
-  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+  return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+  return Object.entries(obj) // 过滤 undefined，保留 null 且转成''
+  .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);

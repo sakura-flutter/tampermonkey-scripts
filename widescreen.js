@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.4
+// @version      2.15.5
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -360,7 +360,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1390px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 900px){:root{--inject-page-width:min(75vw, 1039px)}.inject-widescreen-loose-js{--inject-page-width:75vw}.detail-card{width:var(--inject-page-width) !important}.main-content{padding-right:10px;width:auto !important}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 900px){:root{--inject-page-width:min(75vw, 1039px)}.inject-widescreen-loose-js{--inject-page-width:75vw}#app .content .card{width:var(--inject-page-width) !important}#app .bili-dyn-content{width:auto !important}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -382,7 +382,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 900px){:
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1380px){:root{--inject-page-width:min(85vw, 1454px)}.inject-widescreen-loose-js{--inject-page-width:85vw}#app .home-content{width:var(--inject-page-width) !important}#app .center-panel{width:calc(100% - 524px) !important}#app .main-content{margin-right:20px;width:auto !important}#app .live-container,#app .video-container,#app .bangumi-container,#app .shop-panel{width:auto !important}#app .video-container .text-area{width:calc(100% - 233px) !important}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1380px){:root{--inject-page-width:min(85vw, 1454px)}.inject-widescreen-loose-js{--inject-page-width:85vw}#app .bili-dyn-home--member{width:var(--inject-page-width) !important}#app .bili-dyn-home--member>main{flex:1}#app .bili-dyn-home--member>main .bili-dyn-up-list{width:auto}#app .bili-dyn-home--member .bili-dyn-content,#app .bili-dyn-home--member .bili-dyn-content__orig__major{width:auto !important}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3427,11 +3427,11 @@ function parse(href = location.href) {
     }
   }
 
-  const searchParams = new URLSearchParams(search);
-  return [...searchParams.entries()].reduce((acc, [key, value]) => (acc[key] = value, acc), {});
+  return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj).map(([key, value]) => `${key}=${value}`).join('&');
+  return Object.entries(obj) // 过滤 undefined，保留 null 且转成''
+  .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-google-com/index.lazy.scss
 var www_google_com_index_lazy = __webpack_require__(2797);
