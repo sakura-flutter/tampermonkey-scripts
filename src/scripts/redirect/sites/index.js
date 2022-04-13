@@ -27,6 +27,7 @@ import { tianyancha } from './www-tianyancha-com'
 import { aiqicha } from './aiqicha-baidu-com'
 import { qcc } from './www-qcc-com'
 import { uisdc } from './link-uisdc-com'
+import { cto51 } from './blog-51cto-com'
 
 const sites = [
   {
@@ -181,6 +182,11 @@ const sites = [
     name: '优设网',
     test: 'link.uisdc.com/',
     use: uisdc,
+  },
+  {
+    name: '51CTO',
+    test: 'blog.51cto.com/transfer',
+    use: cto51,
   },
 ]
 
