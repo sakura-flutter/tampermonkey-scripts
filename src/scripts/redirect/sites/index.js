@@ -24,6 +24,9 @@ import { pc6 } from './www-pc6-com'
 import { afdian } from './afdian-net'
 import { gitee } from './gitee-com'
 import { tianyancha } from './www-tianyancha-com'
+import { aiqicha } from './aiqicha-baidu-com'
+import { qcc } from './www-qcc-com'
+import { uisdc } from './link-uisdc-com'
 
 const sites = [
   {
@@ -163,6 +166,21 @@ const sites = [
     name: '天眼查',
     test: 'www.tianyancha.com/security',
     use: tianyancha,
+  },
+  {
+    name: '爱企查',
+    test: 'aiqicha.baidu.com/safetip',
+    use: aiqicha,
+  },
+  {
+    name: '企查查',
+    test: 'www.qcc.com/web/transfer-link',
+    use: qcc,
+  },
+  {
+    name: '优设网',
+    test: 'link.uisdc.com/',
+    use: uisdc,
   },
 ]
 
