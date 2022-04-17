@@ -4,7 +4,7 @@ export default function speed() {
   longPress('KeyS', () => {
     const video = $('#bilibili-player video') || $('#bilibili-player bwp-video')
     const oldPlaybackRate = video.playbackRate
-    video.playbackRate = 3
+    video.playbackRate = 6
 
     window.addEventListener('keyup', () => {
       video.playbackRate = oldPlaybackRate
