@@ -2,21 +2,23 @@
 
 $default-width: 652px;
 
-@include substrate(1450px, 82vw, 1330px) {
+@include substrate(1450px, 88vw, 1530px) {
   body {
-    .lEXIrb {
-      max-width: none !important;
-    }
-
     /* 搜索结果 */
-    #center_col {
-      width: calc(var(--inject-page-width) - 480px);
+    #rcnt {
+      max-width: none;
+      width: var(--inject-page-width);
+
+      #center_col {
+        // - 间距 - 右侧宽度
+        width: calc(100% - var(--rhs-margin) - 550px);
+      }
     }
 
     /* 列表 */
     #rso {
       .g {
-        width: 100%;
+        width: 100% !important;
 
         /* 描述文本 */
         .IsZvec {
@@ -41,9 +43,9 @@ $default-width: 652px;
       }
     }
 
-    /* 右侧 */
-    #rhs {
-      margin-left: calc(var(--inject-page-width) - 240px);
+    /* 细线宽度 */
+    .KFFQ0c {
+      width: 100%;
     }
   }
 }
