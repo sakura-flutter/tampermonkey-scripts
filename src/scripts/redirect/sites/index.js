@@ -188,6 +188,13 @@ const sites = [
     test: 'blog.51cto.com/transfer',
     use: cto51,
   },
+  {
+    name: '力扣',
+    test: 'leetcode-cn.com/link/',
+    use: () => ({
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
