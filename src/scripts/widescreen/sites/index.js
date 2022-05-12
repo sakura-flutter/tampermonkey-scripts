@@ -155,7 +155,7 @@ const sites = [
   {
     name: '头条',
     namespace: 'toutiao',
-    test: /^www\.toutiao\.com\/(a|i)\d+\/?$/, // a6884536349483860492、i6971382481899536933
+    test: /^www\.toutiao\.com\/(article|w)\/\d+\/?$/, // article/6884536349483860492、话题 w/1732500407565326
     use: toutiao,
   },
   {

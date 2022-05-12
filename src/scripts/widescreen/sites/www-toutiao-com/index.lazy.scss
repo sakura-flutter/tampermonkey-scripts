@@ -3,7 +3,10 @@
 $default-width: 676px;
 
 @include substrate(1350px, 88vw, 1470px) {
-  .article-detail-container {
+  // 文章
+  .article-detail-container,
+  // 话题
+  .wtt-detail-container {
     width: var(--inject-page-width) !important;
 
     /* 内容 */
