@@ -38,6 +38,9 @@ class App {
 
       const { readyState: state } = site
       if (state) await readyState[state]()
+      // fix: 罕见情况下会获取不到 head，原因未知
+      // 偶尔会在知乎中出现
+      if (document.head == null) await readyState.interactive()
 
       const config = use({
         createControl,
