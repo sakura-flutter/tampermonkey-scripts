@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.6
+// @version      2.15.7
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -646,7 +646,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1200px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(88vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:88vw}.article-detail-container{width:var(--inject-page-width) !important}.article-detail-container>.main{width:calc(var(--inject-page-width) - 298px - 60px - 96px) !important}.article-detail-container>.main .ttp-comment-block{width:auto}.article-detail-container .detail-end-feed{margin-left:auto;margin-right:auto;max-width:676px}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1350px){:root{--inject-page-width:min(88vw, 1470px)}.inject-widescreen-loose-js{--inject-page-width:88vw}.article-detail-container,.wtt-detail-container{width:var(--inject-page-width) !important}.article-detail-container>.main,.wtt-detail-container>.main{width:calc(var(--inject-page-width) - 298px - 60px - 96px) !important}.article-detail-container>.main .ttp-comment-block,.wtt-detail-container>.main .ttp-comment-block{width:auto}.article-detail-container .detail-end-feed,.wtt-detail-container .detail-end-feed{margin-left:auto;margin-right:auto;max-width:676px}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3812,8 +3812,8 @@ const sites = [{
 }, {
   name: '头条',
   namespace: 'toutiao',
-  test: /^www\.toutiao\.com\/(a|i)\d+\/?$/,
-  // a6884536349483860492、i6971382481899536933
+  test: /^www\.toutiao\.com\/(article|w)\/\d+\/?$/,
+  // article/6884536349483860492、话题 w/1732500407565326
   use: toutiao
 }, {
   name: '微博',
@@ -4401,7 +4401,10 @@ class App {
       const {
         readyState: state
       } = site;
-      if (state) await ready_state_namespaceObject[state]();
+      if (state) await ready_state_namespaceObject[state](); // fix: 罕见情况下会获取不到 head，原因未知
+      // 偶尔会在知乎中出现
+
+      if (document.head == null) await interactive();
       const config = use({
         createControl: createControl,
         store: widescreen_createStore(namespace)
