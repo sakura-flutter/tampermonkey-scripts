@@ -190,7 +190,7 @@ const sites = [
   },
   {
     name: '力扣',
-    test: 'leetcode-cn.com/link/',
+    test: 'leetcode.cn/link/',
     use: () => ({
       query: 'target',
     }),
