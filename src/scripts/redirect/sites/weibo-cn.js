@@ -1,3 +1,5 @@
+import { parse } from '@/utils/querystring'
+
 export const weibo = () => ({
-  query: 'toasturl',
+  link: parse().toasturl || parse().u,
 })
