@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MDN 文档辅助
-// @version      2.2.0
+// @version      2.3.0
 // @description  在提供中文语言的页面自动切换为中文
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -14,8 +14,56 @@
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 829:
+/***/ (() => {
+
+const stylesheet = `
+/* 让搜索框一直展开 */
+@media screen and (min-width: 1220px) {
+  .header-search .search-input-field {
+    width: inherit !important;
+  }
+}
+`;
+const style = document.createElement('style');
+style.appendChild(document.createTextNode(stylesheet));
+document.head.appendChild(style);
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
 
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
@@ -51,67 +99,41 @@ function isEnglish(lang) {
  * callback 返回一个布尔确认操作完后是否自动关闭
  */
 
-function getLangMenus(callback) {
+async function getLangMenus(callback) {
   const toggle = $('button.languages-switcher-menu'); // 存在没有翻译的情况
 
   if (toggle == null) return [];
-  toggle.click(); // 不要返回 NodeList，和空时返回同样的类型
+  toggle.click(); // fix: 新版又被 mdn 改掉了，不知道为什么要放在 task 才能获取到 buttons
+  // 理论上派发事件后所有监听该事件的事件处理方法是立即同步调用执行的
+  // 变为 microtask 的前提是调用栈必须是 0，只有浏览器原生事件才符合
+  // 大概或许可能是 mdn 做了一些操作
+  // 由于需要改为 task，调用这个函数都要更改
+
+  await Promise.resolve(); // 不要返回 NodeList，和空时返回同样的类型
 
   const buttons = [...$$('.language-menu button[name]')];
   const off = callback?.(buttons) ?? true;
   off && toggle.click();
   return buttons;
 }
-function getSupports() {
-  const langs = getLangMenus().map(button => button.getAttribute('name'));
+async function getSupports() {
+  const langs = (await getLangMenus()).map(button => button.getAttribute('name'));
   return langs;
 }
-;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/style.js
-
-const stylesheet = `
-header.top-navigation {
-  position: sticky;/* 顶部吸顶 */
-  top: 0;
-}
-
-#sidebar-quicklinks {
-  position: sticky;
-  top: 65px;
-  max-height: calc(100vh - 65px);/* 减去顶部高度 */
-}
-
-.toc > .document-toc-container {
-  top: 7.1rem !important;
-}
-
-/* 显示被隐藏的按钮 */
-.top-navigation-main.has-search-open .theme-toggle {
-  display: flex;
-}
-`;
-const style = document.createElement('style');
-style.appendChild(document.createTextNode(stylesheet));
-document.head.appendChild(style); // 显示搜索
-
-function showSearch() {
-  if ($('.top-navigation-main.has-search-open') === null) {
-    $('.top-navigation-main .toggle-search-button')?.click();
-  }
-}
-
-showSearch();
-window.addEventListener('urlchange', () => showSearch());
+// EXTERNAL MODULE: ./src/scripts/mdn-web-docs/style.js
+var style = __webpack_require__(829);
 ;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/index.js
 
 
 
 
 let docsLang = matchLang(location.pathname);
-const supports = getSupports();
-warn(docsLang);
-warn(supports);
+let supports = [];
 
-function main() {
+async function main() {
+  supports = await getSupports();
+  warn(docsLang);
+  warn(supports);
   if (!supports.length) return;
   window.addEventListener('urlchange', () => {
     docsLang = matchLang(location.pathname);
@@ -184,5 +206,7 @@ function addLangButton() {
 }
 
 main();
+})();
+
 /******/ })()
 ;
