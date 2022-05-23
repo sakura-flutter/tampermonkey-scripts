@@ -5,7 +5,7 @@ export function onVisible(callback, delay = 500, ...rest) {
   function listener() {
     clearInterval(intervalId)
     if (document.visibilityState === 'hidden') return
-    // eslint-disable-next-line node/no-callback-literal
+    // eslint-disable-next-line n/no-callback-literal
     callback(...rest)
     intervalId = setInterval(callback, delay, ...rest)
   }

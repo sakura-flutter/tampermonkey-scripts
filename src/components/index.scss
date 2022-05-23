@@ -2,7 +2,7 @@
 @mixin var($selector: ':root') {
   #{$selector} {
     --skr-primary-color: #2878ff;
-    --skr-primary-lighten-color: rgba(24, 144, 255, 0.2);
+    --skr-primary-lighten-color: rgb(24 144 255 / 20%);
     --skr-white-color: #fff;
 
     /* transition */
@@ -10,8 +10,8 @@
     --skr-transition-duration-normal: 0.3s;
 
     /* shadow */
-    --skr-box-shadow-lighten: 0 1px 6px rgba(0, 0, 0, 0.15);
-    --skr-box-shadow-normal: 0 1px 6px rgba(0, 0, 0, 0.2);
+    --skr-box-shadow-lighten: 0 1px 6px rgb(0 0 0 / 15%);
+    --skr-box-shadow-normal: 0 1px 6px rgb(0 0 0 / 20%);
 
     /* border */
     --skr-border-color: #d9d9d9;
@@ -24,7 +24,7 @@
 
     /* button */
     --skr-button-transition: all var(--skr-transition-duration-normal);
-    --skr-button-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+    --skr-button-box-shadow: 0 2px 0 rgb(0 0 0 / 4.5%);
 
     /* ripple */
     --skr-ripple-color: rgb(138 218 255 / 20%);
