@@ -4,11 +4,12 @@ import { getSupports, matchLang, isChinese, isEnglish, getLangMenus } from './ut
 import './style'
 
 let docsLang = matchLang(location.pathname)
-const supports = getSupports()
-warn(docsLang)
-warn(supports)
+let supports = []
 
-function main() {
+async function main() {
+  supports = await getSupports()
+  warn(docsLang)
+  warn(supports)
   if (!supports.length) return
 
   window.addEventListener('urlchange', () => {

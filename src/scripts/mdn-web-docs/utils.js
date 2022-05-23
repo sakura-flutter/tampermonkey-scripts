@@ -19,12 +19,18 @@ export function isEnglish(lang) {
  * 切换语言后菜单会自动关闭
  * callback 返回一个布尔确认操作完后是否自动关闭
  */
-export function getLangMenus(callback) {
+export async function getLangMenus(callback) {
   const toggle = $('button.languages-switcher-menu')
   // 存在没有翻译的情况
   if (toggle == null) return []
 
   toggle.click()
+  // fix: 新版又被 mdn 改掉了，不知道为什么要放在 microtask 才能获取到 buttons
+  // 由于改为 microtask，调用这个函数都要更改
+  // https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent
+  // 只有浏览器自己触发的事件才是放在一个 task（不是 microtask） 里执行的
+  // 而人工合成（synthetic）的事件派发（dispatch）是同步执行的，包括执行 click() 和 dispatchEvent()
+  await Promise.resolve()
   // 不要返回 NodeList，和空时返回同样的类型
   const buttons = [...$$('.language-menu button[name]')]
   const off = callback?.(buttons) ?? true
@@ -32,7 +38,7 @@ export function getLangMenus(callback) {
   return buttons
 }
 
-export function getSupports() {
-  const langs = getLangMenus().map(button => button.getAttribute('name'))
+export async function getSupports() {
+  const langs = (await getLangMenus()).map(button => button.getAttribute('name'))
   return langs
 }
