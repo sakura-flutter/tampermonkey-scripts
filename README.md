@@ -2,11 +2,11 @@
 
 <img src="https://img.shields.io/badge/Firefox-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Edge-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Chrome-Latest-brightgreen?style=flat-square" alt="Chrome version">
 
-仅在最新版上通过，如果使用其它浏览器**必须要保证Chromium版本80+**
+仅在最新版上通过，如果使用其它浏览器**必须要保证 Chromium 版本 100 +**
 
 ## 使用
 
-1. 先在浏览器商店安装Tampermonkey扩展（链接：[Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/tampermonkey/), [Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)）
+1. 先在浏览器商店安装 Tampermonkey 扩展（链接：[Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/tampermonkey/), [Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)）
 2. 然后在下面脚本中选择需要的进行安装
 
 ### 脚本
@@ -27,7 +27,7 @@
 
 ## 运行
 
-建议在 [Node](https://nodejs.org/en/)>=14 版本上进行
+建议在 [Node](https://nodejs.org/en/) >= 16 版本上进行
 
 ```bash
 npm install

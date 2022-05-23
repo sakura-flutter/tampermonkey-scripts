@@ -18,7 +18,7 @@
   }
 
   ul {
-    background: rgb(251, 251, 251);
+    background: rgb(251 251 251);
     box-shadow: var(--skr-box-shadow-lighten);
     max-height: 250px;
     overflow-x: hidden;
@@ -52,7 +52,7 @@
       background var(--skr-transition-duration-fast) ease-out;
 
     &:hover {
-      background: rgba(220, 237, 251, 0.64);
+      background: rgb(220 237 251 / 64%);
     }
 
     &.has-pwd::before {
@@ -113,7 +113,7 @@
   }
 
   svg {
-    fill: currentColor;
+    fill: currentcolor;
   }
 
   /* 动画1 */
