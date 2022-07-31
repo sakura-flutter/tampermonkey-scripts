@@ -1,20 +1,20 @@
-interface IVueRoot {
-  instance?: Record<string, unknown>
-  app?: Record<string, unknown>
+interface VueRoot {
+  instance?: Record<string, any>
+  app?: Record<string, any>
 }
 
-interface IVueHTMLElement extends HTMLElement {
-  __vue__?: Record<string, unknown>
+export interface VueHTMLElement extends HTMLElement {
+  __vue__?: Record<string, any>
   // eslint-disable-next-line camelcase
-  __vue_app__?: Record<string, unknown>
+  __vue_app__?: Record<string, any>
   _vnode?: {
     component: {
-      proxy: Record<string, unknown>
+      proxy: Record<string, any>
     }
   }
 }
 
-function getVueRoot(rootContainer: HTMLElement): IVueRoot {
+function getVueRoot(rootContainer: HTMLElement): VueRoot {
   if (isVue2(rootContainer)) return getVue2Instance(rootContainer)
   if (isVue3(rootContainer)) return getVue3Instance(rootContainer)
   return {}
@@ -29,13 +29,13 @@ function isVue3(rootContainer: HTMLElement) {
   return '__vue_app__' in rootContainer
 }
 
-function getVue2Instance(rootContainer: IVueHTMLElement): IVueRoot {
+function getVue2Instance(rootContainer: VueHTMLElement): VueRoot {
   return {
     instance: rootContainer.__vue__,
   }
 }
 
-function getVue3Instance(rootContainer: IVueHTMLElement): IVueRoot {
+function getVue3Instance(rootContainer: VueHTMLElement): VueRoot {
   return {
     app: rootContainer.__vue_app__,
     // dev mode下组件el有__vueParentComponent __vnode属性

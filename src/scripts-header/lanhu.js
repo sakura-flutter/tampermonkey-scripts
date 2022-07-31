@@ -17,7 +17,7 @@ module.exports = isProd =>
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global${isProd ? '.prod.min' : ''}.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=876846
 // ==/UserScript==
 `

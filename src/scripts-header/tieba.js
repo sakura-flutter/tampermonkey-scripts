@@ -21,7 +21,7 @@ module.exports = isProd =>
 // @grant        GM_removeValueChangeListener
 // @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/md5/dist/md5.min.js
-// @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3.0.2/dist/vue.runtime.global${isProd ? '.prod.min' : ''}.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=862073
 // ==/UserScript==
 `

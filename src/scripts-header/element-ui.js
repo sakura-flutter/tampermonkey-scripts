@@ -13,6 +13,6 @@ module.exports = isProd =>
 // @match        https://element-plus.org/*
 // @match        https://element.eleme.cn/*
 // @match        https://element.eleme.io/*
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global${isProd ? '.prod.min' : ''}.js
 // ==/UserScript==
 `

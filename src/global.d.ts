@@ -1,21 +1,23 @@
-/* eslint-disable camelcase */
+import { type ToastApi } from '@/helpers/toast'
 
-interface IToast {
-  (options: string, duration?: number): void
-  info(options: string, duration?: number): void
-  success(options: string, duration?: number): void
-  warning(options: string, duration?: number): void
-  error(options: string, duration?: number): void
+type CSSLazyClasses = {
+  readonly use(): void
+  readonly unuse(): void
 }
 
-interface Window {
-  Toast: IToast
+declare global {
+  interface Window {
+    Toast: ToastApi
+  }
+
+  const Toast: ToastApi
+
+  module '*.lazy.scss' {
+    const classes: CSSLazyClasses
+    export default classes
+  }
+  module '*.scss' {
+    const css: string
+    export default css
+  }
 }
-
-declare const Toast: IToast
-declare module '*.scss'
-
-/* tampermonkey */
-declare function GM_getValue<T>(name: string, defaultValue?: T): T
-declare function GM_setValue<T>(name: string, value: T | null)
-declare function GM_deleteValue(name: string)

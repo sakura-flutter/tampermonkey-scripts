@@ -35,6 +35,7 @@ module.exports = (env, argv) => ({
   },
   externals: {
     vue: 'Vue',
+    viewerjs: 'Viewer',
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],

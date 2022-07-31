@@ -31,6 +31,9 @@ module.exports = {
       },
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        'func-call-spacing': 'off', // 泛型多参数时空格有点问题
       },
     },
   ],
