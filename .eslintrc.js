@@ -37,21 +37,6 @@ module.exports = {
       },
     },
   ],
-  globals: {
-    unsafeWindow: 'readonly',
-    GM_registerMenuCommand: 'readonly',
-    GM_setValue: 'readonly',
-    GM_getValue: 'readonly',
-    GM_deleteValue: 'readonly',
-    GM_listValues: 'readonly',
-    GM_addValueChangeListener: 'readonly',
-    GM_removeValueChangeListener: 'readonly',
-    GM_xmlhttpRequest: 'readonly',
-    GM_addStyle: 'readonly',
-    GM_setClipboard: 'readonly',
-    GM_getResourceText: 'readonly',
-    Toast: 'readonly',
-  },
   rules: {
     'comma-dangle': [
       'error',
