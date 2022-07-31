@@ -20,7 +20,7 @@ var __webpack_exports__ = {};
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/scripts/bilibili/speed.js
+;// CONCATENATED MODULE: ./src/scripts/bilibili/speed.ts
 
 function speed() {
   longPress('KeyS', () => {
@@ -36,20 +36,20 @@ function speed() {
 }
 /**
  * 长按键盘
- * @param {string} code keyCode
- * @param {function} callback
- * @param {number} duration 长按时间
+ * @param code keyCode
+ * @param callback
+ * @param duration 长按时间
  */
 
 function longPress(code, callback, duration = 350) {
-  let timeoutID = null;
+  let timeoutID;
   window.addEventListener('keypress', event => {
     if (event.code === code && timeoutID) return;
 
     if (event.code !== code) {
       if (timeoutID) {
         clearTimeout(timeoutID);
-        timeoutID = null;
+        timeoutID = undefined;
       }
 
       return;
@@ -60,13 +60,13 @@ function longPress(code, callback, duration = 350) {
     }, duration);
     window.addEventListener('keyup', () => {
       clearTimeout(timeoutID);
-      timeoutID = null;
+      timeoutID = undefined;
     }, {
       once: true
     });
   });
 }
-;// CONCATENATED MODULE: ./src/scripts/bilibili/index.js
+;// CONCATENATED MODULE: ./src/scripts/bilibili/index.ts
 
 speed();
 /******/ })()

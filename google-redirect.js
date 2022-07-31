@@ -14,11 +14,8 @@
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 var __webpack_exports__ = {};
-
-
-const url = new URL(location);
+const url = new URL(location.href);
 url.hostname = 'www.google.co.jp';
 location.replace(url);
 /******/ })()

@@ -20,8 +20,45 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
 
+;// CONCATENATED MODULE: external "Viewer"
+const external_Viewer_namespaceObject = Viewer;
+var external_Viewer_default = /*#__PURE__*/__webpack_require__.n(external_Viewer_namespaceObject);
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -37,7 +74,7 @@ function table(...args) {
 }
 
 
-;// CONCATENATED MODULE: ./src/scripts/pixiv/previewer.js
+;// CONCATENATED MODULE: ./src/scripts/pixiv/previewer.ts
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
 
 var id = 0;
@@ -46,7 +83,6 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 
-/* global Viewer */
 
 GM_addStyle(GM_getResourceText('viewerCSS'));
 GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
@@ -86,22 +122,21 @@ class Previewer {
     });
     Object.defineProperty(this, _el, {
       writable: true,
-      value: null
+      value: void 0
     });
     Object.defineProperty(this, _viewer, {
       writable: true,
-      value: null
+      value: void 0
     });
     Object.defineProperty(this, _options, {
       writable: true,
-      value: {
-        includePathname: null
-      }
+      value: void 0
     });
     Object.defineProperty(this, _process, {
       writable: true,
       value: function (event) {
-        /* 这么多的判断多数是没有意义的
+        /**
+         * 这么多的判断多数是没有意义的
          * 只是为了日后可能失效，尽量避免影响原点击事件
          */
         if (!_classPrivateFieldLooseBase(this, _options)[_options].includePathname.test(location.pathname)) return;
@@ -131,7 +166,7 @@ class Previewer {
     });
     _classPrivateFieldLooseBase(this, _process)[_process] = _classPrivateFieldLooseBase(this, _process)[_process].bind(this);
     _classPrivateFieldLooseBase(this, _el)[_el] = el;
-    Object.assign(_classPrivateFieldLooseBase(this, _options)[_options], options);
+    _classPrivateFieldLooseBase(this, _options)[_options] = options;
 
     _classPrivateFieldLooseBase(this, _init)[_init]();
   }
@@ -152,9 +187,7 @@ function _getArtworks2() {
 
 function _createOriginalImgEls2(imgEls) {
   return imgEls.reduce((acc, img) => {
-    const {
-      parentNode
-    } = img; // 原图在其父级a标签href上
+    const parentNode = img.parentNode; // 原图在其父级a标签href上
 
     if (parentNode.tagName === 'A') {
       const image = new Image();
@@ -168,6 +201,7 @@ function _createOriginalImgEls2(imgEls) {
 }
 
 function _preview2(imgEls, viewerOpts) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
   const container = document.createElement('div');
   container.append(...imgEls);
@@ -184,7 +218,7 @@ function _preview2(imgEls, viewerOpts) {
 
     // 销毁
     hide() {
-      _classPrivateFieldLooseBase(self, _viewer)[_viewer] = null;
+      _classPrivateFieldLooseBase(self, _viewer)[_viewer] = undefined;
     },
 
     hidden() {
@@ -192,20 +226,22 @@ function _preview2(imgEls, viewerOpts) {
     }
 
   }, viewerOpts);
-  const viewer = new Viewer(container, viewerOpts);
+  const viewer = new (external_Viewer_default())(container, viewerOpts);
   viewer.show();
   warn('viewer:', container, viewer);
   return viewer;
 }
-;// CONCATENATED MODULE: ./src/utils/visibility-state.js
-// 页面 visible 时执行 setInterval
-// 参数同 setInterval，返回终止函数
+;// CONCATENATED MODULE: ./src/utils/visibility-state.ts
+/**
+ * 页面 visible 时执行 setInterval
+ * 参数同 setInterval，返回终止函数
+ */
 function onVisible(callback, delay = 500, ...rest) {
   let intervalId;
 
   function listener() {
     clearInterval(intervalId);
-    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line node/no-callback-literal
+    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line n/no-callback-literal
 
     callback(...rest);
     intervalId = setInterval(callback, delay, ...rest);
@@ -218,13 +254,10 @@ function onVisible(callback, delay = 500, ...rest) {
     document.removeEventListener('visibilitychange', listener);
   };
 }
-;// CONCATENATED MODULE: ./src/scripts/pixiv/pixels.js
+;// CONCATENATED MODULE: ./src/scripts/pixiv/pixels.ts
 
 
 function attachPixels(el, options) {
-  options = Object.assign({
-    includePathname: null
-  }, options);
   const ws = new WeakSet();
   onVisible(() => {
     if (!options.includePathname.test(location.pathname)) return;
@@ -293,7 +326,7 @@ function calcRectCoincide(width, height) {
     percent: (rate * 100).toFixed(0) + '%'
   };
 }
-;// CONCATENATED MODULE: ./src/scripts/pixiv/index.js
+;// CONCATENATED MODULE: ./src/scripts/pixiv/index.ts
 
  // eslint-disable-next-line no-new
 

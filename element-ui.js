@@ -12,7 +12,7 @@
 // @match        https://element-plus.org/*
 // @match        https://element.eleme.cn/*
 // @match        https://element.eleme.io/*
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.js
+// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.min.js
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -34,7 +34,7 @@
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#catalogue-js{contain:content;position:fixed;right:20px;top:100px;z-index:1000}@media(min-width: 1500px){#catalogue-js{left:calc(50% + 1140px / 2 + 40px);right:auto}}#catalogue-js ul{border-left:1px solid #f0f0f0;font-size:12px;list-style:none;margin:0;padding-left:0}#catalogue-js li{border-left:1px solid transparent;color:rgba(0,0,0,.85);cursor:pointer;line-height:1.5;list-style:none;margin-left:-1px;overflow:hidden;padding:2px 0 2px 16px;text-overflow:ellipsis;transition:all .3s ease;white-space:nowrap;width:110px}#catalogue-js li:hover{border-left-color:#1890ff;color:#1890ff}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#catalogue-js{contain:content;position:fixed;right:20px;top:100px;z-index:1000}@media(min-width: 1500px){#catalogue-js{left:calc(50% + 1140px / 2 + 40px);right:auto}}#catalogue-js ul{border-left:1px solid #f0f0f0;font-size:12px;list-style:none;margin:0;padding-left:0}#catalogue-js li{border-left:1px solid rgba(0,0,0,0);color:rgba(0,0,0,.85);cursor:pointer;line-height:1.5;list-style:none;margin-left:-1px;overflow:hidden;padding:2px 0 2px 16px;text-overflow:ellipsis;transition:all .3s ease;white-space:nowrap;width:110px}#catalogue-js li:hover{border-left-color:#1890ff;color:#1890ff}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -97,8 +97,8 @@ module.exports = function (cssWithMappingToString) {
     var alreadyImportedModules = {};
 
     if (dedupe) {
-      for (var _i = 0; _i < this.length; _i++) {
-        var id = this[_i][0];
+      for (var k = 0; k < this.length; k++) {
+        var id = this[k][0];
 
         if (id != null) {
           alreadyImportedModules[id] = true;
@@ -106,8 +106,8 @@ module.exports = function (cssWithMappingToString) {
       }
     }
 
-    for (var _i2 = 0; _i2 < modules.length; _i2++) {
-      var item = [].concat(modules[_i2]);
+    for (var _k = 0; _k < modules.length; _k++) {
+      var item = [].concat(modules[_k]);
 
       if (dedupe && alreadyImportedModules[item[0]]) {
         continue;
@@ -504,6 +504,11 @@ module.exports = styleTagTransform;
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/nonce */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nc = undefined;
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -511,20 +516,21 @@ var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
-;// CONCATENATED MODULE: ./src/utils/base.js
+;// CONCATENATED MODULE: ./src/utils/base.ts
 function throttle(fn, delay) {
-  let t = null;
+  let timeoutId;
   let begin = Date.now();
   return function (...args) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const cur = Date.now();
-    clearTimeout(t);
+    clearTimeout(timeoutId);
 
     if (cur - begin >= delay) {
       fn.apply(self, args);
       begin = cur;
     } else {
-      t = setTimeout(function () {
+      timeoutId = setTimeout(function () {
         fn.apply(self, args);
       }, delay);
     }
@@ -533,15 +539,15 @@ function throttle(fn, delay) {
 function once(fn) {
   let called = false;
   return function (...args) {
-    if (called === false) {
+    if (!called) {
       called = true;
-      return fn.apply(this, args);
+      fn.apply(this, args);
     }
   };
 }
 /**
  * 延时
- * @param {number} ms 毫秒数
+ * @param ms 毫秒数
  */
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -554,8 +560,7 @@ const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/utils/compatibility.ts
 /**
  * 兼容性检查
- * @param {object} param0 & param1 版本, notify
- * @return {boolean} 是否通过
+ * @return 是否通过
  */
 function checker({
   firefox = 75,
@@ -579,7 +584,10 @@ function checker({
   }
 
   if (!pass) {
-    notify && window.Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
+    const {
+      Toast
+    } = window;
+    notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
 
   return pass;
@@ -632,7 +640,7 @@ function table(...args) {
 }
 
 
-;// CONCATENATED MODULE: ./src/utils/mount-component.js
+;// CONCATENATED MODULE: ./src/utils/mount-component.ts
 /*
   引用：https://github.com/youzan/vant/blob/dev/src/utils/mount-component.ts
 */
@@ -650,7 +658,7 @@ function mountComponent(RootComponent) {
     instance: app.mount(root),
 
     unmount() {
-      app.unmount(root);
+      app.unmount();
       document.body.removeChild(root);
     }
 
@@ -705,7 +713,7 @@ var update = injectStylesIntoStyleTag_default()(catalogue/* default */.Z, option
 
        /* harmony default export */ const element_ui_catalogue = (catalogue/* default */.Z && catalogue/* default.locals */.Z.locals ? catalogue/* default.locals */.Z.locals : undefined);
 
-;// CONCATENATED MODULE: ./src/scripts/element-ui/catalogue.js
+;// CONCATENATED MODULE: ./src/scripts/element-ui/catalogue.tsx
 
 
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
@@ -779,6 +787,7 @@ function _getElements2() {
 }
 
 function _createUI2() {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
   mountComponent({
     setup() {
@@ -799,7 +808,7 @@ function _createUI2() {
 
   });
 }
-;// CONCATENATED MODULE: ./src/scripts/element-ui/index.js
+;// CONCATENATED MODULE: ./src/scripts/element-ui/index.ts
 
 
 
@@ -810,7 +819,7 @@ function _createUI2() {
 
 async function main() {
   if (!checker()) return;
-  let instance = null; // 非国内链接打开较慢，防止未完成加载
+  let instance; // 非国内链接打开较慢，防止未完成加载
 
   while (instance == null) {
     ({
@@ -826,8 +835,8 @@ async function main() {
     // 注意：选择器要同时兼容element与element plus文档
     scope: '.page-container .page-component__content section.element-doc > h3'
   });
-  let unwatch = null;
-  instance.$watch('$route', function (to, from) {
+  let unwatch;
+  instance.$watch('$route', function () {
     (0,external_Vue_namespaceObject.nextTick)(() => {
       const target = $('.page-component__content');
 
@@ -835,7 +844,7 @@ async function main() {
         unwatch = watchDocs(target);
       } else if (!target) {
         unwatch?.();
-        unwatch = null;
+        unwatch = undefined;
       }
     });
   }, {

@@ -16,7 +16,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 829:
+/***/ 4893:
 /***/ (() => {
 
 const stylesheet = `
@@ -80,7 +80,7 @@ function table(...args) {
 }
 
 
-;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/utils.js
+;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/utils.ts
 
 function matchLang(str) {
   // 匹配 pathname 或字符串
@@ -103,11 +103,11 @@ async function getLangMenus(callback) {
   const toggle = $('button.languages-switcher-menu'); // 存在没有翻译的情况
 
   if (toggle == null) return [];
-  toggle.click(); // fix: 新版又被 mdn 改掉了，不知道为什么要放在 task 才能获取到 buttons
-  // 理论上派发事件后所有监听该事件的事件处理方法是立即同步调用执行的
-  // 变为 microtask 的前提是调用栈必须是 0，只有浏览器原生事件才符合
-  // 大概或许可能是 mdn 做了一些操作
-  // 由于需要改为 task，调用这个函数都要更改
+  toggle.click(); // fix: 新版又被 mdn 改掉了，不知道为什么要放在 microtask 才能获取到 buttons
+  // 由于改为 microtask，调用这个函数都要更改
+  // https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent
+  // 只有浏览器自己触发的事件才是放在一个 task（不是 microtask） 里执行的
+  // 而人工合成（synthetic）的事件派发（dispatch）是同步执行的，包括执行 click() 和 dispatchEvent()
 
   await Promise.resolve(); // 不要返回 NodeList，和空时返回同样的类型
 
@@ -120,9 +120,9 @@ async function getSupports() {
   const langs = (await getLangMenus()).map(button => button.getAttribute('name'));
   return langs;
 }
-// EXTERNAL MODULE: ./src/scripts/mdn-web-docs/style.js
-var style = __webpack_require__(829);
-;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/index.js
+// EXTERNAL MODULE: ./src/scripts/mdn-web-docs/style.ts
+var style = __webpack_require__(4893);
+;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/index.ts
 
 
 
@@ -144,7 +144,7 @@ async function main() {
 
     if (isInLangMenu) {
       // 标记自行切换语言
-      sessionStorage.setItem('hand-control-language', true);
+      sessionStorage.setItem('hand-control-language', 'true');
       window.removeEventListener('click', listener, true);
     }
   }, true);
@@ -198,7 +198,7 @@ function addLangButton() {
   button.style.cssText = ['position: fixed', 'right: 0', 'bottom: 15vh', 'line-height: 2em', 'padding: 2px 10px', 'font-size: 12px', 'letter-spacing: 2px', 'border: 1px solid var(--border-secondary)', 'background-color: var(--button-bg)', 'box-shadow: var(--shadow-01)'].join(';');
 
   button.onclick = function () {
-    sessionStorage.setItem('hand-control-language', true);
+    sessionStorage.setItem('hand-control-language', 'true');
     selectLang(isChinese(docsLang) ? values[1] : values[0]);
   };
 
