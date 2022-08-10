@@ -6,12 +6,8 @@
 
 ## 使用
 
-**⚡注意：**
-脚本使用到 jsdelivr 提供的 CDN，但由于不可抗力的原因国内已被污染，更换麻烦。如果您没有办法访问请不要安装当前所有脚本
-
 1. 先在浏览器商店安装 Tampermonkey 扩展（链接：[Firefox](https://addons.mozilla.org/zh-CN/firefox/addon/tampermonkey/), [Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd), [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)）
 2. 然后在下面脚本中选择需要的进行安装
-
 
 ### 脚本
 
