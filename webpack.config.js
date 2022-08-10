@@ -1,16 +1,37 @@
 const fs = require('fs')
 const path = require('path')
+const semver = require('semver')
 const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ESLintPlugin = require('eslint-webpack-plugin')
 const StylelintPlugin = require('stylelint-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 // const CopyPlugin = require('copy-webpack-plugin')
+const packageInfo = require('./package.json')
+
+const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key)
+
+/** 获取所有安装的依赖版本 */
+function getPkgDepsVersion() {
+  const deps = {
+    ...packageInfo.devDependencies,
+    ...packageInfo.dependencies,
+  }
+  for (const pkgName in deps) {
+    if (hasOwn(deps, pkgName)) {
+      const semverVersion = deps[pkgName]
+      deps[pkgName] = semver.coerce(semverVersion).version
+    }
+  }
+  return deps
+}
+
+const depsVersion = getPkgDepsVersion()
 
 function getScriptHeader(filename, argvMode) {
   const filepath = path.join(__dirname, './src/scripts-header', `${filename}.js`)
   const isProd = argvMode === 'production'
-  return fs.existsSync(filepath) ? require(filepath)(isProd) : ''
+  return fs.existsSync(filepath) ? require(filepath)(isProd, depsVersion) : ''
 }
 
 module.exports = (env, argv) => ({
@@ -36,6 +57,7 @@ module.exports = (env, argv) => ({
   externals: {
     vue: 'Vue',
     viewerjs: 'Viewer',
+    'crypto-js/md5': 'CryptoJS.MD5',
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],
@@ -72,7 +94,7 @@ module.exports = (env, argv) => ({
     ],
   },
   plugins: [
-    new CleanWebpackPlugin(), // 默认依赖output path
+    new CleanWebpackPlugin(), // 默认依赖 output path
     new ESLintPlugin({
       extensions: ['js', 'ts', 'tsx'],
       fix: true,
