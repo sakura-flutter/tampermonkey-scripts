@@ -50,5 +50,7 @@ module.exports = {
         asyncArrow: 'always',
       },
     ],
+    'vue/one-component-per-file': 'off',
+    'vue/require-default-prop': 'off',
   },
 }
