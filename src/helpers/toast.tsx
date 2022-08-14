@@ -95,7 +95,9 @@ const Toast = function(_opts: ToastOptions, duration?: ObjectToastOptions['durat
   render(vm, container)
   insertElementInContainer(container)
 
-  return vm
+  return {
+    close: vm.component?.exposed?.close,
+  }
 }
 
 toastTypes.forEach(type => {
