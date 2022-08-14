@@ -100,7 +100,9 @@ const Toast = function (_opts, duration) {
   const vm = (0,external_Vue_namespaceObject.createVNode)(ToastConstructor, options);
   (0,external_Vue_namespaceObject.render)(vm, container);
   insertElementInContainer(container);
-  return vm;
+  return {
+    close: vm.component?.exposed?.close
+  };
 };
 
 toastTypes.forEach(type => {
