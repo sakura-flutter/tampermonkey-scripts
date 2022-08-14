@@ -1,44 +1,49 @@
 export default class Queue {
-  private tasks: (() => Promise<unknown>)[]
-  /** 同时进行任务数 默认 5 个 */
+  private tasks: (() => Promise<unknown>)[] = []
+  /** 同时进行任务数 默认 3 个 */
   private limit: number
   /** 当前执行数 */
-  private count: number
-  /** 任务数 */
-  private tasksCount: number
-  /** 已完成数 */
-  private finishedCount: number
+  private count = 0
 
-  constructor({ tasks, limit = 5 }: {
-    tasks: Queue['tasks'],
+  constructor({ limit = 3 }: {
     limit?: Queue['limit'],
-  }) {
-    this.tasks = [...tasks]
+  } = {}) {
     this.limit = limit
-    this.count = 0
-    this.tasksCount = tasks.length
-    this.finishedCount = 0
+  }
+
+  /** 任务数 */
+  get size() {
+    return this.tasks.length
+  }
+
+  enqueue(tasks: Queue['tasks'][number] | Queue['tasks']): this {
+    if (Array.isArray(tasks)) {
+      this.tasks.push(...tasks)
+    } else {
+      this.tasks.push(tasks)
+    }
+    return this
   }
 
   run(): Promise<void> {
     return new Promise(resolve => {
-      if (this.tasksCount === 0) {
+      if (this.size === 0) {
         resolve()
         return
       }
 
       const { tasks } = this
       const _run = function(this: Queue) {
-        const idle = Math.min(tasks.length, this.limit - this.count)
+        const idle = Math.min(this.size, this.limit - this.count)
         for (let i = 0; i < idle; i++) {
           this.count++
           const task = tasks.shift()!
           task().finally(() => {
             this.count--
-            this.finishedCount++
-            if (this.finishedCount < this.tasksCount) {
+            if (this.size > 0) {
               _run()
-            } else {
+              // fix: 队列为空且当前执行的任务也为空才是结束状态
+            } else if (this.size === 0 && this.count === 0) {
               resolve()
             }
           })
