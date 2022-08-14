@@ -1,8 +1,11 @@
-/* global MD5 */
+import MD5 from 'crypto-js/md5'
 
 export const FAKE_VERSION = '11.8.8.0'
 
-export function makeFakeParams(obj) {
+type Obj = Record<string, unknown>
+
+export function makeFakeParams(obj?: Obj) {
+  // 不要动这些字段
   return Object.assign({
     _client_type: 4, // prohibit
     _client_version: FAKE_VERSION,
@@ -19,12 +22,20 @@ export function makeFakeParams(obj) {
   }, obj)
 }
 
-export function signature(payload, isFake = true) {
-  if (isFake) {
-    payload = makeFakeParams(payload)
-  }
+export function sign(payload: Obj) {
   const sortKeys = Object.keys(payload).sort()
   let str = sortKeys.reduce((acc, key) => (acc += `${key}=${payload[key]}`), '')
   str += 'tiebaclient!!!'
-  return MD5(str)
+  return MD5(str).toString()
+}
+
+export function signRequestParams(params: Obj, isFake = true) {
+  if (isFake) {
+    params = makeFakeParams(params)
+  }
+  const signed = {
+    ...params,
+    sign: sign(params),
+  }
+  return signed
 }

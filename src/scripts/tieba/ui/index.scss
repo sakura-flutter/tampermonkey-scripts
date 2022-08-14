@@ -50,19 +50,7 @@
     user-select: none;
     z-index: 500;
 
-    label {
-      cursor: pointer;
-      height: 20px;
-      margin-left: 8px;
-      text-shadow: 0 1px 3px #fff;
-    }
-
-    input {
-      margin-right: 4px;
-      vertical-align: text-top;
-    }
-
-    .label-wrap {
+    .settings {
       display: inline-flex;
       flex: 1;
       flex-wrap: wrap;

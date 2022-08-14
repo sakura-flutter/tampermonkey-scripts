@@ -1,79 +1,46 @@
 import * as qs from '@/utils/querystring'
-import { FAKE_VERSION, makeFakeParams, signature } from './signature'
+import {
+  GMRequest,
+  request,
+  getPageData,
+  FAKE_VERSION,
+  signRequestParams,
+} from './utils'
+import store from './store'
+import type {
+  WebApiLikeForumResponse,
+  WebApiSignResponse,
+  AppApiLikeForumResponse,
+  AppApiSignResponse,
+  LikeForumData,
+  PageData,
+} from './types'
 
 /**
- * 跨域请求，依赖GM_xmlhttpRequest
- * @param {string} url
- * @param {object} options
+ *
+ * web 接口
+ *
  */
-function GMRequest(url: string, options: Omit<Tampermonkey.Request, 'url'>) {
-  return new Promise((resolve, reject) => {
-    GM_xmlhttpRequest({
-      timeout: 1000 * 15, // 15s超时，0点高峰期失败概率大，BD是1分钟超时，实际上不必等这么久
-      ...options,
-      url,
-      onload(res) {
-        try {
-          resolve(JSON.parse(res.response))
-        } catch (e) {
-          resolve(res.response)
-        }
-      },
-      onerror: reject,
-    })
-  })
-}
-GMRequest.post = function(url: string, data: Tampermonkey.Request['data'], options: Omit<Tampermonkey.Request, 'url'>) {
-  return GMRequest(url, {
-    ...options,
-    data,
-    method: 'POST',
-  })
-}
 
 /**
- * 页面直接发起请求
- * @param {string} url
- * @param {object} options
+ * web 获取关注列表
  */
-function request(url: RequestInfo | URL, options?: RequestInit) {
-  return fetch(url, {
-    ...options,
-  })
-}
-request.post = function(url: RequestInfo | URL, data?: any, options: RequestInit = {}) {
-  options.headers = Object.assign({}, options.headers)
-  if (data) {
-    let body = data
-    // @ts-ignore
-    if (options.headers['Content-Type'].includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
-      body = qs.stringify(data)
-    }
-    // @ts-ignore
-    if (options.headers['Content-Type'].includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
-      body = JSON.stringify(data)
-    }
-    options.body = body
-  }
-
-  return request(url, {
-    ...options,
-    method: 'POST',
-  })
-}
-
-/* web接口 */
-// 获取关注列表
 export function getNewmoindex() {
-  return request.post('/mo/q/newmoindex')
+  return request.post<WebApiLikeForumResponse>('/mo/q/newmoindex')
 }
 
-export function doWebSign(params: any) {
-  return request.post('/sign/add',
-    {
-      ie: 'utf-8',
-      ...params,
-    },
+/**
+ * web 签到
+ */
+export function doSignWeb(params: {
+  /** 吧名 */
+  kw: LikeForumData['forum_name']
+}) {
+  const { tbs } = getPageData()
+
+  return request.post<WebApiSignResponse>(
+    '/sign/add',
+    { ie: 'utf-8', tbs, ...params },
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -82,39 +49,95 @@ export function doWebSign(params: any) {
   )
 }
 
-/* app接口 */
-// 获取关注列表
-export function getForumLike(params: any) {
-  // 签名处理
-  params = makeFakeParams(params)
-  const paramsSigned = {
-    ...params,
-    sign: signature(params),
-  }
-  return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', qs.stringify(paramsSigned), {
-    headers: {
-      'User-agent': `bdtb for Android ${FAKE_VERSION}`,
-      Accept: '',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept-Encoding': 'gzip',
-      Cookie: 'ka=open',
+/**
+ *
+ * app 接口
+ *
+ */
+
+const appCommonHeader = Object.freeze({
+  'User-agent': `bdtb for Android ${FAKE_VERSION}`,
+  Accept: '',
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'Accept-Encoding': 'gzip',
+  Cookie: 'ka=open',
+})
+
+/**
+ * app 获取关注列表
+ */
+export function getForumLike(params: {
+  BDUSS: string
+  tbs: PageData['tbs']
+}) {
+  return GMRequest.post<AppApiLikeForumResponse>(
+    'http://c.tieba.baidu.com/c/f/forum/like',
+    qs.stringify(signRequestParams(params)),
+    {
+      headers: appCommonHeader,
     },
-  })
+  )
 }
 
-export function doSign(params: any) {
-  params = makeFakeParams(params)
-  const paramsSigned = {
-    ...params,
-    sign: signature(params),
+/**
+ * app 签到
+ */
+export function doSignApp(params: {
+  BDUSS: string
+  tbs: PageData['tbs']
+  /** 吧 id */
+  fid: LikeForumData['forum_id'] | string
+  /** 吧名 */
+  kw: LikeForumData['forum_name']
+}) {
+  return GMRequest.post<AppApiSignResponse>(
+    'http://c.tieba.baidu.com/c/c/forum/sign',
+    qs.stringify(signRequestParams(params)),
+    {
+      headers: appCommonHeader,
+    })
+}
+
+/**
+ *
+ * 合成接口
+ *
+ */
+
+/**
+ * 界面上无法获得失效的贴吧，这里调用接口获取所有关注的贴吧
+ */
+export async function mergeLikeForum() {
+  const { BDUSS } = store
+  if (!BDUSS) throw new Error('BDUSS 不能为空')
+  const { tbs } = getPageData()
+  const req2 = {
+    BDUSS,
+    tbs,
   }
-  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', qs.stringify(paramsSigned), {
-    headers: {
-      'User-agent': `bdtb for Android ${FAKE_VERSION}`,
-      Accept: '',
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept-Encoding': 'gzip',
-      Cookie: 'ka=open',
-    },
+  const [like1, like2Map] = await Promise.all([
+    getNewmoindex()
+      .then(data => data.data.like_forum),
+    getForumLike(req2)
+      .then(data => data.forum_list)
+      .then(forumList => forumList.reduce(
+        (acc, val) => (((acc[val.id] = val), acc)),
+        {} as Record<string, typeof forumList[number]>),
+      ),
+  ])
+
+  // 融合数据
+  like1.forEach(forum => {
+    const forumId = forum.forum_id
+    const like2Forum = like2Map[forumId]
+    if (!like2Forum) return
+    Object.assign(forum, {
+      levelup_score: like2Forum.levelup_score,
+      level_name: like2Forum.level_name,
+      slogan: like2Forum.slogan,
+    })
   })
+  // 经验降序
+  like1.sort((a, b) => +b.user_exp - +a.user_exp)
+  return like1 as LikeForumData[]
 }
