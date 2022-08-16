@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.3.0
+// @version      3.3.1
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
-// @compatible   chrome >= Latest
-// @compatible   firefox >= Latest
+// @compatible   chrome Latest
+// @compatible   firefox Latest
+// @compatible   edge Latest
 // @run-at       document-end
 // @match        https://tieba.baidu.com/index.html
 // @match        https://tieba.baidu.com
@@ -2092,20 +2093,22 @@ function createUI() {
         }
       }
 
-      if (tieba_store.BDUSS) {
-        mergeLikeForum().then(forums => {
-          state.likeForums = forums;
-          sort();
-        }).catch(error => {
-          console.error(error);
-          Toast.error('获取贴吧列表失败。。请刷新重试~', 0);
-        });
-      } // 自动签到
+      (async () => {
+        // 获取列表后再自动签到
+        if (tieba_store.BDUSS) {
+          await mergeLikeForum().then(forums => {
+            state.likeForums = forums;
+            sort();
+          }).catch(error => {
+            console.error(error);
+            Toast.error('获取贴吧列表失败。。请刷新重试~', 0);
+          });
+        }
 
-
-      if (isComplete.value) {
-        run();
-      }
+        if (isComplete.value) {
+          run();
+        }
+      })();
 
       return () => (0,external_Vue_namespaceObject.createVNode)("div", {
         "id": "inject-sign",
