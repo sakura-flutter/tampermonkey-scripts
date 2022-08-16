@@ -120,20 +120,21 @@ export function createUI() {
         }
       }
 
-      if (store.BDUSS) {
-        mergeLikeForum().then(forums => {
-          state.likeForums = forums
-          sort()
-        }).catch(error => {
-          console.error(error)
-          Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
-        })
-      }
-
-      // 自动签到
-      if (isComplete.value) {
-        run()
-      }
+      (async () => {
+        // 获取列表后再自动签到
+        if (store.BDUSS) {
+          await mergeLikeForum().then(forums => {
+            state.likeForums = forums
+            sort()
+          }).catch(error => {
+            console.error(error)
+            Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
+          })
+        }
+        if (isComplete.value) {
+          run()
+        }
+      })()
 
       return () => (
         <div
