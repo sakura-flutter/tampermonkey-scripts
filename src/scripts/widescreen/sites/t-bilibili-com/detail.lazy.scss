@@ -3,7 +3,7 @@
 @include substrate(900px, 75vw, 1039px) {
   #app {
     /* 容器 */
-    .content .card {
+    .content {
       width: var(--inject-page-width) !important;
     }
 
