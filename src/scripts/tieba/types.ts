@@ -136,6 +136,41 @@ export interface AppApiSignResponse {
   error_msg?: string
 }
 
+export interface AppApiBatchSignResponse {
+  /** 批量签到的结果，只返回签到成功 */
+  info: {
+    forum_id: string
+    forum_name: string
+    /** 0未签到 1已签到 */
+    signed: '0' | '1'
+    is_on: string
+    is_filter: string
+    /** 连续签到天数 */
+    sign_day_count: string
+    /** 获得经验 */
+    cur_score: string
+    error: {
+      err_no: string
+      usermsg: string
+      errmsg: string
+    }
+  }[]
+  show_dialog: string
+  sign_notice: string
+  is_timeout: string
+  timeout_notice: string
+  error: {
+    errno: string
+    errmsg: string
+    usermsg: string
+  }
+  server_time: string
+  time: number
+  ctime: number
+  logid: number
+  error_code: string
+}
+
 export type LikeForumData =
   WebApiLikeForumResponse['data']['like_forum'][number]
   & Pick<AppApiLikeForumResponse['forum_list'][number], 'levelup_score' | 'level_name' | 'slogan'>

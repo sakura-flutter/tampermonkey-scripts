@@ -1,7 +1,7 @@
 module.exports = (isProd, depsVersion) =>
 `// ==UserScript==
 // @name         百度贴吧签到
-// @version      3.3.1
+// @version      3.4.0
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts

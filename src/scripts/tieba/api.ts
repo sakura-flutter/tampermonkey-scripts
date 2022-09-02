@@ -2,6 +2,7 @@ import * as qs from '@/utils/querystring'
 import {
   GMRequest,
   request,
+  ResponseError,
   getPageData,
   FAKE_VERSION,
   signRequestParams,
@@ -12,6 +13,7 @@ import type {
   WebApiSignResponse,
   AppApiLikeForumResponse,
   AppApiSignResponse,
+  AppApiBatchSignResponse,
   LikeForumData,
   PageData,
 } from './types'
@@ -95,6 +97,29 @@ export function doSignApp(params: {
     qs.stringify(signRequestParams(params)),
     {
       headers: appCommonHeader,
+    })
+}
+
+/**
+ * app 批量签到
+ */
+export function batchSignApp(params: {
+  BDUSS: string
+  tbs: PageData['tbs']
+  /** 吧 id */
+  forum_ids: (LikeForumData['forum_id'] | string)[]
+}) {
+  return GMRequest.post<AppApiBatchSignResponse>(
+    'http://c.tieba.baidu.com/c/c/forum/msign',
+    qs.stringify(signRequestParams(params)),
+    {
+      headers: appCommonHeader,
+    })
+    .then(response => {
+      if (response.error.errno !== '0') {
+        throw new ResponseError(response.error.usermsg, response)
+      }
+      return response
     })
 }
 

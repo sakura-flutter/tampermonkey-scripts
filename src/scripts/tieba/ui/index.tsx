@@ -2,6 +2,7 @@ import { reactive } from 'vue'
 import { useGMvalue } from '@/composables/use-gm-value'
 import store from '../store'
 import { mountComponent } from '@/utils/mount-component'
+import { error as logError } from '@/utils/log'
 import { mergeLikeForum } from '../api'
 import { Adapter, type SignMode } from '../sign'
 import { getElementsInPage } from '../utils'
@@ -35,14 +36,25 @@ export function createUI() {
       const isForumsHide = useGMvalue('is_forums_hide', false)
       const isComplete = useGMvalue('is_complete', false)
       const isCover = useGMvalue('is_cover', false)
+      const toastTime = useGMvalue<number | undefined>('toast_time', undefined)
+      let setSign: (key: string) => void
 
-      function run() {
+      function run(toastVisible = true) {
         if (state.loading) {
           Toast('签到中')
           return
         }
-        if (getElementsInPage().unsigns.length === 0) {
-          Toast.success('所有贴吧已经签到')
+
+        const { unsigns, signs, setSign: _setSign } = getElementsInPage()
+        setSign = _setSign
+
+        if (unsigns.length === 0) {
+          const now = new Date()
+          // 避免每次都提示
+          if (toastVisible || toastTime.value === undefined || new Date(toastTime.value).getDate() < now.getDate()) {
+            Toast.success('所有吧已签到')
+          }
+          toastTime.value = +now
           return
         }
 
@@ -52,7 +64,12 @@ export function createUI() {
             Toast.error('请先输入 BDUSS 或 BDUSS_BFESS')
             return
           }
-          mode = 'app'
+          // 签了 20 个以上视为用过批量签到
+          if (signs.length >= 20) {
+            mode = 'app'
+          } else {
+            mode = 'fast'
+          }
         } else {
           mode = 'web'
         }
@@ -60,21 +77,25 @@ export function createUI() {
         state.loading = true
         const toast = Toast('开始签到，请等待', 0)
         new Adapter({
+          unsigns,
           BDUSS: store.BDUSS,
-          onSuccess({ element, fid, data }) {
-            // 替换成已签到样式
-            element.classList.replace('unsign', 'sign')
-            if (fid && data) {
-              updateLikeForum(fid, data)
-            }
+          onSuccess({ fid, kw, data }) {
+            const key = fid || kw
+            if (key) setSign(key)
+            if (fid && data) updateLikeForum(fid, data)
           },
         })
           .sign(mode)
-          .then(failCount => {
-            failCount
-              ? Toast.warning(`签到成功，失败${failCount}个`, 0)
-              : Toast.success('签到成功')
-            sort()
+          .then(async () => {
+            if (store.BDUSS) await fetchForums()
+            // 以页面为准，因为有时签到失败但实际上是成功的
+            const failList = getElementsInPage().unsigns
+            const length = failList.length
+            if (length > 0) {
+              Toast.warning(`签到成功，失败${length}个：${failList.map(v => v.kw).join('、')}`, 0)
+            } else {
+              Toast.success('签到成功')
+            }
           })
           .finally(() => {
             toast.close()
@@ -83,16 +104,12 @@ export function createUI() {
       }
 
       function updateLikeForum(fid: LikeForumData['forum_id'] | string, forum: Partial<LikeForumData>) {
-        const index = state.likeForums.findIndex(item => +fid === +item.forum_id)
-        if (index === -1) return
-        const target = {
-          ...state.likeForums[index],
-          ...forum,
-        }
+        const found = state.likeForums.find(item => +fid === +item.forum_id)
+        if (!found) return
         if (forum.sign_bonus_point) {
-          target.user_exp = String(Number(target.user_exp) + Number(forum.sign_bonus_point))
+          found.user_exp = String(Number(found.user_exp) + Number(forum.sign_bonus_point))
         }
-        state.likeForums.splice(index, 1, target)
+        Object.assign(found, forum)
       }
 
       // 未签到的靠前
@@ -100,6 +117,23 @@ export function createUI() {
         state.likeForums.sort((a, b) => {
           if (!a.is_sign && b.is_sign) return -1
           return 0
+        })
+      }
+
+      function fetchForums() {
+        return mergeLikeForum().then(forums => {
+          state.likeForums = forums
+          sort()
+          forums.forEach(forum => {
+            // 签到可能失败，以这里为准
+            if (forum.is_sign === 1) {
+              setSign?.(forum.forum_name)
+            }
+          })
+        }).catch(error => {
+          // 爆炸了也没什么需要处理的，这里就不抛了
+          logError.force(error)
+          Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
         })
       }
 
@@ -123,16 +157,10 @@ export function createUI() {
       (async () => {
         // 获取列表后再自动签到
         if (store.BDUSS) {
-          await mergeLikeForum().then(forums => {
-            state.likeForums = forums
-            sort()
-          }).catch(error => {
-            console.error(error)
-            Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
-          })
+          await fetchForums()
         }
         if (isComplete.value) {
-          run()
+          run(false)
         }
       })()
 
@@ -150,7 +178,7 @@ export function createUI() {
               disabled={state.loading}
               type="primary"
               shadow
-              onClick={run}
+              onClick={() => run()}
             >
               一键签到
             </Button>

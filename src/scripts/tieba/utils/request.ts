@@ -1,4 +1,16 @@
 import * as qs from '@/utils/querystring'
+import { error as logError } from '@/utils/log'
+
+export class ResponseError extends Error {
+  readonly name = 'ResponseError'
+  response
+  info
+  constructor(msg = '未知错误', response?: Record<string, any>, info?: any) {
+    super(msg)
+    this.response = response
+    this.info = info
+  }
+}
 
 /**
  * 跨域请求，依赖 GM_xmlhttpRequest
@@ -12,15 +24,24 @@ export function GMRequest<TData = any>(url: string, options: Omit<Tampermonkey.R
       ...options,
       url,
       onload(res) {
-        options.onload?.call(this, res)
+        let error
+        let response
         try {
-          resolve(JSON.parse(res.response))
+          response = JSON.parse(res.response)
         } catch (e) {
-          resolve(res.response)
+          response = res.response
         }
+
+        if (response == null) {
+          error = new ResponseError('无响应', response, { ...options, ...res })
+        } else if (response?.error_code !== '0') {
+          error = new ResponseError(response.error_msg, response, { ...options, ...res })
+        }
+
+        error ? reject(error) : resolve(response)
       },
       onerror(error) {
-        options.onerror?.call(this, error)
+        logError.force(error)
         reject(error)
       },
     })
@@ -41,6 +62,12 @@ GMRequest.post = function<TData = any>(url: string, data: Tampermonkey.Request['
 export function request<TData = any>(url: RequestInfo | URL, options?: RequestInit): Promise<TData> {
   return fetch(url, options)
     .then(response => response.json())
+    .then(resJson => {
+      if (resJson.no !== 0) {
+        throw new ResponseError(resJson.error, resJson, { url, ...options })
+      }
+      return resJson
+    })
 }
 
 request.post = function<TData = any>(url: RequestInfo | URL, data?: any, options: RequestInit = {}) {
