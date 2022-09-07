@@ -6,10 +6,9 @@ import sites from './sites'
 import type { Site } from './types'
 
 function hidePage() {
-  function hide() {
+  readyState.interactive(() => {
     document.body.style.cssText = 'display:none !important;'
-  }
-  document.body ? hide() : readyState.interactive(hide)
+  })
 }
 
 class App {

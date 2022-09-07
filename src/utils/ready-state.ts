@@ -42,8 +42,8 @@ const wrapper = (readyState: ReadyState, fn?: ListenerFunc): Promise<void> => ne
     resolve(fn?.())
   })
 
-  // 边界情况，加载完还有回调添加也执行一下
-  ;['complete', 'load'].includes(currentState) && execute()
+  // 立即检查一下
+  execute()
 })
 
 export const loading = (fn?: ListenerFunc) => wrapper('loading', fn)

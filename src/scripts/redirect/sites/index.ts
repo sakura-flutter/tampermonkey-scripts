@@ -1,10 +1,8 @@
+import { parse } from '@/utils/querystring'
 import { weibo } from './t-cn'
-import { weibo as weibo2 } from './weibo-cn'
-import { qqMail } from './mail-qq-com'
 import { weixin } from './weixin110-qq-com'
 import { doc360 } from './www-360doc-com'
 import { pixiv } from './www-pixiv-net'
-import { google } from './www-google-com'
 import type { Site } from '../types'
 
 const sites: Site[] = [
@@ -31,7 +29,10 @@ const sites: Site[] = [
   {
     name: '微博', // 不同规则
     test: 'weibo.cn/sinaurl',
-    use: weibo2,
+    use: () => ({
+      link: parse().toasturl || parse().u,
+    })
+    ,
   },
   {
     name: 'QQ邮箱',
@@ -39,7 +40,9 @@ const sites: Site[] = [
       /^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
       /^mail\.qq\.com\/cgi-bin\/mail_spam/, // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
     ],
-    use: qqMail,
+    use: () => ({
+      link: parse().url || parse().gourl,
+    }),
   },
   {
     name: 'QQPC',
@@ -134,7 +137,10 @@ const sites: Site[] = [
   {
     name: 'Google',
     test: /^www\.google\..{2,7}url$/,
-    use: google,
+    use: () => ({
+      link: parse().url || parse().q,
+    })
+    ,
   },
   {
     name: '站长之家',
