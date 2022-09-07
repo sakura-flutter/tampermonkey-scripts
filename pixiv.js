@@ -66,8 +66,20 @@ const $$ = document.querySelectorAll.bind(document);
 const isDebug = "production" !== 'production';
 
 function warn(...args) {
-  isDebug && console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
+  isDebug && warn.force(...args);
 }
+
+warn.force = function (...args) {
+  console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
+};
+
+function error(...args) {
+  isDebug && error.force(...args);
+}
+
+error.force = function (...args) {
+  console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
+};
 
 function table(...args) {
   isDebug && console.table(...args);

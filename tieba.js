@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.3.1
+// @version      3.4.0
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -723,8 +723,50 @@ function stringify(obj) {
   return Object.entries(obj) // 过滤 undefined，保留 null 且转成 ''
   .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
-;// CONCATENATED MODULE: ./src/scripts/tieba/utils/request.ts
+;// CONCATENATED MODULE: ./src/utils/log.ts
+const isDebug = "production" !== 'production';
 
+function warn(...args) {
+  isDebug && warn.force(...args);
+}
+
+warn.force = function (...args) {
+  console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
+};
+
+function log_error(...args) {
+  isDebug && log_error.force(...args);
+}
+
+log_error.force = function (...args) {
+  console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
+};
+
+function table(...args) {
+  isDebug && console.table(...args);
+}
+
+
+;// CONCATENATED MODULE: ./src/scripts/tieba/utils/request.ts
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+class ResponseError extends Error {
+  constructor(msg = '未知错误', response, info) {
+    super(msg);
+
+    _defineProperty(this, "name", 'ResponseError');
+
+    _defineProperty(this, "response", void 0);
+
+    _defineProperty(this, "info", void 0);
+
+    this.response = response;
+    this.info = info;
+  }
+
+}
 /**
  * 跨域请求，依赖 GM_xmlhttpRequest
  *
@@ -739,17 +781,30 @@ function GMRequest(url, options) {
       url,
 
       onload(res) {
-        options.onload?.call(this, res);
+        let error;
+        let response;
 
         try {
-          resolve(JSON.parse(res.response));
+          response = JSON.parse(res.response);
         } catch (e) {
-          resolve(res.response);
+          response = res.response;
         }
+
+        if (response == null) {
+          error = new ResponseError('无响应', response, { ...options,
+            ...res
+          });
+        } else if (response?.error_code !== '0') {
+          error = new ResponseError(response.error_msg, response, { ...options,
+            ...res
+          });
+        }
+
+        error ? reject(error) : resolve(response);
       },
 
       onerror(error) {
-        options.onerror?.call(this, error);
+        log_error.force(error);
         reject(error);
       }
 
@@ -769,7 +824,16 @@ GMRequest.post = function (url, data, options) {
 
 
 function request(url, options) {
-  return fetch(url, options).then(response => response.json());
+  return fetch(url, options).then(response => response.json()).then(resJson => {
+    if (resJson.no !== 0) {
+      throw new ResponseError(resJson.error, resJson, {
+        url,
+        ...options
+      });
+    }
+
+    return resJson;
+  });
 }
 
 request.post = function (url, data, options = {}) {
@@ -837,6 +901,7 @@ function signRequestParams(params, isFake = true) {
 
 
 
+
 const jQuery = unsafeWindow.jQuery;
 /**
  * 获取页面上的元素
@@ -847,17 +912,43 @@ function getElementsInPage() {
 
   $moreforumEl.trigger('mouseenter'); // 侧边的吧
 
-  const likeUnsignEls = $$('#likeforumwraper .unsign'); // 查看更多的吧
+  const likeUnsignEls = $$('#likeforumwraper .unsign');
+  const likeSignEls = $$('#likeforumwraper .sign'); // 查看更多的吧
 
-  const alwayUnsignEls = $$('#alwayforum-wraper .unsign'); // 关闭面板
+  const alwayUnsignEls = $$('#alwayforum-wraper .unsign');
+  const alwaySignEls = $$('#alwayforum-wraper .sign'); // 关闭面板
 
   $moreforumEl.trigger('click');
+  const unsigns = [...likeUnsignEls, ...alwayUnsignEls].map(element => {
+    const fid = element.dataset.fid;
+    const {
+      kw
+    } = parse(element.href);
+    return {
+      fid,
+      kw,
+      element
+    };
+  });
+  const unsignsMap = unsigns.reduce((map, unsign) => {
+    // id 与 吧名 作为 key
+    return map.set(unsign.fid, unsign.element).set(unsign.kw, unsign.element);
+  }, new Map());
   return {
     /** 查看更多按钮 */
     moreForum: $moreforumEl,
 
     /** 未签到的元素 */
-    unsigns: [...likeUnsignEls, ...alwayUnsignEls]
+    unsigns,
+
+    /** 签到的元素 */
+    signs: [...likeSignEls, ...alwaySignEls],
+
+    setSign(key) {
+      // 替换成已签到样式
+      unsignsMap.get(key)?.classList.replace('unsign', 'sign');
+    }
+
   };
 }
 /**
@@ -992,6 +1083,21 @@ function doSignApp(params) {
   });
 }
 /**
+ * app 批量签到
+ */
+
+function batchSignApp(params) {
+  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/msign', stringify(signRequestParams(params)), {
+    headers: appCommonHeader
+  }).then(response => {
+    if (response.error.errno !== '0') {
+      throw new ResponseError(response.error.usermsg, response);
+    }
+
+    return response;
+  });
+}
+/**
  *
  * 合成接口
  *
@@ -1030,7 +1136,7 @@ async function mergeLikeForum() {
   return like1;
 }
 ;// CONCATENATED MODULE: ./src/utils/queue.ts
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function queue_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 class Queue {
   /** 同时进行任务数 默认 3 个 */
@@ -1039,11 +1145,11 @@ class Queue {
   constructor({
     limit = 3
   } = {}) {
-    _defineProperty(this, "tasks", []);
+    queue_defineProperty(this, "tasks", []);
 
-    _defineProperty(this, "limit", void 0);
+    queue_defineProperty(this, "limit", void 0);
 
-    _defineProperty(this, "count", 0);
+    queue_defineProperty(this, "count", 0);
 
     this.limit = limit;
   }
@@ -1147,17 +1253,6 @@ function sign_defineProperty(obj, key, value) { if (key in obj) { Object.defineP
 
 
 
-class ResponseError extends Error {
-  constructor(msg = '未知错误', response) {
-    super(msg);
-
-    sign_defineProperty(this, "response", void 0);
-
-    this.response = response;
-  }
-
-}
-
 /**
  * 网页签到
  *
@@ -1165,34 +1260,33 @@ class ResponseError extends Error {
  */
 class WebTask {
   constructor(options) {
-    sign_defineProperty(this, "element", void 0);
+    sign_defineProperty(this, "kw", void 0);
 
     sign_defineProperty(this, "fail", 0);
 
-    this.element = options.element;
+    this.kw = options.kw;
   }
 
   async execute() {
     const {
-      element
-    } = this;
-    const {
       kw
-    } = parse(element.href);
+    } = this;
 
     try {
-      const response = await doSignWeb({
+      await doSignWeb({
         kw
       });
-      const {
-        no,
-        error
-      } = response;
-      if (no !== 0) throw new ResponseError(error, response);
       return {
-        element
+        kw
       };
     } catch (e) {
+      // 签过
+      if (e.response?.no === 1101) {
+        return {
+          kw
+        };
+      }
+
       this.fail++;
       throw e;
     } finally {
@@ -1212,30 +1306,28 @@ class WebTask {
 
 class AppTask {
   constructor(options) {
-    sign_defineProperty(this, "element", void 0);
+    sign_defineProperty(this, "fid", void 0);
+
+    sign_defineProperty(this, "kw", void 0);
 
     sign_defineProperty(this, "BDUSS", void 0);
 
     sign_defineProperty(this, "fail", 0);
 
-    this.element = options.element;
+    this.fid = options.fid;
+    this.kw = options.kw;
     this.BDUSS = options.BDUSS;
   }
 
   async execute() {
     const {
-      element,
+      fid,
+      kw,
       BDUSS
     } = this;
     const {
       tbs
     } = getPageData();
-    const {
-      fid
-    } = element.dataset;
-    const {
-      kw
-    } = parse(element.href);
     if (!fid) throw new Error('获取吧 id 为空');
 
     try {
@@ -1244,46 +1336,78 @@ class AppTask {
         tbs,
         fid,
         kw
-      }); // 签到太快时有可能直接不响应
-
-      if (response == null) throw new ResponseError('无响应');
+      });
       const {
-        error_code,
-        error_msg,
         user_info
-      } = response; // 贴吧成功码为 0
-
-      if (error_code !== '0') throw new ResponseError(error_msg, response);
+      } = response;
       return {
-        element,
         fid,
+        kw,
         data: { ...user_info,
           // 标记为已签到
           is_sign: 1
         }
       };
     } catch (e) {
+      // 签过
+      if (e.response?.error_code === '160002') {
+        return {
+          fid,
+          kw,
+          data: {
+            is_sign: 1
+          }
+        };
+      }
+
       this.fail++;
       throw e;
     } finally {
       // 客户端签到可以将延时缩短，随机延时一下 50ms 以上
-      const ms = parseInt(String(Math.random() * 20 + 50));
+      const ms = parseInt(String(Math.random() * 20));
       await sleep(ms);
     }
   }
 
 }
 
+async function batch(options) {
+  const {
+    BDUSS,
+    forum_ids
+  } = options;
+  const {
+    tbs
+  } = getPageData();
+  const {
+    info
+  } = await batchSignApp({
+    BDUSS,
+    tbs,
+    forum_ids: forum_ids.slice(0, 200) // 接口限制最多 200 个
+
+  });
+  const newInfo = info.map(item => ({
+    forum_id: item.forum_id,
+    forum_name: item.forum_name,
+    sign_bonus_point: item.cur_score,
+    is_sign: 1
+  }));
+  return newInfo;
+}
+
 class Adapter {
   constructor(options) {
     sign_defineProperty(this, "options", void 0);
 
-    this.options = options;
+    this.options = { ...options
+    };
+    this.options.unsigns = [...this.options.unsigns];
   }
   /**
    * 签到
    * @param mode 签到方式
-   * @returns 签到失败数
+   * @returns 签到失败列表
    */
 
 
@@ -1299,6 +1423,7 @@ class Adapter {
         break;
 
       case 'app':
+      case 'fast':
         if (!this.options.BDUSS) {
           throw new Error('签到方式为 app 时 BDUSS 不能为空');
         }
@@ -1315,38 +1440,63 @@ class Adapter {
         })(mode);
     }
 
-    let failCount = 0;
-    const unsignEls = getElementsInPage().unsigns;
+    const {
+      unsigns
+    } = this.options;
+
+    if (mode === 'fast') {
+      try {
+        const data = await batch({
+          BDUSS: this.options.BDUSS,
+          forum_ids: unsigns.map(unsign => unsign.fid)
+        });
+
+        for (let index = unsigns.length - 1; index >= 0; index--) {
+          const unsign = unsigns[index];
+          const found = data.find(item => item.forum_id === unsign.fid);
+
+          if (found) {
+            this.options.onSuccess({
+              fid: found.forum_id,
+              kw: found.forum_name,
+              data: found
+            });
+            unsigns.splice(index, 1);
+          }
+        }
+      } catch (error) {
+        log_error.force('批量签到失败', error);
+      }
+    }
+
+    warn('待签', unsigns);
+    const failList = [];
     const queue = new Queue({
       limit
     });
-    queue.enqueue(unsignEls.map(element => {
+    queue.enqueue(unsigns.map(unsign => {
       const task = new Task({
-        element,
+        fid: unsign.fid,
+        kw: unsign.kw,
         BDUSS: this.options.BDUSS
       });
       return async function callback() {
         try {
           const result = await task.execute();
           this.options.onSuccess(result);
-        } catch (_e) {
-          const error = _e;
-          console.error('签到失败', error, error.response); // 失败重签 1 次
+        } catch (error) {
+          log_error.force('签到失败', error, error.response, error.info); // 失败重签 1 次
 
           if (task.fail <= 1) {
             queue.enqueue(callback);
           } else {
-            failCount++;
-            const {
-              kw
-            } = parse(element.href);
-            Toast.error(`${decodeURIComponent(kw)} 签到失败：${error.message}`);
+            failList.push(unsign);
           }
         }
       }.bind(this);
     }));
     await queue.run();
-    return failCount;
+    return failList;
   }
 
 }
@@ -1974,6 +2124,7 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
+
 const sizeTick = function* () {
   const sizes = ['small', 'normal', 'large'];
   let currSize = tieba_store.size ?? 'small';
@@ -1999,15 +2150,30 @@ function createUI() {
       const isForumsHide = useGMvalue('is_forums_hide', false);
       const isComplete = useGMvalue('is_complete', false);
       const isCover = useGMvalue('is_cover', false);
+      const toastTime = useGMvalue('toast_time', undefined);
+      let setSign;
 
-      function run() {
+      function run(toastVisible = true) {
         if (state.loading) {
           Toast('签到中');
           return;
         }
 
-        if (getElementsInPage().unsigns.length === 0) {
-          Toast.success('所有贴吧已经签到');
+        const {
+          unsigns,
+          signs,
+          setSign: _setSign
+        } = getElementsInPage();
+        setSign = _setSign;
+
+        if (unsigns.length === 0) {
+          const now = new Date(); // 避免每次都提示
+
+          if (toastVisible || toastTime.value === undefined || new Date(toastTime.value).getDate() < now.getDate()) {
+            Toast.success('所有吧已签到');
+          }
+
+          toastTime.value = +now;
           return;
         }
 
@@ -2017,9 +2183,14 @@ function createUI() {
           if (!tieba_store.BDUSS) {
             Toast.error('请先输入 BDUSS 或 BDUSS_BFESS');
             return;
-          }
+          } // 签了 20 个以上视为用过批量签到
 
-          mode = 'app';
+
+          if (signs.length >= 20) {
+            mode = 'app';
+          } else {
+            mode = 'fast';
+          }
         } else {
           mode = 'web';
         }
@@ -2027,24 +2198,30 @@ function createUI() {
         state.loading = true;
         const toast = Toast('开始签到，请等待', 0);
         new Adapter({
+          unsigns,
           BDUSS: tieba_store.BDUSS,
 
           onSuccess({
-            element,
             fid,
+            kw,
             data
           }) {
-            // 替换成已签到样式
-            element.classList.replace('unsign', 'sign');
-
-            if (fid && data) {
-              updateLikeForum(fid, data);
-            }
+            const key = fid || kw;
+            if (key) setSign(key);
+            if (fid && data) updateLikeForum(fid, data);
           }
 
-        }).sign(mode).then(failCount => {
-          failCount ? Toast.warning(`签到成功，失败${failCount}个`, 0) : Toast.success('签到成功');
-          sort();
+        }).sign(mode).then(async () => {
+          if (tieba_store.BDUSS) await fetchForums(); // 以页面为准，因为有时签到失败但实际上是成功的
+
+          const failList = getElementsInPage().unsigns;
+          const length = failList.length;
+
+          if (length > 0) {
+            Toast.warning(`签到成功，失败${length}个：${failList.map(v => v.kw).join('、')}`, 0);
+          } else {
+            Toast.success('签到成功');
+          }
         }).finally(() => {
           toast.close();
           state.loading = false;
@@ -2052,17 +2229,14 @@ function createUI() {
       }
 
       function updateLikeForum(fid, forum) {
-        const index = state.likeForums.findIndex(item => +fid === +item.forum_id);
-        if (index === -1) return;
-        const target = { ...state.likeForums[index],
-          ...forum
-        };
+        const found = state.likeForums.find(item => +fid === +item.forum_id);
+        if (!found) return;
 
         if (forum.sign_bonus_point) {
-          target.user_exp = String(Number(target.user_exp) + Number(forum.sign_bonus_point));
+          found.user_exp = String(Number(found.user_exp) + Number(forum.sign_bonus_point));
         }
 
-        state.likeForums.splice(index, 1, target);
+        Object.assign(found, forum);
       } // 未签到的靠前
 
 
@@ -2070,6 +2244,23 @@ function createUI() {
         state.likeForums.sort((a, b) => {
           if (!a.is_sign && b.is_sign) return -1;
           return 0;
+        });
+      }
+
+      function fetchForums() {
+        return mergeLikeForum().then(forums => {
+          state.likeForums = forums;
+          sort();
+          forums.forEach(forum => {
+            // 签到可能失败，以这里为准
+            if (forum.is_sign === 1) {
+              setSign?.(forum.forum_name);
+            }
+          });
+        }).catch(error => {
+          // 爆炸了也没什么需要处理的，这里就不抛了
+          log_error.force(error);
+          Toast.error('获取贴吧列表失败。。请刷新重试~', 0);
         });
       }
 
@@ -2096,17 +2287,11 @@ function createUI() {
       (async () => {
         // 获取列表后再自动签到
         if (tieba_store.BDUSS) {
-          await mergeLikeForum().then(forums => {
-            state.likeForums = forums;
-            sort();
-          }).catch(error => {
-            console.error(error);
-            Toast.error('获取贴吧列表失败。。请刷新重试~', 0);
-          });
+          await fetchForums();
         }
 
         if (isComplete.value) {
-          run();
+          run(false);
         }
       })();
 
@@ -2123,7 +2308,7 @@ function createUI() {
         "disabled": state.loading,
         "type": "primary",
         "shadow": true,
-        "onClick": run
+        "onClick": () => run()
       }, {
         default: () => [(0,external_Vue_namespaceObject.createTextVNode)("\u4E00\u952E\u7B7E\u5230")]
       }), (0,external_Vue_namespaceObject.createVNode)("div", {
