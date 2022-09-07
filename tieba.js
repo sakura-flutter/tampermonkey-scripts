@@ -615,7 +615,7 @@ var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: ./src/utils/compatibility.ts
 /**
- * 兼容性检查
+ * 兼容性检查，只是用来拦截低版本用户
  * @return 是否通过
  */
 function checker({

@@ -1238,7 +1238,7 @@ __webpack_require__.d(ready_state_namespaceObject, {
 
 ;// CONCATENATED MODULE: ./src/utils/compatibility.ts
 /**
- * 兼容性检查
+ * 兼容性检查，只是用来拦截低版本用户
  * @return 是否通过
  */
 function checker({
@@ -1332,9 +1332,9 @@ window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
     resolve(fn?.());
-  }) // 边界情况，加载完还有回调添加也执行一下
-  ;
-  ['complete', 'load'].includes(currentState) && execute();
+  }); // 立即检查一下
+
+  execute();
 });
 
 const loading = fn => wrapper('loading', fn);

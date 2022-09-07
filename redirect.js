@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.30.0
+// @version      1.31.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -153,9 +153,9 @@ window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
     resolve(fn?.());
-  }) // 边界情况，加载完还有回调添加也执行一下
-  ;
-  ['complete', 'load'].includes(currentState) && execute();
+  }); // 立即检查一下
+
+  execute();
 });
 
 const loading = fn => wrapper('loading', fn);
@@ -209,16 +209,6 @@ const weibo = async () => {
     link
   };
 };
-;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weibo-cn.ts
-
-const weibo_cn_weibo = () => ({
-  link: parse().toasturl || parse().u
-});
-;// CONCATENATED MODULE: ./src/scripts/redirect/sites/mail-qq-com.ts
-
-const qqMail = () => ({
-  link: parse().url || parse().gourl
-});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weixin110-qq-com.ts
 /* eslint-disable camelcase */
 
@@ -283,14 +273,7 @@ const pixiv = () => {
     link
   };
 };
-;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-google-com.ts
-
-const google = () => ({
-  link: parse().url || parse().q
-});
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/index.ts
-
-
 
 
 
@@ -317,13 +300,17 @@ const sites = [{
   name: '微博',
   // 不同规则
   test: 'weibo.cn/sinaurl',
-  use: weibo_cn_weibo
+  use: () => ({
+    link: parse().toasturl || parse().u
+  })
 }, {
   name: 'QQ邮箱',
   test: [/^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
   /^mail\.qq\.com\/cgi-bin\/mail_spam/ // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
   ],
-  use: qqMail
+  use: () => ({
+    link: parse().url || parse().gourl
+  })
 }, {
   name: 'QQPC',
   test: 'c.pc.qq.com/middlem.html',
@@ -405,7 +392,9 @@ const sites = [{
 }, {
   name: 'Google',
   test: /^www\.google\..{2,7}url$/,
-  use: google
+  use: () => ({
+    link: parse().url || parse().q
+  })
 }, {
   name: '站长之家',
   test: 'www.chinaz.com/go.shtml',
@@ -494,11 +483,9 @@ function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + n
 
 
 function hidePage() {
-  function hide() {
+  interactive(() => {
     document.body.style.cssText = 'display:none !important;';
-  }
-
-  document.body ? hide() : interactive(hide);
+  });
 }
 
 var _sites = /*#__PURE__*/_classPrivateFieldLooseKey("sites");
