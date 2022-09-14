@@ -141,7 +141,6 @@ const execute = (readyState = currentState) => {
 };
 
 warn('document.readyState', currentState);
-execute();
 
 if (document.readyState !== 'complete') {
   document.addEventListener('readystatechange', () => execute(document.readyState));
