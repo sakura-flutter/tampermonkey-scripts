@@ -1,10 +1,9 @@
-/* eslint-disable no-useless-escape */
 /* @include 使用的是正则，模板里面用变量，避免变成字符串 */
 
-module.exports = isProd =>
+module.exports = (isProd, depsVersion) =>
 `// ==UserScript==
 // @name         网页宽屏
-// @version      2.15.8
+// @version      2.15.9
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -55,7 +54,7 @@ module.exports = isProd =>
 // @grant        GM_deleteValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
+// @require      https://cdn.jsdelivr.net/npm/vue@${depsVersion.vue}/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=1081231
 // ==/UserScript==
 `

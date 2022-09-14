@@ -30,7 +30,7 @@ const execute = (readyState: ReadyState = currentState) => {
 }
 
 warn('document.readyState', currentState)
-execute()
+
 if (document.readyState !== 'complete') {
   document.addEventListener('readystatechange', () => execute(document.readyState))
   window.addEventListener('DOMContentLoaded', () => execute('DOMContentLoaded'))

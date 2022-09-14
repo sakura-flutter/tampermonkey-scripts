@@ -27,6 +27,10 @@ $default-width: 694px;
   .Question-main {
     width: var(--inject-page-width);
 
+    .AnswerItem-authorInfo {
+      max-width: none;
+    }
+
     /* 查看全部回答后 结构不太一样 */
 
     /* 简短回答 */
