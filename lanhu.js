@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         蓝湖 工具箱
-// @version      1.11.5
-// @description  自动填充填写过的产品密码(不是蓝湖账户)；记录打开过的项目；查看产品页面窗口改变后帮助侧边栏更新高度
+// @version      1.12.0
+// @description  自动填充填写过的产品密码(不是蓝湖账户)；快捷查看打开过的项目
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -16,8 +16,8 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.min.js
-// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=876846
+// @require      https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.runtime.global.prod.js
+// @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=1081231
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -1272,8 +1272,7 @@ function createUI() {
         }, {
           default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
             "tag": "ul",
-            "name": "inject-slide-hor-fade",
-            "appear": true
+            "name": "inject-slide-hor-fade"
           }, _isSlot(_slot = reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
             "class": {
               'has-pwd': !!state.passwords[item.pid]
@@ -1441,25 +1440,7 @@ function autofill() {
 }
 
 
-;// CONCATENATED MODULE: ./src/scripts/lanhu/bar.ts
-
-
-/* 更新侧边栏高度 */
-
-function fixBarHeight() {
-  window.addEventListener('resize', throttle(function () {
-    if (!location.hash.startsWith('#/item/project/product')) return;
-    const barEl = $('.flexible-bar');
-    const modalEl = $('.flexible-modal');
-    if (!barEl || !modalEl) return;
-    barEl.dispatchEvent(new MouseEvent('mousedown'));
-    modalEl.dispatchEvent(new MouseEvent('mouseup'));
-  }, 150));
-}
-
-
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/index.ts
-
 
 
 
@@ -1468,8 +1449,7 @@ function fixBarHeight() {
 
 async function main() {
   if (!checker()) return;
-  fixBarHeight();
-  let app = null; // 不确保一次可以获取到
+  let app; // 不确保一次可以获取到
 
   while (!app) {
     app = $('.whole')?.__vue__;
