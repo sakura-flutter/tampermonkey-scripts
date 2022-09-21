@@ -137,12 +137,10 @@ function createUI() {
           }}
         >
           <Transition name="inject-slide-fade">
-            {/* vue2不需要这层节点，目前不清楚为什么vue3需要 */}
             <div v-show={reversed.value.length && (state.unhidden || state.recordsVisible)}>
               <TransitionGroup
                 tag="ul"
                 name="inject-slide-hor-fade"
-                appear
               >
                 {reversed.value.map((item, index) => (
                   <li

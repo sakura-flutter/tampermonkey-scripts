@@ -3,15 +3,12 @@ import { sleep } from '@/utils/base'
 import { checker } from '@/utils/compatibility'
 import { createRecorder } from './record'
 import { autofill } from './password'
-import { fixBarHeight } from './bar'
 import type { VueHTMLElement } from '@/utils/vue-root'
 
 async function main() {
   if (!checker()) return
 
-  fixBarHeight()
-
-  let app = null
+  let app: Record<string, any> | undefined
   // 不确保一次可以获取到
   while (!app) {
     app = ($('.whole') as VueHTMLElement)?.__vue__
