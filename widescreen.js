@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.9
+// @version      2.15.10
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -2183,14 +2183,16 @@ const tieba = ({
           const BDEImgEls = $$(`${postlistSelector} .BDE_Image`);
           BDEImgEls.forEach(img => {
             if (process.has(img)) return;
-            process.add(img); // 贴吧自身根据
+            process.add(img); // 忽略疑似上古时代的图片
+
+            if (img.src.includes('imgsa.baidu.com/forum')) return; // 贴吧自身根据
             // /^http:\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/ 判断是否相册，
-            // 后续chrome更改必须为https访问时可能需要更改这里的逻辑
+            // 后续 chrome 更改必须为 https 访问时可能需要更改这里的逻辑
             // eslint-disable-next-line no-useless-escape
 
             if (/^http(s?):\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/.test(img.src)) {
               const protocol = img.src.match(/^(https?:\/\/)/)[0];
-              img.src = `${protocol}tiebapic.baidu.com/forum/pic/item/${img.src.split('/').slice(-1)[0]}`; // 不能直接用css：贴吧根据宽高判断,用css宽高auto时若图片未加载宽高获取到0 导致无法查看大图
+              img.src = `${protocol}tiebapic.baidu.com/forum/pic/item/${img.src.split('/').slice(-1)[0]}`; // 不能直接用 css：贴吧根据宽高判断,用 css 宽高 auto 时若图片未加载宽高获取到 0 导致无法查看大图
 
               img.style.cssText += 'max-width: 100%; width: auto !important; height: auto; max-height: 130vh;';
             }
