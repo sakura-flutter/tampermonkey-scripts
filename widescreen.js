@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.10
+// @version      2.15.11
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -2166,57 +2166,54 @@ p_lazy_exported.unuse = function() {
        /* harmony default export */ const tieba_baidu_com_p_lazy = (p_lazy_exported);
 
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/tieba-baidu-com/p.ts
-
-
+// import { $, $$ } from '@/utils/selector'
+// import * as readyState from '@/utils/ready-state'
 
 const tieba = ({
   store,
   createControl
 }) => ({
   handler() {
-    const postlistSelector = '#j_p_postlist';
-
+    // const postlistSelector = '#j_p_postlist'
     function execute() {
-      const replaceOriSrc = function () {
-        const process = new WeakSet();
-        return function () {
-          const BDEImgEls = $$(`${postlistSelector} .BDE_Image`);
-          BDEImgEls.forEach(img => {
-            if (process.has(img)) return;
-            process.add(img); // 忽略疑似上古时代的图片
+      /**
+       * 新版本更新后没什么好的办法，先不做处理
+       */
 
-            if (img.src.includes('imgsa.baidu.com/forum')) return; // 贴吧自身根据
+      /* const replaceOriSrc = (function() {
+        const process = new WeakSet()
+          return function() {
+          const BDEImgEls = $$(`${postlistSelector} .BDE_Image`) as NodeListOf<HTMLImageElement>
+          BDEImgEls.forEach(img => {
+            if (process.has(img)) return
+            process.add(img)
+            // 忽略疑似上古时代的图片
+            if (img.src.includes('imgsa.baidu.com/forum')) return
+            // 贴吧自身根据
             // /^http:\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/ 判断是否相册，
             // 后续 chrome 更改必须为 https 访问时可能需要更改这里的逻辑
             // eslint-disable-next-line no-useless-escape
-
             if (/^http(s?):\/\/[^\/\?]*?\.baidu\.com[:8082]*\/(\w+)\/([^\/\?]+)\/([^\/\?]+)\/(\w+?)\.(?:webp|jpg|jpeg)/.test(img.src)) {
-              const protocol = img.src.match(/^(https?:\/\/)/)[0];
-              img.src = `${protocol}tiebapic.baidu.com/forum/pic/item/${img.src.split('/').slice(-1)[0]}`; // 不能直接用 css：贴吧根据宽高判断,用 css 宽高 auto 时若图片未加载宽高获取到 0 导致无法查看大图
-
-              img.style.cssText += 'max-width: 100%; width: auto !important; height: auto; max-height: 130vh;';
+              const protocol = img.src.match(/^(https?:\/\/)/)![0]
+              img.src = `${protocol}tiebapic.baidu.com/forum/pic/item/${img.src.split('/').slice(-1)[0]}`
+              // 不能直接用 css：贴吧根据宽高判断,用 css 宽高 auto 时若图片未加载宽高获取到 0 导致无法查看大图
+              img.style.cssText += 'max-width: 100%; width: auto !important; height: auto; max-height: 130vh;'
             }
-          });
-        };
-      }();
-
-      interactive(() => {
+          })
+        }
+      })()
+        readyState.interactive(() => {
         // 替换原图
-        replaceOriSrc();
+        replaceOriSrc()
         const observer = new MutationObserver(mutationsList => {
           mutationsList.forEach(mutation => {
-            const {
-              target
-            } = mutation;
-            if (target.id !== postlistSelector.slice(1)) return;
-            replaceOriSrc();
-          });
-        });
-        observer.observe($('.left_section'), {
-          childList: true,
-          subtree: true
-        });
-      });
+            const { target } = mutation
+            if ((target as HTMLElement).id !== postlistSelector.slice(1)) return
+            replaceOriSrc()
+          })
+        })
+        observer.observe($('.left_section') as HTMLElement, { childList: true, subtree: true })
+      }) */
       tieba_baidu_com_p_lazy.use();
     }
 
