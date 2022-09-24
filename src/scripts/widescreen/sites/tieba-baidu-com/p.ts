@@ -1,14 +1,17 @@
-import { $, $$ } from '@/utils/selector'
-import * as readyState from '@/utils/ready-state'
+// import { $, $$ } from '@/utils/selector'
+// import * as readyState from '@/utils/ready-state'
 import styles from './p.lazy.scss'
 import type { Site } from '../../types'
 
 export const tieba:Site['use'] = ({ store, createControl }) => ({
   handler() {
-    const postlistSelector = '#j_p_postlist'
+    // const postlistSelector = '#j_p_postlist'
 
     function execute() {
-      const replaceOriSrc = (function() {
+      /**
+       * 新版本更新后没什么好的办法，先不做处理
+       */
+      /* const replaceOriSrc = (function() {
         const process = new WeakSet()
 
         return function() {
@@ -43,7 +46,7 @@ export const tieba:Site['use'] = ({ store, createControl }) => ({
           })
         })
         observer.observe($('.left_section') as HTMLElement, { childList: true, subtree: true })
-      })
+      }) */
 
       styles.use()
     }
