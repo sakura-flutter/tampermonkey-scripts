@@ -7,7 +7,7 @@ $default-width: 694px;
   .QuestionHeader-footer {
     margin-left: auto;
     margin-right: auto;
-    padding-left: 0;
+    padding-left: 0 !important;
     width: var(--inject-page-width) !important;
   }
 
