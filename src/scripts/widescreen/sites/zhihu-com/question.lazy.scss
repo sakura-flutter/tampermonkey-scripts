@@ -8,7 +8,7 @@ $default-width: 694px;
     margin-left: auto;
     margin-right: auto;
     padding-left: 0;
-    width: var(--inject-page-width);
+    width: var(--inject-page-width) !important;
   }
 
   .QuestionHeader-footer-inner {
@@ -25,7 +25,7 @@ $default-width: 694px;
   }
 
   .Question-main {
-    width: var(--inject-page-width);
+    width: var(--inject-page-width) !important;
 
     .AnswerItem-authorInfo {
       max-width: none;
