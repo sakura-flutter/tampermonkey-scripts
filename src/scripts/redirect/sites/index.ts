@@ -1,3 +1,4 @@
+import { $ } from '@/utils/selector'
 import { parse } from '@/utils/querystring'
 import { weibo } from './t-cn'
 import { weixin } from './weixin110-qq-com'
@@ -233,6 +234,17 @@ const sites: Site[] = [
     use: () => ({
       query: 'target',
     }),
+  },
+  {
+    name: '花瓣网',
+    test: 'huaban.com/go',
+    readyState: 'interactive',
+    use: () => {
+      const nextData = JSON.parse($('#__NEXT_DATA__')!.textContent!)
+      return {
+        link: nextData.props.pageProps.data.link,
+      }
+    },
   },
 ]
 
