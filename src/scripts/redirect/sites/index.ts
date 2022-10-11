@@ -240,11 +240,18 @@ const sites: Site[] = [
     test: 'huaban.com/go',
     readyState: 'interactive',
     use: () => {
-      const nextData = JSON.parse($('#__NEXT_DATA__')!.textContent!)
+      const nextData = JSON.parse(($('#__NEXT_DATA__') as HTMLScriptElement).textContent!)
       return {
-        link: nextData.props.pageProps.data.link,
+        link: nextData.props.pageProps?.data.link,
       }
     },
+  },
+  {
+    name: '飞书',
+    test: 'security.feishu.cn/link/safety',
+    use: () => ({
+      query: 'target',
+    }),
   },
 ]
 
