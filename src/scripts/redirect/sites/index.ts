@@ -253,6 +253,20 @@ const sites: Site[] = [
       query: 'target',
     }),
   },
+  {
+    name: 'Epic',
+    test: /^redirect\.epicgames\.com\//,
+    use: () => ({
+      query: 'redirectTo',
+    }),
+  },
+  {
+    name: 'Steam',
+    test: 'steamcommunity.com/linkfilter/',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
