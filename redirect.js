@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.34.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam
+// @version      1.35.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -45,6 +45,7 @@
 // @match        *://security.feishu.cn/link/safety*
 // @match        *://redirect.epicgames.com/*
 // @match        *://steamcommunity.com/linkfilter/*
+// @match        *://www.yuque.com/r/goto*
 // @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
@@ -496,6 +497,12 @@ const sites = [{
 }, {
   name: 'Steam',
   test: 'steamcommunity.com/linkfilter/',
+  use: () => ({
+    query: 'url'
+  })
+}, {
+  name: '语雀',
+  test: 'www.yuque.com/r/goto',
   use: () => ({
     query: 'url'
   })
