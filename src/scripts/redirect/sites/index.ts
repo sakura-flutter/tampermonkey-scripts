@@ -267,6 +267,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '语雀',
+    test: 'www.yuque.com/r/goto',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
