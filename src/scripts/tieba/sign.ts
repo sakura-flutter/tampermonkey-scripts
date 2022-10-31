@@ -51,7 +51,7 @@ class WebTask implements Task {
       throw e
     } finally {
       // 网页签到不能太短，否则很容易出现验证码(ಥ﹏ಥ) 验证码：2150040
-      const ms = parseInt(String(Math.random() * 500 + 600))
+      const ms = ~~(Math.random() * 500 + 600)
       await sleep(ms)
     }
   }
@@ -113,7 +113,7 @@ class AppTask implements Task {
       throw e
     } finally {
       // 客户端签到可以将延时缩短，随机延时一下 50ms 以上
-      const ms = parseInt(String(Math.random() * 20))
+      const ms = ~~(Math.random() * 20) + 50
       await sleep(ms)
     }
   }
@@ -215,6 +215,8 @@ export class Adapter {
     }
     warn('待签', unsigns)
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this
     const failList: typeof unsigns = []
     const queue = new Queue({ limit })
 
@@ -225,10 +227,10 @@ export class Adapter {
         BDUSS: this.options.BDUSS!,
       })
 
-      return async function callback(this: Adapter) {
+      return async function callback() {
         try {
           const result = await task.execute()
-          this.options.onSuccess(result)
+          self.options.onSuccess(result)
         } catch (error: any) {
           logError.force('签到失败', error, error.response, error.info)
           // 失败重签 1 次
@@ -238,7 +240,7 @@ export class Adapter {
             failList.push(unsign)
           }
         }
-      }.bind(this)
+      }
     }))
     await queue.run()
 

@@ -1,7 +1,7 @@
 module.exports = (isProd, depsVersion) =>
 `// ==UserScript==
 // @name         百度贴吧签到
-// @version      3.4.0
+// @version      3.4.1
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -11,7 +11,7 @@ module.exports = (isProd, depsVersion) =>
 // @compatible   edge Latest
 // @run-at       document-end
 // @match        https://tieba.baidu.com/index.html
-// @match        https://tieba.baidu.com
+// @match        https://tieba.baidu.com/
 // @connect      tieba.baidu.com
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
