@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.4.0
+// @version      3.4.1
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -10,7 +10,7 @@
 // @compatible   edge Latest
 // @run-at       document-end
 // @match        https://tieba.baidu.com/index.html
-// @match        https://tieba.baidu.com
+// @match        https://tieba.baidu.com/
 // @connect      tieba.baidu.com
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
@@ -1291,7 +1291,7 @@ class WebTask {
       throw e;
     } finally {
       // 网页签到不能太短，否则很容易出现验证码(ಥ﹏ಥ) 验证码：2150040
-      const ms = parseInt(String(Math.random() * 500 + 600));
+      const ms = ~~(Math.random() * 500 + 600);
       await sleep(ms);
     }
   }
@@ -1364,7 +1364,7 @@ class AppTask {
       throw e;
     } finally {
       // 客户端签到可以将延时缩短，随机延时一下 50ms 以上
-      const ms = parseInt(String(Math.random() * 20));
+      const ms = ~~(Math.random() * 20) + 50;
       await sleep(ms);
     }
   }
@@ -1469,7 +1469,9 @@ class Adapter {
       }
     }
 
-    warn('待签', unsigns);
+    warn('待签', unsigns); // eslint-disable-next-line @typescript-eslint/no-this-alias
+
+    const self = this;
     const failList = [];
     const queue = new Queue({
       limit
@@ -1483,7 +1485,7 @@ class Adapter {
       return async function callback() {
         try {
           const result = await task.execute();
-          this.options.onSuccess(result);
+          self.options.onSuccess(result);
         } catch (error) {
           log_error.force('签到失败', error, error.response, error.info); // 失败重签 1 次
 
@@ -1493,7 +1495,7 @@ class Adapter {
             failList.push(unsign);
           }
         }
-      }.bind(this);
+      };
     }));
     await queue.run();
     return failList;
@@ -2353,6 +2355,11 @@ function createUI() {
 
 
 
+/**
+ * todo：暂时不支持超过 200 个吧
+ * 一次只能获取 200 个，
+ * 而且通过接口没有办法区分吧是否被封，签到时不好处理
+ */
 
 function main() {
   if (!checker()) return; // 未登录时删除已有的 BDUSS
