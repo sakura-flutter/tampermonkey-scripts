@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.36.0
+// @version      1.37.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、印象笔记、贴吧、CSDN、YouTube、微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -216,10 +216,17 @@ const weibo = async () => {
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/weixin110-qq-com.ts
 /* eslint-disable camelcase */
 
+const {
+  atob
+} = window;
 const weixin = () => {
   const {
-    main_type
+    main_type,
+    midpagecode
   } = parse();
+  /**
+   * main_type 貌似是旧的规则
+   */
 
   switch (main_type) {
     case '2':
@@ -232,11 +239,27 @@ const weixin = () => {
       }
 
     case '1':
-    default:
-      return {
-        selector: '.weui-msg__text-area .ui-ellpisis-content p'
-      };
+      break;
   }
+  /**
+   * midpagecode 似乎是新的规则
+   */
+
+
+  const MAGIC_KEY = atob(atob('Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ=='));
+
+  if (midpagecode && midpagecode !== MAGIC_KEY && !window.cgiData?.url) {
+    const url = new URL(location.href); // 会还原链接
+
+    url.searchParams.set('midpagecode', MAGIC_KEY);
+    location.replace(url.href);
+    return {};
+  }
+
+  return {
+    // 如果解析得到，会出现在页面这里
+    selector: '.weui-msg__text-area .ui-ellpisis-content p'
+  };
 };
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-360doc-com.ts
 
