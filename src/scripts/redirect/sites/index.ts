@@ -274,6 +274,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '牛客网',
+    test: 'hd.nowcoder.com/link.html',
+    use: () => ({
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
