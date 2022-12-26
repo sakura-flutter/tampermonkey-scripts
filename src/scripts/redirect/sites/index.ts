@@ -281,6 +281,13 @@ const sites: Site[] = [
       query: 'target',
     }),
   },
+  {
+    name: '哔哩哔哩',
+    test: 'game.bilibili.com/linkfilter/',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
