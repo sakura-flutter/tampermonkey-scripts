@@ -288,6 +288,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '少数派',
+    test: 'sspai.com/link',
+    use: () => ({
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
