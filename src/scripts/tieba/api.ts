@@ -6,6 +6,7 @@ import {
   getPageData,
   FAKE_VERSION,
   signRequestParams,
+  encodeRequestParams,
 } from './utils'
 import store from './store'
 import type {
@@ -42,7 +43,7 @@ export function doSignWeb(params: {
 
   return request.post<WebApiSignResponse>(
     '/sign/add',
-    { ie: 'utf-8', tbs, ...params },
+    encodeRequestParams({ ie: 'utf-8', tbs, ...params }),
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
@@ -94,7 +95,7 @@ export function doSignApp(params: {
 }) {
   return GMRequest.post<AppApiSignResponse>(
     'http://c.tieba.baidu.com/c/c/forum/sign',
-    qs.stringify(signRequestParams(params)),
+    qs.stringify(encodeRequestParams(signRequestParams(params))),
     {
       headers: appCommonHeader,
     })

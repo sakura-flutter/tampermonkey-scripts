@@ -56,3 +56,15 @@ export function getElementsInPage() {
 export function getPageData() {
   return (unsafeWindow as any).PageData as PageData
 }
+
+/**
+ * 编码请求对象的值
+ *
+ * kw 存在“+”时会有问题
+ * fix: https://github.com/sakura-flutter/tampermonkey-scripts/issues/635
+ */
+export function encodeRequestParams(obj: Record<PropertyKey, any>) {
+  const newObj = { ...obj }
+  newObj.kw &&= encodeURIComponent(newObj.kw)
+  return newObj
+}

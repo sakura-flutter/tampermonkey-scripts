@@ -66,7 +66,7 @@ const ForumList = defineComponent({
               diaplayForums.value.map(item => (
                 <li key={item.forum_id}>
                   <a
-                    href={'/f?kw=' + item.forum_name}
+                    href={'/f?kw=' + encodeURIComponent(item.forum_name)}
                     title={item.forum_name}
                     target="_blank"
                   >
