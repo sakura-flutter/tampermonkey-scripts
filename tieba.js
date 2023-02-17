@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.4.1
+// @version      3.4.2
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -958,6 +958,19 @@ function getElementsInPage() {
 function getPageData() {
   return unsafeWindow.PageData;
 }
+/**
+ * 编码请求对象的值
+ *
+ * kw 存在“+”时会有问题
+ * fix: https://github.com/sakura-flutter/tampermonkey-scripts/issues/635
+ */
+
+function encodeRequestParams(obj) {
+  const newObj = { ...obj
+  };
+  newObj.kw && (newObj.kw = encodeURIComponent(newObj.kw));
+  return newObj;
+}
 ;// CONCATENATED MODULE: external "Vue"
 const external_Vue_namespaceObject = Vue;
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.ts
@@ -1041,11 +1054,11 @@ function doSignWeb(params) {
   const {
     tbs
   } = getPageData();
-  return request.post('/sign/add', {
+  return request.post('/sign/add', encodeRequestParams({
     ie: 'utf-8',
     tbs,
     ...params
-  }, {
+  }), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     }
@@ -1078,7 +1091,7 @@ function getForumLike(params) {
  */
 
 function doSignApp(params) {
-  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringify(signRequestParams(params)), {
+  return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringify(encodeRequestParams(signRequestParams(params))), {
     headers: appCommonHeader
   });
 }
@@ -2057,7 +2070,7 @@ const ForumList = (0,external_Vue_namespaceObject.defineComponent)({
     }, [diaplayForums.value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
       "key": item.forum_id
     }, [(0,external_Vue_namespaceObject.createVNode)("a", {
-      "href": '/f?kw=' + item.forum_name,
+      "href": '/f?kw=' + encodeURIComponent(item.forum_name),
       "title": item.forum_name,
       "target": "_blank"
     }, [item.forum_name]), (0,external_Vue_namespaceObject.createVNode)("span", {
