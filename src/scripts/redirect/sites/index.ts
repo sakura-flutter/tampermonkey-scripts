@@ -32,8 +32,7 @@ const sites: Site[] = [
     test: 'weibo.cn/sinaurl',
     use: () => ({
       link: parse().toasturl || parse().u,
-    })
-    ,
+    }),
   },
   {
     name: 'QQ邮箱',
@@ -50,6 +49,14 @@ const sites: Site[] = [
     test: 'c.pc.qq.com/middlem.html',
     use: () => ({
       query: 'pfurl',
+    }),
+  },
+  {
+    // 被阻止访问
+    name: 'QQPC2',
+    test: 'c.pc.qq.com/pc.html',
+    use: () => ({
+      query: 'url',
     }),
   },
   {
@@ -140,8 +147,7 @@ const sites: Site[] = [
     test: /^www\.google\..{2,7}url$/,
     use: () => ({
       link: parse().url || parse().q,
-    })
-    ,
+    }),
   },
   {
     name: '站长之家',
@@ -162,8 +168,7 @@ const sites: Site[] = [
     test: 'link.juejin.cn/',
     use: () => ({
       query: 'target',
-    })
-    ,
+    }),
   },
   {
     name: 'pc6下载站',
@@ -177,56 +182,49 @@ const sites: Site[] = [
     test: 'afdian.net/link',
     use: () => ({
       query: 'target',
-    })
-    ,
+    }),
   },
   {
     name: 'Gitee',
     test: 'gitee.com/link',
     use: () => ({
       query: 'target',
-    })
-    ,
+    }),
   },
   {
     name: '天眼查',
     test: 'www.tianyancha.com/security',
     use: () => ({
       query: 'target',
-    })
-    ,
+    }),
   },
   {
     name: '爱企查',
     test: 'aiqicha.baidu.com/safetip',
     use: () => ({
       query: 'target',
-    })
-    ,
+    }),
   },
   {
     name: '企查查',
     test: 'www.qcc.com/web/transfer-link',
     use: () => ({
       query: 'link',
-    })
-    ,
+    }),
   },
   {
     name: '优设网',
     test: 'link.uisdc.com/',
     use: () => ({
       query: 'redirect',
-    })
-    ,
+    }),
   },
   {
     name: '51CTO',
     test: 'blog.51cto.com/transfer',
     use: () => ({
       link: location.search.slice(1),
-    })
-    ,
+    }),
   },
   {
     name: '力扣',
@@ -293,6 +291,13 @@ const sites: Site[] = [
     test: 'sspai.com/link',
     use: () => ({
       query: 'target',
+    }),
+  },
+  {
+    name: '5ch',
+    test: 'jump.5ch.net/',
+    use: () => ({
+      link: location.search.slice(1),
     }),
   },
 ]
