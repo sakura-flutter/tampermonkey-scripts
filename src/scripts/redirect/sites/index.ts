@@ -300,6 +300,13 @@ const sites: Site[] = [
       link: location.search.slice(1),
     }),
   },
+  {
+    name: '金山文档',
+    test: 'www.kdocs.cn/office/link',
+    use: () => ({
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
