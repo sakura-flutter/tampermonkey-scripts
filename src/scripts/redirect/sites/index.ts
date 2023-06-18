@@ -307,6 +307,20 @@ const sites: Site[] = [
       query: 'target',
     }),
   },
+  {
+    name: '石墨文档',
+    test: 'shimo.im/outlink/black',
+    use: () => ({
+      query: 'url',
+    }),
+  },
+  {
+    name: 'urlshare',
+    test: 'google.urlshare.cn/umirror_url_check',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
