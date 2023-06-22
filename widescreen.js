@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.13
+// @version      2.15.14
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -492,7 +492,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1150px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1340px){:root{--inject-page-width:min(90vw, 1380px)}.inject-widescreen-loose-js{--inject-page-width:90vw}[class*=Frame_content]{max-width:none;width:var(--inject-page-width)}[class*=Frame_main],[class*=Main_full]{flex-grow:1}.woo-box-wrap[class*=picture_inlineNum3]{max-width:409px}.u-col-4.woo-box-wrap{max-width:546px}[class*=content_row] [class*=card-video_videoBox]{max-width:540px}[class*=content_row] [class*=card-article_pic]{max-width:540px}[class*=Index_backTop]{left:calc(50% + var(--inject-page-width)/2 + var(--frame-mod-gap-space));margin-left:0;transform:translateX(0)}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1340px){:root{--inject-page-width:min(90vw, 1380px)}.inject-widescreen-loose-js{--inject-page-width:90vw}[class*=Frame_content]{--main-width: var(--inject-page-width);width:var(--inject-page-width)}[class*=Frame_content]>div:nth-of-type(2){flex:1}[class*=Frame_main],[class*=Main_full]{flex-grow:1}.woo-box-wrap[class*=picture_inlineNum3]{max-width:409px}.u-col-4.woo-box-wrap{max-width:546px}[class*=content_row] [class*=card-video_videoBox]{max-width:540px}[class*=content_row] [class*=card-article_pic]{max-width:540px}[class*=ProfileHeader_pic]{overflow:hidden}[class*=Index_backTop]{left:calc(50% + var(--inject-page-width)/2 + var(--frame-mod-gap-space));margin-left:0;transform:translateX(0)}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
