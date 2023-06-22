@@ -2,8 +2,14 @@
 
 @include substrate(1340px, 90vw, 1380px) {
   [class*='Frame_content'] {
-    max-width: none;
+    --main-width: var(--inject-page-width);
+
     width: var(--inject-page-width);
+
+    /* 中间主内容 */
+    > div:nth-of-type(2) {
+      flex: 1;
+    }
   }
 
   /* 内容 */
@@ -30,6 +36,11 @@
   /* 列表中文章 */
   [class*='content_row'] [class*='card-article_pic'] {
     max-width: 540px;
+  }
+
+  /* 博主主页头图 */
+  [class*='ProfileHeader_pic'] {
+    overflow: hidden;
   }
 
   /* 返回顶部按钮 */
