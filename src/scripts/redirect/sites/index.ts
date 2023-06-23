@@ -321,6 +321,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '酷安',
+    test: 'www.coolapk.com/link',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
