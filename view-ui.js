@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         View UI v4 文档辅助
-// @version      1.0.4
+// @version      1.0.5
 // @description  (原iView)隐藏文档中菜单项：Pro、物料
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -13,7 +13,7 @@
 // @grant        GM_getValue
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
-// @require      https://cdn.jsdelivr.net/npm/vue@3/dist/vue.runtime.global.prod.min.js
+// @require      https://unpkg.com/vue@3/dist/vue.runtime.global.prod.min.js
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
