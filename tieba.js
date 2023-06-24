@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         百度贴吧签到
-// @version      3.4.3
+// @version      3.4.4
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -20,8 +20,8 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
 // @grant        GM_addStyle
-// @require      https://unpkg.com/crypto-js@4.1.1/core.min.js
-// @require      https://unpkg.com/crypto-js@4.1.1/md5.min.js
+// @require      https://unpkg.com/crypto-js@4.1.1/core.js
+// @require      https://unpkg.com/crypto-js@4.1.1/md5.js
 // @require      https://unpkg.com/vue@3.2.37/dist/vue.runtime.global.prod.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=1081231
 // ==/UserScript==
