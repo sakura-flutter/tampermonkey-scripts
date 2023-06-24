@@ -1,7 +1,7 @@
 module.exports = (isProd, depsVersion) =>
 `// ==UserScript==
 // @name         百度贴吧签到
-// @version      3.4.3
+// @version      3.4.4
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -21,8 +21,8 @@ module.exports = (isProd, depsVersion) =>
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
 // @grant        GM_addStyle
-// @require      https://unpkg.com/crypto-js@${depsVersion['crypto-js']}/core${isProd ? '.min' : ''}.js
-// @require      https://unpkg.com/crypto-js@${depsVersion['crypto-js']}/md5${isProd ? '.min' : ''}.js
+// @require      https://unpkg.com/crypto-js@${depsVersion['crypto-js']}/core.js
+// @require      https://unpkg.com/crypto-js@${depsVersion['crypto-js']}/md5.js
 // @require      https://unpkg.com/vue@${depsVersion.vue}/dist/vue.runtime.global${isProd ? '.prod' : ''}.js
 // @require      https://greasyfork.org/scripts/411093-toast/code/Toast.js?version=1081231
 // ==/UserScript==
