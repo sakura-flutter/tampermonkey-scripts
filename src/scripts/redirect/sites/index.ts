@@ -328,6 +328,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '网盘分享',
+    test: 'wpfx.org/go/',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
