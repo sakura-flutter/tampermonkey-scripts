@@ -60,6 +60,13 @@ const sites: Site[] = [
     }),
   },
   {
+    name: 'QQNT',
+    test: 'c.pc.qq.com/ios.html',
+    use: () => ({
+      query: 'url',
+    }),
+  },
+  {
     name: '腾讯文档',
     test: 'docs.qq.com/scenario/link.html',
     use: () => ({
