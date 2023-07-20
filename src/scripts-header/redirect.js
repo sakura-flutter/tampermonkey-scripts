@@ -58,6 +58,7 @@ module.exports = isProd =>
 // @match        *://google.urlshare.cn/umirror_url_check*
 // @match        *://www.coolapk.com/link*
 // @match        *://wpfx.org/go*
+// @match        *://cloud.tencent.com/developer/tools/blog-entry*
 // @include      ${/^https?:\/\/www\.google\..{2,7}url/}
 // ==/UserScript==
 `

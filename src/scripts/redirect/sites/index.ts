@@ -341,7 +341,13 @@ const sites: Site[] = [
     use: () => ({
       query: 'url',
     }),
-  },
+  },{
+    name: '微信开放社区',
+    test: 'developers.weixin.qq.com/community/middlepage/href',
+    use: () => ({
+      query: 'href'
+    })
+  }
 ]
 
 export default sites
