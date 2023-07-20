@@ -342,10 +342,10 @@ const sites: Site[] = [
       query: 'url',
     }),
   },{
-    name: '微信开放社区',
-    test: 'developers.weixin.qq.com/community/middlepage/href',
+    name: '腾讯云开发者社区',
+    test: 'cloud.tencent.com/developer/tools/blog-entry',
     use: () => ({
-      query: 'href'
+      query: 'target'
     })
   }
 ]
