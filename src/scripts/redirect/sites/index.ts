@@ -341,7 +341,13 @@ const sites: Site[] = [
     use: () => ({
       query: 'url',
     }),
-  },
+  },{
+    name: '腾讯云开发者社区',
+    test: 'cloud.tencent.com/developer/tools/blog-entry',
+    use: () => ({
+      query: 'target'
+    })
+  }
 ]
 
 export default sites
