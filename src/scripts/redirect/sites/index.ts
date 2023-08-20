@@ -274,7 +274,7 @@ const sites: Site[] = [
   },
   {
     name: '语雀',
-    test: 'www.yuque.com/r/goto',
+    test: /\.yuque\.com\/r\/goto(\/?)$/,
     use: () => ({
       query: 'url',
     }),
@@ -341,13 +341,13 @@ const sites: Site[] = [
     use: () => ({
       query: 'url',
     }),
-  },{
+  }, {
     name: '腾讯云开发者社区',
     test: 'cloud.tencent.com/developer/tools/blog-entry',
     use: () => ({
-      query: 'target'
-    })
-  }
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
