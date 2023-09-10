@@ -341,11 +341,19 @@ const sites: Site[] = [
     use: () => ({
       query: 'url',
     }),
-  }, {
+  },
+  {
     name: '腾讯云开发者社区',
     test: 'cloud.tencent.com/developer/tools/blog-entry',
     use: () => ({
       query: 'target',
+    }),
+  },
+  {
+    name: '腾讯兔小巢',
+    test: /^support\.qq\.com\/products\/\d+\/link-jump$/,
+    use: () => ({
+      query: 'jump',
     }),
   },
 ]
