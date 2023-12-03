@@ -351,7 +351,8 @@ const sites: Site[] = [
   },
   {
     name: '腾讯兔小巢',
-    test: /^support\.qq\.com\/products\/\d+\/link-jump$/,
+    // 两个域名
+    test: /^(support|txc)\.qq\.com\/products\/\d+\/link-jump$/,
     use: () => ({
       query: 'jump',
     }),
