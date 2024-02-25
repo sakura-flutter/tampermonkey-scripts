@@ -53,15 +53,8 @@ const sites: Site[] = [
   },
   {
     // 被阻止访问
-    name: 'QQPC2',
-    test: 'c.pc.qq.com/pc.html',
-    use: () => ({
-      query: 'url',
-    }),
-  },
-  {
     name: 'QQNT',
-    test: 'c.pc.qq.com/ios.html',
+    test: /^c\.pc\.qq\.com\/(pc|ios|android)\.html/,
     use: () => ({
       query: 'url',
     }),
@@ -108,6 +101,13 @@ const sites: Site[] = [
     test: /^weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
     use: weixin,
+  },
+  {
+    name: '企业微信',
+    test: 'open.work.weixin.qq.com/wwopen/uriconfirm',
+    use: () => ({
+      query: 'uri',
+    }),
   },
   {
     name: '微信开放社区',
