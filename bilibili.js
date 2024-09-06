@@ -34,27 +34,24 @@ function speed() {
     });
   });
 }
+
 /**
  * 长按键盘
  * @param code keyCode
  * @param callback
  * @param duration 长按时间
  */
-
 function longPress(code, callback, duration = 350) {
   let timeoutID;
   window.addEventListener('keypress', event => {
     if (event.code === code && timeoutID) return;
-
     if (event.code !== code) {
       if (timeoutID) {
         clearTimeout(timeoutID);
         timeoutID = undefined;
       }
-
       return;
     }
-
     timeoutID = setTimeout(() => {
       callback();
     }, duration);

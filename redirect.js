@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.51.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢
+// @version      1.52.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢、云栖社区
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -62,6 +62,7 @@
 // @match        *://cloud.tencent.com/developer/tools/blog-entry*
 // @match        *://support.qq.com/products/*/link-jump*
 // @match        *://txc.qq.com/products/*/link-jump*
+// @match        *://yq.aliyun.com/go/articleRenderRedirect*
 // @include      /^https?:\/\/www\.google\..{2,7}url/
 // ==/UserScript==
 
@@ -115,27 +116,21 @@ __webpack_require__.d(ready_state_namespaceObject, {
 
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
-
 function warn(...args) {
   isDebug && warn.force(...args);
 }
-
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
-
 function error(...args) {
   isDebug && error.force(...args);
 }
-
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
-
 function table(...args) {
   isDebug && console.table(...args);
 }
-
 
 ;// CONCATENATED MODULE: ./src/utils/ready-state.ts
 /**
@@ -144,40 +139,35 @@ function table(...args) {
  * 靠后定义的会自动将靠前定义的但没有监听到的执行一次，但实际上不再是原来的状态
  */
 
-const pool = new Map([['loading', []], ['interactive', []], ['DOMContentLoaded', []], // 扩展状态
+
+const pool = new Map([['loading', []], ['interactive', []], ['DOMContentLoaded', []],
+// 扩展状态
 ['complete', []], ['load', []] // 扩展状态，不一定可以监听到
 ]);
 let currentState = document.readyState;
-
 const execute = (readyState = currentState) => {
   currentState = readyState;
-
   for (const [state, functions] of pool) {
     while (functions.length) {
       functions.shift()();
     }
-
     if (readyState === state) break;
   }
 };
-
 warn('document.readyState', currentState);
-
 if (document.readyState !== 'complete') {
   document.addEventListener('readystatechange', () => execute(document.readyState));
   window.addEventListener('DOMContentLoaded', () => execute('DOMContentLoaded'));
 }
-
 window.addEventListener('load', () => execute('load'));
-
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
     resolve(fn?.());
-  }); // 立即检查一下
+  });
 
+  // 立即检查一下
   execute();
 });
-
 const loading = fn => wrapper('loading', fn);
 const interactive = fn => wrapper('interactive', fn);
 const DOMContentLoaded = fn => wrapper('DOMContentLoaded', fn);
@@ -191,14 +181,13 @@ const load = fn => wrapper('load', fn);
 function parse(href = location.href) {
   if (!href) return {};
   let search;
-
   try {
     // 链接
     const url = new URL(href);
     ({
       search
-    } = url); // 主要处理对hash的search
-
+    } = url);
+    // 主要处理对hash的search
     if (!search && url.hash.includes('?')) {
       search = url.hash.split('?')[1];
     }
@@ -210,11 +199,11 @@ function parse(href = location.href) {
       search = href;
     }
   }
-
   return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj) // 过滤 undefined，保留 null 且转成 ''
+  return Object.entries(obj)
+  // 过滤 undefined，保留 null 且转成 ''
   .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
@@ -240,38 +229,34 @@ const weixin = () => {
     main_type,
     midpagecode
   } = parse();
+
   /**
    * main_type 貌似是旧的规则
    */
-
   switch (main_type) {
     case '2':
       {
-        const url = new URL(location.href); // 转为 1 可还原链接
-
+        const url = new URL(location.href);
+        // 转为 1 可还原链接
         url.searchParams.set('main_type', '1');
         location.replace(url.href);
         return {};
       }
-
     case '1':
       break;
   }
+
   /**
    * midpagecode 似乎是新的规则
    */
-
-
   const MAGIC_KEY = atob(atob('Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ=='));
-
   if (midpagecode && midpagecode !== MAGIC_KEY && !window.cgiData?.url) {
-    const url = new URL(location.href); // 会还原链接
-
+    const url = new URL(location.href);
+    // 会还原链接
     url.searchParams.set('midpagecode', MAGIC_KEY);
     location.replace(url.href);
     return {};
   }
-
   return {
     // 如果解析得到，会出现在页面这里
     selector: '.weui-msg__text-area .ui-ellpisis-content p'
@@ -288,8 +273,8 @@ const doc360 = () => {
     const href = target.href;
     warn(target);
     if (target.nodeName !== 'A') return;
-    if (!href) return; // 是否本站
-
+    if (!href) return;
+    // 是否本站
     if (new RegExp(location.host).test(new URL(href).host)) return;
     event.stopPropagation();
     window.open(href);
@@ -299,19 +284,17 @@ const doc360 = () => {
 ;// CONCATENATED MODULE: ./src/scripts/redirect/sites/www-pixiv-net.ts
 
 const pixiv = () => {
-  let link; // 链接居然是直接拼在url上的
+  let link;
+  // 链接居然是直接拼在url上的
   // https://www.pixiv.net/jump.php?https%3A%2F%2Fwww.huawei.com%2Fcn%2Fcorporate-information
-
   for (const [key, value] of Object.entries(parse())) {
     try {
       link || (link = new URL(key).href);
     } catch {}
-
     try {
       link || (link = new URL(value).href);
     } catch {}
   }
-
   return {
     link
   };
@@ -349,7 +332,8 @@ const sites = [{
   })
 }, {
   name: 'QQ邮箱',
-  test: [/^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
+  test: [/^mail\.qq\.com\/cgi-bin\/readtemplate/,
+  // 好像不用登录也可以
   /^mail\.qq\.com\/cgi-bin\/mail_spam/ // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
   ],
   use: () => ({
@@ -625,16 +609,18 @@ const sites = [{
   use: () => ({
     query: 'jump'
   })
+}, {
+  name: '云栖社区',
+  test: 'yq.aliyun.com/go/articleRenderRedirect',
+  use: () => ({
+    query: 'url'
+  })
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// CONCATENATED MODULE: ./src/scripts/redirect/index.ts
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
-
 var id = 0;
-
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-
-
 
 
 
@@ -645,15 +631,10 @@ function hidePage() {
     document.body.style.cssText = 'display:none !important;';
   });
 }
-
 var _sites = /*#__PURE__*/_classPrivateFieldLooseKey("sites");
-
 var _includes = /*#__PURE__*/_classPrivateFieldLooseKey("includes");
-
 var _parse = /*#__PURE__*/_classPrivateFieldLooseKey("parse");
-
 var _ensure = /*#__PURE__*/_classPrivateFieldLooseKey("ensure");
-
 class App {
   constructor(sites) {
     Object.defineProperty(this, _ensure, {
@@ -671,10 +652,8 @@ class App {
     });
     _classPrivateFieldLooseBase(this, _sites)[_sites] = sites;
   }
-
   boot() {
     const briefURL = location.host + location.pathname;
-
     _classPrivateFieldLooseBase(this, _sites)[_sites].forEach(async site => {
       const {
         name,
@@ -693,15 +672,13 @@ class App {
         redirection
       });
       if (!redirection) return;
-      location.replace(redirection); // 为什么要这样做？
+      location.replace(redirection);
+      // 为什么要这样做？
       // 只是为了避免被问“哎！怎么好像没有跳转啊？！”的烦恼（实际上跳转了只是外链打开慢）(x_x)
-
       hidePage();
     });
   }
-
 }
-
 function _includes2(test, url) {
   return [].concat(test).some(item => {
     if (typeof item === 'string') return item === url;
@@ -709,7 +686,6 @@ function _includes2(test, url) {
     return false;
   });
 }
-
 async function _parse2(use) {
   const {
     query,
@@ -718,7 +694,6 @@ async function _parse2(use) {
     attr
   } = await use();
   let redirection;
-
   if (query) {
     redirection = parse()[query];
   } else if (link) {
@@ -726,26 +701,22 @@ async function _parse2(use) {
   } else if (selector) {
     redirection = $(selector)?.[attr ?? 'innerText'];
   }
-
   redirection && (redirection = _classPrivateFieldLooseBase(this, _ensure)[_ensure](redirection.trim()));
   return redirection;
 }
-
 function _ensure2(url) {
   try {
     // eslint-disable-next-line no-new
     new URL(url);
   } catch (error) {
-    warn(error); // 修复某些链接没有 protocol 导致跳转不正确
+    warn(error);
+    // 修复某些链接没有 protocol 导致跳转不正确
     // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
-
     const protocol = 'http:';
     url = protocol + '//' + url;
   }
-
   return url;
 }
-
 new App(redirect_sites).boot();
 /******/ })()
 ;

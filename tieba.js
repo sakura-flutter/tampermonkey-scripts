@@ -634,18 +634,15 @@ function checker({
   const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
-
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
     pass = true;
   }
-
   if (!pass) {
     const {
       Toast
     } = window;
     notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
-
   return pass;
 }
 ;// CONCATENATED MODULE: ./src/store/index.ts
@@ -656,35 +653,31 @@ function checker({
  */
 function createStore(modulename = '', local = true) {
   const getRealProp = property => modulename ? `[[${modulename}]]-${property}` : property;
-
   const store = new Proxy({}, {
     get(target, property, receiver) {
       const realProp = getRealProp(property);
       const value = local ? GM_getValue(realProp) : Reflect.get(target, realProp, receiver);
       return value;
     },
-
     set(target, property, value, receiver) {
       const realProp = getRealProp(property);
       local ? GM_setValue(realProp, value) : Reflect.set(target, realProp, value, receiver);
       return true;
     },
-
     deleteProperty(target, property) {
       const realProp = getRealProp(property);
       local ? GM_deleteValue(realProp) : Reflect.deleteProperty(target, realProp);
       return true;
     }
-
   });
   return store;
 }
-
 /* harmony default export */ const store = (createStore());
 
 ;// CONCATENATED MODULE: ./src/scripts/tieba/store.ts
- // 用来解决类型问题
 
+
+// 用来解决类型问题
 /* harmony default export */ const tieba_store = (store);
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
@@ -697,14 +690,13 @@ const $$ = document.querySelectorAll.bind(document);
 function parse(href = location.href) {
   if (!href) return {};
   let search;
-
   try {
     // 链接
     const url = new URL(href);
     ({
       search
-    } = url); // 主要处理对hash的search
-
+    } = url);
+    // 主要处理对hash的search
     if (!search && url.hash.includes('?')) {
       search = url.hash.split('?')[1];
     }
@@ -716,113 +708,96 @@ function parse(href = location.href) {
       search = href;
     }
   }
-
   return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj) // 过滤 undefined，保留 null 且转成 ''
+  return Object.entries(obj)
+  // 过滤 undefined，保留 null 且转成 ''
   .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
-
 function warn(...args) {
   isDebug && warn.force(...args);
 }
-
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
-
 function log_error(...args) {
   isDebug && log_error.force(...args);
 }
-
 log_error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
-
 function table(...args) {
   isDebug && console.table(...args);
 }
-
 
 ;// CONCATENATED MODULE: ./src/scripts/tieba/utils/request.ts
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
-
 class ResponseError extends Error {
   constructor(msg = '未知错误', response, info) {
     super(msg);
-
     _defineProperty(this, "name", 'ResponseError');
-
     _defineProperty(this, "response", void 0);
-
     _defineProperty(this, "info", void 0);
-
     this.response = response;
     this.info = info;
   }
-
 }
+
 /**
  * 跨域请求，依赖 GM_xmlhttpRequest
  *
  * 15s 超时，0 点高峰期失败概率大，BD 是 1 分钟超时，实际上不必等这么久
  */
-
 function GMRequest(url, options) {
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({
       timeout: 1000 * 15,
       ...options,
       url,
-
       onload(res) {
         let error;
         let response;
-
         try {
           response = JSON.parse(res.response);
         } catch (e) {
           response = res.response;
         }
-
         if (response == null) {
-          error = new ResponseError('无响应', response, { ...options,
+          error = new ResponseError('无响应', response, {
+            ...options,
             ...res
           });
         } else if (response?.error_code !== '0') {
-          error = new ResponseError(response.error_msg, response, { ...options,
+          error = new ResponseError(response.error_msg, response, {
+            ...options,
             ...res
           });
         }
-
         error ? reject(error) : resolve(response);
       },
-
       onerror(error) {
         log_error.force(error);
         reject(error);
       }
-
     });
   });
 }
-
 GMRequest.post = function (url, data, options) {
-  return GMRequest(url, { ...options,
+  return GMRequest(url, {
+    ...options,
     data,
     method: 'POST'
   });
 };
+
 /**
  * 普通请求
  */
-
-
 function request(url, options) {
   return fetch(url, options).then(response => response.json()).then(resJson => {
     if (resJson.no !== 0) {
@@ -831,26 +806,22 @@ function request(url, options) {
         ...options
       });
     }
-
     return resJson;
   });
 }
-
 request.post = function (url, data, options = {}) {
   const headers = new Headers(options.headers);
   let body = data;
-
   if (data) {
     if (headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
       body = stringify(data);
     }
-
     if (headers.get('Content-Type')?.includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
       body = JSON.stringify(data);
     }
   }
-
-  return request(url, { ...options,
+  return request(url, {
+    ...options,
     method: 'POST',
     headers,
     body
@@ -891,8 +862,8 @@ function signRequestParams(params, isFake = true) {
   if (isFake) {
     params = makeFakeParams(params);
   }
-
-  const signed = { ...params,
+  const signed = {
+    ...params,
     sign: sign(params)
   };
   return signed;
@@ -903,21 +874,21 @@ function signRequestParams(params, isFake = true) {
 
 
 const jQuery = unsafeWindow.jQuery;
+
 /**
  * 获取页面上的元素
  */
-
 function getElementsInPage() {
-  const $moreforumEl = jQuery('#moreforum'); // 必须先触发才能获取剩下的吧
-
-  $moreforumEl.trigger('mouseenter'); // 侧边的吧
-
+  const $moreforumEl = jQuery('#moreforum');
+  // 必须先触发才能获取剩下的吧
+  $moreforumEl.trigger('mouseenter');
+  // 侧边的吧
   const likeUnsignEls = $$('#likeforumwraper .unsign');
-  const likeSignEls = $$('#likeforumwraper .sign'); // 查看更多的吧
-
+  const likeSignEls = $$('#likeforumwraper .sign');
+  // 查看更多的吧
   const alwayUnsignEls = $$('#alwayforum-wraper .unsign');
-  const alwaySignEls = $$('#alwayforum-wraper .sign'); // 关闭面板
-
+  const alwaySignEls = $$('#alwayforum-wraper .sign');
+  // 关闭面板
   $moreforumEl.trigger('click');
   const unsigns = [...likeUnsignEls, ...alwayUnsignEls].map(element => {
     const fid = element.dataset.fid;
@@ -937,36 +908,33 @@ function getElementsInPage() {
   return {
     /** 查看更多按钮 */
     moreForum: $moreforumEl,
-
     /** 未签到的元素 */
     unsigns,
-
     /** 签到的元素 */
     signs: [...likeSignEls, ...alwaySignEls],
-
     setSign(key) {
       // 替换成已签到样式
       unsignsMap.get(key)?.classList.replace('unsign', 'sign');
     }
-
   };
 }
+
 /**
  * 获取 PageData
  */
-
 function getPageData() {
   return unsafeWindow.PageData;
 }
+
 /**
  * 编码请求对象的值
  *
  * kw 存在“+”时会有问题
  * fix: https://github.com/sakura-flutter/tampermonkey-scripts/issues/635
  */
-
 function encodeRequestParams(obj) {
-  const newObj = { ...obj
+  const newObj = {
+    ...obj
   };
   newObj.kw && (newObj.kw = encodeURIComponent(newObj.kw));
   return newObj;
@@ -975,10 +943,10 @@ function encodeRequestParams(obj) {
 const external_Vue_namespaceObject = Vue;
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.ts
 
+
 /**
  * 同 GM_getValue、GM_setValue
  */
-
 function useGMvalue(name, defaultValue, _options) {
   const {
     listening,
@@ -993,7 +961,6 @@ function useGMvalue(name, defaultValue, _options) {
   }, {
     deep
   });
-
   if (listening) {
     (0,external_Vue_namespaceObject.onUnmounted)(() => {
       GM_removeValueChangeListener(id);
@@ -1002,7 +969,6 @@ function useGMvalue(name, defaultValue, _options) {
       value.value = newVal;
     });
   }
-
   return value;
 }
 ;// CONCATENATED MODULE: ./src/utils/mount-component.ts
@@ -1014,23 +980,19 @@ function useGMvalue(name, defaultValue, _options) {
 function append(el) {
   document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
 }
-
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
   append(root);
   return {
     instance: app.mount(root),
-
     unmount() {
       app.unmount();
       document.body.removeChild(root);
     }
-
   };
 }
 ;// CONCATENATED MODULE: ./src/scripts/tieba/api.ts
-
 
 
 
@@ -1046,10 +1008,10 @@ function mountComponent(RootComponent) {
 function getNewmoindex() {
   return request.post('/mo/q/newmoindex');
 }
+
 /**
  * web 签到
  */
-
 function doSignWeb(params) {
   const {
     tbs
@@ -1064,6 +1026,7 @@ function doSignWeb(params) {
     }
   });
 }
+
 /**
  *
  * app 接口
@@ -1077,28 +1040,28 @@ const appCommonHeader = Object.freeze({
   'Accept-Encoding': 'gzip',
   Cookie: 'ka=open'
 });
+
 /**
  * app 获取关注列表
  */
-
 function getForumLike(params) {
   return GMRequest.post('http://c.tieba.baidu.com/c/f/forum/like', stringify(signRequestParams(params)), {
     headers: appCommonHeader
   });
 }
+
 /**
  * app 签到
  */
-
 function doSignApp(params) {
   return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/sign', stringify(encodeRequestParams(signRequestParams(params))), {
     headers: appCommonHeader
   });
 }
+
 /**
  * app 批量签到
  */
-
 function batchSignApp(params) {
   return GMRequest.post('http://c.tieba.baidu.com/c/c/forum/msign', stringify(signRequestParams(params)), {
     headers: appCommonHeader
@@ -1106,10 +1069,10 @@ function batchSignApp(params) {
     if (response.error.errno !== '0') {
       throw new ResponseError(response.error.usermsg, response);
     }
-
     return response;
   });
 }
+
 /**
  *
  * 合成接口
@@ -1119,7 +1082,6 @@ function batchSignApp(params) {
 /**
  * 界面上无法获得失效的贴吧，这里调用接口获取所有关注的贴吧
  */
-
 async function mergeLikeForum() {
   const {
     BDUSS
@@ -1132,8 +1094,9 @@ async function mergeLikeForum() {
     BDUSS,
     tbs
   };
-  const [like1, like2Map] = await Promise.all([getNewmoindex().then(data => data.data.like_forum), getForumLike(req2).then(data => data.forum_list).then(forumList => forumList.reduce((acc, val) => (acc[val.id] = val, acc), {}))]); // 融合数据
+  const [like1, like2Map] = await Promise.all([getNewmoindex().then(data => data.data.like_forum), getForumLike(req2).then(data => data.forum_list).then(forumList => forumList.reduce((acc, val) => (acc[val.id] = val, acc), {}))]);
 
+  // 融合数据
   like1.forEach(forum => {
     const forumId = forum.forum_id;
     const like2Forum = like2Map[forumId];
@@ -1143,80 +1106,67 @@ async function mergeLikeForum() {
       level_name: like2Forum.level_name,
       slogan: like2Forum.slogan
     });
-  }); // 经验降序
-
+  });
+  // 经验降序
   like1.sort((a, b) => +b.user_exp - +a.user_exp);
   return like1;
 }
 ;// CONCATENATED MODULE: ./src/utils/queue.ts
 function queue_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 class Queue {
   /** 同时进行任务数 默认 3 个 */
 
   /** 当前执行数 */
+
   constructor({
     limit = 3
   } = {}) {
     queue_defineProperty(this, "tasks", []);
-
     queue_defineProperty(this, "limit", void 0);
-
     queue_defineProperty(this, "count", 0);
-
     this.limit = limit;
   }
+
   /** 任务数 */
-
-
   get size() {
     return this.tasks.length;
   }
-
   enqueue(tasks) {
     if (Array.isArray(tasks)) {
       this.tasks.push(...tasks);
     } else {
       this.tasks.push(tasks);
     }
-
     return this;
   }
-
   run() {
     return new Promise(resolve => {
       if (this.size === 0) {
         resolve();
         return;
       }
-
       const {
         tasks
       } = this;
-
       const _run = function () {
         const idle = Math.min(this.size, this.limit - this.count);
-
         for (let i = 0; i < idle; i++) {
           this.count++;
           const task = tasks.shift();
           task().finally(() => {
             this.count--;
-
             if (this.size > 0) {
-              _run(); // fix: 队列为空且当前执行的任务也为空才是结束状态
-
+              _run();
+              // fix: 队列为空且当前执行的任务也为空才是结束状态
             } else if (this.size === 0 && this.count === 0) {
               resolve();
             }
           });
         }
       }.bind(this);
-
       _run();
     });
   }
-
 }
 ;// CONCATENATED MODULE: ./src/utils/base.ts
 function throttle(fn, delay) {
@@ -1227,7 +1177,6 @@ function throttle(fn, delay) {
     const self = this;
     const cur = Date.now();
     clearTimeout(timeoutId);
-
     if (cur - begin >= delay) {
       fn.apply(self, args);
       begin = cur;
@@ -1247,20 +1196,18 @@ function once(fn) {
     }
   };
 }
+
 /**
  * 延时
  * @param ms 毫秒数
  */
-
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
 }
 ;// CONCATENATED MODULE: ./src/scripts/tieba/sign.ts
 function sign_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 /* eslint-disable camelcase */
-
 
 
 
@@ -1274,17 +1221,13 @@ function sign_defineProperty(obj, key, value) { if (key in obj) { Object.defineP
 class WebTask {
   constructor(options) {
     sign_defineProperty(this, "kw", void 0);
-
     sign_defineProperty(this, "fail", 0);
-
     this.kw = options.kw;
   }
-
   async execute() {
     const {
       kw
     } = this;
-
     try {
       await doSignWeb({
         kw
@@ -1299,7 +1242,6 @@ class WebTask {
           kw
         };
       }
-
       this.fail++;
       throw e;
     } finally {
@@ -1308,30 +1250,23 @@ class WebTask {
       await sleep(ms);
     }
   }
-
 }
+
 /**
  * 模拟客户端签到
  *
  * 获得经验与客户端签到相同，需要获得 BDUSS
  */
-
-
 class AppTask {
   constructor(options) {
     sign_defineProperty(this, "fid", void 0);
-
     sign_defineProperty(this, "kw", void 0);
-
     sign_defineProperty(this, "BDUSS", void 0);
-
     sign_defineProperty(this, "fail", 0);
-
     this.fid = options.fid;
     this.kw = options.kw;
     this.BDUSS = options.BDUSS;
   }
-
   async execute() {
     const {
       fid,
@@ -1342,7 +1277,6 @@ class AppTask {
       tbs
     } = getPageData();
     if (!fid) throw new Error('获取吧 id 为空');
-
     try {
       const response = await doSignApp({
         BDUSS,
@@ -1356,7 +1290,8 @@ class AppTask {
       return {
         fid,
         kw,
-        data: { ...user_info,
+        data: {
+          ...user_info,
           // 标记为已签到
           is_sign: 1
         }
@@ -1372,7 +1307,6 @@ class AppTask {
           }
         };
       }
-
       this.fail++;
       throw e;
     } finally {
@@ -1381,9 +1315,7 @@ class AppTask {
       await sleep(ms);
     }
   }
-
 }
-
 async function batch(options) {
   const {
     BDUSS,
@@ -1398,7 +1330,6 @@ async function batch(options) {
     BDUSS,
     tbs,
     forum_ids: forum_ids.slice(0, 200) // 接口限制最多 200 个
-
   });
   const newInfo = info.map(item => ({
     forum_id: item.forum_id,
@@ -1408,66 +1339,56 @@ async function batch(options) {
   }));
   return newInfo;
 }
-
 class Adapter {
   constructor(options) {
     sign_defineProperty(this, "options", void 0);
-
-    this.options = { ...options
+    this.options = {
+      ...options
     };
     this.options.unsigns = [...this.options.unsigns];
   }
+
   /**
    * 签到
    * @param mode 签到方式
    * @returns 签到失败列表
    */
-
-
   async sign(mode) {
     let Task;
     let limit;
-
     switch (mode) {
       case 'web':
-        Task = WebTask; // 网页签到要 1 个个来，太快会被禁止一段时间
-
+        Task = WebTask;
+        // 网页签到要 1 个个来，太快会被禁止一段时间
         limit = 1;
         break;
-
       case 'app':
       case 'fast':
         if (!this.options.BDUSS) {
           throw new Error('签到方式为 app 时 BDUSS 不能为空');
         }
-
-        Task = AppTask; // 限制 3 个任务，大于 3 个签到失败的概率好像大点了
-
+        Task = AppTask;
+        // 限制 3 个任务，大于 3 个签到失败的概率好像大点了
         limit = 3;
         break;
-
       default:
         // 类型检查
         return (e => {
           throw new Error(e);
         })(mode);
     }
-
     const {
       unsigns
     } = this.options;
-
     if (mode === 'fast') {
       try {
         const data = await batch({
           BDUSS: this.options.BDUSS,
           forum_ids: unsigns.map(unsign => unsign.fid)
         });
-
         for (let index = unsigns.length - 1; index >= 0; index--) {
           const unsign = unsigns[index];
           const found = data.find(item => item.forum_id === unsign.fid);
-
           if (found) {
             this.options.onSuccess({
               fid: found.forum_id,
@@ -1481,9 +1402,9 @@ class Adapter {
         log_error.force('批量签到失败', error);
       }
     }
+    warn('待签', unsigns);
 
-    warn('待签', unsigns); // eslint-disable-next-line @typescript-eslint/no-this-alias
-
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const failList = [];
     const queue = new Queue({
@@ -1500,8 +1421,8 @@ class Adapter {
           const result = await task.execute();
           self.options.onSuccess(result);
         } catch (error) {
-          log_error.force('签到失败', error, error.response, error.info); // 失败重签 1 次
-
+          log_error.force('签到失败', error, error.response, error.info);
+          // 失败重签 1 次
           if (task.fail <= 1) {
             queue.enqueue(callback);
           } else {
@@ -1513,7 +1434,6 @@ class Adapter {
     await queue.run();
     return failList;
   }
-
 }
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
 var injectStylesIntoStyleTag = __webpack_require__(3379);
@@ -1567,9 +1487,8 @@ var update = injectStylesIntoStyleTag_default()(components_checkbox/* default */
 ;// CONCATENATED MODULE: ./src/components/checkbox/index.tsx
 
 
-
 const prefixCls = 'skr-checkbox';
-const Checkbox = (0,external_Vue_namespaceObject.defineComponent)({
+const Checkbox = defineComponent({
   name: 'SkrCheckbox',
   props: {
     checked: {
@@ -1580,19 +1499,16 @@ const Checkbox = (0,external_Vue_namespaceObject.defineComponent)({
     disabled: Boolean
   },
   emits: ['update:checked'],
-
   setup(props, {
     slots,
     emit
   }) {
-    const inputRef = (0,external_Vue_namespaceObject.ref)();
-
+    const inputRef = ref();
     const handleChange = event => {
-      emit('update:checked', event.target.checked); // 受控
-
+      emit('update:checked', event.target.checked);
+      // 受控
       inputRef.value.checked = !!props.checked;
     };
-
     return () => (0,external_Vue_namespaceObject.createVNode)("label", {
       "class": prefixCls,
       "title": props.title
@@ -1604,7 +1520,6 @@ const Checkbox = (0,external_Vue_namespaceObject.defineComponent)({
       "onChange": handleChange
     }, null), slots.default?.()]);
   }
-
 });
 /* harmony default export */ const src_components_checkbox_0 = (Checkbox);
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.ts
@@ -1624,6 +1539,7 @@ function calcDiagInRect(width, height) {
     return c;
   };
 }
+
 /**
  * 计算当前值离总值中心的位置 越靠近中心值为1，远离中心值为0
  * @param value 当前值
@@ -1632,7 +1548,6 @@ function calcDiagInRect(width, height) {
  * @example value：50 extent：100 则计算 50 在 0-100 中的位置返回 1
  * value：0 或 100 extent：100 返回 0
  */
-
 function closeness(value, extent) {
   if (!value || !extent) return 0;
   const half = extent / 2;
@@ -1675,7 +1590,6 @@ var v_ripple_update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
 const weakmap = new WeakMap();
-
 /**
  * 创建容器元素
  */
@@ -1687,114 +1601,102 @@ function createRippleContainer() {
 /**
  * 创建涟漪元素
  */
-
-
 function createRippleEl() {
   const span = document.createElement('div');
   span.classList.add(rippleClassname);
   return span;
 }
-
 function normalizeOptions(options) {
   if (typeof options === 'boolean') {
     return {
       disabled: !options
     };
   }
-
   return options;
 }
+
 /**
  * 添加涟漪效果
  */
-
-
 const addRippleEffect = function (_options = {}) {
-  let options = normalizeOptions(_options); // 涟漪个数
-
+  let options = normalizeOptions(_options);
+  // 涟漪个数
   let count = 0;
-
   function listener(event) {
     if (options.disabled) return;
-    const currentTarget = event.currentTarget; // 优化: 处理过后不再调用getComputedStyle
+    const currentTarget = event.currentTarget;
 
+    // 优化: 处理过后不再调用getComputedStyle
     if (weakmap.get(currentTarget).position === false) {
-      weakmap.get(currentTarget).position = true; // 注意：会改变当前元素定位方式
-
+      weakmap.get(currentTarget).position = true;
+      // 注意：会改变当前元素定位方式
       if (getComputedStyle(currentTarget).position === 'static') {
         currentTarget.style.position = 'relative';
       }
     }
-
     const rect = currentTarget.getBoundingClientRect();
-    const rippleEl = createRippleEl(); // 取元素长的一边作为涟漪的周长
-
+    const rippleEl = createRippleEl();
+    // 取元素长的一边作为涟漪的周长
     const side = Math.max(rect.width, rect.height);
-    const radius = side / 2; // 鼠标在元素中的坐标
-
+    const radius = side / 2;
+    // 鼠标在元素中的坐标
     const left = event.pageX - rect.left - window.scrollX;
-    const top = event.pageY - rect.top - window.scrollY; // 选项加入到元素中
+    const top = event.pageY - rect.top - window.scrollY;
 
+    // 选项加入到元素中
     options.color && (rippleEl.style.background = options.color);
     rippleEl.style.width = side + 'px';
-    rippleEl.style.height = side + 'px'; // 元素定位再各减自身的宽高一半
-
+    rippleEl.style.height = side + 'px';
+    // 元素定位再各减自身的宽高一半
     rippleEl.style.top = top - radius + 'px';
-    rippleEl.style.left = left - radius + 'px'; // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
-
+    rippleEl.style.left = left - radius + 'px';
+    // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
     const base = 1.5;
     const diagonal = calcDiagInRect(rect.width, rect.height)(left, top);
     rippleEl.style.animationDuration = base - base * diagonal / side + 's';
     let container = currentTarget.querySelector(`.${containerClassname}`);
-
     if (!container) {
       container = createRippleContainer();
       currentTarget.appendChild(container);
     }
-
     container.appendChild(rippleEl);
     count++;
-
     const unlisten = (() => {
       const leaveEvents = ['mouseup', 'mouseleave'];
-
       const listener = () => {
         // 为了尽量能看清动画效果，延时一下再进行透明
         setTimeout(() => {
           rippleEl.style.opacity = '0';
         }, 100);
       };
-
       leaveEvents.forEach(eventname => currentTarget.addEventListener(eventname, listener));
       return () => {
         leaveEvents.forEach(eventname => currentTarget.removeEventListener(eventname, listener));
       };
-    })(); // 移除涟漪元素
+    })();
 
-
+    // 移除涟漪元素
     rippleEl.addEventListener('transitionend', transEvent => {
       if (transEvent.propertyName === 'opacity') {
         unlisten();
-        rippleEl.remove(); // 没有涟漪元素时移除容器
-
+        rippleEl.remove();
+        // 没有涟漪元素时移除容器
         if (--count <= 0) {
           container?.remove();
         }
       }
     });
-  } // 更新配置项
+  }
 
-
+  // 更新配置项
   function update(newOpts) {
     options = Object.assign({}, options, normalizeOptions(newOpts));
   }
-
   return {
     listener,
     update
   };
 };
-
 const vRipple = {
   mounted(el, binding) {
     const {
@@ -1806,16 +1708,13 @@ const vRipple = {
       update,
       // 更新配置项函数
       position: false // 是否已经改变了 el 的定位方式
-
     });
     el.addEventListener('mousedown', listener, false);
   },
-
   updated(el, binding) {
     const val = weakmap.get(el);
     val.update(binding.value);
   }
-
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
 ;// CONCATENATED MODULE: ./src/directives/index.ts
@@ -1856,11 +1755,10 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-
-const button_prefixCls = 'skr-button'; // button type 非 default 时覆盖一层白色
-
+const button_prefixCls = 'skr-button';
+// button type 非 default 时覆盖一层白色
 const rippleColor = 'rgb(255 255 255 / 15%)';
-const Button = (0,external_Vue_namespaceObject.defineComponent)({
+const Button = defineComponent({
   name: 'SkrButton',
   directives: {
     ripple: src_directives_v_ripple
@@ -1894,11 +1792,10 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       default: true
     }
   },
-
   setup(props, {
     slots
   }) {
-    const rippleOptions = (0,external_Vue_namespaceObject.computed)(() => {
+    const rippleOptions = computed(() => {
       return Object.assign({}, {
         color: props.type === 'default' ? undefined : rippleColor
       }, typeof props.ripple === 'boolean' ? {
@@ -1912,7 +1809,6 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
       }, `${button_prefixCls}--${props.size}`]
     }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
-
 });
 /* harmony default export */ const src_components_button_0 = (Button);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/components/input/index.scss
@@ -1949,9 +1845,8 @@ var input_update = injectStylesIntoStyleTag_default()(input/* default */.Z, inpu
 ;// CONCATENATED MODULE: ./src/components/input/index.tsx
 
 
-
 const input_prefixCls = 'skr-input';
-const Input = (0,external_Vue_namespaceObject.defineComponent)({
+const Input = defineComponent({
   name: 'SkrInput',
   props: {
     modelValue: {
@@ -1969,7 +1864,6 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
     }
   },
   emits: ['update:modelValue'],
-
   setup(props, {
     emit
   }) {
@@ -1979,7 +1873,6 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
         emit('update:modelValue', event.target.value);
       }
     };
-
     return () => (0,external_Vue_namespaceObject.createVNode)("input", {
       "class": [input_prefixCls, `${input_prefixCls}--${props.size}`, {
         [`${input_prefixCls}--scale`]: props.scale
@@ -1989,7 +1882,6 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
       "onInput": handleInput
     }, null);
   }
-
 });
 /* harmony default export */ const src_components_input = (Input);
 ;// CONCATENATED MODULE: ./src/scripts/tieba/ui/ForumList.tsx
@@ -1997,8 +1889,7 @@ const Input = (0,external_Vue_namespaceObject.defineComponent)({
 
 
 
-
-const ForumList = (0,external_Vue_namespaceObject.defineComponent)({
+const ForumList = defineComponent({
   props: {
     dataSource: {
       type: Array,
@@ -2010,41 +1901,35 @@ const ForumList = (0,external_Vue_namespaceObject.defineComponent)({
     }
   },
   emits: ['clickSize'],
-
   setup(props, {
     emit
   }) {
     const keyword = useGMvalue('keyword', '');
     const isReverse = useGMvalue('is_reverse', false);
-    const diaplayForums = (0,external_Vue_namespaceObject.computed)(() => {
+    const diaplayForums = computed(() => {
       let newList = [...props.dataSource];
       isReverse.value && newList.reverse();
-
       if (keyword.value) {
         // 忽略大小写
         newList = newList.filter(forum => new RegExp(keyword.value, 'i').test(forum.forum_name));
       }
-
       return newList;
     });
-    const counter = (0,external_Vue_namespaceObject.computed)(() => ({
+    const counter = computed(() => ({
       total: props.dataSource.length,
       // eslint-disable-next-line camelcase
       signed: props.dataSource.filter(({
         is_sign
       }) => is_sign).length
     }));
-
     function changeReverse() {
       isReverse.value = !isReverse.value;
     }
-
     function expTitle(item) {
       const MAX_EXP_DAILY = 8;
       const needed = +item.levelup_score - +item.user_exp;
       return `距离升级还需要${needed}经验，若每天+${MAX_EXP_DAILY}，还需要${Math.ceil(needed / MAX_EXP_DAILY)}天`;
     }
-
     return () => (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [props.dataSource.length > 0 && (0,external_Vue_namespaceObject.createVNode)("div", {
       "class": "forums-container"
     }, [(0,external_Vue_namespaceObject.createVNode)("header", {
@@ -2091,7 +1976,6 @@ const ForumList = (0,external_Vue_namespaceObject.defineComponent)({
       "scale": true
     }, null)])]);
   }
-
 });
 /* harmony default export */ const ui_ForumList = (ForumList);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/tieba/ui/index.scss
@@ -2138,13 +2022,10 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
-
-
 const sizeTick = function* () {
   const sizes = ['small', 'normal', 'large'];
   let currSize = tieba_store.size ?? 'small';
   let index = sizes.findIndex(v => v === currSize);
-
   while (true) {
     index >= sizes.length && (index = 0);
     currSize = sizes[index++];
@@ -2152,11 +2033,10 @@ const sizeTick = function* () {
     yield currSize;
   }
 }();
-
 function createUI() {
   mountComponent({
     setup() {
-      const state = (0,external_Vue_namespaceObject.reactive)({
+      const state = reactive({
         loading: false,
         size: sizeTick.next().value,
         likeForums: []
@@ -2167,40 +2047,33 @@ function createUI() {
       const isCover = useGMvalue('is_cover', false);
       const toastTime = useGMvalue('toast_time', undefined);
       let setSign;
-
       function run(toastVisible = true) {
         if (state.loading) {
           Toast('签到中');
           return;
         }
-
         const {
           unsigns,
           signs,
           setSign: _setSign
         } = getElementsInPage();
         setSign = _setSign;
-
         if (unsigns.length === 0) {
-          const now = new Date(); // 避免每次都提示
-
+          const now = new Date();
+          // 避免每次都提示
           if (toastVisible || toastTime.value === undefined || new Date(toastTime.value).getDate() < now.getDate()) {
             Toast.success('所有吧已签到');
           }
-
           toastTime.value = +now;
           return;
         }
-
         let mode;
-
         if (isSimulate.value) {
           if (!tieba_store.BDUSS) {
             Toast.error('请先输入 BDUSS 或 BDUSS_BFESS');
             return;
-          } // 签了 20 个以上视为用过批量签到
-
-
+          }
+          // 签了 20 个以上视为用过批量签到
           if (signs.length >= 20) {
             mode = 'app';
           } else {
@@ -2209,13 +2082,11 @@ function createUI() {
         } else {
           mode = 'web';
         }
-
         state.loading = true;
         const toast = Toast('开始签到，请等待', 0);
         new Adapter({
           unsigns,
           BDUSS: tieba_store.BDUSS,
-
           onSuccess({
             fid,
             kw,
@@ -2225,13 +2096,11 @@ function createUI() {
             if (key) setSign(key);
             if (fid && data) updateLikeForum(fid, data);
           }
-
         }).sign(mode).then(async () => {
-          if (tieba_store.BDUSS) await fetchForums(); // 以页面为准，因为有时签到失败但实际上是成功的
-
+          if (tieba_store.BDUSS) await fetchForums();
+          // 以页面为准，因为有时签到失败但实际上是成功的
           const failList = getElementsInPage().unsigns;
           const length = failList.length;
-
           if (length > 0) {
             Toast.warning(`签到成功，失败${length}个：${failList.map(v => v.kw).join('、')}`, 0);
           } else {
@@ -2242,26 +2111,22 @@ function createUI() {
           state.loading = false;
         });
       }
-
       function updateLikeForum(fid, forum) {
         const found = state.likeForums.find(item => +fid === +item.forum_id);
         if (!found) return;
-
         if (forum.sign_bonus_point) {
           found.user_exp = String(Number(found.user_exp) + Number(forum.sign_bonus_point));
         }
-
         Object.assign(found, forum);
-      } // 未签到的靠前
+      }
 
-
+      // 未签到的靠前
       function sort() {
         state.likeForums.sort((a, b) => {
           if (!a.is_sign && b.is_sign) return -1;
           return 0;
         });
       }
-
       function fetchForums() {
         return mergeLikeForum().then(forums => {
           state.likeForums = forums;
@@ -2278,18 +2143,15 @@ function createUI() {
           Toast.error('获取贴吧列表失败。。请刷新重试~', 0);
         });
       }
-
       function onSimulateChange(checked) {
         if (checked === false) {
           isSimulate.value = checked;
           return;
         }
-
         const {
           BDUSS
         } = tieba_store;
         const result = window.prompt('请输入 F12 -> 应用(Application) -> Cookies 中的【BDUSS 或 BDUSS_BFESS】', BDUSS || undefined);
-
         if (result) {
           tieba_store.BDUSS = result;
           isSimulate.value = true;
@@ -2298,18 +2160,15 @@ function createUI() {
           isSimulate.value = false;
         }
       }
-
       (async () => {
         // 获取列表后再自动签到
         if (tieba_store.BDUSS) {
           await fetchForums();
         }
-
         if (isComplete.value) {
           run(false);
         }
       })();
-
       return () => (0,external_Vue_namespaceObject.createVNode)("div", {
         "id": "inject-sign",
         "class": {
@@ -2360,10 +2219,10 @@ function createUI() {
         }
       }, null)]);
     }
-
   });
 }
 ;// CONCATENATED MODULE: ./src/scripts/tieba/index.ts
+
 
 
 
@@ -2375,17 +2234,16 @@ function createUI() {
  */
 
 function main() {
-  if (!checker()) return; // 未登录时删除已有的 BDUSS
+  if (!checker()) return;
 
+  // 未登录时删除已有的 BDUSS
   if (!getElementsInPage().moreForum.length) {
     delete tieba_store.BDUSS;
     delete tieba_store.is_complete;
     return;
   }
-
   createUI();
 }
-
 main();
 })();
 
