@@ -357,6 +357,13 @@ const sites: Site[] = [
       query: 'jump',
     }),
   },
+  {
+    name: '云栖社区',
+    test: 'yq.aliyun.com/go/articleRenderRedirect',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
