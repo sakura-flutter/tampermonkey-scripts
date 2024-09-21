@@ -364,6 +364,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: 'NodeSeek',
+    test: 'www.nodeseek.com/jump',
+    use: () => ({
+      query: 'to',
+    }),
+  }
 ]
 
 export default sites
