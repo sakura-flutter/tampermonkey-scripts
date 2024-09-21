@@ -39,6 +39,8 @@ module.exports = isProd =>
 // @match        *://docs.qq.com/scenario/link.html*
 // @match        *://www.pc6.com/goread.html*
 // @match        *://afdian.net/link*
+// @match        *://afdian.com/link*
+// @match        *://ifdian.net/link*
 // @match        *://gitee.com/link*
 // @match        *://www.tianyancha.com/security*
 // @match        *://aiqicha.baidu.com/safetip*
