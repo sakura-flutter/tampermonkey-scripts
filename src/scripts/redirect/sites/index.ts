@@ -37,11 +37,12 @@ const sites: Site[] = [
   {
     name: 'QQ邮箱',
     test: [
-      /^mail\.qq\.com\/cgi-bin\/readtemplate/, // 好像不用登录也可以
-      /^mail\.qq\.com\/cgi-bin\/mail_spam/, // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
+      'mail.qq.com/cgi-bin/readtemplate', // 好像不用登录也可以 gourl
+      'mail.qq.com/cgi-bin/mail_spam', // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转 url
+      'wx.mail.qq.com/xmspamcheck/xmsafejump', // url
     ],
     use: () => ({
-      link: parse().url || parse().gourl,
+      link: parse().gourl || parse().url,
     }),
   },
   {
