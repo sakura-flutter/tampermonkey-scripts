@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.53.0
+// @version      1.54.0
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢、云栖社区、NodeSeek
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -14,6 +14,7 @@
 // @match        *://t.cn/*
 // @match        *://weibo.cn/sinaurl*
 // @match        *://mail.qq.com/cgi-bin/*
+// @match        *://wx.mail.qq.com/xmspamcheck/xmsafejump*
 // @match        *://c.pc.qq.com/middlem.html*
 // @match        *://c.pc.qq.com/pc.html*
 // @match        *://c.pc.qq.com/ios.html*
@@ -335,12 +336,14 @@ const sites = [{
   })
 }, {
   name: 'QQ邮箱',
-  test: [/^mail\.qq\.com\/cgi-bin\/readtemplate/,
-  // 好像不用登录也可以
-  /^mail\.qq\.com\/cgi-bin\/mail_spam/ // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转
+  test: ['mail.qq.com/cgi-bin/readtemplate',
+  // 好像不用登录也可以 gourl
+  'mail.qq.com/cgi-bin/mail_spam',
+  // 需要登录邮箱才可以，不过这里仍然可以帮忙跳转 url
+  'wx.mail.qq.com/xmspamcheck/xmsafejump' // url
   ],
   use: () => ({
-    link: parse().url || parse().gourl
+    link: parse().gourl || parse().url
   })
 }, {
   name: 'QQPC',
