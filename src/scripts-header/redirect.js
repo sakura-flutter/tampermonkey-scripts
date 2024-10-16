@@ -17,6 +17,7 @@ module.exports = isProd =>
 // @match        *://mail.qq.com/cgi-bin/*
 // @match        *://wx.mail.qq.com/xmspamcheck/xmsafejump*
 // @match        *://c.pc.qq.com/middlem.html*
+// @match        *://c.pc.qq.com/middlect.html*
 // @match        *://c.pc.qq.com/pc.html*
 // @match        *://c.pc.qq.com/ios.html*
 // @match        *://c.pc.qq.com/android.html*
