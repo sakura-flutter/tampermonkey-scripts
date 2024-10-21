@@ -47,7 +47,7 @@ const sites: Site[] = [
   },
   {
     name: 'QQPC',
-    test: 'c.pc.qq.com/middlem.html',
+    test: /^c\.pc\.qq\.com\/middle(m|ct).html/,
     use: () => ({
       query: 'pfurl',
     }),
