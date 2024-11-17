@@ -376,6 +376,13 @@ const sites: Site[] = [
       query: 'to',
     }),
   },
+  {
+    name: '亿企查',
+    test: 'www.yiqicha.com/thirdPage',
+    use: () => ({
+      query: 'link',
+    }),
+  },
 ]
 
 export default sites
