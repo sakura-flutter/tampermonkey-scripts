@@ -1,51 +1,28 @@
+/* stylelint-disable max-line-length */
 @import '../mixins';
 
 $default-width: 652px;
 
-@include substrate(1450px, 88vw, 1530px) {
+@include substrate(1600px, 73vw, 1530px) {
   body {
+    $google-columns-repeat: 21;
+
     /* 搜索结果 */
     #rcnt {
-      max-width: none;
+      grid-template-columns: 210px repeat($google-columns-repeat, calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})) minmax(0, 1fr);
       width: var(--inject-page-width);
-
-      #center_col {
-        // - 间距 - 右侧宽度
-        width: calc(100% - var(--rhs-margin) - 600px);
-      }
     }
 
     /* 列表 */
-    #rso {
-      .g {
-        width: 100% !important;
+    #w7tRq {
+      column-gap: 1%;
+      grid-template-columns: 0 repeat($google-columns-repeat, calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat}));
 
-        /* 描述文本 */
-        .IsZvec {
-          max-width: none;
-        }
-
-        /* 折叠面板 */
-        .kp-blk {
-          width: 100%;
-        }
-
-        /* 反馈 */
-        .kno-ftr {
-          margin-right: 0;
-        }
-      }
-
-      /* 特殊类型还原宽度(搜索：蛇麻花) */
-      /* stylelint-disable-next-line selector-type-no-unknown */
-      g-section-with-header {
-        width: $default-width;
-      }
-    }
-
-    /* 细线宽度 */
-    .KFFQ0c {
-      width: 100%;
+      // /* 特殊类型还原宽度(搜索：蛇麻花) */
+      // /* stylelint-disable-next-line selector-type-no-unknown */
+      // g-section-with-header {
+      //   width: $default-width;
+      // }
     }
   }
 }
