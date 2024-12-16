@@ -583,21 +583,27 @@ var __webpack_exports__ = {};
 
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
+
 function warn(...args) {
   isDebug && warn.force(...args);
 }
+
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
+
 function error(...args) {
   isDebug && error.force(...args);
 }
+
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
+
 function table(...args) {
   isDebug && console.table(...args);
 }
+
 
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
@@ -613,24 +619,27 @@ const external_Vue_namespaceObject = Vue;
 function append(el) {
   document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
 }
+
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
   append(root);
   return {
     instance: app.mount(root),
+
     unmount() {
       app.unmount();
       document.body.removeChild(root);
     }
+
   };
 }
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.ts
 
-
 /**
  * 同 GM_getValue、GM_setValue
  */
+
 function useGMvalue(name, defaultValue, _options) {
   const {
     listening,
@@ -645,6 +654,7 @@ function useGMvalue(name, defaultValue, _options) {
   }, {
     deep
   });
+
   if (listening) {
     (0,external_Vue_namespaceObject.onUnmounted)(() => {
       GM_removeValueChangeListener(id);
@@ -653,6 +663,7 @@ function useGMvalue(name, defaultValue, _options) {
       value.value = newVal;
     });
   }
+
   return value;
 }
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.ts
@@ -672,7 +683,6 @@ function calcDiagInRect(width, height) {
     return c;
   };
 }
-
 /**
  * 计算当前值离总值中心的位置 越靠近中心值为1，远离中心值为0
  * @param value 当前值
@@ -681,6 +691,7 @@ function calcDiagInRect(width, height) {
  * @example value：50 extent：100 则计算 50 在 0-100 中的位置返回 1
  * value：0 或 100 extent：100 返回 0
  */
+
 function closeness(value, extent) {
   if (!value || !extent) return 0;
   const half = extent / 2;
@@ -741,6 +752,7 @@ var update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z, options
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
 const weakmap = new WeakMap();
+
 /**
  * 创建容器元素
  */
@@ -752,102 +764,114 @@ function createRippleContainer() {
 /**
  * 创建涟漪元素
  */
+
+
 function createRippleEl() {
   const span = document.createElement('div');
   span.classList.add(rippleClassname);
   return span;
 }
+
 function normalizeOptions(options) {
   if (typeof options === 'boolean') {
     return {
       disabled: !options
     };
   }
+
   return options;
 }
-
 /**
  * 添加涟漪效果
  */
+
+
 const addRippleEffect = function (_options = {}) {
-  let options = normalizeOptions(_options);
-  // 涟漪个数
+  let options = normalizeOptions(_options); // 涟漪个数
+
   let count = 0;
+
   function listener(event) {
     if (options.disabled) return;
-    const currentTarget = event.currentTarget;
+    const currentTarget = event.currentTarget; // 优化: 处理过后不再调用getComputedStyle
 
-    // 优化: 处理过后不再调用getComputedStyle
     if (weakmap.get(currentTarget).position === false) {
-      weakmap.get(currentTarget).position = true;
-      // 注意：会改变当前元素定位方式
+      weakmap.get(currentTarget).position = true; // 注意：会改变当前元素定位方式
+
       if (getComputedStyle(currentTarget).position === 'static') {
         currentTarget.style.position = 'relative';
       }
     }
-    const rect = currentTarget.getBoundingClientRect();
-    const rippleEl = createRippleEl();
-    // 取元素长的一边作为涟漪的周长
-    const side = Math.max(rect.width, rect.height);
-    const radius = side / 2;
-    // 鼠标在元素中的坐标
-    const left = event.pageX - rect.left - window.scrollX;
-    const top = event.pageY - rect.top - window.scrollY;
 
-    // 选项加入到元素中
+    const rect = currentTarget.getBoundingClientRect();
+    const rippleEl = createRippleEl(); // 取元素长的一边作为涟漪的周长
+
+    const side = Math.max(rect.width, rect.height);
+    const radius = side / 2; // 鼠标在元素中的坐标
+
+    const left = event.pageX - rect.left - window.scrollX;
+    const top = event.pageY - rect.top - window.scrollY; // 选项加入到元素中
+
     options.color && (rippleEl.style.background = options.color);
     rippleEl.style.width = side + 'px';
-    rippleEl.style.height = side + 'px';
-    // 元素定位再各减自身的宽高一半
+    rippleEl.style.height = side + 'px'; // 元素定位再各减自身的宽高一半
+
     rippleEl.style.top = top - radius + 'px';
-    rippleEl.style.left = left - radius + 'px';
-    // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+    rippleEl.style.left = left - radius + 'px'; // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+
     const base = 1.5;
     const diagonal = calcDiagInRect(rect.width, rect.height)(left, top);
     rippleEl.style.animationDuration = base - base * diagonal / side + 's';
     let container = currentTarget.querySelector(`.${containerClassname}`);
+
     if (!container) {
       container = createRippleContainer();
       currentTarget.appendChild(container);
     }
+
     container.appendChild(rippleEl);
     count++;
+
     const unlisten = (() => {
       const leaveEvents = ['mouseup', 'mouseleave'];
+
       const listener = () => {
         // 为了尽量能看清动画效果，延时一下再进行透明
         setTimeout(() => {
           rippleEl.style.opacity = '0';
         }, 100);
       };
+
       leaveEvents.forEach(eventname => currentTarget.addEventListener(eventname, listener));
       return () => {
         leaveEvents.forEach(eventname => currentTarget.removeEventListener(eventname, listener));
       };
-    })();
+    })(); // 移除涟漪元素
 
-    // 移除涟漪元素
+
     rippleEl.addEventListener('transitionend', transEvent => {
       if (transEvent.propertyName === 'opacity') {
         unlisten();
-        rippleEl.remove();
-        // 没有涟漪元素时移除容器
+        rippleEl.remove(); // 没有涟漪元素时移除容器
+
         if (--count <= 0) {
           container?.remove();
         }
       }
     });
-  }
+  } // 更新配置项
 
-  // 更新配置项
+
   function update(newOpts) {
     options = Object.assign({}, options, normalizeOptions(newOpts));
   }
+
   return {
     listener,
     update
   };
 };
+
 const vRipple = {
   mounted(el, binding) {
     const {
@@ -859,13 +883,16 @@ const vRipple = {
       update,
       // 更新配置项函数
       position: false // 是否已经改变了 el 的定位方式
+
     });
     el.addEventListener('mousedown', listener, false);
   },
+
   updated(el, binding) {
     const val = weakmap.get(el);
     val.update(binding.value);
   }
+
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
 ;// CONCATENATED MODULE: ./src/directives/index.ts
@@ -906,10 +933,11 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-const prefixCls = 'skr-button';
-// button type 非 default 时覆盖一层白色
+
+const prefixCls = 'skr-button'; // button type 非 default 时覆盖一层白色
+
 const rippleColor = 'rgb(255 255 255 / 15%)';
-const Button = defineComponent({
+const Button = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrButton',
   directives: {
     ripple: src_directives_v_ripple
@@ -943,10 +971,11 @@ const Button = defineComponent({
       default: true
     }
   },
+
   setup(props, {
     slots
   }) {
-    const rippleOptions = computed(() => {
+    const rippleOptions = (0,external_Vue_namespaceObject.computed)(() => {
       return Object.assign({}, {
         color: props.type === 'default' ? undefined : rippleColor
       }, typeof props.ripple === 'boolean' ? {
@@ -960,6 +989,7 @@ const Button = defineComponent({
       }, `${prefixCls}--${props.size}`]
     }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
+
 });
 /* harmony default export */ const src_components_button_0 = (Button);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/view-ui/hide.lazy.scss
@@ -1052,15 +1082,18 @@ var ui_update = injectStylesIntoStyleTag_default()(ui/* default */.Z, ui_options
 
 
 
+
 mountComponent({
   setup() {
     const hidden = useGMvalue('menu_hidden', false);
-    watchEffect(() => {
+    (0,external_Vue_namespaceObject.watchEffect)(() => {
       hidden.value ? view_ui_hide_lazy.use() : view_ui_hide_lazy.unuse();
     });
+
     function toggle() {
       hidden.value = !hidden.value;
     }
+
     return () => (0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
       "id": "hide-menu-control-js",
       "size": "mini",
@@ -1070,15 +1103,17 @@ mountComponent({
       default: () => [(0,external_Vue_namespaceObject.createVNode)("p", null, [(0,external_Vue_namespaceObject.createTextVNode)("\u5207\u6362")])]
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/view-ui/index.ts
 
 
 
+
 function main() {
   // 物料
-  const storeBadge = '.navigate-item-badge-store';
-  // pro
+  const storeBadge = '.navigate-item-badge-store'; // pro
+
   const proBadge = '.navigate-item-badge-pro';
   const prefixSelector = '.app-left .ivu-menu ';
   const selector = Array.from([storeBadge, proBadge], item => prefixSelector + item).join();
@@ -1088,20 +1123,24 @@ function main() {
     let {
       parentElement
     } = el;
+
     while (parentElement) {
       const {
         tagName
       } = parentElement;
+
       if (tagName === 'A' && parentElement.classList.contains('ivu-menu-item')) {
         // 添加标记
         parentElement.dataset.visible = 'hidden';
         break;
       }
+
       if (tagName === 'BODY') break;
       parentElement = parentElement.parentElement;
     }
   });
 }
+
 setTimeout(main, 500);
 })();
 

@@ -70,21 +70,27 @@ const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
+
 function warn(...args) {
   isDebug && warn.force(...args);
 }
+
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
+
 function error(...args) {
   isDebug && error.force(...args);
 }
+
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
+
 function table(...args) {
   isDebug && console.table(...args);
 }
+
 
 ;// CONCATENATED MODULE: ./src/scripts/mdn-web-docs/utils.ts
 
@@ -99,24 +105,24 @@ function isChinese(lang) {
 function isEnglish(lang) {
   return /en-US/i.test(lang);
 }
-
 /**
  * 需要点击菜单才能获取支持的语言
  * 切换语言后菜单会自动关闭
  * callback 返回一个布尔确认操作完后是否自动关闭
  */
+
 async function getLangMenus(callback) {
-  const toggle = $('button.languages-switcher-menu');
-  // 存在没有翻译的情况
+  const toggle = $('button.languages-switcher-menu'); // 存在没有翻译的情况
+
   if (toggle == null) return [];
-  toggle.click();
-  // fix: 新版又被 mdn 改掉了，不知道为什么要放在 microtask 才能获取到 buttons
+  toggle.click(); // fix: 新版又被 mdn 改掉了，不知道为什么要放在 microtask 才能获取到 buttons
   // 由于改为 microtask，调用这个函数都要更改
   // https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent
   // 只有浏览器自己触发的事件才是放在一个 task（不是 microtask） 里执行的
   // 而人工合成（synthetic）的事件派发（dispatch）是同步执行的，包括执行 click() 和 dispatchEvent()
-  await Promise.resolve();
-  // 不要返回 NodeList，和空时返回同样的类型
+
+  await Promise.resolve(); // 不要返回 NodeList，和空时返回同样的类型
+
   const buttons = [...$$('.language-menu button[name]')];
   const off = callback?.(buttons) ?? true;
   off && toggle.click();
@@ -135,6 +141,7 @@ var style = __webpack_require__(4893);
 
 let docsLang = matchLang(location.pathname);
 let supports = [];
+
 async function main() {
   supports = await getSupports();
   warn(docsLang);
@@ -146,6 +153,7 @@ async function main() {
   window.addEventListener('click', function listener(event) {
     if (!event.isTrusted) return;
     const isInLangMenu = $('.languages-switcher-menu .language-menu')?.contains(event.target);
+
     if (isInLangMenu) {
       // 标记自行切换语言
       sessionStorage.setItem('hand-control-language', 'true');
@@ -155,14 +163,17 @@ async function main() {
   setLocale();
   addLangButton();
 }
+
 function setLocale() {
-  if (isChinese(docsLang)) return;
-  // 是否自行切换过语言
+  if (isChinese(docsLang)) return; // 是否自行切换过语言
+
   if (sessionStorage.getItem('hand-control-language') === 'true') return;
+
   for (const item of supports) {
     isChinese(matchLang(item)) && selectLang(item);
   }
 }
+
 function selectLang(value) {
   getLangMenus(buttons => {
     for (const button of buttons) {
@@ -173,33 +184,39 @@ function selectLang(value) {
     }
   });
 }
+
 function addLangButton() {
   const values = []; // [0]中 [1]英 排序
+
   for (const item of supports) {
     const lang = matchLang(item);
+
     if (isChinese(lang)) {
       values[0] = item;
     } else if (isEnglish(lang)) {
       values[1] = item;
     }
   }
+
   if (isChinese(docsLang)) values[0] = docsLang;
   if (isEnglish(docsLang)) values[1] = docsLang;
   warn(values);
-  if (values.filter(Boolean).length < 2) return;
+  if (values.filter(Boolean).length < 2) return; // bug: 会出现一种进来时有翻译，换了另一篇后没翻译，这时按钮仍然显示的问题
 
-  // bug: 会出现一种进来时有翻译，换了另一篇后没翻译，这时按钮仍然显示的问题
   const button = document.createElement('button');
   button.innerText = '中-英';
   button.classList.add('button');
   button.classList.add('action');
   button.style.cssText = ['position: fixed', 'right: 0', 'bottom: 15vh', 'line-height: 2em', 'padding: 2px 10px', 'font-size: 12px', 'letter-spacing: 2px', 'border: 1px solid var(--border-secondary)', 'background-color: var(--button-bg)', 'box-shadow: var(--shadow-01)'].join(';');
+
   button.onclick = function () {
     sessionStorage.setItem('hand-control-language', 'true');
     selectLang(isChinese(docsLang) ? values[1] : values[0]);
   };
+
   document.body.append(button);
 }
+
 main();
 })();
 

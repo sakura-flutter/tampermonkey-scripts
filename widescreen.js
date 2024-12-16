@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         网页宽屏
-// @version      2.15.15
+// @version      2.15.16
 // @description  适配了半次元、微信公众号、知乎、掘金、简书、贴吧、百度搜索、搜狗搜索、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、CSDN、crates.io、米游社原神
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -602,7 +602,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1300px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1450px){:root{--inject-page-width:min(88vw, 1530px)}.inject-widescreen-loose-js{--inject-page-width:88vw}body #rcnt{max-width:none;width:var(--inject-page-width)}body #rcnt #center_col{width:calc(100% - var(--rhs-margin) - 600px)}body #rso .g{width:100% !important}body #rso .g .IsZvec{max-width:none}body #rso .g .kp-blk{width:100%}body #rso .g .kno-ftr{margin-right:0}body #rso g-section-with-header{width:652px}body .KFFQ0c{width:100%}}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "@media screen and (min-width: 1600px){:root{--inject-page-width:min(73vw, 1530px)}.inject-widescreen-loose-js{--inject-page-width:73vw}body #rcnt{grid-template-columns:210px repeat(21, calc(79% / 21)) minmax(0, 1fr);width:var(--inject-page-width)}body #w7tRq{column-gap:1%;grid-template-columns:0 repeat(21, calc(79% / 21))}}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1257,34 +1257,43 @@ function checker({
   const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
+
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
     pass = true;
   }
+
   if (!pass) {
     const {
       Toast
     } = window;
     notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
+
   return pass;
 }
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
+
 function warn(...args) {
   isDebug && warn.force(...args);
 }
+
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
+
 function error(...args) {
   isDebug && error.force(...args);
 }
+
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
+
 function table(...args) {
   isDebug && console.table(...args);
 }
+
 
 ;// CONCATENATED MODULE: ./src/utils/ready-state.ts
 /**
@@ -1293,35 +1302,40 @@ function table(...args) {
  * 靠后定义的会自动将靠前定义的但没有监听到的执行一次，但实际上不再是原来的状态
  */
 
-
-const pool = new Map([['loading', []], ['interactive', []], ['DOMContentLoaded', []],
-// 扩展状态
+const pool = new Map([['loading', []], ['interactive', []], ['DOMContentLoaded', []], // 扩展状态
 ['complete', []], ['load', []] // 扩展状态，不一定可以监听到
 ]);
 let currentState = document.readyState;
+
 const execute = (readyState = currentState) => {
   currentState = readyState;
+
   for (const [state, functions] of pool) {
     while (functions.length) {
       functions.shift()();
     }
+
     if (readyState === state) break;
   }
 };
+
 warn('document.readyState', currentState);
+
 if (document.readyState !== 'complete') {
   document.addEventListener('readystatechange', () => execute(document.readyState));
   window.addEventListener('DOMContentLoaded', () => execute('DOMContentLoaded'));
 }
+
 window.addEventListener('load', () => execute('load'));
+
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
     resolve(fn?.());
-  });
+  }); // 立即检查一下
 
-  // 立即检查一下
   execute();
 });
+
 const loading = fn => wrapper('loading', fn);
 const interactive = fn => wrapper('interactive', fn);
 const DOMContentLoaded = fn => wrapper('DOMContentLoaded', fn);
@@ -1335,25 +1349,30 @@ const load = fn => wrapper('load', fn);
  */
 function createStore(modulename = '', local = true) {
   const getRealProp = property => modulename ? `[[${modulename}]]-${property}` : property;
+
   const store = new Proxy({}, {
     get(target, property, receiver) {
       const realProp = getRealProp(property);
       const value = local ? GM_getValue(realProp) : Reflect.get(target, realProp, receiver);
       return value;
     },
+
     set(target, property, value, receiver) {
       const realProp = getRealProp(property);
       local ? GM_setValue(realProp, value) : Reflect.set(target, realProp, value, receiver);
       return true;
     },
+
     deleteProperty(target, property) {
       const realProp = getRealProp(property);
       local ? GM_deleteValue(realProp) : Reflect.deleteProperty(target, realProp);
       return true;
     }
+
   });
   return store;
 }
+
 /* harmony default export */ const src_store = (createStore());
 
 ;// CONCATENATED MODULE: ./src/utils/selector.ts
@@ -1453,11 +1472,13 @@ const banciyuan = ({
       });
       bcy_net_index_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/mp-weixin-qq-com/index.lazy.scss
 var mp_weixin_qq_com_index_lazy = __webpack_require__(5811);
@@ -1533,11 +1554,13 @@ const weixin = ({
       });
       sites_mp_weixin_qq_com_index_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/zhuanlan-zhihu-com/index.lazy.scss
 var zhuanlan_zhihu_com_index_lazy = __webpack_require__(9123);
@@ -1609,11 +1632,10 @@ const zhihuZhuanlan = ({
               target,
               oldValue
             } = mutation;
-            if (process.has(target) || target.tagName !== 'IMG' || !oldValue.startsWith('data:image/') ||
-            // 与知乎同样的选择器判断
+            if (process.has(target) || target.tagName !== 'IMG' || !oldValue.startsWith('data:image/') || // 与知乎同样的选择器判断
             !(target.classList.contains('lazy') && !target.classList.contains('data-thumbnail'))) return;
-            process.add(target);
-            // 替换原图
+            process.add(target); // 替换原图
+
             target.dataset.original && (target.src = target.dataset.original);
           });
         });
@@ -1625,11 +1647,13 @@ const zhihuZhuanlan = ({
       });
       sites_zhuanlan_zhihu_com_index_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/zhihu-com/question.lazy.scss
 var question_lazy = __webpack_require__(7231);
@@ -1701,17 +1725,15 @@ const zhihuQuestion = ({
               target,
               oldValue
             } = mutation;
-            if (process.has(target) || target.tagName !== 'IMG' || !oldValue.startsWith('data:image/') ||
-            // 不对非文章图片处理
-            !$('.ListShortcut').contains(target) ||
-            // 与知乎同样的选择器判断
+            if (process.has(target) || target.tagName !== 'IMG' || !oldValue.startsWith('data:image/') || // 不对非文章图片处理
+            !$('.ListShortcut').contains(target) || // 与知乎同样的选择器判断
             !(target.classList.contains('lazy') && !target.classList.contains('data-thumbnail'))) return;
-            process.add(target);
-            // 替换原图
+            process.add(target); // 替换原图
+
             target.dataset.original && (target.src = target.dataset.original);
           });
-        });
-        // 查看全部回答时知乎会替换Question-mainColumn标签，只能往更父级监听
+        }); // 查看全部回答时知乎会替换Question-mainColumn标签，只能往更父级监听
+
         observer.observe($('.QuestionPage'), {
           subtree: true,
           attributeFilter: ['src'],
@@ -1720,11 +1742,13 @@ const zhihuQuestion = ({
       });
       zhihu_com_question_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/zhihu-com/home.lazy.scss
 var home_lazy = __webpack_require__(1131);
@@ -1790,6 +1814,7 @@ const zhihuHome = ({
       execute: zhihu_com_home_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/zhihu-com/topic.lazy.scss
 var topic_lazy = __webpack_require__(486);
@@ -1855,6 +1880,7 @@ const zhihuTopic = ({
       execute: zhihu_com_topic_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/zhihu-com/index.ts
 
@@ -1925,6 +1951,7 @@ const juejin = ({
       execute: sites_juejin_cn_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/crates-io/index.lazy.scss
 var crates_io_index_lazy = __webpack_require__(4379);
@@ -1990,6 +2017,7 @@ const crates = ({
       execute: sites_crates_io_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/jianshu-com/index.lazy.scss
 var jianshu_com_index_lazy = __webpack_require__(5502);
@@ -2055,11 +2083,14 @@ const jianshu = ({
       execute: sites_jianshu_com_index_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/www-baidu-com/index.ts
 
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const styles = (__webpack_require__(632)/* ["default"].toString */ .Z.toString)();
+
 const baidu = ({
   store,
   createControl
@@ -2069,16 +2100,18 @@ const baidu = ({
       const styleSheet = GM_addStyle(styles);
       interactive(() => {
         const template = document.createElement('template');
-        template.appendChild(styleSheet);
-        // 搜索时百度会清除head这里将样式插入一次到body
+        template.appendChild(styleSheet); // 搜索时百度会清除head这里将样式插入一次到body
+
         document.body.insertAdjacentElement('afterbegin', template);
       });
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/tieba-baidu-com/p.lazy.scss
 var p_lazy = __webpack_require__(2257);
@@ -2142,11 +2175,11 @@ const tieba = ({
 }) => ({
   handler() {
     // const postlistSelector = '#j_p_postlist'
-
     function execute() {
       /**
        * 新版本更新后没什么好的办法，先不做处理
        */
+
       /* const replaceOriSrc = (function() {
         const process = new WeakSet()
           return function() {
@@ -2181,14 +2214,15 @@ const tieba = ({
         })
         observer.observe($('.left_section') as HTMLElement, { childList: true, subtree: true })
       }) */
-
       tieba_baidu_com_p_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/tieba-baidu-com/f.lazy.scss
 var f_lazy = __webpack_require__(778);
@@ -2254,6 +2288,7 @@ const tiebaForum = ({
       execute: tieba_baidu_com_f_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/tieba-baidu-com/index.ts
 
@@ -2323,6 +2358,7 @@ const sougou = ({
       execute: sites_www_sogou_com_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/segmentfault-com/index.lazy.scss
 var segmentfault_com_index_lazy = __webpack_require__(3250);
@@ -2388,6 +2424,7 @@ const segmentfault = ({
       execute: sites_segmentfault_com_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-bilibili-com/index.lazy.scss
 var www_bilibili_com_index_lazy = __webpack_require__(5927);
@@ -2464,11 +2501,13 @@ const bilibili = ({
       });
       sites_www_bilibili_com_index_lazy.use();
     }
+
     createControl({
       store,
       execute
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/t-bilibili-com/index.lazy.scss
 var t_bilibili_com_index_lazy = __webpack_require__(3338);
@@ -2531,6 +2570,7 @@ function throttle(fn, delay) {
     const self = this;
     const cur = Date.now();
     clearTimeout(timeoutId);
+
     if (cur - begin >= delay) {
       fn.apply(self, args);
       begin = cur;
@@ -2550,11 +2590,11 @@ function once(fn) {
     }
   };
 }
-
 /**
  * 延时
  * @param ms 毫秒数
  */
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
@@ -2562,9 +2602,11 @@ function isFunction(value) {
 ;// CONCATENATED MODULE: ./src/utils/dom.ts
 function parseToDOM(str) {
   const div = document.createElement('div');
+
   if (typeof str === 'string') {
     div.innerHTML = str;
   }
+
   return div.childNodes;
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/t-bilibili-com/mocha-official-gifts.lazy.scss
@@ -2627,10 +2669,12 @@ mocha_official_gifts_lazy_exported.unuse = function() {
 
 load(async () => {
   const MochaId = '212535360';
+
   if (location.href.includes('space.bilibili.com/' + MochaId)) {
     youAreNotAlone();
     return;
   }
+
   await sleep(1000);
   const uploader = $('.main-content .user-name a[href]')?.href;
   if (!uploader) return;
@@ -2638,17 +2682,19 @@ load(async () => {
   if (!isMocha) return;
   youAreNotAlone();
 });
+
 function youAreNotAlone() {
   t_bilibili_com_mocha_official_gifts_lazy.use();
   document.body.append(parseToDOM(strawberry)[0]);
 }
-
 /*
   墨茶最爱吃的
   🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓
   🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓
   🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓🍓
 */
+
+
 const strawberry = '<svg class="mocha-strawberry" t="1611323249307" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3471" width="200" height="200"><path d="M799 780c-27.5 27.5-100.4 64.8-188.8 97.1 1.6-0.6 3.3-1.2 4.9-1.8-24.2-40.7-66.3-22.5-91.9-58.4-25.6-35.9 72.6-132.4 10.2-205S403.5 576 348 571.8c-55.5-4.3-114.5-75.2-147.8-120.5-13.9-18.9-20.7-54.3-23.8-89 17.6-41.9 37-78 56.7-104.7 2.6 32.6 19.6 94.1 64.7 102.9 117 23.1 184.3-39.1 256.3-6.8 17.7 7.9 29.5 22.5 38 40.8 13.9 29.6 19.6 68.9 29 105.2 9.2 35.4 21.9 68.1 49.1 86.4 64.5 43.2 132.2 49.4 187.3 9.6 3.9-2.8 7.7-5.8 11.4-9 11.4 86.1-26.6 150.1-69.9 193.3z" fill="#F9724C" p-id="3472"></path><path d="M615.2 875.3c-51.8 19.1-104.7 35.2-158.5 47.7-53.5 12.4-108.3 21.7-163.4 22.7-31 0.6-62.7-1.3-92.6-10 6 1.7 12.9 4.4 19.1 3.7 5-0.6 9.9-1.4 14.8-2.6 10.2-2.4 20.1-6.2 29.4-11.2 21.8-11.6 40.8-29.7 54.5-50.2 22.8-34.3 8.2-74.7-10.6-107.1-26.5-45.7-62.2-85.5-94.1-127.3-14.6-19.1-28.1-37.9-36.5-60.6-8-21.7-12.2-44.6-14.2-67.5-4-44.3-0.3-89.2 6.8-132.9 1-6.2 4.1-12 6.6-17.8 2.4 26.4 5.7 55.1 17.8 79.1 6.1 12 15.4 22.6 23.7 33.1 8.5 10.7 17.3 21.1 26.6 31.1 18 19.5 37.9 38.1 60.9 51.5 11.1 6.5 23.3 11.7 36.1 13.9 13.8 2.3 28 1 41.8-0.4 28-2.9 56.3-7.5 84.2-1 25.6 6 47.4 21.2 64.5 40.7 18 20.5 24.8 46 21.6 73-3.3 27.7-15 53.3-24.8 79.1-4.6 12.2-9.9 25.3-10 38.5-0.2 12.9 8.1 22.7 18.2 29.8 20.4 14.4 48.2 13.2 67 30.7 4.3 4.2 8 8.9 11.1 14z" fill="#ED4233" p-id="3473"></path><path d="M316.5 878.4c-14 19.3-31.6 36.3-52.8 47.5-10.5 5.5-21.8 9.6-33.4 11.9-5.1 1-10.7 2.4-15.8 1.4-6.2-1.2-12.4-3-18.5-4.9-21.7-6.9-41.9-18.1-56.7-35.8-15-18-24.2-40.2-30.3-62.6-13.1-47.9-13.6-99-10.4-148.3 3.3-50.4 11.3-100.5 22.4-149.7 12.4-54.9 29-108.6 49.4-161 0 3.9-1.3 8.2-1.9 12-0.6 4.2-1.2 8.4-1.8 12.7-1.2 8.9-2.2 17.9-3 26.9-1.7 18.9-2.5 37.9-2.1 56.9 0.7 36.2 5.6 73.4 20.5 106.7 7.4 16.5 18 30.7 28.9 45.1 11.1 14.7 22.6 29.2 34 43.6 22.2 28.2 45.1 56.4 63.1 87.5 9.7 16.7 18.3 34.8 21.3 54.1 3.1 19.9-1.1 39.7-12.9 56z" fill="#D10305" p-id="3474"></path><path d="M869 586.6c-21.1 18.3-46.9 30.9-74.7 34.5-28.2 3.6-56.8-1.9-82.9-12.7-24.7-10.3-50-24.3-65.3-47-15.9-23.6-23-52.2-29.3-79.6-6.4-28-11.4-57-22.9-83.5-5.1-11.8-11.8-23-21.1-31.9-9.4-9-21.1-14.6-33.6-18.1-28.7-8-58.4-2.6-87 3.4-29.1 6.1-58.2 12.5-88.1 13.8-15 0.7-30.1 0.1-45.1-1.6-13.7-1.6-27.9-3.3-39.9-10.7-22.2-13.8-34.1-40.2-40.6-64.6-1.8-6.9-3.3-13.8-4.3-20.9-0.4-2.8-1.5-6.5-1.1-9.2 0.3-2.1 1.8-3.4 3.1-5.2 8.7-11.3 18.4-21.5 29-31 21-19 44.3-35.6 70.2-47.1 26.7-11.8 55.6-17.8 84.8-17.3 29.2 0.5 58 7.3 85.2 17.7 54.5 20.9 103 55.3 147.2 92.9 44.4 37.8 86.1 79.6 122.6 125.1 36.3 45.2 68.4 95.7 84.9 151.6 4 13.6 7.1 27.5 8.9 41.4z" fill="#F7B696" p-id="3475"></path><path d="M621.2 499.7c-22.3 2.4-37.4 2.1-37.4 2.1s-10.2-48.5 8.4-107.4c13.9 29.7 19.6 68.9 29 105.3z" fill="#ED4233" p-id="3476"></path><path d="M870.8 606.2c-4.4-3.3-8.8-6.9-13.1-10.5-47.8-40.3-92.7-100.2-92.7-151.8-38.7 38.7-103 51.6-143.7 55.9-9.4-36.4-15.1-75.6-29-105.2 8.5-26.8 22.9-55.8 47.1-83.4-101.2 0-150.5-92.4-178.2-148.6 0.5 0.1 1 0.2 1.4 0.3 1.3 0.3 2.7 0.6 4 0.9 0.6 0.1 1.2 0.3 1.7 0.4 1.6 0.4 3.3 0.8 4.9 1.2 0.5 0.1 1 0.2 1.4 0.4 2 0.5 4.1 1.1 6.2 1.7 0.7 0.2 1.3 0.4 2 0.6 2.1 0.6 4.2 1.3 6.3 1.9 0.7 0.2 1.4 0.4 2.1 0.7 1.1 0.4 2.3 0.8 3.4 1.2 0.8 0.3 1.7 0.6 2.5 0.9 2.6 0.9 5.3 1.9 7.9 2.9 1 0.4 2.1 0.8 3.1 1.2 2.6 1 5.2 2.1 7.8 3.2 1 0.4 2.1 0.9 3.1 1.3 0.2 0.1 0.3 0.1 0.5 0.2 0.9 0.4 1.9 0.8 2.9 1.3 1.4 0.6 2.7 1.2 4.1 1.9 1.2 0.6 2.4 1.1 3.6 1.7 1.2 0.6 2.4 1.1 3.6 1.7 1.3 0.6 2.5 1.2 3.8 1.9 1.1 0.5 2.1 1.1 3.2 1.6 2.6 1.3 5.3 2.8 8 4.2 1.3 0.7 2.5 1.4 3.8 2.1 0.1 0.1 0.3 0.2 0.4 0.2 1.1 0.6 2.3 1.3 3.4 1.9 1.2 0.7 2.4 1.4 3.6 2 0.1 0.1 0.2 0.1 0.2 0.1 2.5 1.5 5.1 3 7.7 4.5 1.4 0.8 2.8 1.7 4.2 2.5 1.2 0.7 2.4 1.5 3.6 2.2 2.6 1.6 5.2 3.3 7.9 5l5.1 3.3c1 0.7 1.9 1.3 2.9 1.9 1.3 0.9 2.7 1.8 4 2.7s2.7 1.9 4 2.8c2.7 1.9 5.4 3.8 8.1 5.8 0.2 0.2 0.4 0.3 0.7 0.5 1.1 0.8 2.3 1.7 3.4 2.5 1.4 1 2.7 2 4.1 3 1.4 1 2.8 2.1 4.1 3.1 1.1 0.9 2.3 1.8 3.4 2.6 0.3 0.2 0.6 0.5 0.9 0.7 1.3 1 2.7 2.1 4 3.1l0.2 0.2c1.3 1.1 2.7 2.1 4 3.2 1.4 1.1 2.8 2.3 4.2 3.4 1.4 1.1 2.7 2.2 4.1 3.3 0.2 0.2 0.4 0.3 0.7 0.5 1.3 1 2.5 2.1 3.8 3.2 1.4 1.2 2.9 2.4 4.3 3.6 1.4 1.2 2.9 2.4 4.3 3.7 1.4 1.2 2.9 2.5 4.3 3.7 1.4 1.3 2.9 2.5 4.4 3.8s2.9 2.6 4.4 3.9c2.9 2.6 5.8 5.2 8.7 7.9 0.1 0.1 0.2 0.2 0.4 0.3 2.7 2.5 5.5 5 8.2 7.6l0.5 0.5c3 2.8 6 5.7 9 8.6 1.4 1.4 2.9 2.8 4.3 4.1l0.3 0.3c2.7 2.6 5.4 5.3 8.2 8l1 1 4.6 4.6c3.5 3.5 7 7.1 10.4 10.6 0.9 0.9 1.7 1.8 2.5 2.6 0.8 0.9 1.7 1.7 2.5 2.6 2.5 2.6 5 5.2 7.4 7.8 0.1 0.1 0.2 0.3 0.4 0.4 1.5 1.6 2.9 3.2 4.4 4.7 1.6 1.7 3.2 3.5 4.7 5.2 0.8 0.9 1.5 1.7 2.3 2.6 2.3 2.5 4.6 5.1 6.8 7.6 0.7 0.8 1.5 1.7 2.2 2.5s1.5 1.7 2.2 2.5c11.4 13.3 21.9 26.2 31.3 38.9 0.6 0.7 1.1 1.5 1.6 2.2 9.3 12.5 17.6 24.7 25 36.6 0.4 0.7 0.9 1.4 1.3 2 0.5 0.7 0.9 1.5 1.4 2.2 0.8 1.3 1.6 2.7 2.4 4 1.7 2.8 3.3 5.5 4.8 8.3 3.1 5.5 6.1 10.9 8.9 16.2 0.7 1.3 1.4 2.7 2 4 1.4 2.7 2.7 5.3 3.9 7.9 0.6 1.2 1.1 2.4 1.7 3.5 0.1 0.3 0.3 0.5 0.4 0.8 0.4 0.8 0.8 1.7 1.1 2.5 0.3 0.6 0.6 1.2 0.8 1.8 0.5 1 0.9 2 1.4 3.1 0.5 1.2 1 2.3 1.5 3.5s1 2.4 1.5 3.5c0.3 0.8 0.6 1.5 0.9 2.3 0.4 0.9 0.7 1.8 1.1 2.7 0.4 1.1 0.9 2.3 1.3 3.4 0.5 1.3 1 2.5 1.4 3.8 0.9 2.5 1.8 5 2.6 7.5 0.4 1.1 0.7 2.2 1.1 3.3 0.1 0.2 0.1 0.3 0.2 0.5 0.4 1.2 0.8 2.4 1.1 3.5v0.1c0.3 0.8 0.5 1.7 0.8 2.5 0.2 0.6 0.4 1.3 0.6 1.9 0.3 1 0.6 1.9 0.8 2.9 0.3 1.2 0.7 2.3 1 3.4 0 0.1 0.1 0.2 0.1 0.4 0.6 2.3 1.2 4.5 1.7 6.7 1.2 4.8 2.2 9.6 3.1 14.3 0.2 1.2 0.4 2.3 0.6 3.5 0.2 1.1 0.4 2.3 0.6 3.4 0.2 1.1 0.4 2.3 0.5 3.4 0.2 1.1 0.3 2.3 0.5 3.4 1 6.5 1.6 13 1.9 19.4z" fill="#F9724C" p-id="3477"></path><path d="M773.1 282.7c56-33.2 84.3-95.3 85.7-98.4 4.1-9.1 0-19.9-9.2-23.9-9.1-4.1-19.9 0-23.9 9.2-0.1 0.2-8.6 19-25.3 40.3-12.6 16-31.9 36-57 47.5C671.9 74.2 523.7 95 427.5 105.7c24.6 45.7 71.7 174.8 191.3 174.8-77.1 88.1-55.5 190.7-55.5 190.7s121.4 1.8 181.1-58c0 84.4 120.2 190.9 176.4 197.9 3-89.4 23.5-269.7-147.7-328.4z" fill="#91AB48" p-id="3478"></path><path d="M800.4 209.8c16.7-21.3 25.2-40.1 25.3-40.3 4.1-9.1 14.8-13.2 23.9-9.1 3 1.3 5.4 3.3 7.2 5.8 0.1-0.2 0.2-0.4 0.2-0.5 3.9-8.8 0-19.1-8.8-23.1-8.8-3.9-19.1 0-23.1 8.8-0.1 0.2-8.3 18.3-24.4 38.8-12.1 15.5-30.8 34.7-54.9 45.8C677 59.6 534.2 79.6 441.6 89.9c2.1 3.9 4.4 8.5 6.9 13.5 95.6-10.3 228.5-16.3 295 154 25-11.6 44.4-31.5 56.9-47.6zM794.1 268c-6.5 5.3-13.5 10.2-21 14.7C868.6 315.4 904.5 386 917 457.5c-6.9-72.9-33.8-150.4-122.9-189.5zM273.4 213.6c-2.8 2.8-5.5 5.8-8.3 9 50.9-46.5 112.7-75.2 190.9-61-4-7.2-7.6-14.2-10.9-20.9-70-4.9-125.6 26.8-171.7 72.9z" fill="#FFFFFF" p-id="3479"></path><path d="M911.2 431c-0.3 24.1-6.3 42-23.5 42-53 0-67.3-87.7-96.7-59s-52.2-18.5-62.4-29.7-63.2 1-90.9-37.8c-27.7-38.7 46-97.9 28.2-130.5S522.4 182.6 551 132.4c7.4-13 23-20.4 41.9-24.1 58.6 16 114.3 56.5 150.5 149 25.1-11.5 44.4-31.5 57-47.5 16.7-21.3 25.2-40.1 25.3-40.3 4.1-9.1 14.8-13.2 23.9-9.1 9.1 4.1 13.2 14.8 9.2 23.9-1.4 3.1-29.7 65.2-85.7 98.4 83.7 28.7 121.6 86.4 138.1 148.3z" fill="#A6BF4C" p-id="3480"></path><path d="M270 213.3c2.9 0 5.8-1.2 7.8-3.3 56.7-56.8 116.8-78.8 183.8-67.4 3.1 1.4 6.8 1.4 9.9-0.3 0.8-0.4 1.5-0.9 2.1-1.5 1.9-1.6 3.3-3.8 3.8-6.5 0.5-2.9-0.1-5.8-1.7-8.2-0.4-0.6-0.9-1.2-1.4-1.7-5.3-9.8-10-19.3-14.2-27.7l-2.1-4.3c-0.8-1.7-1.6-3.3-2.4-4.9 33.6-3.7 77.4-7.8 119-0.6 50.2 8.7 89.4 32.1 119.9 71.4 2 2.7 5.2 4.3 8.7 4.3 2.5 0 4.8-0.8 6.8-2.4 2.3-1.7 3.8-4.3 4.2-7.1 0.4-2.9-0.4-5.9-2.2-8.3-34.2-44.2-78.3-70.2-134.8-79.8-47.6-8-95.4-2.7-133.8 1.7l-5.9 0.7c-3.5 0.3-6.6 2.5-8.5 5.6-1.8 3.1-1.9 7-0.2 10.4l0.1 0.1c2.3 4.2 4.7 9.2 7.5 14.9l3.4 6.9c2 4.1 4.2 8.5 6.5 13.1-66.8-5.8-127.3 19.2-184.1 76l-0.1 0.1c-4.1 4.3-4.1 11.2 0 15.4 2.1 2.2 4.9 3.4 7.9 3.4zM841.6 671.9c-2.5-1.5-5.4-2-8.3-1.3-2.9 0.7-5.3 2.5-6.8 4.9-9.9 16.3-22.3 31.9-36.9 46.5-17.7 17.7-58.5 41.3-111.9 64.7-56.6 24.8-122.5 47.4-185.5 63.6-72.1 18.6-138.1 28.5-191 28.6H300c-59.9 0-102.2-12-125.9-35.6-18.1-18.1-30.8-46.7-37.7-85-6.5-36.1-7.8-79.5-3.7-129.1 7.5-91.4 33-198.3 68.2-286.1 1.2-2.8 1.2-5.8 0-8.5s-3.3-4.8-6-5.9c-2.7-1.1-5.7-1.1-8.4 0-2.7 1.2-4.8 3.3-5.9 6-36 89.7-62.1 199-69.7 292.5-4.2 51.6-2.9 96.9 4 134.8 7.7 42.8 22.4 75.3 43.8 96.7 28 27.9 75.6 42.1 141.4 42.1h0.2l0.4 0.1h0.6c54.8-0.2 122.7-10.4 196.4-29.4 131.1-33.9 266.2-92.8 307.5-134.1 15.9-15.9 29.4-32.9 40.1-50.5 3.1-5.1 1.5-11.8-3.7-15zM913.9 381.1c-9.8-32.5-25.1-60.5-45.4-83-19.4-21.6-43.8-38.9-72.7-51.5 46-35.5 69.1-87.3 69.4-87.9 6.4-14.3-0.1-31.3-14.4-37.7-6.8-3.1-14.6-3.3-21.9-0.6-7 2.7-12.7 8.1-15.8 15v0.1c-0.9 1.8-8.7 18.4-23.1 36.7-10.7 13.7-28.3 32.3-51 42.7-2.7 1.2-4.7 3.5-5.7 6.2-1 2.8-0.9 5.8 0.4 8.4 1.2 2.7 3.5 4.7 6.2 5.7 2.8 1 5.8 0.9 8.4-0.4 26.7-12.3 46.9-33.5 59.1-49.2 15.6-19.9 24.1-37.6 25.8-41.1l0.1-0.1c0.8-1.7 2-2.8 3.6-3.5 1.2-0.5 3-0.8 5 0.1 3.3 1.5 4.7 5.3 3.3 8.6l-0.1 0.2c-4.7 10.1-30.7 61.6-78.3 89.9-3.6 2.2-5.7 6.3-5.3 10.5 0.4 4.3 3.1 7.9 7.4 9.4 34.2 11.7 62.3 29.6 83.4 53.3 18.2 20.3 31.9 45.6 40.8 75.1 16.4 54.7 13.8 115.1 11.9 159.1-0.1 1.9-0.2 3.8-0.2 5.7-11.3-3.7-24.6-10.8-39-20.6-4.9-3.3-11.7-2-15.2 2.9l-0.1 0.1c-3.3 4.9-2 11.7 3 15.2 23.1 15.7 44 25 60.5 27.1h1.3c2.4 0 4.8-0.8 6.8-2.3l0.3-0.2c2.3-1.9 3.7-4.8 3.9-7.9v-0.2c0.1-5.3 0.3-11 0.6-17.1l0.1-2.4c1.8-45.7 4.4-108.2-13.1-166.3z" fill="#934A19" p-id="3481"></path></svg>';
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/t-bilibili-com/detail.lazy.scss
 var detail_lazy = __webpack_require__(158);
@@ -2715,6 +2761,7 @@ const bilibiliDynamicDetail = ({
       execute: t_bilibili_com_detail_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/t-bilibili-com/index.ts
 
@@ -2728,6 +2775,7 @@ const bilibiliDynamic = ({
       execute: sites_t_bilibili_com_index_lazy.use
     });
   }
+
 });
 
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/space-bilibili-com/index.ts
@@ -2735,6 +2783,7 @@ const bilibiliDynamic = ({
 const bilibiliSpace = () => ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   handler() {}
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-douban-com/index.lazy.scss
 var www_douban_com_index_lazy = __webpack_require__(5201);
@@ -2800,6 +2849,7 @@ const douban = ({
       execute: sites_www_douban_com_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/movie-douban-com/subject.lazy.scss
 var subject_lazy = __webpack_require__(6587);
@@ -2865,6 +2915,7 @@ const doubanSubject = ({
       execute: movie_douban_com_subject_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/review.ts
 // 貌似样式一样的，直接用subject的吧
@@ -2879,6 +2930,7 @@ const doubanReview = ({
       execute: movie_douban_com_subject_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/movie-douban-com/index.ts
 
@@ -2947,6 +2999,7 @@ const toutiao = ({
       execute: sites_www_toutiao_com_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/weibo-com/article.lazy.scss
 var article_lazy = __webpack_require__(7028);
@@ -3012,18 +3065,21 @@ const weiboArticle = ({
       execute: weibo_com_article_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/weibo-com/index.ts
 
 
 
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const homeStyles = (__webpack_require__(5258)/* ["default"].toString */ .Z.toString)();
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const homeStyles = (__webpack_require__(5258)/* ["default"].toString */ .Z.toString)(); // eslint-disable-next-line @typescript-eslint/no-var-requires
+
+
 const playDetailStyles = (__webpack_require__(8184)/* ["default"].toString */ .Z.toString)();
 
+ // hack type
 
-// hack type
 const unsafeWindowAlias = unsafeWindow;
 const weibo = ({
   store,
@@ -3036,6 +3092,7 @@ const weibo = ({
       silent: true
     });
     execute();
+
     function execute() {
       let proxyConfig;
       document.addEventListener('readystatechange', () => {
@@ -3044,68 +3101,58 @@ const weibo = ({
           WbNewVersion();
           return;
         }
+
         if (!unsafeWindowAlias.$CONFIG) return;
         if (proxyConfig && proxyConfig === unsafeWindowAlias.$CONFIG) return;
         proxyConfig = new Proxy(unsafeWindowAlias.$CONFIG, {
           set(target, property, value, receiver) {
             const oldVal = target[property];
             const succeeded = Reflect.set(target, property, value, receiver);
+
             if (property === 'location' && value !== oldVal) {
               warn('script：reinsert styleSheet');
               addStyle();
             }
+
             return succeeded;
           }
+
         });
         unsafeWindowAlias.$CONFIG = proxyConfig;
         addStyle();
       });
     }
-
     /* 新版========start */
+
+
     const WbNewVersion = once(() => {
       const uiControl = createControl({
         store,
         visible: false,
         silent: true
       });
+
       const app = $('#app').__vue__;
+
       let styleSheet;
       warn('新版本', app);
-      const pageStyleMap = new Map([[['home',
-      // 首页
-      'mygroups',
-      // 首页左侧分组
-      'profile',
-      // 博主主页
-      'nameProfile',
-      // 博主主页(名称)
-      'customProfile',
-      // 自定义主页
-      'bidDetail',
-      // 微博详情
-      'atWeibo',
-      // 消息 at我的
-      'cmtInbox',
-      // 消息 评论
-      'likeInbox',
-      // 消息 赞
-      'follow',
-      // 我的关注、我的粉丝
-      'myFollowTab',
-      // 我的关注tab栏
-      'fav',
-      // 我的收藏
-      'like',
-      // 我的赞
-      'weibo',
-      // 热门微博
-      'list',
-      // 热门榜单
-      'topic',
-      // 话题榜
-      'search',
-      // 热搜榜
+      const pageStyleMap = new Map([[['home', // 首页
+      'mygroups', // 首页左侧分组
+      'profile', // 博主主页
+      'nameProfile', // 博主主页(名称)
+      'customProfile', // 自定义主页
+      'bidDetail', // 微博详情
+      'atWeibo', // 消息 at我的
+      'cmtInbox', // 消息 评论
+      'likeInbox', // 消息 赞
+      'follow', // 我的关注、我的粉丝
+      'myFollowTab', // 我的关注tab栏
+      'fav', // 我的收藏
+      'like', // 我的赞
+      'weibo', // 热门微博
+      'list', // 热门榜单
+      'topic', // 话题榜
+      'search', // 热搜榜
       'searchResult' // 搜索结果
       ], () => GM_addStyle(homeStyles)], [['Playdetail' // 视频详情
       ], () => GM_addStyle(playDetailStyles)]]);
@@ -3116,13 +3163,16 @@ const weibo = ({
         styleSheet?.remove();
         warn('route changed', to);
         uiControl.hide();
+
         for (const [routenames, addStyle] of pageStyleMap.entries()) {
           if (routenames.includes(to.name)) {
             uiControl.show();
+
             if (store.enabled) {
               styleSheet = addStyle();
               notify();
             }
+
             break;
           }
         }
@@ -3133,6 +3183,7 @@ const weibo = ({
     /* 新版========end */
 
     /* 旧版(保留，不再更新) */
+
     const addStyle = function () {
       let styleSheet;
       return function () {
@@ -3140,7 +3191,9 @@ const weibo = ({
           $CONFIG
         } = unsafeWindowAlias;
         const classnamePrefix = 'inject-ws-';
+
         const getClassname = classname => `${classnamePrefix}${classname}`;
+
         styleSheet?.remove();
         [...document.body.classList.values()].forEach(item => {
           if (item.startsWith(classnamePrefix)) {
@@ -3176,6 +3229,7 @@ const weibo = ({
         uiControl.notify();
       };
     }();
+
     function doMainPage(classname) {
       return GM_addStyle(`
         :root {
@@ -3213,6 +3267,7 @@ const weibo = ({
         }
       `.replace(/\|>/g, `.${classname}`));
     }
+
     function doProfilePage(classname) {
       return GM_addStyle(`
         :root {
@@ -3266,6 +3321,7 @@ const weibo = ({
         }
       `.replace(/\|>/g, `.${classname}`));
     }
+
     function doSingleWBPage(classname) {
       return GM_addStyle(`
         :root {
@@ -3292,6 +3348,7 @@ const weibo = ({
       `.replace(/\|>/g, `.${classname}`));
     }
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/d-weibo-com/index.lazy.scss
 var d_weibo_com_index_lazy = __webpack_require__(8343);
@@ -3357,6 +3414,7 @@ const weiboDynamic = ({
       execute: sites_d_weibo_com_index_lazy.use
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/utils/querystring.ts
 /**
@@ -3366,13 +3424,14 @@ const weiboDynamic = ({
 function parse(href = location.href) {
   if (!href) return {};
   let search;
+
   try {
     // 链接
     const url = new URL(href);
     ({
       search
-    } = url);
-    // 主要处理对hash的search
+    } = url); // 主要处理对hash的search
+
     if (!search && url.hash.includes('?')) {
       search = url.hash.split('?')[1];
     }
@@ -3384,11 +3443,11 @@ function parse(href = location.href) {
       search = href;
     }
   }
+
   return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj)
-  // 过滤 undefined，保留 null 且转成 ''
+  return Object.entries(obj) // 过滤 undefined，保留 null 且转成 ''
   .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/www-google-com/index.lazy.scss
@@ -3458,6 +3517,7 @@ const google = ({
       execute: sites_www_google_com_index_lazy.use
     });
   }
+
 });
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/sites/blog-csdn-net/index.lazy.scss
 var blog_csdn_net_index_lazy = __webpack_require__(3880);
@@ -3520,13 +3580,16 @@ const csdn = ({
   handler() {
     createControl({
       store,
+
       execute() {
         // 关闭登录弹窗
         document.cookie = `unlogin_scroll_step=${Date.now()};domain=.csdn.net;path=/`;
         sites_blog_csdn_net_index_lazy.use();
       }
+
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/utils/visibility-state.ts
 /**
@@ -3535,13 +3598,15 @@ const csdn = ({
  */
 function onVisible(callback, delay = 500, ...rest) {
   let intervalId;
+
   function listener() {
     clearInterval(intervalId);
-    if (document.visibilityState === 'hidden') return;
-    // eslint-disable-next-line n/no-callback-literal
+    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line n/no-callback-literal
+
     callback(...rest);
     intervalId = setInterval(callback, delay, ...rest);
   }
+
   listener();
   document.addEventListener('visibilitychange', listener);
   return function abort() {
@@ -3621,14 +3686,18 @@ const mihoyoBBS = ({
         });
       });
     }
+
     createControl({
       store,
+
       execute() {
         replaceImgURL();
         sites_bbs_mihoyo_com_index_lazy.use();
       }
+
     });
   }
+
 });
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/sites/index.ts
 
@@ -3811,24 +3880,27 @@ const external_Vue_namespaceObject = Vue;
 function append(el) {
   document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
 }
+
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
   append(root);
   return {
     instance: app.mount(root),
+
     unmount() {
       app.unmount();
       document.body.removeChild(root);
     }
+
   };
 }
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.ts
 
-
 /**
  * 同 GM_getValue、GM_setValue
  */
+
 function useGMvalue(name, defaultValue, _options) {
   const {
     listening,
@@ -3843,6 +3915,7 @@ function useGMvalue(name, defaultValue, _options) {
   }, {
     deep
   });
+
   if (listening) {
     (0,external_Vue_namespaceObject.onUnmounted)(() => {
       GM_removeValueChangeListener(id);
@@ -3851,6 +3924,7 @@ function useGMvalue(name, defaultValue, _options) {
       value.value = newVal;
     });
   }
+
   return value;
 }
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.ts
@@ -3870,7 +3944,6 @@ function calcDiagInRect(width, height) {
     return c;
   };
 }
-
 /**
  * 计算当前值离总值中心的位置 越靠近中心值为1，远离中心值为0
  * @param value 当前值
@@ -3879,6 +3952,7 @@ function calcDiagInRect(width, height) {
  * @example value：50 extent：100 则计算 50 在 0-100 中的位置返回 1
  * value：0 或 100 extent：100 返回 0
  */
+
 function closeness(value, extent) {
   if (!value || !extent) return 0;
   const half = extent / 2;
@@ -3921,6 +3995,7 @@ var v_ripple_update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
 const weakmap = new WeakMap();
+
 /**
  * 创建容器元素
  */
@@ -3932,102 +4007,114 @@ function createRippleContainer() {
 /**
  * 创建涟漪元素
  */
+
+
 function createRippleEl() {
   const span = document.createElement('div');
   span.classList.add(rippleClassname);
   return span;
 }
+
 function normalizeOptions(options) {
   if (typeof options === 'boolean') {
     return {
       disabled: !options
     };
   }
+
   return options;
 }
-
 /**
  * 添加涟漪效果
  */
+
+
 const addRippleEffect = function (_options = {}) {
-  let options = normalizeOptions(_options);
-  // 涟漪个数
+  let options = normalizeOptions(_options); // 涟漪个数
+
   let count = 0;
+
   function listener(event) {
     if (options.disabled) return;
-    const currentTarget = event.currentTarget;
+    const currentTarget = event.currentTarget; // 优化: 处理过后不再调用getComputedStyle
 
-    // 优化: 处理过后不再调用getComputedStyle
     if (weakmap.get(currentTarget).position === false) {
-      weakmap.get(currentTarget).position = true;
-      // 注意：会改变当前元素定位方式
+      weakmap.get(currentTarget).position = true; // 注意：会改变当前元素定位方式
+
       if (getComputedStyle(currentTarget).position === 'static') {
         currentTarget.style.position = 'relative';
       }
     }
-    const rect = currentTarget.getBoundingClientRect();
-    const rippleEl = createRippleEl();
-    // 取元素长的一边作为涟漪的周长
-    const side = Math.max(rect.width, rect.height);
-    const radius = side / 2;
-    // 鼠标在元素中的坐标
-    const left = event.pageX - rect.left - window.scrollX;
-    const top = event.pageY - rect.top - window.scrollY;
 
-    // 选项加入到元素中
+    const rect = currentTarget.getBoundingClientRect();
+    const rippleEl = createRippleEl(); // 取元素长的一边作为涟漪的周长
+
+    const side = Math.max(rect.width, rect.height);
+    const radius = side / 2; // 鼠标在元素中的坐标
+
+    const left = event.pageX - rect.left - window.scrollX;
+    const top = event.pageY - rect.top - window.scrollY; // 选项加入到元素中
+
     options.color && (rippleEl.style.background = options.color);
     rippleEl.style.width = side + 'px';
-    rippleEl.style.height = side + 'px';
-    // 元素定位再各减自身的宽高一半
+    rippleEl.style.height = side + 'px'; // 元素定位再各减自身的宽高一半
+
     rippleEl.style.top = top - radius + 'px';
-    rippleEl.style.left = left - radius + 'px';
-    // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+    rippleEl.style.left = left - radius + 'px'; // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+
     const base = 1.5;
     const diagonal = calcDiagInRect(rect.width, rect.height)(left, top);
     rippleEl.style.animationDuration = base - base * diagonal / side + 's';
     let container = currentTarget.querySelector(`.${containerClassname}`);
+
     if (!container) {
       container = createRippleContainer();
       currentTarget.appendChild(container);
     }
+
     container.appendChild(rippleEl);
     count++;
+
     const unlisten = (() => {
       const leaveEvents = ['mouseup', 'mouseleave'];
+
       const listener = () => {
         // 为了尽量能看清动画效果，延时一下再进行透明
         setTimeout(() => {
           rippleEl.style.opacity = '0';
         }, 100);
       };
+
       leaveEvents.forEach(eventname => currentTarget.addEventListener(eventname, listener));
       return () => {
         leaveEvents.forEach(eventname => currentTarget.removeEventListener(eventname, listener));
       };
-    })();
+    })(); // 移除涟漪元素
 
-    // 移除涟漪元素
+
     rippleEl.addEventListener('transitionend', transEvent => {
       if (transEvent.propertyName === 'opacity') {
         unlisten();
-        rippleEl.remove();
-        // 没有涟漪元素时移除容器
+        rippleEl.remove(); // 没有涟漪元素时移除容器
+
         if (--count <= 0) {
           container?.remove();
         }
       }
     });
-  }
+  } // 更新配置项
 
-  // 更新配置项
+
   function update(newOpts) {
     options = Object.assign({}, options, normalizeOptions(newOpts));
   }
+
   return {
     listener,
     update
   };
 };
+
 const vRipple = {
   mounted(el, binding) {
     const {
@@ -4039,13 +4126,16 @@ const vRipple = {
       update,
       // 更新配置项函数
       position: false // 是否已经改变了 el 的定位方式
+
     });
     el.addEventListener('mousedown', listener, false);
   },
+
   updated(el, binding) {
     const val = weakmap.get(el);
     val.update(binding.value);
   }
+
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
 ;// CONCATENATED MODULE: ./src/directives/index.ts
@@ -4086,10 +4176,11 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-const prefixCls = 'skr-button';
-// button type 非 default 时覆盖一层白色
+
+const prefixCls = 'skr-button'; // button type 非 default 时覆盖一层白色
+
 const rippleColor = 'rgb(255 255 255 / 15%)';
-const Button = defineComponent({
+const Button = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrButton',
   directives: {
     ripple: src_directives_v_ripple
@@ -4123,10 +4214,11 @@ const Button = defineComponent({
       default: true
     }
   },
+
   setup(props, {
     slots
   }) {
-    const rippleOptions = computed(() => {
+    const rippleOptions = (0,external_Vue_namespaceObject.computed)(() => {
       return Object.assign({}, {
         color: props.type === 'default' ? undefined : rippleColor
       }, typeof props.ripple === 'boolean' ? {
@@ -4140,6 +4232,7 @@ const Button = defineComponent({
       }, `${prefixCls}--${props.size}`]
     }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
+
 });
 /* harmony default export */ const src_components_button_0 = (Button);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/widescreen/control.scss
@@ -4180,9 +4273,10 @@ var control_update = injectStylesIntoStyleTag_default()(control/* default */.Z, 
 
 
 
+ // eslint-disable-next-line @typescript-eslint/no-empty-function
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
+
 /** 宽屏开关 */
 function createControl(options) {
   const {
@@ -4197,19 +4291,22 @@ function createControl(options) {
     setup(_, {
       expose
     }) {
-      const state = reactive({
+      const state = (0,external_Vue_namespaceObject.reactive)({
         // 总开关
         uiVisible: useGMvalue('ui_visible', true),
         visible,
         loose: store.loose || false
       });
+
       function notify() {
         (src_store.notify_enabled ?? false) && Toast('已宽屏处理');
       }
+
       function toggle() {
         store.enabled = !store.enabled;
         location.reload();
       }
+
       expose({
         notify,
         show: () => {
@@ -4219,14 +4316,16 @@ function createControl(options) {
           state.visible = false;
         }
       });
+
       if (store.enabled) {
-        watchEffect(() => {
+        (0,external_Vue_namespaceObject.watchEffect)(() => {
           store.loose = state.loose;
           document.documentElement.classList[state.loose ? 'add' : 'remove']('inject-widescreen-loose-js');
         });
         execute();
         !silent && notify();
       }
+
       return () => (0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Fragment, null, [state.uiVisible && state.visible && (0,external_Vue_namespaceObject.createVNode)("div", {
         "class": "inject-widescreen-js"
       }, [(0,external_Vue_namespaceObject.createVNode)(src_components_button_0, {
@@ -4243,13 +4342,18 @@ function createControl(options) {
         "type": "checkbox"
       }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.loose]]), (0,external_Vue_namespaceObject.createTextVNode)("\u66F4\u5BBD")])])]);
     }
+
   });
   return instance;
 }
 ;// CONCATENATED MODULE: ./src/scripts/widescreen/index.ts
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
+
 var id = 0;
+
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
+
+
 
 
 
@@ -4271,8 +4375,11 @@ function main() {
   });
   new App(widescreen_sites).boot();
 }
+
 var _sites = /*#__PURE__*/_classPrivateFieldLooseKey("sites");
+
 var _includes = /*#__PURE__*/_classPrivateFieldLooseKey("includes");
+
 class App {
   constructor(sites) {
     Object.defineProperty(this, _includes, {
@@ -4284,8 +4391,10 @@ class App {
     });
     _classPrivateFieldLooseBase(this, _sites)[_sites] = sites;
   }
+
   boot() {
     const briefURL = location.host + location.pathname;
+
     _classPrivateFieldLooseBase(this, _sites)[_sites].forEach(async site => {
       const {
         name,
@@ -4297,9 +4406,9 @@ class App {
       const {
         readyState: state
       } = site;
-      if (state) await ready_state_namespaceObject[state]();
-      // fix: 罕见情况下会获取不到 head，原因未知
+      if (state) await ready_state_namespaceObject[state](); // fix: 罕见情况下会获取不到 head，原因未知
       // 偶尔会在知乎中出现
+
       if (document.head == null) await interactive();
       const config = use({
         createControl: createControl,
@@ -4309,9 +4418,10 @@ class App {
       config.handler();
     });
   }
-}
 
-// 存储
+} // 存储
+
+
 function _includes2(test, url) {
   return [].concat(test).some(item => {
     if (item instanceof RegExp) return item.test(url);
@@ -4319,19 +4429,24 @@ function _includes2(test, url) {
     return false;
   });
 }
+
 function widescreen_createStore(namespace) {
   const store = new Proxy(createStore(namespace), {
     get(target, property, receiver) {
       let value = Reflect.get(target, property, receiver);
+
       if (property === 'enabled') {
         // 默认开启
         value ?? (value = true);
       }
+
       return value;
     }
+
   });
   return store;
 }
+
 main();
 })();
 

@@ -525,6 +525,7 @@ function throttle(fn, delay) {
     const self = this;
     const cur = Date.now();
     clearTimeout(timeoutId);
+
     if (cur - begin >= delay) {
       fn.apply(self, args);
       begin = cur;
@@ -544,11 +545,11 @@ function once(fn) {
     }
   };
 }
-
 /**
  * 延时
  * @param ms 毫秒数
  */
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
@@ -577,15 +578,18 @@ function checker({
   const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
+
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
     pass = true;
   }
+
   if (!pass) {
     const {
       Toast
     } = window;
     notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
+
   return pass;
 }
 ;// CONCATENATED MODULE: ./src/utils/vue-root.ts
@@ -594,25 +598,28 @@ function getVueRoot(rootContainer) {
   if (isVue3(rootContainer)) return getVue3Instance(rootContainer);
   return {};
 }
+
 function isVue2(rootContainer) {
   return '__vue__' in rootContainer;
 }
+
 function isVue3(rootContainer) {
   // https://github.com/vuejs/vue-next/blob/a66e53a24f445b688eef6812ecb872dc53cf2702/packages/runtime-core/src/apiCreateApp.ts#L252
   return '__vue_app__' in rootContainer;
 }
+
 function getVue2Instance(rootContainer) {
   return {
     instance: rootContainer.__vue__
   };
 }
+
 function getVue3Instance(rootContainer) {
   return {
     app: rootContainer.__vue_app__,
     // dev mode下组件el有__vueParentComponent __vnode属性
     // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L767
     // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L763
-
     // _vnode.component.proxy获取实例，应该就是app.mount返回的
     // https://github.com/vuejs/vue-next/blob/a66e53a24f445b688eef6812ecb872dc53cf2702/packages/runtime-core/src/apiCreateApp.ts#L258
     // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L2198
@@ -620,23 +627,30 @@ function getVue3Instance(rootContainer) {
   };
 }
 
+
 ;// CONCATENATED MODULE: ./src/utils/log.ts
 const isDebug = "production" !== 'production';
+
 function warn(...args) {
   isDebug && warn.force(...args);
 }
+
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
+
 function error(...args) {
   isDebug && error.force(...args);
 }
+
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
+
 function table(...args) {
   isDebug && console.table(...args);
 }
+
 
 ;// CONCATENATED MODULE: ./src/utils/mount-component.ts
 /*
@@ -647,16 +661,19 @@ function table(...args) {
 function append(el) {
   document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
 }
+
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
   append(root);
   return {
     instance: app.mount(root),
+
     unmount() {
       app.unmount();
       document.body.removeChild(root);
     }
+
   };
 }
 // EXTERNAL MODULE: ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
@@ -710,17 +727,27 @@ var update = injectStylesIntoStyleTag_default()(catalogue/* default */.Z, option
 
 ;// CONCATENATED MODULE: ./src/scripts/element-ui/catalogue.tsx
 
+
 function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
+
 var id = 0;
+
 function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
 
 
 
 
+
+
+
 var _scope = /*#__PURE__*/_classPrivateFieldLooseKey("scope");
+
 var _cat = /*#__PURE__*/_classPrivateFieldLooseKey("cat");
+
 var _getElements = /*#__PURE__*/_classPrivateFieldLooseKey("getElements");
+
 var _createUI = /*#__PURE__*/_classPrivateFieldLooseKey("createUI");
+
 class Catalogue {
   constructor({
     scope
@@ -737,19 +764,22 @@ class Catalogue {
     });
     Object.defineProperty(this, _cat, {
       writable: true,
-      value: ref([])
+      value: (0,external_Vue_namespaceObject.ref)([])
     });
     _classPrivateFieldLooseBase(this, _scope)[_scope] = scope;
+
     _classPrivateFieldLooseBase(this, _createUI)[_createUI]();
   }
+
   update() {
     const els = _classPrivateFieldLooseBase(this, _getElements)[_getElements]();
+
     const cat = els.map(el => {
       const catItem = {
         id: el.id,
         text: ''
-      };
-      // 仅显示文本节点内容
+      }; // 仅显示文本节点内容
+
       el.childNodes.forEach(node => {
         if (node.nodeName === '#text') {
           catItem.text += node.nodeValue;
@@ -761,10 +791,13 @@ class Catalogue {
     warn(els, cat);
     _classPrivateFieldLooseBase(this, _cat)[_cat].value = cat;
   }
+
 }
+
 function _getElements2() {
   return [...$$(_classPrivateFieldLooseBase(this, _scope)[_scope])];
 }
+
 function _createUI2() {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
@@ -775,6 +808,7 @@ function _createUI2() {
           block: 'center'
         });
       }
+
       return () => (0,external_Vue_namespaceObject.createVNode)("div", {
         "id": "catalogue-js"
       }, [(0,external_Vue_namespaceObject.createVNode)("ul", null, [_classPrivateFieldLooseBase(self, _cat)[_cat].value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
@@ -783,6 +817,7 @@ function _createUI2() {
         "onClick": () => intoView(item)
       }, [item.text]))])]);
     }
+
   });
 }
 ;// CONCATENATED MODULE: ./src/scripts/element-ui/index.ts
@@ -793,18 +828,20 @@ function _createUI2() {
 
 
 
+
 async function main() {
   if (!checker()) return;
-  let instance;
-  // 非国内链接打开较慢，防止未完成加载
+  let instance; // 非国内链接打开较慢，防止未完成加载
+
   while (instance == null) {
     ({
       instance
     } = getVueRoot($('#app')));
     await sleep(500);
   }
-  warn(instance);
-  // element-plus 已支持
+
+  warn(instance); // element-plus 已支持
+
   if ($('#app').__vue_app__) return;
   const catalogue = new Catalogue({
     // 注意：选择器要同时兼容element与element plus文档
@@ -814,6 +851,7 @@ async function main() {
   instance.$watch('$route', function () {
     (0,external_Vue_namespaceObject.nextTick)(() => {
       const target = $('.page-component__content');
+
       if (target && unwatch == null) {
         unwatch = watchDocs(target);
       } else if (!target) {
@@ -824,6 +862,7 @@ async function main() {
   }, {
     immediate: true
   });
+
   function watchDocs(target) {
     catalogue.update();
     const observer = new MutationObserver(() => catalogue.update());
@@ -837,6 +876,7 @@ async function main() {
     };
   }
 }
+
 main();
 })();
 

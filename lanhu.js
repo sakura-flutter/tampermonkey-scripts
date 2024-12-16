@@ -575,6 +575,7 @@ function throttle(fn, delay) {
     const self = this;
     const cur = Date.now();
     clearTimeout(timeoutId);
+
     if (cur - begin >= delay) {
       fn.apply(self, args);
       begin = cur;
@@ -594,11 +595,11 @@ function once(fn) {
     }
   };
 }
-
 /**
  * 延时
  * @param ms 毫秒数
  */
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 function isFunction(value) {
   return typeof value === 'function';
@@ -624,15 +625,18 @@ function checker({
   const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
+
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
     pass = true;
   }
+
   if (!pass) {
     const {
       Toast
     } = window;
     notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
   }
+
   return pass;
 }
 ;// CONCATENATED MODULE: external "Vue"
@@ -645,13 +649,14 @@ const external_Vue_namespaceObject = Vue;
 function parse(href = location.href) {
   if (!href) return {};
   let search;
+
   try {
     // 链接
     const url = new URL(href);
     ({
       search
-    } = url);
-    // 主要处理对hash的search
+    } = url); // 主要处理对hash的search
+
     if (!search && url.hash.includes('?')) {
       search = url.hash.split('?')[1];
     }
@@ -663,11 +668,11 @@ function parse(href = location.href) {
       search = href;
     }
   }
+
   return Object.fromEntries(new URLSearchParams(search));
 }
 function stringify(obj) {
-  return Object.entries(obj)
-  // 过滤 undefined，保留 null 且转成 ''
+  return Object.entries(obj) // 过滤 undefined，保留 null 且转成 ''
   .filter(([, value]) => value !== undefined).map(([key, value]) => `${key}=${value ?? ''}`).join('&');
 }
 ;// CONCATENATED MODULE: ./src/utils/mount-component.ts
@@ -679,24 +684,27 @@ function stringify(obj) {
 function append(el) {
   document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
 }
+
 function mountComponent(RootComponent) {
   const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
   const root = document.createElement('div');
   append(root);
   return {
     instance: app.mount(root),
+
     unmount() {
       app.unmount();
       document.body.removeChild(root);
     }
+
   };
 }
 ;// CONCATENATED MODULE: ./src/composables/use-gm-value.ts
 
-
 /**
  * 同 GM_getValue、GM_setValue
  */
+
 function useGMvalue(name, defaultValue, _options) {
   const {
     listening,
@@ -711,6 +719,7 @@ function useGMvalue(name, defaultValue, _options) {
   }, {
     deep
   });
+
   if (listening) {
     (0,external_Vue_namespaceObject.onUnmounted)(() => {
       GM_removeValueChangeListener(id);
@@ -719,6 +728,7 @@ function useGMvalue(name, defaultValue, _options) {
       value.value = newVal;
     });
   }
+
   return value;
 }
 ;// CONCATENATED MODULE: ./src/store/index.ts
@@ -729,25 +739,30 @@ function useGMvalue(name, defaultValue, _options) {
  */
 function createStore(modulename = '', local = true) {
   const getRealProp = property => modulename ? `[[${modulename}]]-${property}` : property;
+
   const store = new Proxy({}, {
     get(target, property, receiver) {
       const realProp = getRealProp(property);
       const value = local ? GM_getValue(realProp) : Reflect.get(target, realProp, receiver);
       return value;
     },
+
     set(target, property, value, receiver) {
       const realProp = getRealProp(property);
       local ? GM_setValue(realProp, value) : Reflect.set(target, realProp, value, receiver);
       return true;
     },
+
     deleteProperty(target, property) {
       const realProp = getRealProp(property);
       local ? GM_deleteValue(realProp) : Reflect.deleteProperty(target, realProp);
       return true;
     }
+
   });
   return store;
 }
+
 /* harmony default export */ const store = (createStore());
 
 ;// CONCATENATED MODULE: ./src/directives/v-ripple/utils.ts
@@ -767,7 +782,6 @@ function calcDiagInRect(width, height) {
     return c;
   };
 }
-
 /**
  * 计算当前值离总值中心的位置 越靠近中心值为1，远离中心值为0
  * @param value 当前值
@@ -776,6 +790,7 @@ function calcDiagInRect(width, height) {
  * @example value：50 extent：100 则计算 50 在 0-100 中的位置返回 1
  * value：0 或 100 extent：100 返回 0
  */
+
 function closeness(value, extent) {
   if (!value || !extent) return 0;
   const half = extent / 2;
@@ -836,6 +851,7 @@ var update = injectStylesIntoStyleTag_default()(v_ripple/* default */.Z, options
 const containerClassname = 'skr-ripple-container';
 const rippleClassname = 'skr-ripple';
 const weakmap = new WeakMap();
+
 /**
  * 创建容器元素
  */
@@ -847,102 +863,114 @@ function createRippleContainer() {
 /**
  * 创建涟漪元素
  */
+
+
 function createRippleEl() {
   const span = document.createElement('div');
   span.classList.add(rippleClassname);
   return span;
 }
+
 function normalizeOptions(options) {
   if (typeof options === 'boolean') {
     return {
       disabled: !options
     };
   }
+
   return options;
 }
-
 /**
  * 添加涟漪效果
  */
+
+
 const addRippleEffect = function (_options = {}) {
-  let options = normalizeOptions(_options);
-  // 涟漪个数
+  let options = normalizeOptions(_options); // 涟漪个数
+
   let count = 0;
+
   function listener(event) {
     if (options.disabled) return;
-    const currentTarget = event.currentTarget;
+    const currentTarget = event.currentTarget; // 优化: 处理过后不再调用getComputedStyle
 
-    // 优化: 处理过后不再调用getComputedStyle
     if (weakmap.get(currentTarget).position === false) {
-      weakmap.get(currentTarget).position = true;
-      // 注意：会改变当前元素定位方式
+      weakmap.get(currentTarget).position = true; // 注意：会改变当前元素定位方式
+
       if (getComputedStyle(currentTarget).position === 'static') {
         currentTarget.style.position = 'relative';
       }
     }
-    const rect = currentTarget.getBoundingClientRect();
-    const rippleEl = createRippleEl();
-    // 取元素长的一边作为涟漪的周长
-    const side = Math.max(rect.width, rect.height);
-    const radius = side / 2;
-    // 鼠标在元素中的坐标
-    const left = event.pageX - rect.left - window.scrollX;
-    const top = event.pageY - rect.top - window.scrollY;
 
-    // 选项加入到元素中
+    const rect = currentTarget.getBoundingClientRect();
+    const rippleEl = createRippleEl(); // 取元素长的一边作为涟漪的周长
+
+    const side = Math.max(rect.width, rect.height);
+    const radius = side / 2; // 鼠标在元素中的坐标
+
+    const left = event.pageX - rect.left - window.scrollX;
+    const top = event.pageY - rect.top - window.scrollY; // 选项加入到元素中
+
     options.color && (rippleEl.style.background = options.color);
     rippleEl.style.width = side + 'px';
-    rippleEl.style.height = side + 'px';
-    // 元素定位再各减自身的宽高一半
+    rippleEl.style.height = side + 'px'; // 元素定位再各减自身的宽高一半
+
     rippleEl.style.top = top - radius + 'px';
-    rippleEl.style.left = left - radius + 'px';
-    // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+    rippleEl.style.left = left - radius + 'px'; // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
+
     const base = 1.5;
     const diagonal = calcDiagInRect(rect.width, rect.height)(left, top);
     rippleEl.style.animationDuration = base - base * diagonal / side + 's';
     let container = currentTarget.querySelector(`.${containerClassname}`);
+
     if (!container) {
       container = createRippleContainer();
       currentTarget.appendChild(container);
     }
+
     container.appendChild(rippleEl);
     count++;
+
     const unlisten = (() => {
       const leaveEvents = ['mouseup', 'mouseleave'];
+
       const listener = () => {
         // 为了尽量能看清动画效果，延时一下再进行透明
         setTimeout(() => {
           rippleEl.style.opacity = '0';
         }, 100);
       };
+
       leaveEvents.forEach(eventname => currentTarget.addEventListener(eventname, listener));
       return () => {
         leaveEvents.forEach(eventname => currentTarget.removeEventListener(eventname, listener));
       };
-    })();
+    })(); // 移除涟漪元素
 
-    // 移除涟漪元素
+
     rippleEl.addEventListener('transitionend', transEvent => {
       if (transEvent.propertyName === 'opacity') {
         unlisten();
-        rippleEl.remove();
-        // 没有涟漪元素时移除容器
+        rippleEl.remove(); // 没有涟漪元素时移除容器
+
         if (--count <= 0) {
           container?.remove();
         }
       }
     });
-  }
+  } // 更新配置项
 
-  // 更新配置项
+
   function update(newOpts) {
     options = Object.assign({}, options, normalizeOptions(newOpts));
   }
+
   return {
     listener,
     update
   };
 };
+
 const vRipple = {
   mounted(el, binding) {
     const {
@@ -954,13 +982,16 @@ const vRipple = {
       update,
       // 更新配置项函数
       position: false // 是否已经改变了 el 的定位方式
+
     });
     el.addEventListener('mousedown', listener, false);
   },
+
   updated(el, binding) {
     const val = weakmap.get(el);
     val.update(binding.value);
   }
+
 };
 /* harmony default export */ const src_directives_v_ripple = (vRipple);
 ;// CONCATENATED MODULE: ./src/directives/index.ts
@@ -1001,10 +1032,11 @@ var button_update = injectStylesIntoStyleTag_default()(components_button/* defau
 
 
 
-const prefixCls = 'skr-button';
-// button type 非 default 时覆盖一层白色
+
+const prefixCls = 'skr-button'; // button type 非 default 时覆盖一层白色
+
 const rippleColor = 'rgb(255 255 255 / 15%)';
-const Button = defineComponent({
+const Button = (0,external_Vue_namespaceObject.defineComponent)({
   name: 'SkrButton',
   directives: {
     ripple: src_directives_v_ripple
@@ -1038,10 +1070,11 @@ const Button = defineComponent({
       default: true
     }
   },
+
   setup(props, {
     slots
   }) {
-    const rippleOptions = computed(() => {
+    const rippleOptions = (0,external_Vue_namespaceObject.computed)(() => {
       return Object.assign({}, {
         color: props.type === 'default' ? undefined : rippleColor
       }, typeof props.ripple === 'boolean' ? {
@@ -1055,6 +1088,7 @@ const Button = defineComponent({
       }, `${prefixCls}--${props.size}`]
     }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
+
 });
 /* harmony default export */ const src_components_button_0 = (Button);
 // EXTERNAL MODULE: ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/scripts/lanhu/record.scss
@@ -1098,9 +1132,11 @@ var record_update = injectStylesIntoStyleTag_default()(record/* default */.Z, re
 
 
 /* 记录看过的产品 */
+
 function _isSlot(s) {
   return typeof s === 'function' || Object.prototype.toString.call(s) === '[object Object]' && !(0,external_Vue_namespaceObject.isVNode)(s);
 }
+
 function createRecorder() {
   GM_registerMenuCommand('显示/隐藏 最近项目', function () {
     const next = !(store.recorder_visible ?? true);
@@ -1108,6 +1144,7 @@ function createRecorder() {
     store.recorder_visible = next;
   });
   createUI();
+
   function record() {
     const {
       pid
@@ -1121,26 +1158,28 @@ function createRecorder() {
         records.splice(index, 1);
         return true;
       }
+
       return false;
-    });
-    // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
+    }); // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
+
     const title = ['蓝湖', '...'].includes(document.title) && old?.title ? old.title : document.title;
-    records.push({
-      ...old,
+    records.push({ ...old,
       pid,
       title,
       href: location.href
     });
     GM_setValue('records', records);
   }
+
   return {
     record
   };
 }
+
 function createUI() {
   mountComponent({
     setup() {
-      const state = reactive({
+      const state = (0,external_Vue_namespaceObject.reactive)({
         recordsVisible: false,
         moreActionsVisible: false,
         // 初始宽度
@@ -1152,12 +1191,13 @@ function createUI() {
         passwords: useGMvalue('passwords', {})
       });
       const recorderVisible = useGMvalue('recorder_visible', true);
-      const lisRef = ref([]);
-      const reversed = computed(() => [...state.records].reverse());
-      onMounted(() => {
-        watch([() => state.recordsVisible, () => state.moreActionsVisible, () => state.records, () => state.unhidden, recorderVisible], () => {
-          nextTick(() => {
+      const lisRef = (0,external_Vue_namespaceObject.ref)([]);
+      const reversed = (0,external_Vue_namespaceObject.computed)(() => [...state.records].reverse());
+      (0,external_Vue_namespaceObject.onMounted)(() => {
+        (0,external_Vue_namespaceObject.watch)([() => state.recordsVisible, () => state.moreActionsVisible, () => state.records, () => state.unhidden, recorderVisible], () => {
+          (0,external_Vue_namespaceObject.nextTick)(() => {
             const [first] = lisRef.value;
+
             if (first) {
               const width = [...first.children].reduce((totalWidth, el) => totalWidth + el.getBoundingClientRect().width, 0);
               state.width = 5 + width; // 左边距
@@ -1168,13 +1208,16 @@ function createUI() {
           flush: 'post'
         });
       });
+
       function deleteItem(item) {
         const index = state.records.findIndex(record => record.pid === item.pid);
         index > -1 && state.records.splice(index, 1);
       }
+
       function copy(action, item) {
         let copyString = '';
         const password = state.passwords[item.pid];
+
         if (action === 'all') {
           copyString += `${item.title}`;
           password && (copyString += ` (密码：${password})`);
@@ -1186,28 +1229,35 @@ function createUI() {
             Toast.warning('没有密码！');
           }
         }
+
         if (!copyString) return;
         GM_setClipboard(copyString, 'text');
         Toast.success('复制成功');
       }
+
       function editCustomTitle(item) {
         // 取消时不操作
         let result = window.prompt('输入自定义标题，不填则会使用原标题', item.customTitle || item.title || undefined);
         result && (result = result.trim());
+
         if (result === '') {
           delete item.customTitle;
         } else if (result) {
           item.customTitle = result;
         }
       }
+
       function setRecordsVisible(visible) {
         state.recordsVisible = visible;
       }
+
       function setMoreActionsVisible(visible) {
         state.moreActionsVisible = visible;
       }
+
       return () => {
         let _slot;
+
         return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("article", {
           "id": "inject-recorder-ui",
           "onMouseenter": () => {
@@ -1217,10 +1267,10 @@ function createUI() {
             setRecordsVisible(false);
             setMoreActionsVisible(false);
           }
-        }, [(0,external_Vue_namespaceObject.createVNode)(Transition, {
+        }, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.Transition, {
           "name": "inject-slide-fade"
         }, {
-          default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(TransitionGroup, {
+          default: () => [(0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("div", null, [(0,external_Vue_namespaceObject.createVNode)(external_Vue_namespaceObject.TransitionGroup, {
             "tag": "ul",
             "name": "inject-slide-hor-fade"
           }, _isSlot(_slot = reversed.value.map((item, index) => (0,external_Vue_namespaceObject.createVNode)("li", {
@@ -1289,8 +1339,10 @@ function createUI() {
         }, null), [[external_Vue_namespaceObject.vModelCheckbox, state.unhidden]])])]), [[external_Vue_namespaceObject.vShow, recorderVisible.value]]);
       };
     }
+
   });
 }
+
 const IconCopy = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "viewBox": "0 0 1024 1024",
   "version": "1.1",
@@ -1302,6 +1354,7 @@ const IconCopy = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "d": "M877.714286 0H265.142857c-5.028571 0-9.142857 4.114286-9.142857 9.142857v64c0 5.028571 4.114286 9.142857 9.142857 9.142857h566.857143v786.285715c0 5.028571 4.114286 9.142857 9.142857 9.142857h64c5.028571 0 9.142857-4.114286 9.142857-9.142857V36.571429c0-20.228571-16.342857-36.571429-36.571428-36.571429zM731.428571 146.285714H146.285714c-20.228571 0-36.571429 16.342857-36.571428 36.571429v606.514286c0 9.714286 3.885714 18.971429 10.742857 25.828571l198.057143 198.057143c2.514286 2.514286 5.371429 4.571429 8.457143 6.285714v2.171429h4.8c4 1.485714 8.228571 2.285714 12.571428 2.285714H731.428571c20.228571 0 36.571429-16.342857 36.571429-36.571429V182.857143c0-20.228571-16.342857-36.571429-36.571429-36.571429zM326.857143 905.371429L228.457143 806.857143H326.857143v98.514286zM685.714286 941.714286H400V779.428571c0-25.257143-20.457143-45.714286-45.714286-45.714285H192V228.571429h493.714286v713.142857z",
   "p-id": "4118"
 }, null)]);
+
 const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "class": "icon",
   "viewBox": "0 0 1024 1024",
@@ -1315,64 +1368,65 @@ const IconEdit = (0,external_Vue_namespaceObject.createVNode)("svg", {
   "p-id": "3702"
 }, null)]);
 
+
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/password.ts
 
 
 const marks = new WeakSet();
 let observer = null;
-
 /* 填充密码 */
+
 function autofill() {
   // 停止上次观察
   if (observer) {
     observer.disconnect();
     observer = null;
   }
+
   if (!location.hash.startsWith('#/item/project/door')) return;
   const {
     pid,
     pwd
-  } = parse();
-  // 有些链接自带密码 如果保存过密码但链接自带新密码会有问题
-  if (!pid || pwd) return;
+  } = parse(); // 有些链接自带密码 如果保存过密码但链接自带新密码会有问题
 
-  // 确认登录按钮
-  let confirmEl = null;
-  // 密码框
+  if (!pid || pwd) return; // 确认登录按钮
+
+  let confirmEl = null; // 密码框
+
   let passwordEl = null;
+
   function savePassword() {
     const savedPassword = GM_getValue('passwords', {});
     const password = passwordEl.value;
-    GM_setValue('passwords', {
-      ...savedPassword,
+    GM_setValue('passwords', { ...savedPassword,
       [pid]: password
     });
   }
+
   observer = new MutationObserver((mutationsList, observer) => {
-    let filled = false;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let filled = false; // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     for (const _ of mutationsList) {
       const [hasConfirmEl, hasPasswordEl] = [$('#project-door .mu-raised-button-wrapper'), $('#project-door .pass input')];
       if (!hasConfirmEl || !hasPasswordEl) continue;
       observer.disconnect();
       confirmEl = hasConfirmEl;
       passwordEl = hasPasswordEl;
-      const pidPassword = GM_getValue('passwords', {})[pid];
-      // 确保本次内只进行一次操作
+      const pidPassword = GM_getValue('passwords', {})[pid]; // 确保本次内只进行一次操作
+
       if (filled === false && pidPassword) {
         filled = true;
         passwordEl.value = pidPassword;
         Toast('密码已填写');
         confirmEl.click();
-      }
+      } // 标记已添加事件的元素
 
-      // 标记已添加事件的元素
+
       if (marks.has(confirmEl)) break;
-      marks.add(confirmEl);
+      marks.add(confirmEl); // 点击后保存密码
 
-      // 点击后保存密码
-      confirmEl.addEventListener('mousedown', savePassword);
-      // 回车键保存密码
+      confirmEl.addEventListener('mousedown', savePassword); // 回车键保存密码
+
       passwordEl.addEventListener('keydown', event => {
         if (event.keyCode !== 13) return;
         savePassword();
@@ -1385,7 +1439,9 @@ function autofill() {
   });
 }
 
+
 ;// CONCATENATED MODULE: ./src/scripts/lanhu/index.ts
+
 
 
 
@@ -1393,21 +1449,23 @@ function autofill() {
 
 async function main() {
   if (!checker()) return;
-  let app;
-  // 不确保一次可以获取到
+  let app; // 不确保一次可以获取到
+
   while (!app) {
     app = $('.whole')?.__vue__;
     await sleep(500);
   }
+
   const recorder = createRecorder();
   app.$watch('$route', function () {
-    autofill();
-    // 蓝湖title是动态获取的，可能有延时，延时处理
+    autofill(); // 蓝湖title是动态获取的，可能有延时，延时处理
+
     setTimeout(recorder.record, 500);
   }, {
     immediate: true
   });
 }
+
 main();
 })();
 
