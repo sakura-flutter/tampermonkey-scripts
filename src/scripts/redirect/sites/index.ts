@@ -274,7 +274,7 @@ const sites: Site[] = [
     name: 'Steam',
     test: 'steamcommunity.com/linkfilter/',
     use: () => ({
-      query: 'url',
+      link: parse().url || parse().u,
     }),
   },
   {
