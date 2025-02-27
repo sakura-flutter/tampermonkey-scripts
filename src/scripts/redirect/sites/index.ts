@@ -383,6 +383,14 @@ const sites: Site[] = [
       query: 'link',
     }),
   },
+  {
+    name: '异次元软件',
+    test: 'www.iplaysoft.com/link/',
+    readyState: 'interactive',
+    use: () => ({
+      selector: '#targetUrl > a',
+    }),
+  },
 ]
 
 export default sites
