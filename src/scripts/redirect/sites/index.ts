@@ -391,6 +391,13 @@ const sites: Site[] = [
       selector: '#targetUrl > a',
     }),
   },
+  {
+    name: 'HelloGitHub',
+    test: 'hellogithub.com/periodical/statistics/click',
+    use: () => ({
+      query: 'target',
+    }),
+  },
 ]
 
 export default sites
