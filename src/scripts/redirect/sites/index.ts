@@ -1,7 +1,8 @@
 import { $ } from '@/utils/selector'
 import { parse } from '@/utils/querystring'
 import { weibo } from './t-cn'
-import { weixin } from './weixin110-qq-com'
+import { weixin } from './mp-weixin-qq-com'
+import { weixin as weixin2 } from './weixin110-qq-com'
 import { doc360 } from './www-360doc-com'
 import { pixiv } from './www-pixiv-net'
 import type { Site } from '../types'
@@ -98,10 +99,15 @@ const sites: Site[] = [
     }),
   },
   {
+    name: '微信2',
+    test: /^mp\.weixin\.qq\.com\/s\//,
+    use: weixin,
+  },
+  {
     name: '微信',
     test: /^weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
-    use: weixin,
+    use: weixin2,
   },
   {
     name: '企业微信',
@@ -394,6 +400,13 @@ const sites: Site[] = [
   {
     name: 'HelloGitHub',
     test: 'hellogithub.com/periodical/statistics/click',
+    use: () => ({
+      query: 'target',
+    }),
+  },
+  {
+    name: '知更鸟',
+    test: 'zmingcx.com/go.html',
     use: () => ({
       query: 'target',
     }),
