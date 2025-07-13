@@ -306,7 +306,7 @@ const sites: Site[] = [
   },
   {
     name: '少数派',
-    test: 'sspai.com/link',
+    test: /^(niu\.)?sspai\.com\/link/, // 有两个域名
     use: () => ({
       query: 'target',
     }),
@@ -409,6 +409,13 @@ const sites: Site[] = [
     test: 'zmingcx.com/go.html',
     use: () => ({
       query: 'target',
+    }),
+  },
+  {
+    name: '巴哈姆特',
+    test: 'ref.gamer.com.tw/redir.php',
+    use: () => ({
+      query: 'url',
     }),
   },
 ]

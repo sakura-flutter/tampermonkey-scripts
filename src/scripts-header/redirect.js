@@ -1,8 +1,8 @@
 module.exports = isProd =>
 `// ==UserScript==
 // @name         redirect 外链跳转
-// @version      1.60.0
-// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢、云栖社区、NodeSeek、亿企查、异次元软件、HelloGitHub、知更鸟
+// @version      1.61.0
+// @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢、云栖社区、NodeSeek、亿企查、异次元软件、HelloGitHub、知更鸟、巴哈姆特
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
@@ -60,6 +60,7 @@ module.exports = isProd =>
 // @match        *://hd.nowcoder.com/link.html*
 // @match        *://game.bilibili.com/linkfilter/*
 // @match        *://sspai.com/link*
+// @match        *://niu.sspai.com/link*
 // @match        *://jump.5ch.net/*
 // @match        *://www.kdocs.cn/office/link*
 // @match        *://shimo.im/outlink/black*
@@ -75,6 +76,7 @@ module.exports = isProd =>
 // @match        *://www.iplaysoft.com/link*
 // @match        *://hellogithub.com/periodical/statistics/click*
 // @match        *://zmingcx.com/go.html*
+// @match        *://ref.gamer.com.tw/redir.php*
 // @include      ${/^https?:\/\/www\.google\..{2,7}url/}
 // ==/UserScript==
 `
