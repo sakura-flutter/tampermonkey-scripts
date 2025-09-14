@@ -418,6 +418,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: 'ABABTOOLS',
+    test: 'ababtools.com/',
+    use: () => ({
+      query: 'url',
+    }),
+  },
 ]
 
 export default sites
