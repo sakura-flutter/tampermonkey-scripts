@@ -264,9 +264,9 @@ const sites: Site[] = [
   },
   {
     name: '飞书',
-    test: 'security.feishu.cn/link/safety',
+    test: /security\.feishu\.cn\/link\/safety(\/block_template)?/,
     use: () => ({
-      query: 'target',
+      link: parse().target || parse().url,
     }),
   },
   {
