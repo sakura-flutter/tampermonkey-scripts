@@ -99,15 +99,22 @@ const sites: Site[] = [
     }),
   },
   {
-    name: '微信2',
+    name: '微信',
     test: /^mp\.weixin\.qq\.com\/s\//,
     use: weixin,
   },
   {
-    name: '微信',
+    name: '微信2',
     test: /^weixin110\.qq\.com\/cgi-bin\/mmspamsupport-bin\/newredirectconfirmcgi/,
     readyState: 'interactive',
     use: weixin2,
+  },
+  {
+    name: '微信3',
+    test: /^mp\.weixin\.qq\.com\/mp\/readtemplate/,
+    use: () => ({
+      query: 'url',
+    }),
   },
   {
     name: '企业微信',
