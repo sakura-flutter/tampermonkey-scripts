@@ -432,6 +432,13 @@ const sites: Site[] = [
       query: 'url',
     }),
   },
+  {
+    name: '阿里云帮助中心',
+    test: 'help.aliyun.com/redirect',
+    use: () => ({
+      query: 'targetUrl',
+    }),
+  },
 ]
 
 export default sites
