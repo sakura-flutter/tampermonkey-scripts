@@ -17,7 +17,7 @@
 - [tieba 签到](https://greasyfork.org/zh-CN/scripts/410874-百度贴吧签到)
 - [重定向](https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转)
 - [Pixiv](https://greasyfork.org/zh-CN/scripts/419761-pixiv-工具箱)
-- [Github](https://greasyfork.org/zh-CN/scripts/423178-github-工具箱)
+- [GitHub](https://greasyfork.org/zh-CN/scripts/423178-github-工具箱)
 - [蓝湖](https://greasyfork.org/zh-CN/scripts/411030-蓝湖-lanhu)
 - [MDN Web Dosc 文档辅助](https://greasyfork.org/zh-CN/scripts/420958-mdn-文档辅助)
 - [Element UI 文档辅助](https://greasyfork.org/zh-CN/scripts/418173-element-ui文档辅助)
@@ -32,11 +32,12 @@
 ```bash
 npm install
 
-npm run serve
-// 或者（输出到dist目录）
-// npm run dev
+# 监听并输出到 dist 目录
+npm run dev
 
-// 输出到dist目录
+# npm run serve 还有点问题
+
+# 输出到 dist 目录
 npm run build
 ```
 
