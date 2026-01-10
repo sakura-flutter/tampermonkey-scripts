@@ -14,13 +14,13 @@ interface PreviewerOptions {
 }
 
 export default class Previewer {
-  #el
+  #imgsSelector
   #viewer?: Viewer
   #options: PreviewerOptions
 
-  constructor(el: string, options: PreviewerOptions) {
+  constructor(imgsSelector: string, options: PreviewerOptions) {
     this.#process = this.#process.bind(this)
-    this.#el = el
+    this.#imgsSelector = imgsSelector
     this.#options = options
     this.#init()
   }
@@ -42,12 +42,12 @@ export default class Previewer {
     const artworks = this.#getArtworks()
     if (artworks.length === 0) return
     let index = -1
-    // 比较5层深度应该足够了
+    // 比较 5 层深度应该足够了
     event.composedPath().slice(0, 5).find(target => {
       index = artworks.findIndex(artwork => artwork === target)
       return index > -1
     })
-    warn(event, index)
+    warn(event, index, artworks)
     if (index === -1) return
     const originalArtworks = this.#createOriginalImgEls(artworks)
     if (originalArtworks.length === 0) return
@@ -65,7 +65,7 @@ export default class Previewer {
    * 获取要预览图片的节点
    */
   #getArtworks() {
-    return [...$$(this.#el)] as HTMLImageElement[]
+    return [...$$(this.#imgsSelector)] as HTMLImageElement[]
   }
 
   /**
@@ -75,13 +75,28 @@ export default class Previewer {
    */
   #createOriginalImgEls(imgEls: HTMLImageElement[]) {
     return imgEls.reduce((acc, img) => {
-      const parentNode = img.parentNode as HTMLAnchorElement
-      // 原图在其父级a标签href上
-      if (parentNode.tagName === 'A') {
-        const image = new Image()
-        image.src = parentNode.href
-        image.alt = img.alt
-        acc.push(image)
+      // 原图地址在祖先 a 标签 href 上，但 a 标签位置不固定要动态查找
+      let parentElement = img.parentElement!
+      let steps = 0
+      // 往上找 5 层足够了，还找不到应该就是真没有
+      const maxAncestors = 5
+
+      while (parentElement && steps < maxAncestors) {
+        // 如果遇到属性 role="presentation" 的元素说明到边界了
+        if (parentElement.getAttribute('role') === 'presentation') {
+          break
+        }
+
+        if (parentElement.tagName === 'A') {
+          const image = new Image()
+          image.src = (parentElement as HTMLAnchorElement).href
+          image.alt = img.alt
+          acc.push(image)
+          break
+        }
+
+        parentElement = parentElement.parentElement!
+        steps++
       }
 
       return acc
@@ -119,7 +134,6 @@ export default class Previewer {
 
     const viewer = new Viewer(container, viewerOpts)
     viewer.show()
-    warn('viewer:', container, viewer)
     return viewer
   }
 }

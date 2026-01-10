@@ -5,13 +5,13 @@ interface Options {
   includePathname: RegExp
 }
 
-export default function attachPixels(el: string, options: Options) {
+export default function attachPixels(imgsSelector: string, options: Options) {
   const ws = new WeakSet()
 
   onVisible(() => {
     if (!options.includePathname.test(location.pathname)) return
 
-    $$(el).forEach(img => {
+    $$(imgsSelector).forEach(img => {
       if (ws.has(img)) return
 
       // 获取原尺寸
