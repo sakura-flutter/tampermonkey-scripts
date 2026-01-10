@@ -13,11 +13,13 @@
 
 详细说明点击查看
 
-- [宽屏](https://greasyfork.org/zh-CN/scripts/411260-网页宽屏)
-- [tieba 签到](https://greasyfork.org/zh-CN/scripts/410874-百度贴吧签到)
 - [重定向](https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转)
+- [视频倍速](https://greasyfork.org/zh-CN/scripts/562075-视频倍速播放)
 - [Pixiv](https://greasyfork.org/zh-CN/scripts/419761-pixiv-工具箱)
 - [GitHub](https://greasyfork.org/zh-CN/scripts/423178-github-工具箱)
+- [Bilibili](https://greasyfork.org/zh-CN/scripts/426198-bilibili-工具箱)
+- [Tieba 签到](https://greasyfork.org/zh-CN/scripts/410874-百度贴吧签到)
+- [宽屏](https://greasyfork.org/zh-CN/scripts/411260-网页宽屏)
 - [蓝湖](https://greasyfork.org/zh-CN/scripts/411030-蓝湖-lanhu)
 - [MDN Web Dosc 文档辅助](https://greasyfork.org/zh-CN/scripts/420958-mdn-文档辅助)
 - [Element UI 文档辅助](https://greasyfork.org/zh-CN/scripts/418173-element-ui文档辅助)
@@ -33,6 +35,8 @@
 npm install
 
 # 监听并输出到 dist 目录
+# 然后在油猴中引用本地路径 `// @require file://path/xx.js`
+# 记得在浏览器扩展中设置允许本地脚本
 npm run dev
 
 # npm run serve 还有点问题
