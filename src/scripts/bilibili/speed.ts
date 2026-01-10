@@ -1,8 +1,11 @@
-import { $ } from '@/utils/selector'
+import { findBestVideoElement } from '@/scripts/playback-rate/utils'
 
 export default function speed() {
   longPress('KeyS', () => {
-    const video = ($('#bilibili-player video') || $('#bilibili-player bwp-video')) as HTMLVideoElement
+    const video = findBestVideoElement()
+
+    if (!video) return
+
     const oldPlaybackRate = video.playbackRate
     video.playbackRate = 6
 
@@ -21,7 +24,7 @@ export default function speed() {
 function longPress(code: string, callback: () => void, duration = 350) {
   let timeoutID: NodeJS.Timeout | undefined
 
-  window.addEventListener('keypress', event => {
+  window.addEventListener('keydown', event => {
     if (event.code === code && timeoutID) return
 
     if (event.code !== code) {
