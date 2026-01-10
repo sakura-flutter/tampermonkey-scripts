@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pixiv 工具箱
-// @version      1.4.1
+// @version      1.5.0
 // @description  增强P站查看原图功能；显示原图尺寸
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -102,7 +102,7 @@ GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背�
 '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }' // 加大导航栏
 ].join(''));
 
-var _el = /*#__PURE__*/_classPrivateFieldLooseKey("el");
+var _imgsSelector = /*#__PURE__*/_classPrivateFieldLooseKey("imgsSelector");
 
 var _viewer = /*#__PURE__*/_classPrivateFieldLooseKey("viewer");
 
@@ -119,7 +119,7 @@ var _createOriginalImgEls = /*#__PURE__*/_classPrivateFieldLooseKey("createOrigi
 var _preview = /*#__PURE__*/_classPrivateFieldLooseKey("preview");
 
 class Previewer {
-  constructor(el, options) {
+  constructor(imgsSelector, options) {
     Object.defineProperty(this, _preview, {
       value: _preview2
     });
@@ -132,7 +132,7 @@ class Previewer {
     Object.defineProperty(this, _init, {
       value: _init2
     });
-    Object.defineProperty(this, _el, {
+    Object.defineProperty(this, _imgsSelector, {
       writable: true,
       value: void 0
     });
@@ -156,13 +156,13 @@ class Previewer {
         const artworks = _classPrivateFieldLooseBase(this, _getArtworks)[_getArtworks]();
 
         if (artworks.length === 0) return;
-        let index = -1; // 比较5层深度应该足够了
+        let index = -1; // 比较 5 层深度应该足够了
 
         event.composedPath().slice(0, 5).find(target => {
           index = artworks.findIndex(artwork => artwork === target);
           return index > -1;
         });
-        warn(event, index);
+        warn(event, index, artworks);
         if (index === -1) return;
 
         const originalArtworks = _classPrivateFieldLooseBase(this, _createOriginalImgEls)[_createOriginalImgEls](artworks);
@@ -177,7 +177,7 @@ class Previewer {
       }
     });
     _classPrivateFieldLooseBase(this, _process)[_process] = _classPrivateFieldLooseBase(this, _process)[_process].bind(this);
-    _classPrivateFieldLooseBase(this, _el)[_el] = el;
+    _classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector] = imgsSelector;
     _classPrivateFieldLooseBase(this, _options)[_options] = options;
 
     _classPrivateFieldLooseBase(this, _init)[_init]();
@@ -194,18 +194,33 @@ function _init2() {
 }
 
 function _getArtworks2() {
-  return [...$$(_classPrivateFieldLooseBase(this, _el)[_el])];
+  return [...$$(_classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector])];
 }
 
 function _createOriginalImgEls2(imgEls) {
   return imgEls.reduce((acc, img) => {
-    const parentNode = img.parentNode; // 原图在其父级a标签href上
+    // 原图地址在祖先 a 标签 href 上，但 a 标签位置不固定要动态查找
+    let parentElement = img.parentElement;
+    let steps = 0; // 往上找 5 层足够了，还找不到应该就是真没有
 
-    if (parentNode.tagName === 'A') {
-      const image = new Image();
-      image.src = parentNode.href;
-      image.alt = img.alt;
-      acc.push(image);
+    const maxAncestors = 5;
+
+    while (parentElement && steps < maxAncestors) {
+      // 如果遇到属性 role="presentation" 的元素说明到边界了
+      if (parentElement.getAttribute('role') === 'presentation') {
+        break;
+      }
+
+      if (parentElement.tagName === 'A') {
+        const image = new Image();
+        image.src = parentElement.href;
+        image.alt = img.alt;
+        acc.push(image);
+        break;
+      }
+
+      parentElement = parentElement.parentElement;
+      steps++;
     }
 
     return acc;
@@ -240,7 +255,6 @@ function _preview2(imgEls, viewerOpts) {
   }, viewerOpts);
   const viewer = new (external_Viewer_default())(container, viewerOpts);
   viewer.show();
-  warn('viewer:', container, viewer);
   return viewer;
 }
 ;// CONCATENATED MODULE: ./src/utils/visibility-state.ts
@@ -269,11 +283,11 @@ function onVisible(callback, delay = 500, ...rest) {
 ;// CONCATENATED MODULE: ./src/scripts/pixiv/pixels.ts
 
 
-function attachPixels(el, options) {
+function attachPixels(imgsSelector, options) {
   const ws = new WeakSet();
   onVisible(() => {
     if (!options.includePathname.test(location.pathname)) return;
-    $$(el).forEach(img => {
+    $$(imgsSelector).forEach(img => {
       if (ws.has(img)) return; // 获取原尺寸
 
       let [width, height] = [img.getAttribute('width'), img.getAttribute('height')];
@@ -342,10 +356,10 @@ function calcRectCoincide(width, height) {
 
  // eslint-disable-next-line no-new
 
-new Previewer('figure [role="presentation"] a img', {
+new Previewer('figure [role="presentation"] a img[width][height]', {
   includePathname: /^\/artworks\/(\w)+/
 });
-attachPixels('figure [role="presentation"] a img', {
+attachPixels('figure [role="presentation"] a img[width][height]', {
   includePathname: /^\/artworks\/(\w)+/
 });
 /******/ })()
