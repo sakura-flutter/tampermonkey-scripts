@@ -48,6 +48,7 @@ module.exports = (env, argv) => ({
     'element-ui': './src/scripts/element-ui',
     'mdn-web-docs': './src/scripts/mdn-web-docs',
     'google-redirect': './src/scripts/google-redirect',
+    'playback-rate': './src/scripts/playback-rate',
     toast: './src/helpers/toast',
   },
   output: {
