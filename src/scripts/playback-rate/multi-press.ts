@@ -8,13 +8,13 @@
  */
 export interface MultiPressConfig {
   /** 多击之间的最大时间间隔（毫秒），默认 150ms */
-  pressInterval?: number;
+  pressInterval?: number
   /** 长按触发的时间阈值（毫秒），默认 350ms */
-  longPressThreshold?: number;
+  longPressThreshold?: number
   /** 是否在长按期间持续触发事件，默认 false */
-  enableRepeat?: boolean;
+  enableRepeat?: boolean
   /** 重复触发的间隔（毫秒），默认 100ms */
-  repeatInterval?: number;
+  repeatInterval?: number
 }
 
 /**
@@ -22,21 +22,21 @@ export interface MultiPressConfig {
  */
 export interface MultiPressEvent {
   /** 按键代码 */
-  key: KeyboardEvent['key'];
+  key: KeyboardEvent['key']
   /** 按键次数 (1=单次, 2=两次, 3=三次, 4=四次, ...) */
-  pressCount: number;
+  pressCount: number
   /** 是否为长按事件 */
-  isLongPress: boolean;
+  isLongPress: boolean
   /** 长按持续时间（毫秒），仅在长按时有效 */
-  pressDuration?: number;
+  pressDuration?: number
   /** 原始键盘事件 */
-  originalEvent: KeyboardEvent;
+  originalEvent: KeyboardEvent
 }
 
 /**
  * 事件回调函数类型
  */
-export type MultiPressCallback = (event: MultiPressEvent) => void;
+export type MultiPressCallback = (event: MultiPressEvent) => void
 
 /**
  * 多击长按键盘事件处理器
@@ -83,18 +83,21 @@ export type MultiPressCallback = (event: MultiPressEvent) => void;
 export class MultiPress {
   private config: Required<MultiPressConfig>
   private listeners: Map<KeyboardEvent['key'], Map<number, MultiPressCallback[]>>
-  private keyStates: Map<KeyboardEvent['key'], {
-    pressCount: number;
-    lastKeyDownTime: number;
-    lastKeyUpTime: number;
-    longPressTimer: number | null;
-    repeatTimer: number | null;
-    pressResetTimer: number | null;
-    pressTriggerTimer: number | null;
-    isLongPressing: boolean;
-    pressStartTime: number;
-    lastEvent: KeyboardEvent | null;
-  }>
+  private keyStates: Map<
+    KeyboardEvent['key'],
+    {
+      pressCount: number
+      lastKeyDownTime: number
+      lastKeyUpTime: number
+      longPressTimer: number | null
+      repeatTimer: number | null
+      pressResetTimer: number | null
+      pressTriggerTimer: number | null
+      isLongPressing: boolean
+      pressStartTime: number
+      lastEvent: KeyboardEvent | null
+    }
+  >
 
   private isActive: boolean
   private boundKeyDown: (e: KeyboardEvent) => void
@@ -362,10 +365,10 @@ export class MultiPress {
   }
 
   private clearTimers(state: {
-    longPressTimer: number | null;
-    repeatTimer: number | null;
-    pressResetTimer: number | null;
-    pressTriggerTimer: number | null;
+    longPressTimer: number | null
+    repeatTimer: number | null
+    pressResetTimer: number | null
+    pressTriggerTimer: number | null
   }) {
     if (state.longPressTimer !== null) {
       clearTimeout(state.longPressTimer)
@@ -395,8 +398,6 @@ export class MultiPress {
 /**
  * 便捷工厂函数
  */
-export function createMultiPress(
-  config?: MultiPressConfig,
-): MultiPress {
+export function createMultiPress(config?: MultiPressConfig): MultiPress {
   return new MultiPress(config)
 }

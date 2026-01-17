@@ -17,11 +17,15 @@ async function main() {
 
   const recorder = createRecorder()
 
-  app.$watch('$route', function() {
-    autofill()
-    // 蓝湖title是动态获取的，可能有延时，延时处理
-    setTimeout(recorder.record, 500)
-  }, { immediate: true })
+  app.$watch(
+    '$route',
+    function () {
+      autofill()
+      // 蓝湖title是动态获取的，可能有延时，延时处理
+      setTimeout(recorder.record, 500)
+    },
+    { immediate: true },
+  )
 }
 
 main()

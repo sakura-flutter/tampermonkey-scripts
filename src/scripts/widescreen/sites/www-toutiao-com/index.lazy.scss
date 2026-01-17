@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 $default-width: 676px;
 

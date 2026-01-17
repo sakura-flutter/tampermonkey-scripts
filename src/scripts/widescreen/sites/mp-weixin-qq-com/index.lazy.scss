@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(750px, 90vw, 1150px) {
   /* 文章宽屏 */

@@ -33,7 +33,7 @@ const ForumList = defineComponent({
 
     const counter = computed(() => ({
       total: props.dataSource.length,
-      // eslint-disable-next-line camelcase
+
       signed: props.dataSource.filter(({ is_sign }) => is_sign).length,
     }))
 
@@ -47,55 +47,44 @@ const ForumList = defineComponent({
       return `距离升级还需要${needed}经验，若每天+${MAX_EXP_DAILY}，还需要${Math.ceil(needed / MAX_EXP_DAILY)}天`
     }
 
-    return () => (<>
-      {
-        props.dataSource.length > 0 && <div class="forums-container">
-          <header class="top-btns">
-            <Button class="reverse-btn" size="mini" onClick={changeReverse}>
-              {isReverse.value ? '已倒序' : '普通'}
-              <span title="已签/总数">
-                {counter.value.signed}/{counter.value.total}
-              </span>
-            </Button>
-            <Button class="resize-btn" size="mini" onClick={() => emit('clickSize')}>
-              大小
-            </Button>
-          </header>
-          <ul class={{ [props.size]: true }}>
-            {
-              diaplayForums.value.map(item => (
+    return () => (
+      <>
+        {props.dataSource.length > 0 && (
+          <div class="forums-container">
+            <header class="top-btns">
+              <Button class="reverse-btn" size="mini" onClick={changeReverse}>
+                {isReverse.value ? '已倒序' : '普通'}
+                <span title="已签/总数">
+                  {counter.value.signed}/{counter.value.total}
+                </span>
+              </Button>
+              <Button class="resize-btn" size="mini" onClick={() => emit('clickSize')}>
+                大小
+              </Button>
+            </header>
+            <ul class={{ [props.size]: true }}>
+              {diaplayForums.value.map(item => (
                 <li key={item.forum_id}>
-                  <a
-                    href={'/f?kw=' + encodeURIComponent(item.forum_name)}
-                    title={item.forum_name}
-                    target="_blank"
-                  >
+                  <a href={'/f?kw=' + encodeURIComponent(item.forum_name)} title={item.forum_name} target="_blank">
                     {item.forum_name}
                   </a>
                   <span class="signed">{item.is_sign ? ' √' : ''}</span>
                   <span class="level" title={item.level_name}>
                     {item.user_level}级
                   </span>
-                  <span class="gain">{item.sign_bonus_point ? ('+' + item.sign_bonus_point) : ''}</span>
+                  <span class="gain">{item.sign_bonus_point ? '+' + item.sign_bonus_point : ''}</span>
                   <span class="exp" title={expTitle(item)}>
                     {item.user_exp}/{item.levelup_score}
                   </span>
                 </li>
-              ))
-            }
-          </ul>
-          {/* 太多时显示搜索 */}
-          {
-            props.dataSource.length > 25 && <Input
-              v-model={keyword.value}
-              placeholder="搜索"
-              size="small"
-              scale
-            />
-          }
-       </div>
-      }
-    </>)
+              ))}
+            </ul>
+            {/* 太多时显示搜索 */}
+            {props.dataSource.length > 25 && <Input v-model={keyword.value} placeholder="搜索" size="small" scale />}
+          </div>
+        )}
+      </>
+    )
   },
 })
 

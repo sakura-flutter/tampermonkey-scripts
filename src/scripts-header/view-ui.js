@@ -1,5 +1,5 @@
-module.exports = isProd =>
-`// ==UserScript==
+export default isProd =>
+  `// ==UserScript==
 // @name         View UI v4 文档辅助
 // @version      1.0.5
 // @description  (原iView)隐藏文档中菜单项：Pro、物料

@@ -1,3 +1,4 @@
+/* eslint-disable vue/multi-word-component-names */
 /* Toast */
 
 import { createVNode, defineComponent, render, isVNode, onMounted, reactive, Transition } from 'vue'
@@ -7,7 +8,7 @@ const toastTypes = ['info', 'success', 'warning', 'error'] as const
 
 export type ObjectToastOptions = {
   content: string | VNode
-  type?: typeof toastTypes[number]
+  type?: (typeof toastTypes)[number]
   closable?: boolean
   /** 默认 3s，0 时不会自动关闭 */
   duration?: number
@@ -23,7 +24,7 @@ function normalizeOptions(options: ToastOptions, duration: ObjectToastOptions['d
   return options
 }
 
-const Toast = function(_opts: ToastOptions, duration?: ObjectToastOptions['duration']) {
+const Toast = function (_opts: ToastOptions, duration?: ObjectToastOptions['duration']) {
   const options = normalizeOptions(_opts, duration)
 
   const container = document.createElement('div')
@@ -50,7 +51,7 @@ const Toast = function(_opts: ToastOptions, duration?: ObjectToastOptions['durat
     setup(props, context) {
       const { expose } = context
       const state = reactive({
-        closable: (props.duration === 0 && props.closable == null) ? true : props.closable, // 0 时 closable 默认打开
+        closable: props.duration === 0 && props.closable == null ? true : props.closable, // 0 时 closable 默认打开
         visible: false,
       })
 
@@ -81,7 +82,11 @@ const Toast = function(_opts: ToastOptions, duration?: ObjectToastOptions['durat
             <div class="inject-toast">
               <div class={['inject-toast-content', `inject-toast-content--${props.type}`]}>
                 <div class="inject-toast-content-text">{props.content}</div>
-                {state.closable && <button class="inject-toast-content-close" onClick={close}>×</button>}
+                {state.closable && (
+                  <button class="inject-toast-content-close" onClick={close}>
+                    ×
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -101,7 +106,7 @@ const Toast = function(_opts: ToastOptions, duration?: ObjectToastOptions['durat
 }
 
 toastTypes.forEach(type => {
-  (Toast as any)[type] = function(_opts: ToastOptions, duration?: ObjectToastOptions['duration']) {
+  ;(Toast as any)[type] = function (_opts: ToastOptions, duration?: ObjectToastOptions['duration']) {
     const options = {
       ...normalizeOptions(_opts, duration),
       type,
@@ -139,9 +144,11 @@ function insertElementInContainer(elememnt: Element) {
   })
 }
 
-(function addStyle() {
+;(function addStyle() {
   const styleEl = document.createElement('style')
-  styleEl.appendChild(document.createTextNode(`
+  styleEl.appendChild(
+    document.createTextNode(
+      `
     .inject-toast-container {
       position: fixed;
       z-index: 99999;
@@ -218,7 +225,9 @@ function insertElementInContainer(elememnt: Element) {
       padding: 0;
       opacity: 0;
     }
-  `.replace(/\|>/g, '.inject-toast-content')))
+  `.replace(/\|>/g, '.inject-toast-content'),
+    ),
+  )
 
   // fix: tampermonkey 偶尔会获取不到 head
   safeAppendElement(() => {

@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(1450px, 91vw, 91vw) {
   [class*='Frame_content2'] {

@@ -20,9 +20,7 @@ const Input = defineComponent({
       default: false,
     },
   },
-  emits: [
-    'update:modelValue',
-  ],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
     const handleInput = (event: Event) => {
       // vue 自带的
@@ -33,11 +31,7 @@ const Input = defineComponent({
 
     return () => (
       <input
-        class={[
-          prefixCls,
-          `${prefixCls}--${props.size}`,
-          { [`${prefixCls}--scale`]: props.scale },
-        ]}
+        class={[prefixCls, `${prefixCls}--${props.size}`, { [`${prefixCls}--scale`]: props.scale }]}
         value={props.modelValue}
         type="text"
         onInput={handleInput}

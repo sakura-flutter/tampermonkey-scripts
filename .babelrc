@@ -11,7 +11,6 @@
         "modules": false,
         "useBuiltIns": "usage",
         "corejs": 3,
-        "bugfixes": true,
         "exclude": [
           "es.array.includes",
           "es.array.reduce",
@@ -25,8 +24,6 @@
   ],
   // 顺序执行
   "plugins": [
-    "@vue/babel-plugin-jsx",
-    ["@babel/plugin-proposal-class-properties"],
-    ["@babel/plugin-proposal-private-methods"]
+    "@vue/babel-plugin-jsx"
   ]
 }

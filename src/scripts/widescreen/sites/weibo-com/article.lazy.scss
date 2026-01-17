@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(1150px, 90vw, 1380px) {
   #articleRoot {

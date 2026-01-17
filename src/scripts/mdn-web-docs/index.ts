@@ -15,16 +15,20 @@ async function main() {
   window.addEventListener('urlchange', () => {
     docsLang = matchLang(location.pathname)
   })
-  window.addEventListener('click', function listener(event) {
-    if (!event.isTrusted) return
+  window.addEventListener(
+    'click',
+    function listener(event) {
+      if (!event.isTrusted) return
 
-    const isInLangMenu = $('.languages-switcher-menu .language-menu')?.contains(event.target as HTMLElement)
-    if (isInLangMenu) {
-      // 标记自行切换语言
-      sessionStorage.setItem('hand-control-language', 'true')
-      window.removeEventListener('click', listener, true)
-    }
-  }, true)
+      const isInLangMenu = $('.languages-switcher-menu .language-menu')?.contains(event.target as HTMLElement)
+      if (isInLangMenu) {
+        // 标记自行切换语言
+        sessionStorage.setItem('hand-control-language', 'true')
+        window.removeEventListener('click', listener, true)
+      }
+    },
+    true,
+  )
 
   setLocale()
   addLangButton()
@@ -83,9 +87,9 @@ function addLangButton() {
     'background-color: var(--button-bg)',
     'box-shadow: var(--shadow-01)',
   ].join(';')
-  button.onclick = function() {
+  button.onclick = function () {
     sessionStorage.setItem('hand-control-language', 'true')
-    selectLang((isChinese(docsLang) ? values[1]! : values[0]!))
+    selectLang(isChinese(docsLang) ? values[1]! : values[0]!)
   }
 
   document.body.append(button)

@@ -10,12 +10,12 @@ import type { Site } from './types'
 function main() {
   if (!checker()) return
 
-  GM_registerMenuCommand('宽屏通知', function() {
+  GM_registerMenuCommand('宽屏通知', function () {
     const nextStatus = !(globalStore.notify_enabled ?? false)
     Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
     globalStore.notify_enabled = nextStatus
   })
-  GM_registerMenuCommand('控制按钮', function() {
+  GM_registerMenuCommand('控制按钮', function () {
     const nextStatus = !(globalStore.ui_visible ?? true)
     Toast.success(nextStatus ? '已显示按钮' : '已隐藏按钮')
     globalStore.ui_visible = nextStatus

@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 $default-width: 560px;
 
@@ -13,7 +13,7 @@ $default-width: 560px;
 
   .head_wrapper .s_form {
     // 1921px时本身会居中
-    @media (max-width: 1920px) {
+    @media (width <= 1920px) {
       margin-left: auto;
       margin-right: auto;
       width: fit-content;
@@ -67,7 +67,7 @@ $default-width: 560px;
       .c-span9 {
         width: 75%;
 
-        @media (min-width: 1680px) {
+        @media (width >= 1680px) {
           width: 81%;
         }
       }

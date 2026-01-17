@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 /* 简书文章 */
 @include substrate(1250px, 85vw, 1280px) {

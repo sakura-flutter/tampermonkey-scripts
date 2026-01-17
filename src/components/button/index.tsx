@@ -43,7 +43,8 @@ const Button = defineComponent({
   setup(props, { slots }) {
     const rippleOptions = computed(() => {
       return Object.assign(
-        {}, {
+        {},
+        {
           color: props.type === 'default' ? undefined : rippleColor,
         },
         typeof props.ripple === 'boolean' ? { disabled: !props.ripple } : props.ripple,

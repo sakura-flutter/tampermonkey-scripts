@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 /* crates.io package */
 @include substrate(1300px, 82vw, 1400px) {

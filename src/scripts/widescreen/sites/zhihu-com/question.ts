@@ -3,7 +3,7 @@ import * as readyState from '@/utils/ready-state'
 import styles from './question.lazy.scss'
 import type { Site } from '../../types'
 
-export const zhihuQuestion:Site['use'] = ({ store, createControl }) => ({
+export const zhihuQuestion: Site['use'] = ({ store, createControl }) => ({
   handler() {
     function execute() {
       readyState.DOMContentLoaded(() => {
@@ -11,7 +11,7 @@ export const zhihuQuestion:Site['use'] = ({ store, createControl }) => ({
         const observer = new MutationObserver(mutationsList => {
           mutationsList.forEach(mutation => {
             const { target, oldValue } = mutation as unknown as {
-              target: HTMLImageElement,
+              target: HTMLImageElement
               oldValue: string
             }
             if (
@@ -22,7 +22,8 @@ export const zhihuQuestion:Site['use'] = ({ store, createControl }) => ({
               !$('.ListShortcut')!.contains(target) ||
               // 与知乎同样的选择器判断
               !(target.classList.contains('lazy') && !target.classList.contains('data-thumbnail'))
-            ) return
+            )
+              return
             process.add(target)
             // 替换原图
             target.dataset.original && (target.src = target.dataset.original)

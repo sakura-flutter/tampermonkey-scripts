@@ -31,9 +31,7 @@ export function getElementsInPage() {
 
   const unsignsMap = unsigns.reduce((map, unsign) => {
     // id 与 吧名 作为 key
-    return map
-      .set(unsign.fid, unsign.element)
-      .set(unsign.kw, unsign.element)
+    return map.set(unsign.fid, unsign.element).set(unsign.kw, unsign.element)
   }, new Map<string, HTMLAnchorElement>())
 
   return {

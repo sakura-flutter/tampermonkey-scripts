@@ -1,5 +1,4 @@
-@import '~@/components/index';
-
+@use '~@/components/index' as *;
 @include var;
 
 #hide-menu-control-js {

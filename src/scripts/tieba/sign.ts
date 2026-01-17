@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import Queue from '@/utils/queue'
 import { sleep } from '@/utils/base'
 import { warn, error as logError } from '@/utils/log'
@@ -15,11 +14,11 @@ interface Task {
   fail: number
   /** 签到逻辑 */
   execute(): Promise<{
-    fid?: string,
-    kw?: string,
+    fid?: string
+    kw?: string
     data?: Partial<AppApiSignResponse['user_info']> & {
       is_sign: 1
-    },
+    }
   }>
 }
 
@@ -31,9 +30,7 @@ interface Task {
 class WebTask implements Task {
   readonly kw
   fail = 0
-  constructor(options: {
-    kw: string
-  }) {
+  constructor(options: { kw: string }) {
     this.kw = options.kw
   }
 
@@ -67,11 +64,7 @@ class AppTask implements Task {
   readonly kw
   readonly BDUSS
   fail = 0
-  constructor(options: {
-    fid: string
-    kw: string
-    BDUSS: string
-  }) {
+  constructor(options: { fid: string; kw: string; BDUSS: string }) {
     this.fid = options.fid
     this.kw = options.kw
     this.BDUSS = options.BDUSS
@@ -119,10 +112,7 @@ class AppTask implements Task {
   }
 }
 
-async function batch(options: {
-  BDUSS: string,
-  forum_ids: string[]
-}) {
+async function batch(options: { BDUSS: string; forum_ids: string[] }) {
   const { BDUSS, forum_ids } = options
   const { tbs } = getPageData()
   const { info } = await batchSignApp({
@@ -132,8 +122,8 @@ async function batch(options: {
   })
 
   type NewInfoItem = Awaited<ReturnType<Task['execute']>>['data'] & {
-    forum_id: string,
-    forum_name: string,
+    forum_id: string
+    forum_name: string
   }
   const newInfo: NewInfoItem[] = info.map(item => ({
     forum_id: item.forum_id,
@@ -148,9 +138,9 @@ export type SignMode = 'web' | 'app' | 'fast'
 
 export class Adapter {
   options: {
-    unsigns: { fid: string, kw: string }[],
-    BDUSS?: string,
-    onSuccess: (result: Awaited<ReturnType<Task['execute']>>) => void,
+    unsigns: { fid: string; kw: string }[]
+    BDUSS?: string
+    onSuccess: (result: Awaited<ReturnType<Task['execute']>>) => void
   }
 
   constructor(options: Adapter['options']) {
@@ -186,7 +176,9 @@ export class Adapter {
 
       default:
         // 类型检查
-        return ((e: never) => { throw new Error(e) })(mode)
+        return ((e: never) => {
+          throw new Error(e)
+        })(mode)
     }
 
     const { unsigns } = this.options
@@ -220,28 +212,30 @@ export class Adapter {
     const failList: typeof unsigns = []
     const queue = new Queue({ limit })
 
-    queue.enqueue(unsigns.map(unsign => {
-      const task = new Task({
-        fid: unsign.fid,
-        kw: unsign.kw,
-        BDUSS: this.options.BDUSS!,
-      })
+    queue.enqueue(
+      unsigns.map(unsign => {
+        const task = new Task({
+          fid: unsign.fid,
+          kw: unsign.kw,
+          BDUSS: this.options.BDUSS!,
+        })
 
-      return async function callback() {
-        try {
-          const result = await task.execute()
-          self.options.onSuccess(result)
-        } catch (error: any) {
-          logError.force('签到失败', error, error.response, error.info)
-          // 失败重签 1 次
-          if (task.fail <= 1) {
-            queue.enqueue(callback)
-          } else {
-            failList.push(unsign)
+        return async function callback() {
+          try {
+            const result = await task.execute()
+            self.options.onSuccess(result)
+          } catch (error: any) {
+            logError.force('签到失败', error, error.response, error.info)
+            // 失败重签 1 次
+            if (task.fail <= 1) {
+              queue.enqueue(callback)
+            } else {
+              failList.push(unsign)
+            }
           }
         }
-      }
-    }))
+      }),
+    )
     await queue.run()
 
     return failList

@@ -63,7 +63,6 @@ class App {
 
   #ensure(url: string): Location['href'] {
     try {
-      // eslint-disable-next-line no-new
       new URL(url)
     } catch (error) {
       warn(error)

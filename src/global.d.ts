@@ -1,8 +1,8 @@
 import { type ToastApi } from '@/helpers/toast'
 
 type CSSLazyClasses = {
-  readonly use(): void
-  readonly unuse(): void
+  readonly use: () => void
+  readonly unuse: () => void
 }
 
 declare global {

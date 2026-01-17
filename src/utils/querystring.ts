@@ -30,12 +30,18 @@ export function parse(href: string | null = location.href): ParseReturn {
   return Object.fromEntries(new URLSearchParams(search))
 }
 
-export function stringify(obj: ParseReturn | {
-  [key: string]: number
-}): string {
-  return Object.entries(obj)
-    // 过滤 undefined，保留 null 且转成 ''
-    .filter(([, value]) => value !== undefined)
-    .map(([key, value]) => `${key}=${value ?? ''}`)
-    .join('&')
+export function stringify(
+  obj:
+    | ParseReturn
+    | {
+        [key: string]: number
+      },
+): string {
+  return (
+    Object.entries(obj)
+      // 过滤 undefined，保留 null 且转成 ''
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => `${key}=${value ?? ''}`)
+      .join('&')
+  )
 }

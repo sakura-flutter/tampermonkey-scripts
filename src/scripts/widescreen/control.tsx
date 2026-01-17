@@ -5,7 +5,6 @@ import globalStore from '@/store'
 import Button from '@/components/button'
 import './control.scss'
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {}
 
 interface ControlOptions {
@@ -32,7 +31,7 @@ export default function createControl(options: ControlOptions) {
       })
 
       function notify() {
-        (globalStore.notify_enabled ?? false) && Toast('已宽屏处理')
+        ;(globalStore.notify_enabled ?? false) && Toast('已宽屏处理')
       }
       function toggle() {
         store.enabled = !store.enabled
@@ -41,8 +40,12 @@ export default function createControl(options: ControlOptions) {
 
       expose({
         notify,
-        show: () => { state.visible = true },
-        hide: () => { state.visible = false },
+        show: () => {
+          state.visible = true
+        },
+        hide: () => {
+          state.visible = false
+        },
       })
 
       if (store.enabled) {
@@ -56,23 +59,19 @@ export default function createControl(options: ControlOptions) {
 
       return () => (
         <>
-          {state.uiVisible && state.visible && <div class="inject-widescreen-js">
-            <Button
-              title="注意：页面会被刷新"
-              type="primary"
-              shadow
-              onClick={toggle}
-            >
-              {store.enabled ? '已开启' : '关闭'}
-            </Button>
-            {store.enabled && <label title="勾选后不再限制最大宽度，酌情使用">
-              <input
-                v-model={state.loose}
-                type="checkbox"
-              />
-                更宽
-            </label>}
-          </div>}
+          {state.uiVisible && state.visible && (
+            <div class="inject-widescreen-js">
+              <Button title="注意：页面会被刷新" type="primary" shadow onClick={toggle}>
+                {store.enabled ? '已开启' : '关闭'}
+              </Button>
+              {store.enabled && (
+                <label title="勾选后不再限制最大宽度，酌情使用">
+                  <input v-model={state.loose} type="checkbox" />
+                  更宽
+                </label>
+              )}
+            </div>
+          )}
         </>
       )
     },

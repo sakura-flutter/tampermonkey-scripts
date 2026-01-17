@@ -17,12 +17,7 @@ mountComponent({
     }
 
     return () => (
-      <Button
-        id="hide-menu-control-js"
-        size="mini"
-        shadow
-        onClick={toggle}
-      >
+      <Button id="hide-menu-control-js" size="mini" shadow onClick={toggle}>
         <p>切换</p>
       </Button>
     )

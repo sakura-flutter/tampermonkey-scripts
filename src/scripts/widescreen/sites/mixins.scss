@@ -1,9 +1,4 @@
-@mixin substrate(
-  $start,
-  $page-width,
-  $page-max-width,
-  $property-name: --inject-page-width
-) {
+@mixin substrate($start, $page-width, $page-max-width, $property-name: --inject-page-width) {
   @media screen and (min-width: $start) {
     :root {
       #{$property-name}: min(#{$page-width}, #{$page-max-width});

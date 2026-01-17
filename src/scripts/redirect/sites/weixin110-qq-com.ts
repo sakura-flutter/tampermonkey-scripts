@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { parse } from '@/utils/querystring'
 import type { Site } from '../types'
 
@@ -25,12 +24,12 @@ export const weixin: Site['use'] = () => {
   /**
    * midpagecode 似乎是新的规则
    */
-  const MAGIC_KEY = atob(atob('Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ=='))
-  if (
-    midpagecode &&
-    midpagecode !== MAGIC_KEY &&
-    !(window as any).cgiData?.url
-  ) {
+  const MAGIC_KEY = atob(
+    atob(
+      'Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ==',
+    ),
+  )
+  if (midpagecode && midpagecode !== MAGIC_KEY && !(window as any).cgiData?.url) {
     const url = new URL(location.href)
     // 会还原链接
     url.searchParams.set('midpagecode', MAGIC_KEY)

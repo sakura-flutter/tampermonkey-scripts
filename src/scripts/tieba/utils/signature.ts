@@ -6,20 +6,23 @@ type Obj = Record<string, unknown>
 
 export function makeFakeParams(obj?: Obj) {
   // 不要动这些字段
-  return Object.assign({
-    _client_type: 4, // prohibit
-    _client_version: FAKE_VERSION,
-    _phone_imei: '0'.repeat(15),
-    model: 'HUAWEI P40', // HUAWEI加油 ヾ(◍°∇°◍)ﾉﾞ
-    net_type: 1,
-    stErrorNums: 1,
-    stMethod: 1,
-    stMode: 1,
-    stSize: 320,
-    stTime: 117,
-    stTimesNum: 1,
-    timestamp: Date.now(),
-  }, obj)
+  return Object.assign(
+    {
+      _client_type: 4, // prohibit
+      _client_version: FAKE_VERSION,
+      _phone_imei: '0'.repeat(15),
+      model: 'HUAWEI P40', // HUAWEI加油 ヾ(◍°∇°◍)ﾉﾞ
+      net_type: 1,
+      stErrorNums: 1,
+      stMethod: 1,
+      stMode: 1,
+      stSize: 320,
+      stTime: 117,
+      stTimesNum: 1,
+      timestamp: Date.now(),
+    },
+    obj,
+  )
 }
 
 export function sign(payload: Obj) {

@@ -12,7 +12,7 @@ async function main() {
   let instance: unknown
   // 非国内链接打开较慢，防止未完成加载
   while (instance == null) {
-    ({ instance } = getVueRoot($('#app')!))
+    ;({ instance } = getVueRoot($('#app')!))
     await sleep(500)
   }
   warn(instance)
@@ -25,17 +25,21 @@ async function main() {
   })
 
   let unwatch: (() => void) | undefined
-  (instance as any).$watch('$route', function() {
-    nextTick(() => {
-      const target = $('.page-component__content')
-      if (target && unwatch == null) {
-        unwatch = watchDocs(target)
-      } else if (!target) {
-        unwatch?.()
-        unwatch = undefined
-      }
-    })
-  }, { immediate: true })
+  ;(instance as any).$watch(
+    '$route',
+    function () {
+      nextTick(() => {
+        const target = $('.page-component__content')
+        if (target && unwatch == null) {
+          unwatch = watchDocs(target)
+        } else if (!target) {
+          unwatch?.()
+          unwatch = undefined
+        }
+      })
+    },
+    { immediate: true },
+  )
 
   function watchDocs(target: Node) {
     catalogue.update()

@@ -1,5 +1,6 @@
-module.exports = isProd =>
-`// ==UserScript==
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default isProd =>
+  `// ==UserScript==
 // @name         MDN 文档辅助
 // @version      2.3.0
 // @description  在提供中文语言的页面自动切换为中文

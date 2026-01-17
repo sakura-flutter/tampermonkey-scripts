@@ -41,15 +41,11 @@ export function doSignWeb(params: {
 }) {
   const { tbs } = getPageData()
 
-  return request.post<WebApiSignResponse>(
-    '/sign/add',
-    encodeRequestParams({ ie: 'utf-8', tbs, ...params }),
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
+  return request.post<WebApiSignResponse>('/sign/add', encodeRequestParams({ ie: 'utf-8', tbs, ...params }), {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
-  )
+  })
 }
 
 /**
@@ -69,10 +65,7 @@ const appCommonHeader = Object.freeze({
 /**
  * app 获取关注列表
  */
-export function getForumLike(params: {
-  BDUSS: string
-  tbs: PageData['tbs']
-}) {
+export function getForumLike(params: { BDUSS: string; tbs: PageData['tbs'] }) {
   return GMRequest.post<AppApiLikeForumResponse>(
     'http://c.tieba.baidu.com/c/f/forum/like',
     qs.stringify(signRequestParams(params)),
@@ -98,7 +91,8 @@ export function doSignApp(params: {
     qs.stringify(encodeRequestParams(signRequestParams(params))),
     {
       headers: appCommonHeader,
-    })
+    },
+  )
 }
 
 /**
@@ -115,13 +109,13 @@ export function batchSignApp(params: {
     qs.stringify(signRequestParams(params)),
     {
       headers: appCommonHeader,
-    })
-    .then(response => {
-      if (response.error.errno !== '0') {
-        throw new ResponseError(response.error.usermsg, response)
-      }
-      return response
-    })
+    },
+  ).then(response => {
+    if (response.error.errno !== '0') {
+      throw new ResponseError(response.error.usermsg, response)
+    }
+    return response
+  })
 }
 
 /**
@@ -142,13 +136,11 @@ export async function mergeLikeForum() {
     tbs,
   }
   const [like1, like2Map] = await Promise.all([
-    getNewmoindex()
-      .then(data => data.data.like_forum),
+    getNewmoindex().then(data => data.data.like_forum),
     getForumLike(req2)
       .then(data => data.forum_list)
-      .then(forumList => forumList.reduce(
-        (acc, val) => (((acc[val.id] = val), acc)),
-        {} as Record<string, typeof forumList[number]>),
+      .then(forumList =>
+        forumList.reduce((acc, val) => ((acc[val.id] = val), acc), {} as Record<string, (typeof forumList)[number]>),
       ),
   ])
 

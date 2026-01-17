@@ -3,7 +3,7 @@
 import styles from './p.lazy.scss'
 import type { Site } from '../../types'
 
-export const tieba:Site['use'] = ({ store, createControl }) => ({
+export const tieba: Site['use'] = ({ store, createControl }) => ({
   handler() {
     // const postlistSelector = '#j_p_postlist'
 

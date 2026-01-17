@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 $gap: 20px; // 每个区域之间的间距
 

@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(1580px, 75vw, 1440px) {
   .container .row {

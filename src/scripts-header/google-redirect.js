@@ -1,5 +1,6 @@
-module.exports = isProd =>
-`// ==UserScript==
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default isProd =>
+  `// ==UserScript==
 // @name         谷歌重定向
 // @version      1.0.0
 // @description  hk -> jp

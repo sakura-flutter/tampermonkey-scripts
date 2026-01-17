@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 /* 掘金文章 */
 @include substrate(1400px, 82vw, 1300px) {

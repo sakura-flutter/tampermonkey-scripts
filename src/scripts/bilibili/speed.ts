@@ -9,9 +9,13 @@ export default function speed() {
     const oldPlaybackRate = video.playbackRate
     video.playbackRate = 6
 
-    window.addEventListener('keyup', () => {
-      video.playbackRate = oldPlaybackRate
-    }, { once: true })
+    window.addEventListener(
+      'keyup',
+      () => {
+        video.playbackRate = oldPlaybackRate
+      },
+      { once: true },
+    )
   })
 }
 
@@ -39,9 +43,13 @@ function longPress(code: string, callback: () => void, duration = 350) {
       callback()
     }, duration)
 
-    window.addEventListener('keyup', () => {
-      clearTimeout(timeoutID)
-      timeoutID = undefined
-    }, { once: true })
+    window.addEventListener(
+      'keyup',
+      () => {
+        clearTimeout(timeoutID)
+        timeoutID = undefined
+      },
+      { once: true },
+    )
   })
 }

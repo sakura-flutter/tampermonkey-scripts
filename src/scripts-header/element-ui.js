@@ -1,5 +1,5 @@
-module.exports = isProd =>
-`// ==UserScript==
+export default isProd =>
+  `// ==UserScript==
 // @name         Element UI文档辅助
 // @version      1.0.4
 // @description  在Element UI文档中增加示例目录导航，同时支持v2与v3(element-plus)版本，类似于Ant右侧悬浮的导航

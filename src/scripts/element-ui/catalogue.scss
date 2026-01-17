@@ -2,7 +2,7 @@ $primary-color: #1890ff;
 $element-page-width: 1140px;
 
 #catalogue-js {
-  @media (min-width: 1500px) {
+  @media (width >= 1500px) {
     left: calc(50% + #{$element-page-width} / 2 + 40px);
     right: auto;
   }

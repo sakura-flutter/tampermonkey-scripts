@@ -13,9 +13,7 @@ const Checkbox = defineComponent({
     title: String,
     disabled: Boolean,
   },
-  emits: [
-    'update:checked',
-  ],
+  emits: ['update:checked'],
   setup(props, { slots, emit }) {
     const inputRef = ref<HTMLInputElement>()
     const handleChange = (event: Event) => {

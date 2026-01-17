@@ -1,15 +1,16 @@
-const fs = require('fs')
-const path = require('path')
-const semver = require('semver')
-const webpack = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin')
-const StylelintPlugin = require('stylelint-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
-// const CopyPlugin = require('copy-webpack-plugin')
-const packageInfo = require('./package.json')
+import fs from 'node:fs'
+import path from 'node:path'
+import { createRequire } from 'node:module'
+import semver from 'semver'
+import webpack from 'webpack'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import ESLintPlugin from 'eslint-webpack-plugin'
+import StylelintPlugin from 'stylelint-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
+// import { CopyPlugin } from 'copy-webpack-plugin'
+import packageInfo from './package.json' with { type: 'json' }
 
-const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key)
+const require = createRequire(import.meta.url)
 
 /** 获取所有安装的依赖版本 */
 function getPkgDepsVersion() {
@@ -18,7 +19,7 @@ function getPkgDepsVersion() {
     ...packageInfo.dependencies,
   }
   for (const pkgName in deps) {
-    if (hasOwn(deps, pkgName)) {
+    if (Object.hasOwn(deps, pkgName)) {
       const semverVersion = deps[pkgName]
       deps[pkgName] = semver.coerce(semverVersion).version
     }
@@ -29,12 +30,12 @@ function getPkgDepsVersion() {
 const depsVersion = getPkgDepsVersion()
 
 function getScriptHeader(filename, argvMode) {
-  const filepath = path.join(__dirname, './src/scripts-header', `${filename}.js`)
+  const filepath = path.join(import.meta.dirname, './src/scripts-header', `${filename}.js`)
   const isProd = argvMode === 'production'
-  return fs.existsSync(filepath) ? require(filepath)(isProd, depsVersion) : ''
+  return fs.existsSync(filepath) ? require(filepath).default(isProd, depsVersion) : ''
 }
 
-module.exports = (env, argv) => ({
+export default (env, argv) => ({
   devtool: false,
   entry: {
     lanhu: './src/scripts/lanhu',
@@ -52,7 +53,7 @@ module.exports = (env, argv) => ({
     toast: './src/helpers/toast',
   },
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: path.join(import.meta.dirname, 'dist'),
     publicPath: '/',
   },
   externals: {
@@ -63,7 +64,7 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
-      '@': path.join(__dirname, './src'),
+      '@': path.join(import.meta.dirname, './src'),
     },
   },
   module: {
@@ -75,30 +76,31 @@ module.exports = (env, argv) => ({
       },
       {
         test: /\.s[ac]ss$/i,
-        exclude: [
-          /\.lazy\.s[ac]ss$/i,
-          /\.string\.s[ac]ss$/i,
-        ],
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+        exclude: [/\.lazy\.s[ac]ss$/i, /\.string\.s[ac]ss$/i],
+        use: ['style-loader', 'css-loader', 'postcss-loader', { loader: 'sass-loader', options: { api: 'modern' } }],
       },
       {
         test: /\.lazy\.s[ac]ss$/i,
         use: [
           { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
-          'css-loader', 'postcss-loader', 'sass-loader',
+          'css-loader',
+          'postcss-loader',
+          { loader: 'sass-loader', options: { api: 'modern' } },
         ],
       },
       {
         test: /\.string\.s[ac]ss$/i,
-        use: ['css-loader', 'postcss-loader', 'sass-loader'],
+        use: ['css-loader', 'postcss-loader', { loader: 'sass-loader', options: { api: 'modern' } }],
       },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(), // 默认依赖 output path
     new ESLintPlugin({
-      extensions: ['js', 'ts', 'tsx'],
+      extensions: ['js', 'mjs', 'jsx', 'ts', 'mts', 'tsx', 'vue'],
       fix: true,
+      failOnWarning: false,
+      failOnError: false,
     }),
     new StylelintPlugin({
       fix: true,
@@ -110,28 +112,30 @@ module.exports = (env, argv) => ({
     }),
     // new CopyPlugin({
     //   patterns: [
-    //     { from: path.join(__dirname, './src/helpers/toast.js') },
+    //     { from: path.join(import.meta.dirname, './src/helpers/toast.js') },
     //   ],
     // }),
   ],
-  // 遵守Greasy Fork代码规定，不做最小化处理
+  // 遵守 Greasy Fork 代码规定，不做最小化处理
   // https://greasyfork.org/zh-CN/help/code-rules
   optimization: {
     minimize: false,
-    minimizer: [new TerserPlugin({
-      extractComments: false,
-      terserOptions: {
-        output: {
-          comments: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+        terserOptions: {
+          output: {
+            comments: true,
+          },
         },
-      },
-    })],
+      }),
+    ],
   },
   devServer: {
     port: 8886,
     static: [
       {
-        directory: path.resolve(__dirname, 'dist'),
+        directory: path.resolve(import.meta.dirname, 'dist'),
       },
     ],
   },

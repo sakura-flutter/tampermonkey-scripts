@@ -134,11 +134,7 @@ const sites: Site[] = [
   {
     name: '豆瓣',
     namespace: 'douban',
-    test: [
-      /^www\.douban\.com\/gallery\/$/,
-      /^www\.douban\.com\/gallery\/topic\/.+?/,
-      /^www\.douban\.com\/note\/.+?/,
-    ],
+    test: [/^www\.douban\.com\/gallery\/$/, /^www\.douban\.com\/gallery\/topic\/.+?/, /^www\.douban\.com\/note\/.+?/],
     use: douban,
   },
   {

@@ -3,27 +3,28 @@ import { $ } from '@/utils/selector'
 import { warn } from '@/utils/log'
 import type { VueHTMLElement } from '@/utils/vue-root'
 import type { Site } from '../../types'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const homeStyles = require('./home.string.scss').default.toString() as string
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const playDetailStyles = require('./play-detail.string.scss').default.toString() as string
 
 export { weiboArticle } from './article'
 
-// hack type
-const unsafeWindowAlias = unsafeWindow as Window & {
+const unsafeWindowAlias = unsafeWindow as unknown as Window & {
   $CONFIG: any
 }
 
-export const weibo:Site['use'] = ({ store, createControl }) => ({
+export const weibo: Site['use'] = ({ store, createControl }) => ({
   handler() {
     const uiControl = createControl({ store, visible: false, silent: true })
     execute()
 
     function execute() {
-      let proxyConfig: undefined | {
-        [key: string]: any
-      }
+      let proxyConfig:
+        | undefined
+        | {
+            [key: string]: any
+          }
       document.addEventListener('readystatechange', () => {
         // 是否启用新版微博
         if ($('#app') && ($('#app') as VueHTMLElement).__vue__) {
@@ -91,29 +92,33 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
       const notify = once(() => {
         uiControl.notify()
       })
-      app.$watch('$route', (to: Record<string, any>) => {
-        styleSheet?.remove()
-        warn('route changed', to)
-        uiControl.hide()
-        for (const [routenames, addStyle] of pageStyleMap.entries()) {
-          if (routenames.includes(to.name)) {
-            uiControl.show()
-            if (store.enabled) {
-              styleSheet = addStyle()
-              notify()
+      app.$watch(
+        '$route',
+        (to: Record<string, any>) => {
+          styleSheet?.remove()
+          warn('route changed', to)
+          uiControl.hide()
+          for (const [routenames, addStyle] of pageStyleMap.entries()) {
+            if (routenames.includes(to.name)) {
+              uiControl.show()
+              if (store.enabled) {
+                styleSheet = addStyle()
+                notify()
+              }
+              break
             }
-            break
           }
-        }
-      }, { immediate: true })
+        },
+        { immediate: true },
+      )
     })
     /* 新版========end */
 
     /* 旧版(保留，不再更新) */
-    const addStyle = (function() {
+    const addStyle = (function () {
       let styleSheet: HTMLStyleElement | undefined
 
-      return function() {
+      return function () {
         const { $CONFIG } = unsafeWindowAlias
         const classnamePrefix = 'inject-ws-'
         const getClassname = (classname: string) => `${classnamePrefix}${classname}`
@@ -128,7 +133,9 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
         const pages = {
           // 首页(含特别关注)、我的收藏、我的赞、好友圈
           mainpage: {
-            test: /^v6.*_content_home$/.test($CONFIG.location) || /v6_(fav|likes_outbox|content_friends)/.test($CONFIG.location),
+            test:
+              /^v6.*_content_home$/.test($CONFIG.location) ||
+              /v6_(fav|likes_outbox|content_friends)/.test($CONFIG.location),
             use: doMainPage,
           },
           // 用户资料页、相册、管理中心、粉丝、服务、财经专家、热门话题
@@ -155,7 +162,8 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
     })()
 
     function doMainPage(classname: string) {
-      return GM_addStyle(`
+      return GM_addStyle(
+        `
         :root {
           --inject-page-width: min(75vw, 1330px);
         }
@@ -189,11 +197,13 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
             margin-left: 0 !important;
           }
         }
-      `.replace(/\|>/g, `.${classname}`))
+      `.replace(/\|>/g, `.${classname}`),
+      )
     }
 
     function doProfilePage(classname: string) {
-      return GM_addStyle(`
+      return GM_addStyle(
+        `
         :root {
           --inject-page-width: min(75vw, 1330px);
         }
@@ -243,11 +253,13 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
             float: none;
           }
         }
-      `.replace(/\|>/g, `.${classname}`))
+      `.replace(/\|>/g, `.${classname}`),
+      )
     }
 
     function doSingleWBPage(classname: string) {
-      return GM_addStyle(`
+      return GM_addStyle(
+        `
         :root {
           --inject-page-width: min(75vw, 1330px);
         }
@@ -269,7 +281,8 @@ export const weibo:Site['use'] = ({ store, createControl }) => ({
             margin-left: 0 !important;
           }
         }
-      `.replace(/\|>/g, `.${classname}`))
+      `.replace(/\|>/g, `.${classname}`),
+      )
     }
   },
 })

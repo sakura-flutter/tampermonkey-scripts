@@ -1,10 +1,10 @@
-@import '~@/components/index';
-
+@use '~@/components/index' as *;
 @include var;
 
 #inject-sign {
   // 列表宽度
   --container-width: 19vw;
+
   // 列表距离右边距离
   --container-right: 10px;
 
@@ -46,7 +46,9 @@
     position: fixed;
     right: max(calc(var(--container-right) + var(--container-width) / 2), 150px);
     transform: translateX(50%);
-    transition: bottom 0.3s, right 0.15s;
+    transition:
+      bottom 0.3s,
+      right 0.15s;
     user-select: none;
     z-index: 500;
 
@@ -72,7 +74,11 @@
     padding: 5px;
     position: fixed;
     right: var(--container-right);
-    transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;
+    transition:
+      transform 0.3s,
+      bottom 0.3s,
+      width 0.15s,
+      box-shadow 0.3s;
     width: var(--container-width);
     z-index: 2;
 

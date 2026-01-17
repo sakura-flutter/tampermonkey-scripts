@@ -8,11 +8,9 @@ export interface UseReturn {
 export interface Site {
   name: string
   namespace: string
-  test:
-    (string | RegExp)
-    | (string | RegExp)[]
+  test: (string | RegExp) | (string | RegExp)[]
   readyState?: ReadyState
-  use: (payload: { store: Record<string, any>, createControl: typeof createControl }) => ({
+  use: (payload: { store: Record<string, any>; createControl: typeof createControl }) => {
     handler(): void
-  })
+  }
 }

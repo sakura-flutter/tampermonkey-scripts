@@ -70,6 +70,4 @@ function autofill() {
   observer.observe(document.body, { childList: true, subtree: true })
 }
 
-export {
-  autofill,
-}
+export { autofill }

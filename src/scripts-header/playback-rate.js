@@ -1,5 +1,6 @@
-module.exports = isProd =>
-`// ==UserScript==
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default isProd =>
+  `// ==UserScript==
 // @name         视频倍速播放
 // @version      1.1.0
 // @description  长按 [0、\`(反引号键)] 键 3 倍速，双击长按 6 倍速。适配了哔哩哔哩、抖音、小红书、知乎、微博、极客时间、YouTube、爱奇艺、优酷、PPTV、芒果TV、乐视视频、搜狐视频、咪咕视频

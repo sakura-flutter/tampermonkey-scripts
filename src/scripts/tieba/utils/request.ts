@@ -28,7 +28,7 @@ export function GMRequest<TData = any>(url: string, options: Omit<Tampermonkey.R
         let response
         try {
           response = JSON.parse(res.response)
-        } catch (e) {
+        } catch {
           response = res.response
         }
 
@@ -48,7 +48,11 @@ export function GMRequest<TData = any>(url: string, options: Omit<Tampermonkey.R
   })
 }
 
-GMRequest.post = function<TData = any>(url: string, data: Tampermonkey.Request['data'], options: Omit<Tampermonkey.Request, 'url'>) {
+GMRequest.post = function <TData = any>(
+  url: string,
+  data: Tampermonkey.Request['data'],
+  options: Omit<Tampermonkey.Request, 'url'>,
+) {
   return GMRequest<TData>(url, {
     ...options,
     data,
@@ -70,14 +74,20 @@ export function request<TData = any>(url: RequestInfo | URL, options?: RequestIn
     })
 }
 
-request.post = function<TData = any>(url: RequestInfo | URL, data?: any, options: RequestInit = {}) {
+request.post = function <TData = any>(url: RequestInfo | URL, data?: any, options: RequestInit = {}) {
   const headers = new Headers(options.headers)
   let body = data
   if (data) {
-    if (headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
+    if (
+      headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') &&
+      Object.prototype.toString.call(data) === '[object Object]'
+    ) {
       body = qs.stringify(data)
     }
-    if (headers.get('Content-Type')?.includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
+    if (
+      headers.get('Content-Type')?.includes('application/json') &&
+      Object.prototype.toString.call(data) === '[object Object]'
+    ) {
       body = JSON.stringify(data)
     }
   }

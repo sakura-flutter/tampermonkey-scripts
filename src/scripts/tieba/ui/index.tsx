@@ -12,12 +12,12 @@ import ForumList from './ForumList'
 import type { LikeForumData } from '../types'
 import './index.scss'
 
-const sizeTick = (function * () {
+const sizeTick = (function* () {
   const sizes = ['small', 'normal', 'large'] as const
   let currSize = store.size ?? 'small'
   let index = sizes.findIndex(v => v === currSize)
   while (true) {
-    (index >= sizes.length) && (index = 0)
+    index >= sizes.length && (index = 0)
     currSize = sizes[index++]
     store.size = currSize
     yield currSize
@@ -121,20 +121,22 @@ export function createUI() {
       }
 
       function fetchForums() {
-        return mergeLikeForum().then(forums => {
-          state.likeForums = forums
-          sort()
-          forums.forEach(forum => {
-            // 签到可能失败，以这里为准
-            if (forum.is_sign === 1) {
-              setSign?.(forum.forum_name)
-            }
+        return mergeLikeForum()
+          .then(forums => {
+            state.likeForums = forums
+            sort()
+            forums.forEach(forum => {
+              // 签到可能失败，以这里为准
+              if (forum.is_sign === 1) {
+                setSign?.(forum.forum_name)
+              }
+            })
           })
-        }).catch(error => {
-          // 爆炸了也没什么需要处理的，这里就不抛了
-          logError.force(error)
-          Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
-        })
+          .catch(error => {
+            // 爆炸了也没什么需要处理的，这里就不抛了
+            logError.force(error)
+            Toast.error('获取贴吧列表失败。。请刷新重试~', 0)
+          })
       }
 
       function onSimulateChange(checked: boolean) {
@@ -144,7 +146,10 @@ export function createUI() {
         }
 
         const { BDUSS } = store
-        const result = window.prompt('请输入 F12 -> 应用(Application) -> Cookies 中的【BDUSS 或 BDUSS_BFESS】', BDUSS || undefined)
+        const result = window.prompt(
+          '请输入 F12 -> 应用(Application) -> Cookies 中的【BDUSS 或 BDUSS_BFESS】',
+          BDUSS || undefined,
+        )
         if (result) {
           store.BDUSS = result
           isSimulate.value = true
@@ -154,7 +159,7 @@ export function createUI() {
         }
       }
 
-      (async () => {
+      ;(async () => {
         // 获取列表后再自动签到
         if (store.BDUSS) {
           await fetchForums()
@@ -174,12 +179,7 @@ export function createUI() {
           }}
         >
           <div class="control">
-            <Button
-              disabled={state.loading}
-              type="primary"
-              shadow
-              onClick={() => run()}
-            >
+            <Button disabled={state.loading} type="primary" shadow onClick={() => run()}>
               一键签到
             </Button>
             <div class="settings">
@@ -193,18 +193,16 @@ export function createUI() {
               <Checkbox v-model:checked={isComplete.value} title="下次进入贴吧时自动签到，建议同时勾选模拟APP">
                 自动签到
               </Checkbox>
-              {
-                state.likeForums.length > 0 && (
-                  <>
-                    <Checkbox v-model:checked={isForumsHide.value} title="列表将缩到底部">
-                      隐藏列表
-                    </Checkbox>
-                    <Checkbox v-model:checked={isCover.value} title="覆盖在页面上显示">
-                      防止遮挡
-                    </Checkbox>
-                  </>
-                )
-              }
+              {state.likeForums.length > 0 && (
+                <>
+                  <Checkbox v-model:checked={isForumsHide.value} title="列表将缩到底部">
+                    隐藏列表
+                  </Checkbox>
+                  <Checkbox v-model:checked={isCover.value} title="覆盖在页面上显示">
+                    防止遮挡
+                  </Checkbox>
+                </>
+              )}
             </div>
           </div>
 

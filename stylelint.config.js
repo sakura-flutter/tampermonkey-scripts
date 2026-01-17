@@ -1,8 +1,6 @@
-module.exports = {
-  extends: [
-    'stylelint-config-standard',
-    'stylelint-config-sass-guidelines',
-  ],
+/** @type {import('stylelint').Config} */
+export default {
+  extends: ['stylelint-config-standard-scss'],
   rules: {
     'selector-class-pattern': null, // 名称限制
     'max-nesting-depth': null, // 嵌套的深度

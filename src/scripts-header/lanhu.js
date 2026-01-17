@@ -1,5 +1,5 @@
-module.exports = (isProd, depsVersion) =>
-`// ==UserScript==
+export default (isProd, depsVersion) =>
+  `// ==UserScript==
 // @name         蓝湖 工具箱
 // @version      1.12.1
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；快捷查看打开过的项目

@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(1380px, 85vw, 1454px) {
   #app .bili-dyn-home--member {

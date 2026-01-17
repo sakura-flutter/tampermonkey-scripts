@@ -5,8 +5,10 @@ export default class Queue {
   /** 当前执行数 */
   private count = 0
 
-  constructor({ limit = 3 }: {
-    limit?: Queue['limit'],
+  constructor({
+    limit = 3,
+  }: {
+    limit?: Queue['limit']
   } = {}) {
     this.limit = limit
   }
@@ -33,7 +35,7 @@ export default class Queue {
       }
 
       const { tasks } = this
-      const _run = function(this: Queue) {
+      const _run = function (this: Queue) {
         const idle = Math.min(this.size, this.limit - this.count)
         for (let i = 0; i < idle; i++) {
           this.count++

@@ -7,7 +7,7 @@ export function onVisible<TArgs extends any[]>(callback: (...args: TArgs) => voi
   function listener() {
     clearInterval(intervalId)
     if (document.visibilityState === 'hidden') return
-    // eslint-disable-next-line n/no-callback-literal
+
     callback(...rest)
     intervalId = setInterval(callback, delay, ...rest)
   }

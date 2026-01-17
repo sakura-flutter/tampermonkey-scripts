@@ -8,14 +8,10 @@ export function calcDiagInRect(width: number, height: number) {
   const halfWidth = width / 2
   const halfHeight = height / 2
 
-  return function(left: number, top: number) {
-    const a = left <= halfWidth
-      ? halfWidth - left
-      : left - halfWidth
-    const b = top <= halfHeight
-      ? halfHeight - top
-      : top - halfHeight
-    const c = Math.sqrt((a * a) + (b * b))
+  return function (left: number, top: number) {
+    const a = left <= halfWidth ? halfWidth - left : left - halfWidth
+    const b = top <= halfHeight ? halfHeight - top : top - halfHeight
+    const c = Math.sqrt(a * a + b * b)
     return c
   }
 }
@@ -32,7 +28,5 @@ export function closeness(value: number, extent: number) {
   if (!value || !extent) return 0
 
   const half = extent / 2
-  return value <= half
-    ? value / half
-    : 1 - value / extent
+  return value <= half ? value / half : 1 - value / extent
 }

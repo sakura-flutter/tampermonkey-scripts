@@ -12,13 +12,7 @@ interface Options {
  * 兼容性检查，只是用来拦截低版本用户
  * @return 是否通过
  */
-export function checker({
-  firefox = 75,
-  edge = 80,
-  chrome = 80,
-  safari = 14,
-  notify = true,
-}: Options = {}): boolean {
+export function checker({ firefox = 75, edge = 80, chrome = 80, safari = 14, notify = true }: Options = {}): boolean {
   const { userAgent } = window.navigator
   const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1]
   const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1]
@@ -37,7 +31,12 @@ export function checker({
 
   if (!pass) {
     const { Toast } = window
-    notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0)
+    notify &&
+      Toast &&
+      Toast.error(
+        `哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`,
+        0,
+      )
   }
   return pass
 }

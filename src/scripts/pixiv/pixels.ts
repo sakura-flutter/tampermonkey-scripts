@@ -20,8 +20,7 @@ export default function attachPixels(imgsSelector: string, options: Options) {
         img.getAttribute('height'),
       ]
       if (width === null || height === null) return
-
-      [width, height] = [+width, +height]
+      ;[width, height] = [+width, +height]
       img.parentElement!.style.position = 'relative'
       const elem = createPixelsElement(img.parentElement!)
       elem.innerText = `${width} × ${height} (${calcRectCoincide(width, height).percent})`

@@ -200,11 +200,7 @@ const sites: Site[] = [
   },
   {
     name: '爱发电',
-    test: [
-      'afdian.net/link',
-      'afdian.com/link',
-      'ifdian.net/link',
-    ],
+    test: ['afdian.net/link', 'afdian.com/link', 'ifdian.net/link'],
     use: () => ({
       query: 'target',
     }),

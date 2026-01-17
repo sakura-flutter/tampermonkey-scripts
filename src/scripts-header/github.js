@@ -1,5 +1,6 @@
-module.exports = isProd =>
-`// ==UserScript==
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default isProd =>
+  `// ==UserScript==
 // @name         GitHub 工具箱
 // @name:en      GitHub ToolBox
 // @version      1.1.0

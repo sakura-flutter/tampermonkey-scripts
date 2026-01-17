@@ -37,14 +37,15 @@ if (document.readyState !== 'complete') {
 }
 window.addEventListener('load', () => execute('load'))
 
-const wrapper = (readyState: ReadyState, fn?: ListenerFunc): Promise<void> => new Promise(resolve => {
-  pool.get(readyState)!.push(function() {
-    resolve(fn?.())
-  })
+const wrapper = (readyState: ReadyState, fn?: ListenerFunc): Promise<void> =>
+  new Promise(resolve => {
+    pool.get(readyState)!.push(function () {
+      resolve(fn?.())
+    })
 
-  // 立即检查一下
-  execute()
-})
+    // 立即检查一下
+    execute()
+  })
 
 export const loading = (fn?: ListenerFunc) => wrapper('loading', fn)
 export const interactive = (fn?: ListenerFunc) => wrapper('interactive', fn)

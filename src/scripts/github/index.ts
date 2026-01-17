@@ -13,7 +13,7 @@ function insert1sButton() {
     </a>
   </li>`
   actions.insertAdjacentHTML('afterbegin', btnHTML)
-  ; ($('#github1s-button') as HTMLAnchorElement).onmouseenter = function(this: HTMLAnchorElement) {
+  ;($('#github1s-button') as HTMLAnchorElement).onmouseenter = function (this: HTMLAnchorElement) {
     const github1sURL = new URL(location.href)
     github1sURL.host = 'github1s.com'
     this.href = github1sURL.href

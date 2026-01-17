@@ -1,9 +1,9 @@
 import * as readyState from '@/utils/ready-state'
 import type { Site } from '../../types'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const styles = require('./index.string.scss').default.toString() as string
 
-export const baidu:Site['use'] = ({ store, createControl }) => ({
+export const baidu: Site['use'] = ({ store, createControl }) => ({
   handler() {
     function execute() {
       const styleSheet = GM_addStyle(styles)

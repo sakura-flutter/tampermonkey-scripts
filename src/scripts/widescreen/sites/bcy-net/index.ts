@@ -3,7 +3,7 @@ import * as readyState from '@/utils/ready-state'
 import styles from './index.lazy.scss'
 import type { Site } from '../../types'
 
-export const banciyuan:Site['use'] = ({ store, createControl }) => ({
+export const banciyuan: Site['use'] = ({ store, createControl }) => ({
   handler() {
     function execute() {
       readyState.interactive(() => {

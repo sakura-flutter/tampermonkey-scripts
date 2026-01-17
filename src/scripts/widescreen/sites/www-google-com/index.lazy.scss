@@ -1,5 +1,5 @@
 /* stylelint-disable max-line-length */
-@import '../mixins';
+@use '../mixins' as *;
 
 $default-width: 652px;
 
@@ -9,14 +9,20 @@ $default-width: 652px;
 
     /* 搜索结果 */
     #rcnt {
-      grid-template-columns: 210px repeat($google-columns-repeat, calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})) minmax(0, 1fr);
+      grid-template-columns: 210px repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        ) minmax(0, 1fr);
       width: var(--inject-page-width);
     }
 
     /* 列表 */
     #w7tRq {
       column-gap: 1%;
-      grid-template-columns: 0 repeat($google-columns-repeat, calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat}));
+      grid-template-columns: 0 repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        );
 
       // /* 特殊类型还原宽度(搜索：蛇麻花) */
       // /* stylelint-disable-next-line selector-type-no-unknown */

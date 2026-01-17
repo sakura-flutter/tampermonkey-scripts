@@ -6,11 +6,9 @@ import './catalogue.scss'
 
 export default class Catalogue {
   #scope = ''
-  #cat = ref<{ id: HTMLElement['id'], text: string }[]>([])
+  #cat = ref<{ id: HTMLElement['id']; text: string }[]>([])
 
-  constructor({ scope }: {
-    scope: string
-  }) {
+  constructor({ scope }: { scope: string }) {
     this.#scope = scope
     this.#createUI()
   }
@@ -53,11 +51,7 @@ export default class Catalogue {
           <div id="catalogue-js">
             <ul>
               {self.#cat.value.map(item => (
-                <li
-                  key={item.id}
-                  title={item.text}
-                  onClick={() => intoView(item)}
-                >
+                <li key={item.id} title={item.text} onClick={() => intoView(item)}>
                   {item.text}
                 </li>
               ))}

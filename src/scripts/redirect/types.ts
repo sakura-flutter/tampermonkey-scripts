@@ -16,9 +16,7 @@ export interface ParseRule {
 
 export interface Site {
   name: string
-  test:
-    (string | RegExp)
-    | (string | RegExp)[]
+  test: (string | RegExp) | (string | RegExp)[]
   readyState?: ReadyState
   use: () => ParseRule | Promise<ParseRule>
 }

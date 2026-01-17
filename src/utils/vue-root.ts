@@ -5,7 +5,7 @@ interface VueRoot {
 
 export interface VueHTMLElement extends HTMLElement {
   __vue__?: Record<string, any>
-  // eslint-disable-next-line camelcase
+
   __vue_app__?: Record<string, any>
   _vnode?: {
     component: {
@@ -49,6 +49,4 @@ function getVue3Instance(rootContainer: VueHTMLElement): VueRoot {
   }
 }
 
-export {
-  getVueRoot,
-}
+export { getVueRoot }

@@ -41,7 +41,7 @@ function normalizeOptions(options: RippleOptions) {
 /**
  * 添加涟漪效果
  */
-const addRippleEffect = function(_options: RippleOptions = {}) {
+const addRippleEffect = function (_options: RippleOptions = {}) {
   let options = normalizeOptions(_options)
   // 涟漪个数
   let count = 0
@@ -78,7 +78,7 @@ const addRippleEffect = function(_options: RippleOptions = {}) {
     // 动画在元素中间扩散时基础时长1.5s，当点击范围处于元素边缘时，动画扩散比在元素中间位置要长，所以要加快动画进行
     const base = 1.5
     const diagonal = calcDiagInRect(rect.width, rect.height)(left, top)
-    rippleEl.style.animationDuration = base - base * diagonal / side + 's'
+    rippleEl.style.animationDuration = base - (base * diagonal) / side + 's'
 
     let container = currentTarget.querySelector(`.${containerClassname}`)
     if (!container) {

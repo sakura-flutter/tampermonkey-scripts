@@ -1,4 +1,3 @@
-
 export interface WebApiLikeForumResponse {
   error: string
   no: number
@@ -97,24 +96,24 @@ export interface AppApiLikeForumResponse {
 
 export interface AppApiSignResponse {
   user_info: {
-    user_id: string;
-    is_sign_in: string;
-    user_sign_rank: string;
-    sign_time: string;
-    cont_sign_num: string;
-    total_sign_num: string;
-    cout_total_sing_num: string;
-    hun_sign_num: string;
-    total_resign_num: string;
-    is_org_name: string;
-    sign_bonus_point: string;
-    miss_sign_num: string;
-    level_name: string;
-    levelup_score: string;
-    last_level_score: string;
-    last_score_left: string;
-    last_level_name: string;
-    last_level: string;
+    user_id: string
+    is_sign_in: string
+    user_sign_rank: string
+    sign_time: string
+    cont_sign_num: string
+    total_sign_num: string
+    cout_total_sing_num: string
+    hun_sign_num: string
+    total_resign_num: string
+    is_org_name: string
+    sign_bonus_point: string
+    miss_sign_num: string
+    level_name: string
+    levelup_score: string
+    last_level_score: string
+    last_score_left: string
+    last_level_name: string
+    last_level: string
     /** 吧所有等级信息 */
     all_level_info: {
       /** 等级 */
@@ -123,15 +122,15 @@ export interface AppApiSignResponse {
       name: string
       /** 该等级所需经验值 */
       score: string
-    }[];
-  };
-  contri_info: any[];
-  server_time: string;
-  time: number;
-  ctime: number;
-  logid: number;
+    }[]
+  }
+  contri_info: any[]
+  server_time: string
+  time: number
+  ctime: number
+  logid: number
   /** 错误码 成功 0，签过 160002，签太快 340011，其它失败 */
-  error_code: string;
+  error_code: string
   /** 错误信息 错误的时候才会有 */
   error_msg?: string
 }
@@ -171,10 +170,8 @@ export interface AppApiBatchSignResponse {
   error_code: string
 }
 
-export type LikeForumData =
-  WebApiLikeForumResponse['data']['like_forum'][number]
-  & Pick<AppApiLikeForumResponse['forum_list'][number], 'levelup_score' | 'level_name' | 'slogan'>
-  & {
+export type LikeForumData = WebApiLikeForumResponse['data']['like_forum'][number] &
+  Pick<AppApiLikeForumResponse['forum_list'][number], 'levelup_score' | 'level_name' | 'slogan'> & {
     /** 签到所获得的经验值 */
     sign_bonus_point?: string
   }

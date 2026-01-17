@@ -1,5 +1,5 @@
-module.exports = (isProd, depsVersion) =>
-`// ==UserScript==
+export default (isProd, depsVersion) =>
+  `// ==UserScript==
 // @name         百度贴吧签到
 // @version      3.4.4
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~

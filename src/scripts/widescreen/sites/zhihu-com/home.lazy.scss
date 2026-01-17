@@ -1,4 +1,4 @@
-@import '../mixins';
+@use '../mixins' as *;
 
 @include substrate(1100px, 91vw, 1360px) {
   .Topstory-container {

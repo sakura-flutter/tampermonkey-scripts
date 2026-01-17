@@ -1,5 +1,6 @@
-module.exports = isProd =>
-`// ==UserScript==
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default isProd =>
+  `// ==UserScript==
 // @name         bilibili 工具箱
 // @version      1.6.0
 // @description  长按 S 键倍速播放

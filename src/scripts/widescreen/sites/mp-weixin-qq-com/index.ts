@@ -3,7 +3,7 @@ import { interactive } from '@/utils/ready-state'
 import styles from './index.lazy.scss'
 import type { Site } from '../../types'
 
-export const weixin:Site['use'] = ({ store, createControl }) => ({
+export const weixin: Site['use'] = ({ store, createControl }) => ({
   handler() {
     function execute() {
       interactive(() => {

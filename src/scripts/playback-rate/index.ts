@@ -3,8 +3,7 @@ import { findBestVideoElement } from './utils'
 
 // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
-// eslint-disable-next-line no-new
-new class PlaybackRateController {
+new (class PlaybackRateController {
   /** 触发按键 */
   private triggerKeys = ['`', '0']
   /** 按键次数 -> 倍速 映射 */
@@ -47,8 +46,9 @@ new class PlaybackRateController {
     video.playbackRate = this.rateMap[event.pressCount as keyof typeof this.rateMap] ?? oldPlaybackRate
 
     const controller = new AbortController()
-    window.addEventListener('keyup',
-      (keyupEvent) => {
+    window.addEventListener(
+      'keyup',
+      keyupEvent => {
         if (keyupEvent.key === event.key) {
           controller.abort()
           video.playbackRate = oldPlaybackRate
@@ -58,10 +58,11 @@ new class PlaybackRateController {
       {
         capture: true,
         signal: controller.signal,
-      })
+      },
+    )
   }
 
   destroy() {
     this.multiPress.stop()
   }
-}()
+})()

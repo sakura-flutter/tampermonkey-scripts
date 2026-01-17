@@ -1,5 +1,5 @@
-module.exports = isProd =>
-`// ==UserScript==
+export default isProd =>
+  `// ==UserScript==
 // @name         Pixiv 工具箱
 // @version      1.5.0
 // @description  增强P站查看原图功能；显示原图尺寸

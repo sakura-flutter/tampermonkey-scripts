@@ -5,9 +5,7 @@
 import { createApp, type Component } from 'vue'
 
 function append(el: Element) {
-  document.body
-    ? document.body.appendChild(el)
-    : window.addEventListener('DOMContentLoaded', () => append(el))
+  document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el))
 }
 
 export function mountComponent(RootComponent: Component) {
