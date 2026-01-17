@@ -26,11 +26,8 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: ./src/scripts/playback-rate/multi-press.ts
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+;// ./src/scripts/playback-rate/multi-press.ts
 // =====================================================
 // Name: 多击键盘事件
 // Author: AI
@@ -92,25 +89,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  */
 class MultiPress {
   constructor(config) {
-    _defineProperty(this, "config", void 0);
-
-    _defineProperty(this, "listeners", void 0);
-
-    _defineProperty(this, "keyStates", void 0);
-
-    _defineProperty(this, "isActive", void 0);
-
-    _defineProperty(this, "boundKeyDown", void 0);
-
-    _defineProperty(this, "boundKeyUp", void 0);
-
     const defaultConfig = {
       pressInterval: 150,
       longPressThreshold: 350,
       enableRepeat: false,
       repeatInterval: 100
     };
-    this.config = { ...defaultConfig,
+    this.config = {
+      ...defaultConfig,
       ...config
     };
     this.listeners = new Map();
@@ -119,47 +105,39 @@ class MultiPress {
     this.boundKeyDown = this.handleKeyDown.bind(this);
     this.boundKeyUp = this.handleKeyUp.bind(this);
   }
+
   /**
    * 注册事件监听器
    * @param key 按键代码（如 'Space', 'Enter', 'a', 'A', 'ArrowUp' 等）
    * @param pressCount 按键次数（1=单次, 2=两次, 3=三次, ...）
    * @param callback 回调函数
    */
-
-
   on(key, pressCount, callback) {
     if (!this.listeners.has(key)) {
       this.listeners.set(key, new Map());
     }
-
     const keyListeners = this.listeners.get(key);
-
     if (!keyListeners.has(pressCount)) {
       keyListeners.set(pressCount, []);
     }
-
     keyListeners.get(pressCount).push(callback);
   }
+
   /**
    * 移除事件监听器
    * @param key 按键代码
    * @param pressCount 按键次数
    * @param callback 要移除的回调函数（可选，不传则移除该按键和按键次数的所有监听器）
    */
-
-
   off(key, pressCount, callback) {
     if (!this.listeners.has(key)) return;
     const keyListeners = this.listeners.get(key);
-
     if (pressCount === undefined) {
       // 移除该按键的所有监听器
       this.listeners.delete(key);
       return;
     }
-
     if (!keyListeners.has(pressCount)) return;
-
     if (callback === undefined) {
       // 移除该按键和按键次数的所有监听器
       keyListeners.delete(pressCount);
@@ -167,55 +145,50 @@ class MultiPress {
       // 移除特定回调
       const callbacks = keyListeners.get(pressCount);
       const index = callbacks.indexOf(callback);
-
       if (index !== -1) {
         callbacks.splice(index, 1);
       }
-
       if (callbacks.length === 0) {
         keyListeners.delete(pressCount);
       }
     }
-
     if (keyListeners.size === 0) {
       this.listeners.delete(key);
     }
   }
+
   /**
    * 获取当前配置
    */
-
-
   getConfig() {
-    return { ...this.config
+    return {
+      ...this.config
     };
   }
+
   /**
    * 更新配置
    */
-
-
   updateConfig(config) {
-    this.config = { ...this.config,
+    this.config = {
+      ...this.config,
       ...config
     };
   }
+
   /**
    * 启动键盘事件监听
    */
-
-
   start() {
     if (this.isActive) return;
     this.isActive = true;
     window.addEventListener('keydown', this.boundKeyDown, true);
     window.addEventListener('keyup', this.boundKeyUp, true);
   }
+
   /**
    * 停止键盘事件监听
    */
-
-
   stop() {
     if (!this.isActive) return;
     this.isActive = false;
@@ -223,24 +196,22 @@ class MultiPress {
     window.removeEventListener('keyup', this.boundKeyUp, true);
     this.clearAllTimers();
   }
+
   /**
    * 销毁处理器，清理所有资源
    */
-
-
   destroy() {
     this.stop();
     this.listeners.clear();
     this.keyStates.clear();
   }
-
   handleKeyDown(event) {
-    const key = event.key; // 避免重复触发（按住不放）
+    const key = event.key;
 
+    // 避免重复触发（按住不放）
     if (event.repeat) return;
     const now = Date.now();
     let state = this.keyStates.get(key);
-
     if (!state) {
       state = {
         pressCount: 0,
@@ -255,11 +226,10 @@ class MultiPress {
         lastEvent: null
       };
       this.keyStates.set(key, state);
-    } // 判断是否为连续点击
+    }
 
-
+    // 判断是否为连续点击
     const timeSinceLastUp = now - state.lastKeyUpTime;
-
     if (timeSinceLastUp <= this.config.pressInterval && state.lastKeyUpTime > 0) {
       // 连续点击，增加计数
       state.pressCount++;
@@ -267,24 +237,24 @@ class MultiPress {
       // 新的点击序列
       state.pressCount = 1;
     }
-
     state.lastKeyDownTime = now;
     state.pressStartTime = now;
     state.isLongPressing = false;
-    state.lastEvent = event; // 清除之前的定时器（包括按键触发定时器）
+    state.lastEvent = event;
 
+    // 清除之前的定时器（包括按键触发定时器）
     this.clearTimers(state);
-
     if (state.pressTriggerTimer !== null) {
       clearTimeout(state.pressTriggerTimer);
       state.pressTriggerTimer = null;
-    } // 设置长按检测定时器
+    }
 
-
+    // 设置长按检测定时器
     state.longPressTimer = window.setTimeout(() => {
       state.isLongPressing = true;
-      this.triggerEvent(key, state.pressCount, true, event, now); // 如果启用重复触发
+      this.triggerEvent(key, state.pressCount, true, event, now);
 
+      // 如果启用重复触发
       if (this.config.enableRepeat) {
         state.repeatTimer = window.setInterval(() => {
           if (state.isLongPressing) {
@@ -294,45 +264,48 @@ class MultiPress {
       }
     }, this.config.longPressThreshold);
   }
-
   handleKeyUp(event) {
     const key = event.key;
     const state = this.keyStates.get(key);
     if (!state) return;
     const now = Date.now();
-    state.lastKeyUpTime = now; // 清除长按和重复定时器
+    state.lastKeyUpTime = now;
 
-    this.clearTimers(state); // 如果没有触发长按，需要延迟触发以等待可能的后续点击
+    // 清除长按和重复定时器
+    this.clearTimers(state);
 
+    // 如果没有触发长按，需要延迟触发以等待可能的后续点击
     if (!state.isLongPressing) {
       // 清除之前的延迟触发定时器
       if (state.pressTriggerTimer !== null) {
         clearTimeout(state.pressTriggerTimer);
         state.pressTriggerTimer = null;
-      } // 保存当前的 pressCount 和 event
+      }
 
-
+      // 保存当前的 pressCount 和 event
       const currentPressCount = state.pressCount;
-      const currentEvent = state.lastEvent || event; // 设置延迟触发定时器，等待 pressInterval 时间
-      // 如果在这个时间内没有新的点击，则触发当前次数的回调
+      const currentEvent = state.lastEvent || event;
 
+      // 设置延迟触发定时器，等待 pressInterval 时间
+      // 如果在这个时间内没有新的点击，则触发当前次数的回调
       state.pressTriggerTimer = window.setTimeout(() => {
         // 触发当前点击次数的事件
-        this.triggerEvent(key, currentPressCount, false, currentEvent); // 重置按键计数
+        this.triggerEvent(key, currentPressCount, false, currentEvent);
 
+        // 重置按键计数
         state.pressCount = 0;
         state.pressTriggerTimer = null;
       }, this.config.pressInterval);
     } else {
       // 如果已经触发长按，只需要重置状态
-      state.isLongPressing = false; // 设置按键计数重置定时器
+      state.isLongPressing = false;
 
+      // 设置按键计数重置定时器
       state.pressResetTimer = window.setTimeout(() => {
         state.pressCount = 0;
       }, this.config.pressInterval);
     }
   }
-
   triggerEvent(key, pressCount, isLongPress, originalEvent, pressStartTime) {
     const keyListeners = this.listeners.get(key);
     if (!keyListeners) return;
@@ -353,97 +326,84 @@ class MultiPress {
       }
     });
   }
-
   clearTimers(state) {
     if (state.longPressTimer !== null) {
       clearTimeout(state.longPressTimer);
       state.longPressTimer = null;
     }
-
     if (state.repeatTimer !== null) {
       clearInterval(state.repeatTimer);
       state.repeatTimer = null;
     }
   }
-
   clearAllTimers() {
     this.keyStates.forEach(state => {
       this.clearTimers(state);
-
       if (state.pressResetTimer !== null) {
         clearTimeout(state.pressResetTimer);
         state.pressResetTimer = null;
       }
-
       if (state.pressTriggerTimer !== null) {
         clearTimeout(state.pressTriggerTimer);
         state.pressTriggerTimer = null;
       }
     });
   }
-
 }
+
 /**
  * 便捷工厂函数
  */
-
 function createMultiPress(config) {
   return new MultiPress(config);
 }
-;// CONCATENATED MODULE: ./src/utils/selector.ts
+;// ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/utils/log.ts
+;// ./src/utils/log.ts
 const isDebug = "production" !== 'production';
-
 function warn(...args) {
   isDebug && warn.force(...args);
 }
-
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
-
 function error(...args) {
   isDebug && error.force(...args);
 }
-
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
-
 function table(...args) {
   isDebug && console.table(...args);
 }
 
+;// ./src/scripts/playback-rate/utils.ts
 
-;// CONCATENATED MODULE: ./src/scripts/playback-rate/utils.ts
 
 
 /** 判断视频是否正在播放 */
-
 function isPlaying(video) {
   return !video.paused && !video.ended;
 }
+
 /** 判断视频是否有声音（非静音） */
-
-
 function isAudible(video) {
   return !video.muted && video.volume > 0;
 }
+
 /** 计算矩形中心到视口中心的距离 */
-
-
 function getDistanceFromViewportCenter(rect) {
   const viewportCenterX = window.innerWidth / 2;
   const viewportCenterY = window.innerHeight / 2;
   const videoCenterX = rect.left + rect.width / 2;
   const videoCenterY = rect.top + rect.height / 2;
   const dx = videoCenterX - viewportCenterX;
-  const dy = videoCenterY - viewportCenterY; // 这里不需要 `Math.sqrt` 开根号，避免计算开销，比较时平方距离也是有效的
-
+  const dy = videoCenterY - viewportCenterY;
+  // 这里不需要 `Math.sqrt` 开根号，避免计算开销，比较时平方距离也是有效的
   return dx * dx + dy * dy;
 }
+
 /**
  * 查找页面中最符合条件的视频元素
  *
@@ -454,94 +414,81 @@ function getDistanceFromViewportCenter(rect) {
  * 3. 元素大小 (大 > 小)：大尺寸的视频通常是主要内容，虽然背景视频尺寸可能更大但通常都是静音的
  * 4. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近的视频
  */
-
-
 function findBestVideoElement() {
   // 获取页面所有 video 元素
   const videos = Array.from($$('video'));
-
   if (videos.length === 0) {
     warn('视频元素为空');
     return null;
   }
-
   videos.sort((a, b) => {
     // 优先级 1 播放状态：播放中优先
     const playingA = isPlaying(a);
     const playingB = isPlaying(b);
-
     if (playingA !== playingB) {
       return playingA ? -1 : 1;
-    } // 优先级 2 音频状态：非静音优先
+    }
 
-
+    // 优先级 2 音频状态：非静音优先
     const audibleA = isAudible(a);
     const audibleB = isAudible(b);
-
     if (audibleA !== audibleB) {
       return audibleA ? -1 : 1;
     }
-
     const rectA = a.getBoundingClientRect();
-    const rectB = b.getBoundingClientRect(); // 优先级 3 元素大小：大尺寸优先
+    const rectB = b.getBoundingClientRect();
 
+    // 优先级 3 元素大小：大尺寸优先
     const sizeA = rectA.width * rectA.height;
-    const sizeB = rectB.width * rectB.height; // 允许 100 像素的误差视为相等，或者直接比较
-
+    const sizeB = rectB.width * rectB.height;
+    // 允许 100 像素的误差视为相等，或者直接比较
     if (sizeA !== sizeB) {
       return sizeB - sizeA;
-    } // 优先级 4 视口距离：距离视口中心越近越优先 (距离越小越好)
+    }
 
-
+    // 优先级 4 视口距离：距离视口中心越近越优先 (距离越小越好)
     const distA = getDistanceFromViewportCenter(rectA);
     const distB = getDistanceFromViewportCenter(rectB);
     return distA - distB;
   });
-  warn(videos); // 返回排序后的第一个元素，即最优匹配
+  warn(videos);
 
+  // 返回排序后的第一个元素，即最优匹配
   return videos[0] ?? null;
 }
-;// CONCATENATED MODULE: ./src/scripts/playback-rate/index.ts
-function playback_rate_defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+;// ./src/scripts/playback-rate/index.ts
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
- // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
-// eslint-disable-next-line no-new
+
+// 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
 new class PlaybackRateController {
-  /** 触发按键 */
-
-  /** 按键次数 -> 倍速 映射 */
-
-  /** 是否正在加速播放 */
   constructor() {
-    playback_rate_defineProperty(this, "triggerKeys", ['`', '0']);
-
-    playback_rate_defineProperty(this, "rateMap", {
+    /** 触发按键 */
+    _defineProperty(this, "triggerKeys", ['`', '0']);
+    /** 按键次数 -> 倍速 映射 */
+    _defineProperty(this, "rateMap", {
       1: 3,
       2: 6,
       3: 9
     });
-
-    playback_rate_defineProperty(this, "isBoosting", false);
-
-    playback_rate_defineProperty(this, "multiPress", createMultiPress());
-
+    /** 是否正在加速播放 */
+    _defineProperty(this, "isBoosting", false);
+    _defineProperty(this, "multiPress", createMultiPress());
     this.init();
   }
-
   init() {
     const changeHandler = this.handleChange.bind(this);
-
     for (const triggerKey of this.triggerKeys) {
       for (const pressCount of Object.keys(this.rateMap)) {
         this.multiPress.on(triggerKey, Number(pressCount), changeHandler);
       }
     }
-
     this.multiPress.start();
   }
-
   handleChange(event) {
     if (this.isBoosting || !event.isLongPress) return;
     const video = findBestVideoElement();
@@ -561,11 +508,9 @@ new class PlaybackRateController {
       signal: controller.signal
     });
   }
-
   destroy() {
     this.multiPress.stop();
   }
-
 }();
 /******/ })()
 ;

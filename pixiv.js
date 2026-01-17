@@ -54,78 +54,75 @@
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: external "Viewer"
+;// external "Viewer"
 const external_Viewer_namespaceObject = Viewer;
 var external_Viewer_default = /*#__PURE__*/__webpack_require__.n(external_Viewer_namespaceObject);
-;// CONCATENATED MODULE: ./src/utils/selector.ts
+;// ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/utils/log.ts
+;// ./src/utils/log.ts
 const isDebug = "production" !== 'production';
-
 function warn(...args) {
   isDebug && warn.force(...args);
 }
-
 warn.force = function (...args) {
   console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
 };
-
 function error(...args) {
   isDebug && error.force(...args);
 }
-
 error.force = function (...args) {
   console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
 };
-
 function table(...args) {
   isDebug && console.table(...args);
 }
 
-
-;// CONCATENATED MODULE: ./src/scripts/pixiv/previewer.ts
-function _classPrivateFieldLooseBase(receiver, privateKey) { if (!Object.prototype.hasOwnProperty.call(receiver, privateKey)) { throw new TypeError("attempted to use private field on non-instance"); } return receiver; }
-
+;// ./src/scripts/pixiv/previewer.ts
+function _classPrivateFieldLooseBase(e, t) { if (!{}.hasOwnProperty.call(e, t)) throw new TypeError("attempted to use private field on non-instance"); return e; }
 var id = 0;
-
-function _classPrivateFieldLooseKey(name) { return "__private_" + id++ + "_" + name; }
-
+function _classPrivateFieldLooseKey(e) { return "__private_" + id++ + "_" + e; }
 
 
 
 GM_addStyle(GM_getResourceText('viewerCSS'));
-GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }', // 背景暗一点
-'.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }', // 添加标题阴影 在图片是白底时显示得清楚点
+GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }',
+// 背景暗一点
+'.viewer-container .viewer-title { text-shadow: 1px 1px 1px #000 }',
+// 添加标题阴影 在图片是白底时显示得清楚点
 '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }' // 加大导航栏
 ].join(''));
-
 var _imgsSelector = /*#__PURE__*/_classPrivateFieldLooseKey("imgsSelector");
-
 var _viewer = /*#__PURE__*/_classPrivateFieldLooseKey("viewer");
-
 var _options = /*#__PURE__*/_classPrivateFieldLooseKey("options");
-
 var _init = /*#__PURE__*/_classPrivateFieldLooseKey("init");
-
 var _process = /*#__PURE__*/_classPrivateFieldLooseKey("process");
-
 var _getArtworks = /*#__PURE__*/_classPrivateFieldLooseKey("getArtworks");
-
 var _createOriginalImgEls = /*#__PURE__*/_classPrivateFieldLooseKey("createOriginalImgEls");
-
 var _preview = /*#__PURE__*/_classPrivateFieldLooseKey("preview");
-
 class Previewer {
   constructor(imgsSelector, options) {
+    /**
+     * 预览
+     * @param {nodes}
+     * @param {object} viewerOpts
+     * @return {viewer}
+     */
     Object.defineProperty(this, _preview, {
       value: _preview2
     });
+    /**
+     * 将getArtworks的图片转成原图
+     * @param {nodes}
+     * @return {nodes}
+     */
     Object.defineProperty(this, _createOriginalImgEls, {
       value: _createOriginalImgEls2
     });
+    /**
+     * 获取要预览图片的节点
+     */
     Object.defineProperty(this, _getArtworks, {
       value: _getArtworks2
     });
@@ -152,21 +149,17 @@ class Previewer {
          * 只是为了日后可能失效，尽量避免影响原点击事件
          */
         if (!_classPrivateFieldLooseBase(this, _options)[_options].includePathname.test(location.pathname)) return;
-
         const artworks = _classPrivateFieldLooseBase(this, _getArtworks)[_getArtworks]();
-
         if (artworks.length === 0) return;
-        let index = -1; // 比较 5 层深度应该足够了
-
+        let index = -1;
+        // 比较 5 层深度应该足够了
         event.composedPath().slice(0, 5).find(target => {
           index = artworks.findIndex(artwork => artwork === target);
           return index > -1;
         });
         warn(event, index, artworks);
         if (index === -1) return;
-
         const originalArtworks = _classPrivateFieldLooseBase(this, _createOriginalImgEls)[_createOriginalImgEls](artworks);
-
         if (originalArtworks.length === 0) return;
         event.preventDefault();
         event.stopPropagation();
@@ -179,12 +172,9 @@ class Previewer {
     _classPrivateFieldLooseBase(this, _process)[_process] = _classPrivateFieldLooseBase(this, _process)[_process].bind(this);
     _classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector] = imgsSelector;
     _classPrivateFieldLooseBase(this, _options)[_options] = options;
-
     _classPrivateFieldLooseBase(this, _init)[_init]();
   }
-
 }
-
 function _init2() {
   window.addEventListener('click', _classPrivateFieldLooseBase(this, _process)[_process], true);
   window.addEventListener('urlchange', info => {
@@ -192,25 +182,21 @@ function _init2() {
     _classPrivateFieldLooseBase(this, _viewer)[_viewer]?.hide();
   });
 }
-
 function _getArtworks2() {
   return [...$$(_classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector])];
 }
-
 function _createOriginalImgEls2(imgEls) {
   return imgEls.reduce((acc, img) => {
     // 原图地址在祖先 a 标签 href 上，但 a 标签位置不固定要动态查找
     let parentElement = img.parentElement;
-    let steps = 0; // 往上找 5 层足够了，还找不到应该就是真没有
-
+    let steps = 0;
+    // 往上找 5 层足够了，还找不到应该就是真没有
     const maxAncestors = 5;
-
     while (parentElement && steps < maxAncestors) {
       // 如果遇到属性 role="presentation" 的元素说明到边界了
       if (parentElement.getAttribute('role') === 'presentation') {
         break;
       }
-
       if (parentElement.tagName === 'A') {
         const image = new Image();
         image.src = parentElement.href;
@@ -218,15 +204,12 @@ function _createOriginalImgEls2(imgEls) {
         acc.push(image);
         break;
       }
-
       parentElement = parentElement.parentElement;
       steps++;
     }
-
     return acc;
   }, []);
 }
-
 function _preview2(imgEls, viewerOpts) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
@@ -238,41 +221,34 @@ function _preview2(imgEls, viewerOpts) {
     zoomRatio: 0.5,
     minZoomRatio: 0.1,
     maxZoomRatio: 1.5,
-
     viewed() {
       this.viewer.tooltip();
     },
-
     // 销毁
     hide() {
       _classPrivateFieldLooseBase(self, _viewer)[_viewer] = undefined;
     },
-
     hidden() {
       this.viewer.destroy();
     }
-
   }, viewerOpts);
   const viewer = new (external_Viewer_default())(container, viewerOpts);
   viewer.show();
   return viewer;
 }
-;// CONCATENATED MODULE: ./src/utils/visibility-state.ts
+;// ./src/utils/visibility-state.ts
 /**
  * 页面 visible 时执行 setInterval
  * 参数同 setInterval，返回终止函数
  */
 function onVisible(callback, delay = 500, ...rest) {
   let intervalId;
-
   function listener() {
     clearInterval(intervalId);
-    if (document.visibilityState === 'hidden') return; // eslint-disable-next-line n/no-callback-literal
-
+    if (document.visibilityState === 'hidden') return;
     callback(...rest);
     intervalId = setInterval(callback, delay, ...rest);
   }
-
   listener();
   document.addEventListener('visibilitychange', listener);
   return function abort() {
@@ -280,7 +256,7 @@ function onVisible(callback, delay = 500, ...rest) {
     document.removeEventListener('visibilitychange', listener);
   };
 }
-;// CONCATENATED MODULE: ./src/scripts/pixiv/pixels.ts
+;// ./src/scripts/pixiv/pixels.ts
 
 
 function attachPixels(imgsSelector, options) {
@@ -288,8 +264,9 @@ function attachPixels(imgsSelector, options) {
   onVisible(() => {
     if (!options.includePathname.test(location.pathname)) return;
     $$(imgsSelector).forEach(img => {
-      if (ws.has(img)) return; // 获取原尺寸
+      if (ws.has(img)) return;
 
+      // 获取原尺寸
       let [width, height] = [img.getAttribute('width'), img.getAttribute('height')];
       if (width === null || height === null) return;
       [width, height] = [+width, +height];
@@ -300,23 +277,21 @@ function attachPixels(imgsSelector, options) {
     });
   });
 }
-
 function createPixelsElement(parentElement) {
   const classname = 'artwork-pixels';
-
   for (const child of parentElement.children) {
     if (child.classList.contains(classname)) return child;
-  } // 没有则插入一个
+  }
 
-
+  // 没有则插入一个
   const elem = document.createElement('span');
   elem.classList.add(classname);
   elem.style.cssText = ['position: absolute', 'z-index: 1', 'top: 32px', 'right: 8px', 'padding: 0 4px', 'border-radius: 8px', 'font-size: 12px', 'line-height: initial', 'color: #fff', 'background: rgb(0 0 0 / 0.32)'].join(';');
   parentElement.prepend(elem);
   return elem;
-} // 计算图片与屏幕吻合度
+}
 
-
+// 计算图片与屏幕吻合度
 function calcRectCoincide(width, height) {
   const {
     width: sw,
@@ -325,20 +300,19 @@ function calcRectCoincide(width, height) {
   const rectRate = width / height;
   const screenRate = sw / sh;
   let rate;
-
   if (rectRate >= screenRate) {
     rate = screenRate / rectRate;
   } else {
     rate = rectRate / screenRate;
-  } // 图片小于屏幕尺寸，降低值
+  }
 
-
+  // 图片小于屏幕尺寸，降低值
   if (width < sw && height < sh) {
     rate *= width / sw * (height / sh);
-  } // 符合屏幕比例且超过屏幕尺寸的图片，提高值
+  }
+
+  // 符合屏幕比例且超过屏幕尺寸的图片，提高值
   // 接近比例也算符合
-
-
   if (rate >= 0.99) {
     if (width > sw) {
       rate *= width / sw;
@@ -346,15 +320,13 @@ function calcRectCoincide(width, height) {
       rate *= height / sh;
     }
   }
-
   return {
     rate,
     percent: (rate * 100).toFixed(0) + '%'
   };
 }
-;// CONCATENATED MODULE: ./src/scripts/pixiv/index.ts
+;// ./src/scripts/pixiv/index.ts
 
- // eslint-disable-next-line no-new
 
 new Previewer('figure [role="presentation"] a img[width][height]', {
   includePathname: /^\/artworks\/(\w)+/

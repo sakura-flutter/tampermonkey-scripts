@@ -17,13 +17,11 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: ./src/utils/selector.ts
+;// ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-;// CONCATENATED MODULE: ./src/scripts/github/index.ts
-
+;// ./src/scripts/github/index.ts
 
 function insert1sButton() {
   const actions = $('.pagehead-actions');
@@ -37,16 +35,14 @@ function insert1sButton() {
     </a>
   </li>`;
   actions.insertAdjacentHTML('afterbegin', btnHTML);
-
   $('#github1s-button').onmouseenter = function () {
     const github1sURL = new URL(location.href);
     github1sURL.host = 'github1s.com';
     this.href = github1sURL.href;
   };
 }
-
-insert1sButton(); // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
+insert1sButton();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.addEventListener('urlchange', info => {
   setTimeout(insert1sButton, 200);
 });

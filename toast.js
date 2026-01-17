@@ -1,28 +1,24 @@
 
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: external "Vue"
+;// external "Vue"
 const external_Vue_namespaceObject = Vue;
-;// CONCATENATED MODULE: ./src/helpers/toast.tsx
-
-
+;// ./src/helpers/toast.tsx
+/* eslint-disable vue/multi-word-component-names */
 /* Toast */
 
-const toastTypes = ['info', 'success', 'warning', 'error'];
 
+const toastTypes = ['info', 'success', 'warning', 'error'];
 function normalizeOptions(options, duration) {
   if (typeof options === 'string' || (0,external_Vue_namespaceObject.isVNode)(options)) {
     options = {
       content: options
     };
   }
-
   options.duration = duration ?? options.duration;
   return options;
 }
-
 const Toast = function (_opts, duration) {
   const options = normalizeOptions(_opts, duration);
   const container = document.createElement('div');
@@ -46,7 +42,6 @@ const Toast = function (_opts, duration) {
         default: 3000
       }
     },
-
     setup(props, context) {
       const {
         expose
@@ -58,22 +53,18 @@ const Toast = function (_opts, duration) {
       });
       (0,external_Vue_namespaceObject.onMounted)(() => {
         state.visible = true;
-
         if (props.duration > 0) {
           setTimeout(close, props.duration);
         }
       });
-
       const close = () => {
         state.visible = false;
       };
-
       const onAfterLeave = () => {
         // 销毁
         (0,external_Vue_namespaceObject.render)(null, container);
         container.remove();
       };
-
       expose({
         close
       });
@@ -94,9 +85,9 @@ const Toast = function (_opts, duration) {
         }, [(0,external_Vue_namespaceObject.createTextVNode)("\xD7")])])])]
       });
     }
+  });
 
-  }); // toast
-
+  // toast
   const vm = (0,external_Vue_namespaceObject.createVNode)(ToastConstructor, options);
   (0,external_Vue_namespaceObject.render)(vm, container);
   insertElementInContainer(container);
@@ -104,40 +95,36 @@ const Toast = function (_opts, duration) {
     close: vm.component?.exposed?.close
   };
 };
-
 toastTypes.forEach(type => {
+  ;
   Toast[type] = function (_opts, duration) {
-    const options = { ...normalizeOptions(_opts, duration),
+    const options = {
+      ...normalizeOptions(_opts, duration),
       type
     };
     return Toast(options, duration);
   };
 });
 window.Toast = Toast;
-
 function safeAppendElement(cb) {
   document.body ? cb() : window.addEventListener('DOMContentLoaded', cb);
 }
-
 function insertElementInContainer(elememnt) {
   function getContainer() {
     const classname = 'inject-toast-container';
     let containerEl = document.querySelector('.' + classname);
-
     if (containerEl == null) {
       containerEl = document.createElement('div');
       containerEl.classList.add(classname);
       document.body.appendChild(containerEl);
     }
-
     return containerEl;
   }
-
   safeAppendElement(() => {
     getContainer().appendChild(elememnt);
   });
 }
-
+;
 (function addStyle() {
   const styleEl = document.createElement('style');
   styleEl.appendChild(document.createTextNode(`
@@ -217,8 +204,9 @@ function insertElementInContainer(elememnt) {
       padding: 0;
       opacity: 0;
     }
-  `.replace(/\|>/g, '.inject-toast-content'))); // fix: tampermonkey 偶尔会获取不到 head
+  `.replace(/\|>/g, '.inject-toast-content')));
 
+  // fix: tampermonkey 偶尔会获取不到 head
   safeAppendElement(() => {
     document.head.appendChild(styleEl);
   });
