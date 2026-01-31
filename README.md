@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/Firefox-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Edge-Latest-brightgreen?style=flat-square" alt="Firefox version"> <img src="https://img.shields.io/badge/Chrome-Latest-brightgreen?style=flat-square" alt="Chrome version">
 
-仅在最新版上通过，如果使用其它浏览器**必须要保证 Chromium 版本 120+**
+仅在最新版上通过，如果使用其它浏览器**必须要保证 Chromium 版本 130+**
 
 ## 使用
 
