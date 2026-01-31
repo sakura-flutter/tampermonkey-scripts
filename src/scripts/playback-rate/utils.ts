@@ -34,8 +34,8 @@ function getDistanceFromViewportCenter(rect: DOMRect) {
  * 4. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近的视频
  */
 export function findBestVideoElement(): HTMLVideoElement | null {
-  // 获取页面所有 video 元素
-  const videos = Array.from($$('video'))
+  // 优先级 1 播放状态：播放中优先
+  const videos = Array.from($$('video')).filter(video => isPlaying(video))
 
   if (videos.length === 0) {
     warn('视频元素为空')
@@ -44,11 +44,11 @@ export function findBestVideoElement(): HTMLVideoElement | null {
 
   videos.sort((a, b) => {
     // 优先级 1 播放状态：播放中优先
-    const playingA = isPlaying(a)
-    const playingB = isPlaying(b)
-    if (playingA !== playingB) {
-      return playingA ? -1 : 1
-    }
+    // const playingA = isPlaying(a)
+    // const playingB = isPlaying(b)
+    // if (playingA !== playingB) {
+    //   return playingA ? -1 : 1
+    // }
 
     // 优先级 2 音频状态：非静音优先
     const audibleA = isAudible(a)
@@ -77,5 +77,26 @@ export function findBestVideoElement(): HTMLVideoElement | null {
   warn(videos)
 
   // 返回排序后的第一个元素，即最优匹配
-  return videos[0] ?? null
+  return videos[0]
+}
+
+/**
+ * 检测当前活动元素是否为输入元素
+ */
+export function isInputActive(): boolean {
+  let activeElement = document.activeElement
+
+  if (!activeElement) return false
+
+  while (activeElement.shadowRoot?.activeElement) {
+    activeElement = activeElement.shadowRoot.activeElement
+  }
+
+  const tagName = activeElement.tagName
+
+  return (
+    tagName === 'INPUT' ||
+    tagName === 'TEXTAREA' ||
+    (activeElement instanceof HTMLElement && activeElement.isContentEditable)
+  )
 }

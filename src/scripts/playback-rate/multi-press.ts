@@ -15,6 +15,10 @@ export interface MultiPressConfig {
   enableRepeat?: boolean
   /** 重复触发的间隔（毫秒），默认 100ms */
   repeatInterval?: number
+  /** 按键按下时的回调 */
+  onKeydown?(e: KeyboardEvent): void
+  /** 按键松开时的回调 */
+  onKeyup?(e: KeyboardEvent): void
 }
 
 /**
@@ -27,6 +31,8 @@ export interface MultiPressEvent {
   pressCount: number
   /** 是否为长按事件 */
   isLongPress: boolean
+  /** 是否为长按期间的重复触发（仅在 `enableRepeat` 为 true 时可能为 true） */
+  isRepeat: boolean
   /** 长按持续时间（毫秒），仅在长按时有效 */
   pressDuration?: number
   /** 原始键盘事件 */
@@ -109,6 +115,8 @@ export class MultiPress {
       longPressThreshold: 350,
       enableRepeat: false,
       repeatInterval: 100,
+      onKeydown() {},
+      onKeyup() {},
     }
 
     this.config = { ...defaultConfig, ...config }
@@ -228,6 +236,7 @@ export class MultiPress {
   }
 
   private handleKeyDown(event: KeyboardEvent) {
+    this.config.onKeydown(event)
     const key = event.key
 
     // 避免重复触发（按住不放）
@@ -277,13 +286,14 @@ export class MultiPress {
     // 设置长按检测定时器
     state.longPressTimer = window.setTimeout(() => {
       state.isLongPressing = true
-      this.triggerEvent(key, state.pressCount, true, event, now)
+      this.triggerEvent(key, state.pressCount, true, event, now, false)
 
       // 如果启用重复触发
       if (this.config.enableRepeat) {
         state.repeatTimer = window.setInterval(() => {
           if (state.isLongPressing) {
-            this.triggerEvent(key, state.pressCount, true, event, state.pressStartTime)
+            // TODO: 这里 `event.repeat` 应该为 true
+            this.triggerEvent(key, state.pressCount, true, event, state.pressStartTime, true)
           }
         }, this.config.repeatInterval)
       }
@@ -291,6 +301,7 @@ export class MultiPress {
   }
 
   private handleKeyUp(event: KeyboardEvent) {
+    this.config.onKeyup(event)
     const key = event.key
     const state = this.keyStates.get(key)
     if (!state) return
@@ -340,6 +351,7 @@ export class MultiPress {
     isLongPress: boolean,
     originalEvent: KeyboardEvent,
     pressStartTime?: number,
+    isRepeat: boolean = false,
   ) {
     const keyListeners = this.listeners.get(key)
     if (!keyListeners) return
@@ -351,6 +363,7 @@ export class MultiPress {
       key,
       pressCount,
       isLongPress,
+      isRepeat,
       pressDuration: pressStartTime ? Date.now() - pressStartTime : undefined,
       originalEvent,
     }
