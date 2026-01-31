@@ -567,14 +567,13 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
-  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
-  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
-  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
-  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
+  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
+  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
+  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
+  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -677,15 +676,12 @@ function table(...args) {
 }
 
 ;// ./src/scripts/tieba/utils/request.ts
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 class ResponseError extends Error {
+  name = 'ResponseError';
   constructor(msg = '未知错误', response, info) {
     super(msg);
-    _defineProperty(this, "name", 'ResponseError');
     this.response = response;
     this.info = info;
   }
@@ -703,7 +699,6 @@ function GMRequest(url, options) {
       ...options,
       url,
       onload(res) {
-        var _response;
         let error;
         let response;
         try {
@@ -716,7 +711,7 @@ function GMRequest(url, options) {
             ...options,
             ...res
           });
-        } else if (((_response = response) === null || _response === void 0 ? void 0 : _response.error_code) !== '0') {
+        } else if (response?.error_code !== '0') {
           error = new ResponseError(response.error_msg, response, {
             ...options,
             ...res
@@ -757,11 +752,10 @@ request.post = function (url, data, options = {}) {
   const headers = new Headers(options.headers);
   let body = data;
   if (data) {
-    var _headers$get, _headers$get2;
-    if ((_headers$get = headers.get('Content-Type')) !== null && _headers$get !== void 0 && _headers$get.includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
+    if (headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') && Object.prototype.toString.call(data) === '[object Object]') {
       body = stringify(data);
     }
-    if ((_headers$get2 = headers.get('Content-Type')) !== null && _headers$get2 !== void 0 && _headers$get2.includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
+    if (headers.get('Content-Type')?.includes('application/json') && Object.prototype.toString.call(data) === '[object Object]') {
       body = JSON.stringify(data);
     }
   }
@@ -858,9 +852,8 @@ function getElementsInPage() {
     /** 签到的元素 */
     signs: [...likeSignEls, ...alwaySignEls],
     setSign(key) {
-      var _unsignsMap$get;
       // 替换成已签到样式
-      (_unsignsMap$get = unsignsMap.get(key)) === null || _unsignsMap$get === void 0 || _unsignsMap$get.classList.replace('unsign', 'sign');
+      unsignsMap.get(key)?.classList.replace('unsign', 'sign');
     }
   };
 }
@@ -882,7 +875,7 @@ function encodeRequestParams(obj) {
   const newObj = {
     ...obj
   };
-  newObj.kw && (newObj.kw = encodeURIComponent(newObj.kw));
+  newObj.kw &&= encodeURIComponent(newObj.kw);
   return newObj;
 }
 ;// external "Vue"
@@ -1058,16 +1051,15 @@ async function mergeLikeForum() {
   return like1;
 }
 ;// ./src/utils/queue.ts
-function queue_defineProperty(e, r, t) { return (r = queue_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function queue_toPropertyKey(t) { var i = queue_toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function queue_toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 class Queue {
+  tasks = [];
+  /** 同时进行任务数 默认 3 个 */
+
+  /** 当前执行数 */
+  count = 0;
   constructor({
     limit = 3
   } = {}) {
-    queue_defineProperty(this, "tasks", []);
-    /** 当前执行数 */
-    queue_defineProperty(this, "count", 0);
     this.limit = limit;
   }
 
@@ -1150,9 +1142,6 @@ function isFunction(value) {
   return typeof value === 'function';
 }
 ;// ./src/scripts/tieba/sign.ts
-function sign_defineProperty(e, r, t) { return (r = sign_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function sign_toPropertyKey(t) { var i = sign_toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function sign_toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -1164,8 +1153,8 @@ function sign_toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var 
  * 经验没客户端那么多，但不需要获得 BDUSS 只需登录即可
  */
 class WebTask {
+  fail = 0;
   constructor(options) {
-    sign_defineProperty(this, "fail", 0);
     this.kw = options.kw;
   }
   async execute() {
@@ -1180,9 +1169,8 @@ class WebTask {
         kw
       };
     } catch (e) {
-      var _e$response;
       // 签过
-      if (((_e$response = e.response) === null || _e$response === void 0 ? void 0 : _e$response.no) === 1101) {
+      if (e.response?.no === 1101) {
         return {
           kw
         };
@@ -1203,8 +1191,8 @@ class WebTask {
  * 获得经验与客户端签到相同，需要获得 BDUSS
  */
 class AppTask {
+  fail = 0;
   constructor(options) {
-    sign_defineProperty(this, "fail", 0);
     this.fid = options.fid;
     this.kw = options.kw;
     this.BDUSS = options.BDUSS;
@@ -1239,9 +1227,8 @@ class AppTask {
         }
       };
     } catch (e) {
-      var _e$response2;
       // 签过
-      if (((_e$response2 = e.response) === null || _e$response2 === void 0 ? void 0 : _e$response2.error_code) === '160002') {
+      if (e.response?.error_code === '160002') {
         return {
           fid,
           kw,
@@ -1449,19 +1436,16 @@ const Checkbox = (0,external_Vue_namespaceObject.defineComponent)({
       // 受控
       inputRef.value.checked = !!props.checked;
     };
-    return () => {
-      var _slots$default;
-      return (0,external_Vue_namespaceObject.createVNode)("label", {
-        "class": prefixCls,
-        "title": props.title
-      }, [(0,external_Vue_namespaceObject.createVNode)("input", {
-        "ref": inputRef,
-        "checked": props.checked,
-        "type": "checkbox",
-        "disabled": props.disabled,
-        "onChange": handleChange
-      }, null), (_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]);
-    };
+    return () => (0,external_Vue_namespaceObject.createVNode)("label", {
+      "class": prefixCls,
+      "title": props.title
+    }, [(0,external_Vue_namespaceObject.createVNode)("input", {
+      "ref": inputRef,
+      "checked": props.checked,
+      "type": "checkbox",
+      "disabled": props.disabled,
+      "onChange": handleChange
+    }, null), slots.default?.()]);
   }
 });
 /* harmony default export */ const src_components_checkbox_0 = (Checkbox);
@@ -1623,8 +1607,7 @@ const addRippleEffect = function (_options = {}) {
         rippleEl.remove();
         // 没有涟漪元素时移除容器
         if (--count <= 0) {
-          var _container;
-          (_container = container) === null || _container === void 0 || _container.remove();
+          container?.remove();
         }
       }
     });
@@ -1742,15 +1725,12 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
         disabled: !props.ripple
       } : props.ripple);
     });
-    return () => {
-      var _slots$default;
-      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-        "class": [button_prefixCls, `${button_prefixCls}--${props.type}`, {
-          [`${button_prefixCls}--round`]: props.round,
-          [`${button_prefixCls}--shadow`]: props.shadow
-        }, `${button_prefixCls}--${props.size}`]
-      }, [(_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
-    };
+    return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
+      "class": [button_prefixCls, `${button_prefixCls}--${props.type}`, {
+        [`${button_prefixCls}--round`]: props.round,
+        [`${button_prefixCls}--shadow`]: props.shadow
+      }, `${button_prefixCls}--${props.size}`]
+    }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
 });
 /* harmony default export */ const src_components_button_0 = (Button);
@@ -2072,8 +2052,7 @@ function createUI() {
           forums.forEach(forum => {
             // 签到可能失败，以这里为准
             if (forum.is_sign === 1) {
-              var _setSign2;
-              (_setSign2 = setSign) === null || _setSign2 === void 0 || _setSign2(forum.forum_name);
+              setSign?.(forum.forum_name);
             }
           });
         }).catch(error => {

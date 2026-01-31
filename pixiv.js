@@ -80,9 +80,6 @@ function table(...args) {
 }
 
 ;// ./src/scripts/pixiv/previewer.ts
-function _classPrivateFieldLooseBase(e, t) { if (!{}.hasOwnProperty.call(e, t)) throw new TypeError("attempted to use private field on non-instance"); return e; }
-var id = 0;
-function _classPrivateFieldLooseKey(e) { return "__private_" + id++ + "_" + e; }
 
 
 
@@ -93,149 +90,119 @@ GM_addStyle(['.viewer-backdrop { background-color: rgb(0 0 0 / 0.8) }',
 // 添加标题阴影 在图片是白底时显示得清楚点
 '.viewer-container .viewer-navbar ul, .viewer-container .viewer-navbar li { width: 66px; height: 110px }' // 加大导航栏
 ].join(''));
-var _imgsSelector = /*#__PURE__*/_classPrivateFieldLooseKey("imgsSelector");
-var _viewer = /*#__PURE__*/_classPrivateFieldLooseKey("viewer");
-var _options = /*#__PURE__*/_classPrivateFieldLooseKey("options");
-var _init = /*#__PURE__*/_classPrivateFieldLooseKey("init");
-var _process = /*#__PURE__*/_classPrivateFieldLooseKey("process");
-var _getArtworks = /*#__PURE__*/_classPrivateFieldLooseKey("getArtworks");
-var _createOriginalImgEls = /*#__PURE__*/_classPrivateFieldLooseKey("createOriginalImgEls");
-var _preview = /*#__PURE__*/_classPrivateFieldLooseKey("preview");
 class Previewer {
+  #imgsSelector;
+  #viewer;
+  #options;
   constructor(imgsSelector, options) {
-    /**
-     * 预览
-     * @param {nodes}
-     * @param {object} viewerOpts
-     * @return {viewer}
-     */
-    Object.defineProperty(this, _preview, {
-      value: _preview2
-    });
-    /**
-     * 将getArtworks的图片转成原图
-     * @param {nodes}
-     * @return {nodes}
-     */
-    Object.defineProperty(this, _createOriginalImgEls, {
-      value: _createOriginalImgEls2
-    });
-    /**
-     * 获取要预览图片的节点
-     */
-    Object.defineProperty(this, _getArtworks, {
-      value: _getArtworks2
-    });
-    Object.defineProperty(this, _init, {
-      value: _init2
-    });
-    Object.defineProperty(this, _imgsSelector, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _viewer, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _options, {
-      writable: true,
-      value: void 0
-    });
-    Object.defineProperty(this, _process, {
-      writable: true,
-      value: function (event) {
-        /**
-         * 这么多的判断多数是没有意义的
-         * 只是为了日后可能失效，尽量避免影响原点击事件
-         */
-        if (!_classPrivateFieldLooseBase(this, _options)[_options].includePathname.test(location.pathname)) return;
-        const artworks = _classPrivateFieldLooseBase(this, _getArtworks)[_getArtworks]();
-        if (artworks.length === 0) return;
-        let index = -1;
-        // 比较 5 层深度应该足够了
-        event.composedPath().slice(0, 5).find(target => {
-          index = artworks.findIndex(artwork => artwork === target);
-          return index > -1;
-        });
-        warn(event, index, artworks);
-        if (index === -1) return;
-        const originalArtworks = _classPrivateFieldLooseBase(this, _createOriginalImgEls)[_createOriginalImgEls](artworks);
-        if (originalArtworks.length === 0) return;
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        _classPrivateFieldLooseBase(this, _viewer)[_viewer] = _classPrivateFieldLooseBase(this, _preview)[_preview](originalArtworks, {
-          initialViewIndex: index
-        });
-      }
-    });
-    _classPrivateFieldLooseBase(this, _process)[_process] = _classPrivateFieldLooseBase(this, _process)[_process].bind(this);
-    _classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector] = imgsSelector;
-    _classPrivateFieldLooseBase(this, _options)[_options] = options;
-    _classPrivateFieldLooseBase(this, _init)[_init]();
+    this.#process = this.#process.bind(this);
+    this.#imgsSelector = imgsSelector;
+    this.#options = options;
+    this.#init();
   }
-}
-function _init2() {
-  window.addEventListener('click', _classPrivateFieldLooseBase(this, _process)[_process], true);
-  window.addEventListener('urlchange', info => {
-    var _classPrivateFieldLoo;
-    warn('urlchange', info);
-    (_classPrivateFieldLoo = _classPrivateFieldLooseBase(this, _viewer)[_viewer]) === null || _classPrivateFieldLoo === void 0 || _classPrivateFieldLoo.hide();
-  });
-}
-function _getArtworks2() {
-  return [...$$(_classPrivateFieldLooseBase(this, _imgsSelector)[_imgsSelector])];
-}
-function _createOriginalImgEls2(imgEls) {
-  return imgEls.reduce((acc, img) => {
-    // 原图地址在祖先 a 标签 href 上，但 a 标签位置不固定要动态查找
-    let parentElement = img.parentElement;
-    let steps = 0;
-    // 往上找 5 层足够了，还找不到应该就是真没有
-    const maxAncestors = 5;
-    while (parentElement && steps < maxAncestors) {
-      // 如果遇到属性 role="presentation" 的元素说明到边界了
-      if (parentElement.getAttribute('role') === 'presentation') {
-        break;
+  #init() {
+    window.addEventListener('click', this.#process, true);
+    window.addEventListener('urlchange', info => {
+      warn('urlchange', info);
+      this.#viewer?.hide();
+    });
+  }
+  #process = function (event) {
+    /**
+     * 这么多的判断多数是没有意义的
+     * 只是为了日后可能失效，尽量避免影响原点击事件
+     */
+    if (!this.#options.includePathname.test(location.pathname)) return;
+    const artworks = this.#getArtworks();
+    if (artworks.length === 0) return;
+    let index = -1;
+    // 比较 5 层深度应该足够了
+    event.composedPath().slice(0, 5).find(target => {
+      index = artworks.findIndex(artwork => artwork === target);
+      return index > -1;
+    });
+    warn(event, index, artworks);
+    if (index === -1) return;
+    const originalArtworks = this.#createOriginalImgEls(artworks);
+    if (originalArtworks.length === 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    this.#viewer = this.#preview(originalArtworks, {
+      initialViewIndex: index
+    });
+  };
+
+  /**
+   * 获取要预览图片的节点
+   */
+  #getArtworks() {
+    return [...$$(this.#imgsSelector)];
+  }
+
+  /**
+   * 将getArtworks的图片转成原图
+   * @param {nodes}
+   * @return {nodes}
+   */
+  #createOriginalImgEls(imgEls) {
+    return imgEls.reduce((acc, img) => {
+      // 原图地址在祖先 a 标签 href 上，但 a 标签位置不固定要动态查找
+      let parentElement = img.parentElement;
+      let steps = 0;
+      // 往上找 5 层足够了，还找不到应该就是真没有
+      const maxAncestors = 5;
+      while (parentElement && steps < maxAncestors) {
+        // 如果遇到属性 role="presentation" 的元素说明到边界了
+        if (parentElement.getAttribute('role') === 'presentation') {
+          break;
+        }
+        if (parentElement.tagName === 'A') {
+          const image = new Image();
+          image.src = parentElement.href;
+          image.alt = img.alt;
+          acc.push(image);
+          break;
+        }
+        parentElement = parentElement.parentElement;
+        steps++;
       }
-      if (parentElement.tagName === 'A') {
-        const image = new Image();
-        image.src = parentElement.href;
-        image.alt = img.alt;
-        acc.push(image);
-        break;
+      return acc;
+    }, []);
+  }
+
+  /**
+   * 预览
+   * @param {nodes}
+   * @param {object} viewerOpts
+   * @return {viewer}
+   */
+  #preview(imgEls, viewerOpts) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    const container = document.createElement('div');
+    container.append(...imgEls);
+    viewerOpts = Object.assign({
+      navbar: imgEls.length > 1,
+      loop: false,
+      zoomRatio: 0.5,
+      minZoomRatio: 0.1,
+      maxZoomRatio: 1.5,
+      viewed() {
+        this.viewer.tooltip();
+      },
+      // 销毁
+      hide() {
+        self.#viewer = undefined;
+      },
+      hidden() {
+        this.viewer.destroy();
       }
-      parentElement = parentElement.parentElement;
-      steps++;
-    }
-    return acc;
-  }, []);
-}
-function _preview2(imgEls, viewerOpts) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  const container = document.createElement('div');
-  container.append(...imgEls);
-  viewerOpts = Object.assign({
-    navbar: imgEls.length > 1,
-    loop: false,
-    zoomRatio: 0.5,
-    minZoomRatio: 0.1,
-    maxZoomRatio: 1.5,
-    viewed() {
-      this.viewer.tooltip();
-    },
-    // 销毁
-    hide() {
-      _classPrivateFieldLooseBase(self, _viewer)[_viewer] = undefined;
-    },
-    hidden() {
-      this.viewer.destroy();
-    }
-  }, viewerOpts);
-  const viewer = new (external_Viewer_default())(container, viewerOpts);
-  viewer.show();
-  return viewer;
+    }, viewerOpts);
+    const viewer = new (external_Viewer_default())(container, viewerOpts);
+    viewer.show();
+    return viewer;
+  }
 }
 ;// ./src/utils/visibility-state.ts
 /**

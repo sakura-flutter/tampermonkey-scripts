@@ -510,14 +510,13 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
-  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
-  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
-  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
-  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
+  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
+  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
+  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
+  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -650,41 +649,22 @@ var update = injectStylesIntoStyleTag_default()(catalogue/* default */.A, option
        /* harmony default export */ const element_ui_catalogue = (catalogue/* default */.A && catalogue/* default */.A.locals ? catalogue/* default */.A.locals : undefined);
 
 ;// ./src/scripts/element-ui/catalogue.tsx
-function _classPrivateFieldLooseBase(e, t) { if (!{}.hasOwnProperty.call(e, t)) throw new TypeError("attempted to use private field on non-instance"); return e; }
-var id = 0;
-function _classPrivateFieldLooseKey(e) { return "__private_" + id++ + "_" + e; }
 
 
 
 
 
-var _scope = /*#__PURE__*/_classPrivateFieldLooseKey("scope");
-var _cat = /*#__PURE__*/_classPrivateFieldLooseKey("cat");
-var _getElements = /*#__PURE__*/_classPrivateFieldLooseKey("getElements");
-var _createUI = /*#__PURE__*/_classPrivateFieldLooseKey("createUI");
 class Catalogue {
+  #scope = '';
+  #cat = (0,external_Vue_namespaceObject.ref)([]);
   constructor({
     scope
   }) {
-    Object.defineProperty(this, _createUI, {
-      value: _createUI2
-    });
-    Object.defineProperty(this, _getElements, {
-      value: _getElements2
-    });
-    Object.defineProperty(this, _scope, {
-      writable: true,
-      value: ''
-    });
-    Object.defineProperty(this, _cat, {
-      writable: true,
-      value: (0,external_Vue_namespaceObject.ref)([])
-    });
-    _classPrivateFieldLooseBase(this, _scope)[_scope] = scope;
-    _classPrivateFieldLooseBase(this, _createUI)[_createUI]();
+    this.#scope = scope;
+    this.#createUI();
   }
   update() {
-    const els = _classPrivateFieldLooseBase(this, _getElements)[_getElements]();
+    const els = this.#getElements();
     const cat = els.map(el => {
       const catItem = {
         id: el.id,
@@ -700,32 +680,31 @@ class Catalogue {
       return catItem;
     });
     warn(els, cat);
-    _classPrivateFieldLooseBase(this, _cat)[_cat].value = cat;
+    this.#cat.value = cat;
   }
-}
-function _getElements2() {
-  return [...$$(_classPrivateFieldLooseBase(this, _scope)[_scope])];
-}
-function _createUI2() {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const self = this;
-  mountComponent({
-    setup() {
-      function intoView(item) {
-        var _$;
-        (_$ = $('#' + item.id)) === null || _$ === void 0 || _$.scrollIntoView({
-          block: 'center'
-        });
+  #getElements() {
+    return [...$$(this.#scope)];
+  }
+  #createUI() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    mountComponent({
+      setup() {
+        function intoView(item) {
+          $('#' + item.id)?.scrollIntoView({
+            block: 'center'
+          });
+        }
+        return () => (0,external_Vue_namespaceObject.createVNode)("div", {
+          "id": "catalogue-js"
+        }, [(0,external_Vue_namespaceObject.createVNode)("ul", null, [self.#cat.value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
+          "key": item.id,
+          "title": item.text,
+          "onClick": () => intoView(item)
+        }, [item.text]))])]);
       }
-      return () => (0,external_Vue_namespaceObject.createVNode)("div", {
-        "id": "catalogue-js"
-      }, [(0,external_Vue_namespaceObject.createVNode)("ul", null, [_classPrivateFieldLooseBase(self, _cat)[_cat].value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
-        "key": item.id,
-        "title": item.text,
-        "onClick": () => intoView(item)
-      }, [item.text]))])]);
-    }
-  });
+    });
+  }
 }
 ;// ./src/scripts/element-ui/index.ts
 
@@ -760,8 +739,7 @@ async function main() {
       if (target && unwatch == null) {
         unwatch = watchDocs(target);
       } else if (!target) {
-        var _unwatch;
-        (_unwatch = unwatch) === null || _unwatch === void 0 || _unwatch();
+        unwatch?.();
         unwatch = undefined;
       }
     });

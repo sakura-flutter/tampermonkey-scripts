@@ -122,8 +122,7 @@ function findBestVideoElement() {
 function isInputActive() {
   let activeElement = document.activeElement;
   if (!activeElement) return false;
-  while ((_activeElement$shadow = activeElement.shadowRoot) !== null && _activeElement$shadow !== void 0 && _activeElement$shadow.activeElement) {
-    var _activeElement$shadow;
+  while (activeElement.shadowRoot?.activeElement) {
     activeElement = activeElement.shadowRoot.activeElement;
   }
   const tagName = activeElement.tagName;

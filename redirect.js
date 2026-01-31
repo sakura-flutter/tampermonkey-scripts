@@ -177,7 +177,7 @@ if (document.readyState !== 'complete') {
 window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
-    resolve(fn === null || fn === void 0 ? void 0 : fn());
+    resolve(fn?.());
   });
 
   // 立即检查一下
@@ -227,9 +227,8 @@ const $$ = document.querySelectorAll.bind(document);
 ;// ./src/scripts/redirect/sites/t-cn.ts
 
 const weibo = async () => {
-  var _$;
-  let link = (_$ = $('.open-url a[href]')) === null || _$ === void 0 ? void 0 : _$.href;
-  link || (link = await fetch(location.href).then(response => response.headers.get('location')));
+  let link = $('.open-url a[href]')?.href;
+  link ||= await fetch(location.href).then(response => response.headers.get('location'));
   return {
     link
   };
@@ -258,7 +257,6 @@ const {
   atob
 } = window;
 const weixin110_qq_com_weixin = () => {
-  var _cgiData;
   const {
     main_type,
     midpagecode
@@ -284,7 +282,7 @@ const weixin110_qq_com_weixin = () => {
    * midpagecode 似乎是新的规则
    */
   const MAGIC_KEY = atob(atob('Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ=='));
-  if (midpagecode && midpagecode !== MAGIC_KEY && !((_cgiData = window.cgiData) !== null && _cgiData !== void 0 && _cgiData.url)) {
+  if (midpagecode && midpagecode !== MAGIC_KEY && !window.cgiData?.url) {
     const url = new URL(location.href);
     // 会还原链接
     url.searchParams.set('midpagecode', MAGIC_KEY);
@@ -324,10 +322,10 @@ const pixiv = () => {
   // https://www.pixiv.net/jump.php?https%3A%2F%2Fwww.huawei.com%2Fcn%2Fcorporate-information
   for (const [key, value] of Object.entries(parse())) {
     try {
-      link || (link = new URL(key).href);
+      link ||= new URL(key).href;
     } catch {}
     try {
-      link || (link = new URL(value).href);
+      link ||= new URL(value).href;
     } catch {}
   }
   return {
@@ -561,10 +559,9 @@ const sites = [{
   test: 'huaban.com/go',
   readyState: 'interactive',
   use: () => {
-    var _nextData$props$pageP;
     const nextData = JSON.parse($('#__NEXT_DATA__').textContent);
     return {
-      link: (_nextData$props$pageP = nextData.props.pageProps) === null || _nextData$props$pageP === void 0 ? void 0 : _nextData$props$pageP.data.link
+      link: nextData.props.pageProps?.data.link
     };
   }
 }, {
@@ -717,9 +714,6 @@ const sites = [{
 }];
 /* harmony default export */ const redirect_sites = (sites);
 ;// ./src/scripts/redirect/index.ts
-function _classPrivateFieldLooseBase(e, t) { if (!{}.hasOwnProperty.call(e, t)) throw new TypeError("attempted to use private field on non-instance"); return e; }
-var id = 0;
-function _classPrivateFieldLooseKey(e) { return "__private_" + id++ + "_" + e; }
 
 
 
@@ -730,41 +724,25 @@ function hidePage() {
     document.body.style.cssText = 'display:none !important;';
   });
 }
-var _sites = /*#__PURE__*/_classPrivateFieldLooseKey("sites");
-var _includes = /*#__PURE__*/_classPrivateFieldLooseKey("includes");
-var _parse = /*#__PURE__*/_classPrivateFieldLooseKey("parse");
-var _ensure = /*#__PURE__*/_classPrivateFieldLooseKey("ensure");
 class App {
+  #sites;
   constructor(sites) {
-    Object.defineProperty(this, _ensure, {
-      value: _ensure2
-    });
-    Object.defineProperty(this, _parse, {
-      value: _parse2
-    });
-    Object.defineProperty(this, _includes, {
-      value: _includes2
-    });
-    Object.defineProperty(this, _sites, {
-      writable: true,
-      value: void 0
-    });
-    _classPrivateFieldLooseBase(this, _sites)[_sites] = sites;
+    this.#sites = sites;
   }
   boot() {
     const briefURL = location.host + location.pathname;
-    _classPrivateFieldLooseBase(this, _sites)[_sites].forEach(async site => {
+    this.#sites.forEach(async site => {
       const {
         name,
         test,
         use
       } = site;
-      if (!_classPrivateFieldLooseBase(this, _includes)[_includes](test, briefURL)) return;
+      if (!this.#includes(test, briefURL)) return;
       const {
         readyState: state
       } = site;
       if (state) await ready_state_namespaceObject[state]();
-      const redirection = await _classPrivateFieldLooseBase(this, _parse)[_parse](use);
+      const redirection = await this.#parse(use);
       table({
         name,
         briefURL,
@@ -777,44 +755,43 @@ class App {
       hidePage();
     });
   }
-}
-function _includes2(test, url) {
-  return [].concat(test).some(item => {
-    if (typeof item === 'string') return item === url;
-    if (item instanceof RegExp) return item.test(url);
-    return false;
-  });
-}
-async function _parse2(use) {
-  const {
-    query,
-    link,
-    selector,
-    attr
-  } = await use();
-  let redirection;
-  if (query) {
-    redirection = parse()[query];
-  } else if (link) {
-    redirection = link;
-  } else if (selector) {
-    var _$;
-    redirection = (_$ = $(selector)) === null || _$ === void 0 ? void 0 : _$[attr ?? 'innerText'];
+  #includes(test, url) {
+    return [].concat(test).some(item => {
+      if (typeof item === 'string') return item === url;
+      if (item instanceof RegExp) return item.test(url);
+      return false;
+    });
   }
-  redirection && (redirection = _classPrivateFieldLooseBase(this, _ensure)[_ensure](redirection.trim()));
-  return redirection;
-}
-function _ensure2(url) {
-  try {
-    new URL(url);
-  } catch (error) {
-    warn(error);
-    // 修复某些链接没有 protocol 导致跳转不正确
-    // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
-    const protocol = 'http:';
-    url = protocol + '//' + url;
+  async #parse(use) {
+    const {
+      query,
+      link,
+      selector,
+      attr
+    } = await use();
+    let redirection;
+    if (query) {
+      redirection = parse()[query];
+    } else if (link) {
+      redirection = link;
+    } else if (selector) {
+      redirection = $(selector)?.[attr ?? 'innerText'];
+    }
+    redirection &&= this.#ensure(redirection.trim());
+    return redirection;
   }
-  return url;
+  #ensure(url) {
+    try {
+      new URL(url);
+    } catch (error) {
+      warn(error);
+      // 修复某些链接没有 protocol 导致跳转不正确
+      // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
+      const protocol = 'http:';
+      url = protocol + '//' + url;
+    }
+    return url;
+  }
 }
 new App(redirect_sites).boot();
 /******/ })()

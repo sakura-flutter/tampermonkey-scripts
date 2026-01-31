@@ -472,17 +472,13 @@ function findBestVideoElement() {
 function isInputActive() {
   let activeElement = document.activeElement;
   if (!activeElement) return false;
-  while ((_activeElement$shadow = activeElement.shadowRoot) !== null && _activeElement$shadow !== void 0 && _activeElement$shadow.activeElement) {
-    var _activeElement$shadow;
+  while (activeElement.shadowRoot?.activeElement) {
     activeElement = activeElement.shadowRoot.activeElement;
   }
   const tagName = activeElement.tagName;
   return tagName === 'INPUT' || tagName === 'TEXTAREA' || activeElement instanceof HTMLElement && activeElement.isContentEditable;
 }
 ;// ./src/scripts/playback-rate/index.ts
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -490,6 +486,21 @@ function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = 
 // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
 new class PlaybackRateController {
+  /** 触发按键 */
+  triggerKeys = ['ArrowLeft', 'ArrowRight'];
+  /** 按键次数 -> 倍速 映射 */
+  rateMap = {
+    1: 3,
+    2: 6,
+    3: 9
+  };
+  currentTriggerKey = null;
+  videoPlaybackRate = 1;
+  /** 是否正在倍速播放 */
+  isBoosting = false;
+  /** 当前视频元素 */
+  _video = null;
+
   /** 当前视频元素 */
   get video() {
     return this._video;
@@ -506,23 +517,8 @@ new class PlaybackRateController {
    * 判断当前是否处于输入状态，
    * 如果是，不处理任何快捷键。避免冲突，比如输入状态下按方向键。
    */
-
+  isInputActive = false;
   constructor() {
-    /** 触发按键 */
-    _defineProperty(this, "triggerKeys", ['ArrowLeft', 'ArrowRight']);
-    /** 按键次数 -> 倍速 映射 */
-    _defineProperty(this, "rateMap", {
-      1: 3,
-      2: 6,
-      3: 9
-    });
-    _defineProperty(this, "currentTriggerKey", null);
-    _defineProperty(this, "videoPlaybackRate", 1);
-    /** 是否正在倍速播放 */
-    _defineProperty(this, "isBoosting", false);
-    /** 当前视频元素 */
-    _defineProperty(this, "_video", null);
-    _defineProperty(this, "isInputActive", false);
     this.multiPress = createMultiPress({
       pressInterval: 100,
       longPressThreshold: 200,
@@ -536,7 +532,7 @@ new class PlaybackRateController {
         // 只在首次按下时获取状态，重复按下时不再获取避免影响性能
         if (event.repeat === false) {
           if (this.isInputActive = isInputActive()) return;
-          this.video ?? (this.video = findBestVideoElement());
+          this.video ??= findBestVideoElement();
         }
         if (this.isInputActive) return;
         if (this.video) {

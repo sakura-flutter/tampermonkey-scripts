@@ -458,7 +458,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@media screen and (min-width: 1300px){
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `@media screen and (min-width: 1390px){:root{--inject-page-width:min(80vw,1250px)}.inject-widescreen-loose-js{--inject-page-width:80vw}#container{width:var(--inject-page-width)}#container>.content{width:100%}.nav_wrap,.p_thread,.pb_content,.core_title_wrap_bright,.core_reply_wrapper,.l_post_bright .core_reply_wrapper,.pb_footer{width:100%}.core_title_absolute_bright{width:calc(var(--inject-page-width) - 240px)}.pb_content{background-size:100%;display:flex}.pb_content::after{content:none}.pb_content .replace_div{width:-moz-fit-content !important;width:fit-content !important}.pb_content .replace_div .replace_tip{width:100% !important}.left_section{border-right:2px solid #e4e6eb;flex:1}.l_post_bright{display:flex;width:100% !important}.l_post_bright .d_post_content_main{flex:1;width:0}.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-down,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-up,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-action{right:180px !important}.tbui_aside_float_bar{left:calc(50% + var(--inject-page-width)/2 + 12px);margin-left:0;right:auto}}`, ""]);
+___CSS_LOADER_EXPORT___.push([module.id, `@media screen and (min-width: 1390px){:root{--inject-page-width:min(80vw,1250px)}.inject-widescreen-loose-js{--inject-page-width:80vw}#container{width:var(--inject-page-width)}#container>.content{width:100%}.nav_wrap,.p_thread,.pb_content,.core_title_wrap_bright,.core_reply_wrapper,.l_post_bright .core_reply_wrapper,.pb_footer{width:100%}.core_title_absolute_bright{width:calc(var(--inject-page-width) - 240px)}.pb_content{background-size:100%;display:flex}.pb_content::after{content:none}.pb_content .replace_div{width:fit-content !important}.pb_content .replace_div .replace_tip{width:100% !important}.left_section{border-right:2px solid #e4e6eb;flex:1}.l_post_bright{display:flex;width:100% !important}.l_post_bright .d_post_content_main{flex:1;width:0}.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-down,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-up,.l_post_bright .d_post_content_main .core_reply_wrapper .user-hide-post-action{right:180px !important}.tbui_aside_float_bar{left:calc(50% + var(--inject-page-width)/2 + 12px);margin-left:0;right:auto}}`, ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1085,7 +1085,7 @@ module.exports = function (cssWithMappingToString) {
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `@media screen and (min-width: 1460px){:root{--inject-page-width:min(75vw,1300px)}.inject-widescreen-loose-js{--inject-page-width:75vw}#head:not(.s-skin-hasbg){backdrop-filter:blur(10px);background-color:hsla(0,0%,100%,.8196078431)}}@media screen and (min-width: 1460px)and (width <= 1920px){.head_wrapper .s_form{margin-left:auto;margin-right:auto;width:-moz-fit-content;width:fit-content}}@media screen and (min-width: 1460px){.s_tab{margin-left:auto;margin-right:auto;padding-left:0 !important;width:-moz-fit-content;width:fit-content}#container{margin-left:auto !important;margin-right:auto !important;width:var(--inject-page-width) !important}#content_left{width:calc(var(--inject-page-width) - 450px) !important}#content_left>div:not([tpl*=img_address]){width:100% !important}#content_left .op-bk-polysemy-video__wrap{width:560px !important}#content_left .wenda-abstract-img-wrap-new{height:auto}#content_left .c-group-wrapper .result-op,#content_left .c-group-wrapper .c-group{width:95% !important}#content_left .new-pmd .c-span9{width:75%}}@media screen and (min-width: 1460px)and (width >= 1680px){#content_left .new-pmd .c-span9{width:81%}}@media screen and (min-width: 1460px){#content_left .new-pmd .c-span12{width:100%}}@media screen and (min-width: 1460px){.page-inner{margin-left:auto;margin-right:auto;padding-left:0 !important;width:var(--inject-page-width)}.foot-inner{margin-left:auto;margin-right:auto;width:var(--inject-page-width)}#foot .foot-inner #help{padding-left:0 !important}}`, ""]);
+___CSS_LOADER_EXPORT___.push([module.id, `@media screen and (min-width: 1460px){:root{--inject-page-width:min(75vw,1300px)}.inject-widescreen-loose-js{--inject-page-width:75vw}#head:not(.s-skin-hasbg){backdrop-filter:blur(10px);background-color:hsla(0,0%,100%,.8196078431)}}@media screen and (min-width: 1460px)and (width <= 1920px){.head_wrapper .s_form{margin-left:auto;margin-right:auto;width:fit-content}}@media screen and (min-width: 1460px){.s_tab{margin-left:auto;margin-right:auto;padding-left:0 !important;width:fit-content}#container{margin-left:auto !important;margin-right:auto !important;width:var(--inject-page-width) !important}#content_left{width:calc(var(--inject-page-width) - 450px) !important}#content_left>div:not([tpl*=img_address]){width:100% !important}#content_left .op-bk-polysemy-video__wrap{width:560px !important}#content_left .wenda-abstract-img-wrap-new{height:auto}#content_left .c-group-wrapper .result-op,#content_left .c-group-wrapper .c-group{width:95% !important}#content_left .new-pmd .c-span9{width:75%}}@media screen and (min-width: 1460px)and (width >= 1680px){#content_left .new-pmd .c-span9{width:81%}}@media screen and (min-width: 1460px){#content_left .new-pmd .c-span12{width:100%}}@media screen and (min-width: 1460px){.page-inner{margin-left:auto;margin-right:auto;padding-left:0 !important;width:var(--inject-page-width)}.foot-inner{margin-left:auto;margin-right:auto;width:var(--inject-page-width)}#foot .foot-inner #help{padding-left:0 !important}}`, ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1190,14 +1190,13 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
-  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
-  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
-  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
-  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
+  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
+  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
+  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
+  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -1259,7 +1258,7 @@ if (document.readyState !== 'complete') {
 window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
-    resolve(fn === null || fn === void 0 ? void 0 : fn());
+    resolve(fn?.());
   });
 
   // 立即检查一下
@@ -2537,16 +2536,15 @@ mocha_official_gifts_lazy_exported.unuse = function() {
 
 
 load(async () => {
-  var _$, _uploader$match;
   const MochaId = '212535360';
   if (location.href.includes('space.bilibili.com/' + MochaId)) {
     youAreNotAlone();
     return;
   }
   await sleep(1000);
-  const uploader = (_$ = $('.main-content .user-name a[href]')) === null || _$ === void 0 ? void 0 : _$.href;
+  const uploader = $('.main-content .user-name a[href]')?.href;
   if (!uploader) return;
-  const isMocha = ((_uploader$match = uploader.match(/\/(\d+)\//)) === null || _uploader$match === void 0 ? void 0 : _uploader$match[1]) === MochaId;
+  const isMocha = uploader.match(/\/(\d+)\//)?.[1] === MochaId;
   if (!isMocha) return;
   youAreNotAlone();
 });
@@ -3010,8 +3008,7 @@ const weibo = ({
         uiControl.notify();
       });
       app.$watch('$route', to => {
-        var _styleSheet;
-        (_styleSheet = styleSheet) === null || _styleSheet === void 0 || _styleSheet.remove();
+        styleSheet?.remove();
         warn('route changed', to);
         uiControl.hide();
         for (const [routenames, addStyle] of pageStyleMap.entries()) {
@@ -3034,13 +3031,12 @@ const weibo = ({
     const addStyle = function () {
       let styleSheet;
       return function () {
-        var _styleSheet2;
         const {
           $CONFIG
         } = unsafeWindowAlias;
         const classnamePrefix = 'inject-ws-';
         const getClassname = classname => `${classnamePrefix}${classname}`;
-        (_styleSheet2 = styleSheet) === null || _styleSheet2 === void 0 || _styleSheet2.remove();
+        styleSheet?.remove();
         [...document.body.classList.values()].forEach(item => {
           if (item.startsWith(classnamePrefix)) {
             document.body.classList.remove(item);
@@ -3902,8 +3898,7 @@ const addRippleEffect = function (_options = {}) {
         rippleEl.remove();
         // 没有涟漪元素时移除容器
         if (--count <= 0) {
-          var _container;
-          (_container = container) === null || _container === void 0 || _container.remove();
+          container?.remove();
         }
       }
     });
@@ -4021,15 +4016,12 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
         disabled: !props.ripple
       } : props.ripple);
     });
-    return () => {
-      var _slots$default;
-      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-        "class": [prefixCls, `${prefixCls}--${props.type}`, {
-          [`${prefixCls}--round`]: props.round,
-          [`${prefixCls}--shadow`]: props.shadow
-        }, `${prefixCls}--${props.size}`]
-      }, [(_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
-    };
+    return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
+      "class": [prefixCls, `${prefixCls}--${props.type}`, {
+        [`${prefixCls}--round`]: props.round,
+        [`${prefixCls}--shadow`]: props.shadow
+      }, `${prefixCls}--${props.size}`]
+    }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
   }
 });
 /* harmony default export */ const src_components_button_0 = (Button);
@@ -4135,9 +4127,6 @@ function createControl(options) {
   return instance;
 }
 ;// ./src/scripts/widescreen/index.ts
-function _classPrivateFieldLooseBase(e, t) { if (!{}.hasOwnProperty.call(e, t)) throw new TypeError("attempted to use private field on non-instance"); return e; }
-var id = 0;
-function _classPrivateFieldLooseKey(e) { return "__private_" + id++ + "_" + e; }
 
 
 
@@ -4159,29 +4148,21 @@ function main() {
   });
   new App(widescreen_sites).boot();
 }
-var _sites = /*#__PURE__*/_classPrivateFieldLooseKey("sites");
-var _includes = /*#__PURE__*/_classPrivateFieldLooseKey("includes");
 class App {
+  #sites;
   constructor(sites) {
-    Object.defineProperty(this, _includes, {
-      value: _includes2
-    });
-    Object.defineProperty(this, _sites, {
-      writable: true,
-      value: void 0
-    });
-    _classPrivateFieldLooseBase(this, _sites)[_sites] = sites;
+    this.#sites = sites;
   }
   boot() {
     const briefURL = location.host + location.pathname;
-    _classPrivateFieldLooseBase(this, _sites)[_sites].forEach(async site => {
+    this.#sites.forEach(async site => {
       const {
         name,
         namespace,
         test,
         use
       } = site;
-      if (!_classPrivateFieldLooseBase(this, _includes)[_includes](test, briefURL)) return;
+      if (!this.#includes(test, briefURL)) return;
       const {
         readyState: state
       } = site;
@@ -4197,23 +4178,23 @@ class App {
       config.handler();
     });
   }
+  #includes(test, url) {
+    return [].concat(test).some(item => {
+      if (item instanceof RegExp) return item.test(url);
+      if (typeof item === 'boolean') return item;
+      return false;
+    });
+  }
 }
 
 // 存储
-function _includes2(test, url) {
-  return [].concat(test).some(item => {
-    if (item instanceof RegExp) return item.test(url);
-    if (typeof item === 'boolean') return item;
-    return false;
-  });
-}
 function widescreen_createStore(namespace) {
   const store = new Proxy(createStore(namespace), {
     get(target, property, receiver) {
       let value = Reflect.get(target, property, receiver);
       if (property === 'enabled') {
         // 默认开启
-        value ?? (value = true);
+        value ??= true;
       }
       return value;
     }
