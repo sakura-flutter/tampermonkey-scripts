@@ -510,13 +510,14 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
+  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
-  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
-  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
+  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
+  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
+  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
+  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -711,7 +712,8 @@ function _createUI2() {
   mountComponent({
     setup() {
       function intoView(item) {
-        $('#' + item.id)?.scrollIntoView({
+        var _$;
+        (_$ = $('#' + item.id)) === null || _$ === void 0 || _$.scrollIntoView({
           block: 'center'
         });
       }
@@ -758,7 +760,8 @@ async function main() {
       if (target && unwatch == null) {
         unwatch = watchDocs(target);
       } else if (!target) {
-        unwatch?.();
+        var _unwatch;
+        (_unwatch = unwatch) === null || _unwatch === void 0 || _unwatch();
         unwatch = undefined;
       }
     });

@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         视频倍速播放
-// @version      1.1.0
-// @description  长按 [0、`(反引号键)] 键 3 倍速，双击长按 6 倍速。适配了哔哩哔哩、抖音、小红书、知乎、微博、极客时间、YouTube、爱奇艺、优酷、PPTV、芒果TV、乐视视频、搜狐视频、咪咕视频
+// @name         视频倍速播放快捷键
+// @version      2.0.0
+// @description  为网页视频添加统一的倍速播放快捷键：→ 方向键点按快进、长按倍速，← 方向键后退；长按 3 倍速，双击长按 6 倍速。适配了哔哩哔哩、抖音、小红书、知乎、微博、极客时间、YouTube、腾讯视频、爱奇艺、优酷、PPTV、芒果TV、乐视视频、搜狐视频、咪咕视频、今日头条
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
 // @license      GPL-3.0
+// @run-at       document-start
 // @match        *://www.bilibili.com/*
 // @match        *://www.douyin.com/*
 // @match        *://www.xiaohongshu.com/*
@@ -12,6 +13,7 @@
 // @match        *://*.weibo.com/*
 // @match        *://time.geekbang.org/*
 // @match        *://www.youtube.com/*
+// @match        *://v.qq.com/*
 // @match        *://www.iqiyi.com/*
 // @match        *://www.youku.com/*
 // @match        *://v.youku.com/*
@@ -22,6 +24,7 @@
 // @match        *://www.le.com/*
 // @match        *://tv.sohu.com/*
 // @match        *://www.miguvideo.com/*
+// @match        *://www.toutiao.com/*
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -93,7 +96,9 @@ class MultiPress {
       pressInterval: 150,
       longPressThreshold: 350,
       enableRepeat: false,
-      repeatInterval: 100
+      repeatInterval: 100,
+      onKeydown() {},
+      onKeyup() {}
     };
     this.config = {
       ...defaultConfig,
@@ -206,6 +211,7 @@ class MultiPress {
     this.keyStates.clear();
   }
   handleKeyDown(event) {
+    this.config.onKeydown(event);
     const key = event.key;
 
     // 避免重复触发（按住不放）
@@ -252,19 +258,21 @@ class MultiPress {
     // 设置长按检测定时器
     state.longPressTimer = window.setTimeout(() => {
       state.isLongPressing = true;
-      this.triggerEvent(key, state.pressCount, true, event, now);
+      this.triggerEvent(key, state.pressCount, true, event, now, false);
 
       // 如果启用重复触发
       if (this.config.enableRepeat) {
         state.repeatTimer = window.setInterval(() => {
           if (state.isLongPressing) {
-            this.triggerEvent(key, state.pressCount, true, event, state.pressStartTime);
+            // TODO: 这里 `event.repeat` 应该为 true
+            this.triggerEvent(key, state.pressCount, true, event, state.pressStartTime, true);
           }
         }, this.config.repeatInterval);
       }
     }, this.config.longPressThreshold);
   }
   handleKeyUp(event) {
+    this.config.onKeyup(event);
     const key = event.key;
     const state = this.keyStates.get(key);
     if (!state) return;
@@ -306,7 +314,7 @@ class MultiPress {
       }, this.config.pressInterval);
     }
   }
-  triggerEvent(key, pressCount, isLongPress, originalEvent, pressStartTime) {
+  triggerEvent(key, pressCount, isLongPress, originalEvent, pressStartTime, isRepeat = false) {
     const keyListeners = this.listeners.get(key);
     if (!keyListeners) return;
     const callbacks = keyListeners.get(pressCount);
@@ -315,6 +323,7 @@ class MultiPress {
       key,
       pressCount,
       isLongPress,
+      isRepeat,
       pressDuration: pressStartTime ? Date.now() - pressStartTime : undefined,
       originalEvent
     };
@@ -415,19 +424,19 @@ function getDistanceFromViewportCenter(rect) {
  * 4. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近的视频
  */
 function findBestVideoElement() {
-  // 获取页面所有 video 元素
-  const videos = Array.from($$('video'));
+  // 优先级 1 播放状态：播放中优先
+  const videos = Array.from($$('video')).filter(video => isPlaying(video));
   if (videos.length === 0) {
     warn('视频元素为空');
     return null;
   }
   videos.sort((a, b) => {
     // 优先级 1 播放状态：播放中优先
-    const playingA = isPlaying(a);
-    const playingB = isPlaying(b);
-    if (playingA !== playingB) {
-      return playingA ? -1 : 1;
-    }
+    // const playingA = isPlaying(a)
+    // const playingB = isPlaying(b)
+    // if (playingA !== playingB) {
+    //   return playingA ? -1 : 1
+    // }
 
     // 优先级 2 音频状态：非静音优先
     const audibleA = isAudible(a);
@@ -454,7 +463,21 @@ function findBestVideoElement() {
   warn(videos);
 
   // 返回排序后的第一个元素，即最优匹配
-  return videos[0] ?? null;
+  return videos[0];
+}
+
+/**
+ * 检测当前活动元素是否为输入元素
+ */
+function isInputActive() {
+  let activeElement = document.activeElement;
+  if (!activeElement) return false;
+  while ((_activeElement$shadow = activeElement.shadowRoot) !== null && _activeElement$shadow !== void 0 && _activeElement$shadow.activeElement) {
+    var _activeElement$shadow;
+    activeElement = activeElement.shadowRoot.activeElement;
+  }
+  const tagName = activeElement.tagName;
+  return tagName === 'INPUT' || tagName === 'TEXTAREA' || activeElement instanceof HTMLElement && activeElement.isContentEditable;
 }
 ;// ./src/scripts/playback-rate/index.ts
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -463,50 +486,130 @@ function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = 
 
 
 
+
 // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
 new class PlaybackRateController {
+  /** 当前视频元素 */
+  get video() {
+    return this._video;
+  }
+  set video(video) {
+    // 处于倍速时不能置空视频元素，否则播放速度无法恢复
+    if (this.isBoosting && video === null) {
+      return;
+    }
+    this._video = video;
+  }
+
+  /**
+   * 判断当前是否处于输入状态，
+   * 如果是，不处理任何快捷键。避免冲突，比如输入状态下按方向键。
+   */
+
   constructor() {
     /** 触发按键 */
-    _defineProperty(this, "triggerKeys", ['`', '0']);
+    _defineProperty(this, "triggerKeys", ['ArrowLeft', 'ArrowRight']);
     /** 按键次数 -> 倍速 映射 */
     _defineProperty(this, "rateMap", {
       1: 3,
       2: 6,
       3: 9
     });
-    /** 是否正在加速播放 */
+    _defineProperty(this, "currentTriggerKey", null);
+    _defineProperty(this, "videoPlaybackRate", 1);
+    /** 是否正在倍速播放 */
     _defineProperty(this, "isBoosting", false);
-    _defineProperty(this, "multiPress", createMultiPress());
+    /** 当前视频元素 */
+    _defineProperty(this, "_video", null);
+    _defineProperty(this, "isInputActive", false);
+    this.multiPress = createMultiPress({
+      pressInterval: 100,
+      longPressThreshold: 200,
+      enableRepeat: true,
+      onKeydown: event => {
+        /**
+         * 按下方向键时如果有视频元素，则阻止网站本身行为
+         */
+        if (!this.triggerKeys.includes(event.key)) return;
+
+        // 只在首次按下时获取状态，重复按下时不再获取避免影响性能
+        if (event.repeat === false) {
+          if (this.isInputActive = isInputActive()) return;
+          this.video ?? (this.video = findBestVideoElement());
+        }
+        if (this.isInputActive) return;
+        if (this.video) {
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          event.preventDefault();
+        }
+
+        // ← ArrowLeft
+        // 这里无多击判断延迟
+        if (event.key === 'ArrowLeft') {
+          this.handleSeek('backward');
+        }
+      },
+      onKeyup: event => {
+        // 松开方向键时如果有视频元素，则阻止网站本身行为
+        // 虽然 keyup 不一定需要停止传播，但为了逻辑一致性避免页面响应 keyup
+        if (this.triggerKeys.includes(event.key) && this.video) {
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+          event.preventDefault();
+        }
+        this.handleKeyUp(event);
+      }
+    });
     this.init();
   }
   init() {
-    const changeHandler = this.handleChange.bind(this);
-    for (const triggerKey of this.triggerKeys) {
-      for (const pressCount of Object.keys(this.rateMap)) {
-        this.multiPress.on(triggerKey, Number(pressCount), changeHandler);
-      }
+    // → ArrowRight
+    for (const pressCount of Object.keys(this.rateMap)) {
+      this.multiPress.on('ArrowRight', Number(pressCount), event => {
+        if (event.isRepeat || this.isInputActive) return;
+        if (event.isLongPress) {
+          this.handleSpeed(event);
+        } else {
+          this.handleSeek('forward');
+        }
+      });
     }
     this.multiPress.start();
   }
-  handleChange(event) {
+  handleSpeed(event) {
+    warn('speed');
     if (this.isBoosting || !event.isLongPress) return;
-    const video = findBestVideoElement();
+    const {
+      video
+    } = this;
     if (!video) return;
     this.isBoosting = true;
-    const oldPlaybackRate = video.playbackRate;
-    video.playbackRate = this.rateMap[event.pressCount] ?? oldPlaybackRate;
-    const controller = new AbortController();
-    window.addEventListener('keyup', keyupEvent => {
-      if (keyupEvent.key === event.key) {
-        controller.abort();
-        video.playbackRate = oldPlaybackRate;
-        this.isBoosting = false;
-      }
-    }, {
-      capture: true,
-      signal: controller.signal
-    });
+    this.currentTriggerKey = event.key;
+    this.videoPlaybackRate = video.playbackRate;
+    video.playbackRate = this.rateMap[event.pressCount] ?? this.videoPlaybackRate;
+  }
+  handleKeyUp(event) {
+    if (this.isBoosting && event.key === this.currentTriggerKey) {
+      warn('恢复播放速度');
+      this.video.playbackRate = this.videoPlaybackRate;
+      this.isBoosting = false;
+      this.currentTriggerKey = null;
+      this.video = null;
+    }
+  }
+
+  /** 前进或后退 */
+  handleSeek(direction = 'forward') {
+    warn('seek');
+    const {
+      video
+    } = this;
+    if (video) {
+      video.currentTime += direction === 'forward' ? 5 : -5;
+    }
+    this.video = null;
   }
   destroy() {
     this.multiPress.stop();

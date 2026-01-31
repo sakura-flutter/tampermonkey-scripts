@@ -177,7 +177,7 @@ if (document.readyState !== 'complete') {
 window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
-    resolve(fn?.());
+    resolve(fn === null || fn === void 0 ? void 0 : fn());
   });
 
   // 立即检查一下
@@ -227,7 +227,8 @@ const $$ = document.querySelectorAll.bind(document);
 ;// ./src/scripts/redirect/sites/t-cn.ts
 
 const weibo = async () => {
-  let link = $('.open-url a[href]')?.href;
+  var _$;
+  let link = (_$ = $('.open-url a[href]')) === null || _$ === void 0 ? void 0 : _$.href;
   link || (link = await fetch(location.href).then(response => response.headers.get('location')));
   return {
     link
@@ -257,6 +258,7 @@ const {
   atob
 } = window;
 const weixin110_qq_com_weixin = () => {
+  var _cgiData;
   const {
     main_type,
     midpagecode
@@ -282,7 +284,7 @@ const weixin110_qq_com_weixin = () => {
    * midpagecode 似乎是新的规则
    */
   const MAGIC_KEY = atob(atob('Tmpjek56ZGhNbUZrWWpRMFpURTNZekZpTUdGa1lqSTBZalZqWmpKaVpERXlZek0wWkRsaU5UWmxNRFpqWTJRMlpHUTBZekk1TVdJME1qTmlOV0prTjJabU5tUmhZbVJqTlRVM1l6azVNbVkxWkRZd1pEZzVNbUkyT0Rjd1pqYzBOakV3TldNM05HRmhNalJqTXpBMk0yUTNOR1ExT1dJMFlXVTFOVFF6WldJM1lqSmtObVUwT1dOak1qYzNNMkZsTVRjM01UWTNNemcwTmpRM04ySmpOalppTTJNelltUTNPVE5sWkRJNFpEZGhaVE5rTnpZeE0yUm1ZVGRpWW1ReQ=='));
-  if (midpagecode && midpagecode !== MAGIC_KEY && !window.cgiData?.url) {
+  if (midpagecode && midpagecode !== MAGIC_KEY && !((_cgiData = window.cgiData) !== null && _cgiData !== void 0 && _cgiData.url)) {
     const url = new URL(location.href);
     // 会还原链接
     url.searchParams.set('midpagecode', MAGIC_KEY);
@@ -559,9 +561,10 @@ const sites = [{
   test: 'huaban.com/go',
   readyState: 'interactive',
   use: () => {
+    var _nextData$props$pageP;
     const nextData = JSON.parse($('#__NEXT_DATA__').textContent);
     return {
-      link: nextData.props.pageProps?.data.link
+      link: (_nextData$props$pageP = nextData.props.pageProps) === null || _nextData$props$pageP === void 0 ? void 0 : _nextData$props$pageP.data.link
     };
   }
 }, {
@@ -795,7 +798,8 @@ async function _parse2(use) {
   } else if (link) {
     redirection = link;
   } else if (selector) {
-    redirection = $(selector)?.[attr ?? 'innerText'];
+    var _$;
+    redirection = (_$ = $(selector)) === null || _$ === void 0 ? void 0 : _$[attr ?? 'innerText'];
   }
   redirection && (redirection = _classPrivateFieldLooseBase(this, _ensure)[_ensure](redirection.trim()));
   return redirection;

@@ -1190,13 +1190,14 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
+  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
-  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
-  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
+  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
+  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
+  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
+  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -1258,7 +1259,7 @@ if (document.readyState !== 'complete') {
 window.addEventListener('load', () => execute('load'));
 const wrapper = (readyState, fn) => new Promise(resolve => {
   pool.get(readyState).push(function () {
-    resolve(fn?.());
+    resolve(fn === null || fn === void 0 ? void 0 : fn());
   });
 
   // 立即检查一下
@@ -2536,15 +2537,16 @@ mocha_official_gifts_lazy_exported.unuse = function() {
 
 
 load(async () => {
+  var _$, _uploader$match;
   const MochaId = '212535360';
   if (location.href.includes('space.bilibili.com/' + MochaId)) {
     youAreNotAlone();
     return;
   }
   await sleep(1000);
-  const uploader = $('.main-content .user-name a[href]')?.href;
+  const uploader = (_$ = $('.main-content .user-name a[href]')) === null || _$ === void 0 ? void 0 : _$.href;
   if (!uploader) return;
-  const isMocha = uploader.match(/\/(\d+)\//)?.[1] === MochaId;
+  const isMocha = ((_uploader$match = uploader.match(/\/(\d+)\//)) === null || _uploader$match === void 0 ? void 0 : _uploader$match[1]) === MochaId;
   if (!isMocha) return;
   youAreNotAlone();
 });
@@ -3008,7 +3010,8 @@ const weibo = ({
         uiControl.notify();
       });
       app.$watch('$route', to => {
-        styleSheet?.remove();
+        var _styleSheet;
+        (_styleSheet = styleSheet) === null || _styleSheet === void 0 || _styleSheet.remove();
         warn('route changed', to);
         uiControl.hide();
         for (const [routenames, addStyle] of pageStyleMap.entries()) {
@@ -3031,12 +3034,13 @@ const weibo = ({
     const addStyle = function () {
       let styleSheet;
       return function () {
+        var _styleSheet2;
         const {
           $CONFIG
         } = unsafeWindowAlias;
         const classnamePrefix = 'inject-ws-';
         const getClassname = classname => `${classnamePrefix}${classname}`;
-        styleSheet?.remove();
+        (_styleSheet2 = styleSheet) === null || _styleSheet2 === void 0 || _styleSheet2.remove();
         [...document.body.classList.values()].forEach(item => {
           if (item.startsWith(classnamePrefix)) {
             document.body.classList.remove(item);
@@ -3898,7 +3902,8 @@ const addRippleEffect = function (_options = {}) {
         rippleEl.remove();
         // 没有涟漪元素时移除容器
         if (--count <= 0) {
-          container?.remove();
+          var _container;
+          (_container = container) === null || _container === void 0 || _container.remove();
         }
       }
     });
@@ -4016,12 +4021,15 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
         disabled: !props.ripple
       } : props.ripple);
     });
-    return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-      "class": [prefixCls, `${prefixCls}--${props.type}`, {
-        [`${prefixCls}--round`]: props.round,
-        [`${prefixCls}--shadow`]: props.shadow
-      }, `${prefixCls}--${props.size}`]
-    }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    return () => {
+      var _slots$default;
+      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
+        "class": [prefixCls, `${prefixCls}--${props.type}`, {
+          [`${prefixCls}--round`]: props.round,
+          [`${prefixCls}--shadow`]: props.shadow
+        }, `${prefixCls}--${props.size}`]
+      }, [(_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    };
   }
 });
 /* harmony default export */ const src_components_button_0 = (Button);

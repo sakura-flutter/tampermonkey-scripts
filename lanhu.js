@@ -557,13 +557,14 @@ function checker({
   safari = 14,
   notify = true
 } = {}) {
+  var _userAgent$match, _userAgent$match2, _userAgent$match3, _userAgent$match4;
   const {
     userAgent
   } = window.navigator;
-  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
-  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
-  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
+  const firefoxVersion = (_userAgent$match = userAgent.match(/Firefox\/(\d+)/)) === null || _userAgent$match === void 0 ? void 0 : _userAgent$match[1];
+  const edgeVersion = (_userAgent$match2 = userAgent.match(/Edg\/(\d+)/)) === null || _userAgent$match2 === void 0 ? void 0 : _userAgent$match2[1];
+  const chromeVersion = (_userAgent$match3 = userAgent.match(/Chrome\/(\d+)/)) === null || _userAgent$match3 === void 0 ? void 0 : _userAgent$match3[1];
+  const safariVersion = (_userAgent$match4 = userAgent.match(/Version\/(\d+).*Safari/)) === null || _userAgent$match4 === void 0 ? void 0 : _userAgent$match4[1]; // 不保证兼容
 
   let pass = false;
   if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
@@ -868,7 +869,8 @@ const addRippleEffect = function (_options = {}) {
         rippleEl.remove();
         // 没有涟漪元素时移除容器
         if (--count <= 0) {
-          container?.remove();
+          var _container;
+          (_container = container) === null || _container === void 0 || _container.remove();
         }
       }
     });
@@ -986,12 +988,15 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
         disabled: !props.ripple
       } : props.ripple);
     });
-    return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-      "class": [prefixCls, `${prefixCls}--${props.type}`, {
-        [`${prefixCls}--round`]: props.round,
-        [`${prefixCls}--shadow`]: props.shadow
-      }, `${prefixCls}--${props.size}`]
-    }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    return () => {
+      var _slots$default;
+      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
+        "class": [prefixCls, `${prefixCls}--${props.type}`, {
+          [`${prefixCls}--round`]: props.round,
+          [`${prefixCls}--shadow`]: props.shadow
+        }, `${prefixCls}--${props.size}`]
+      }, [(_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    };
   }
 });
 /* harmony default export */ const src_components_button_0 = (Button);
@@ -1045,6 +1050,7 @@ function createRecorder() {
   });
   createUI();
   function record() {
+    var _old;
     const {
       pid
     } = parse();
@@ -1060,7 +1066,7 @@ function createRecorder() {
       return false;
     });
     // 优化标题显示：当前是无意义标题且有旧标题时优先使用旧标题
-    const title = ['蓝湖', '...'].includes(document.title) && old?.title ? old.title : document.title;
+    const title = ['蓝湖', '...'].includes(document.title) && (_old = old) !== null && _old !== void 0 && _old.title ? old.title : document.title;
     records.push({
       ...old,
       pid,
@@ -1332,7 +1338,8 @@ async function main() {
   let app;
   // 不确保一次可以获取到
   while (!app) {
-    app = $('.whole')?.__vue__;
+    var _$;
+    app = (_$ = $('.whole')) === null || _$ === void 0 ? void 0 : _$.__vue__;
     await sleep(500);
   }
   const recorder = createRecorder();

@@ -178,8 +178,9 @@ class Previewer {
 function _init2() {
   window.addEventListener('click', _classPrivateFieldLooseBase(this, _process)[_process], true);
   window.addEventListener('urlchange', info => {
+    var _classPrivateFieldLoo;
     warn('urlchange', info);
-    _classPrivateFieldLooseBase(this, _viewer)[_viewer]?.hide();
+    (_classPrivateFieldLoo = _classPrivateFieldLooseBase(this, _viewer)[_viewer]) === null || _classPrivateFieldLoo === void 0 || _classPrivateFieldLoo.hide();
   });
 }
 function _getArtworks2() {

@@ -88,9 +88,10 @@ function table(...args) {
 ;// ./src/scripts/mdn-web-docs/utils.ts
 
 function matchLang(str) {
+  var _str$match;
   // 匹配 pathname 或字符串
   // /en-US/docs/Web/API/ 或 en-US
-  return str.match(/^\/?([\w-]+)/)?.[1];
+  return (_str$match = str.match(/^\/?([\w-]+)/)) === null || _str$match === void 0 ? void 0 : _str$match[1];
 }
 function isChinese(lang) {
   return /zh-CN/i.test(lang);
@@ -117,7 +118,7 @@ async function getLangMenus(callback) {
   await Promise.resolve();
   // 不要返回 NodeList，和空时返回同样的类型
   const buttons = [...$$('.language-menu button[name]')];
-  const off = callback?.(buttons) ?? true;
+  const off = (callback === null || callback === void 0 ? void 0 : callback(buttons)) ?? true;
   off && toggle.click();
   return buttons;
 }
@@ -143,8 +144,9 @@ async function main() {
     docsLang = matchLang(location.pathname);
   });
   window.addEventListener('click', function listener(event) {
+    var _$;
     if (!event.isTrusted) return;
-    const isInLangMenu = $('.languages-switcher-menu .language-menu')?.contains(event.target);
+    const isInLangMenu = (_$ = $('.languages-switcher-menu .language-menu')) === null || _$ === void 0 ? void 0 : _$.contains(event.target);
     if (isInLangMenu) {
       // 标记自行切换语言
       sessionStorage.setItem('hand-control-language', 'true');

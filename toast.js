@@ -20,6 +20,7 @@ function normalizeOptions(options, duration) {
   return options;
 }
 const Toast = function (_opts, duration) {
+  var _vm$component;
   const options = normalizeOptions(_opts, duration);
   const container = document.createElement('div');
   const ToastConstructor = (0,external_Vue_namespaceObject.defineComponent)({
@@ -92,7 +93,7 @@ const Toast = function (_opts, duration) {
   (0,external_Vue_namespaceObject.render)(vm, container);
   insertElementInContainer(container);
   return {
-    close: vm.component?.exposed?.close
+    close: (_vm$component = vm.component) === null || _vm$component === void 0 || (_vm$component = _vm$component.exposed) === null || _vm$component === void 0 ? void 0 : _vm$component.close
   };
 };
 toastTypes.forEach(type => {

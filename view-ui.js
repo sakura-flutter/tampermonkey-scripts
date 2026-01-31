@@ -773,7 +773,8 @@ const addRippleEffect = function (_options = {}) {
         rippleEl.remove();
         // 没有涟漪元素时移除容器
         if (--count <= 0) {
-          container?.remove();
+          var _container;
+          (_container = container) === null || _container === void 0 || _container.remove();
         }
       }
     });
@@ -891,12 +892,15 @@ const Button = (0,external_Vue_namespaceObject.defineComponent)({
         disabled: !props.ripple
       } : props.ripple);
     });
-    return () => (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
-      "class": [prefixCls, `${prefixCls}--${props.type}`, {
-        [`${prefixCls}--round`]: props.round,
-        [`${prefixCls}--shadow`]: props.shadow
-      }, `${prefixCls}--${props.size}`]
-    }, [slots.default?.()]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    return () => {
+      var _slots$default;
+      return (0,external_Vue_namespaceObject.withDirectives)((0,external_Vue_namespaceObject.createVNode)("button", {
+        "class": [prefixCls, `${prefixCls}--${props.type}`, {
+          [`${prefixCls}--round`]: props.round,
+          [`${prefixCls}--shadow`]: props.shadow
+        }, `${prefixCls}--${props.size}`]
+      }, [(_slots$default = slots.default) === null || _slots$default === void 0 ? void 0 : _slots$default.call(slots)]), [[(0,external_Vue_namespaceObject.resolveDirective)("ripple"), rippleOptions.value]]);
+    };
   }
 });
 /* harmony default export */ const src_components_button_0 = (Button);
