@@ -61,6 +61,7 @@ export default isProd =>
 // @match        *://*.yuque.com/r/goto*
 // @match        *://hd.nowcoder.com/link.html*
 // @match        *://game.bilibili.com/linkfilter/*
+// @match        *://www.bilibili.com/york/link-middle-page/pc*
 // @match        *://sspai.com/link*
 // @match        *://niu.sspai.com/link*
 // @match        *://jump.5ch.net/*
