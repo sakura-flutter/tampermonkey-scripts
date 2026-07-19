@@ -302,9 +302,12 @@ const sites: Site[] = [
   },
   {
     name: '哔哩哔哩',
-    test: 'game.bilibili.com/linkfilter/',
+    test: [
+      'game.bilibili.com/linkfilter/',
+      'www.bilibili.com/york/link-middle-page/pc',
+    ],
     use: () => ({
-      query: 'url',
+      link: parse().url || parse().redirect_url,
     }),
   },
   {
