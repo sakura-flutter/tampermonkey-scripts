@@ -5,6 +5,7 @@ import { weixin } from './mp-weixin-qq-com'
 import { weixin as weixin2 } from './weixin110-qq-com'
 import { doc360 } from './www-360doc-com'
 import { pixiv } from './www-pixiv-net'
+import { linuxDo } from './linux-do'
 import type { Site } from '../types'
 
 const sites: Site[] = [
@@ -434,6 +435,11 @@ const sites: Site[] = [
     use: () => ({
       query: 'targetUrl',
     }),
+  },
+  {
+    name: 'LINUX DO',
+    test: /^linux\.do\//,
+    use: linuxDo,
   },
 ]
 
