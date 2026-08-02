@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.6.0
+// @version      1.7.0
 // @description  长按 S 键倍速播放
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -16,6 +16,134 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
+;// ./src/scripts/playback-rate/tap-hold.ts
+// =====================================================
+// Name: 点按与长按键盘事件
+// Author: AI
+// =====================================================
+
+/**
+ * 点按与长按处理器配置
+ */
+
+/**
+ * 按键回调集合
+ */
+
+/**
+ * 点按与长按键盘事件检测器
+ *
+ * - 点按：按下后在长按阈值内松开
+ * - 长按：按下后持续超过阈值
+ *
+ * 长按触发后松开只会触发 `onLongPressEnd`，不会触发 `onTap`；
+ * 未注册 `onLongPressStart` 的键长按后松开同样不触发 `onTap`（长按视为"取消点按"）。
+ *
+ * `on(key, handlers)` 的 `key` 既可匹配 `event.key` 也可匹配 `event.code`。
+ */
+class TapHold {
+  isActive = false;
+  constructor(config) {
+    this.longPressThreshold = config?.longPressThreshold ?? 300;
+    this.capture = config?.capture ?? false;
+    this.onKeydown = config?.onKeydown;
+    this.onKeyup = config?.onKeyup;
+    this.handlers = new Map();
+    this.keyStates = new Map();
+    this.boundKeyDown = this.handleKeyDown.bind(this);
+    this.boundKeyUp = this.handleKeyUp.bind(this);
+  }
+
+  /**
+   * 注册按键回调
+   * @param key 按键标识，可为 `event.key`（如 'ArrowRight'、'2'）或 `event.code`（如 'KeyS'）
+   * @param handlers 回调集合
+   */
+  on(key, handlers) {
+    this.handlers.set(key, handlers);
+  }
+
+  /** 启动监听 */
+  start() {
+    if (this.isActive) return;
+    this.isActive = true;
+    window.addEventListener('keydown', this.boundKeyDown, this.capture);
+    window.addEventListener('keyup', this.boundKeyUp, this.capture);
+  }
+
+  /** 停止监听并清理计时器 */
+  stop() {
+    if (!this.isActive) return;
+    this.isActive = false;
+    window.removeEventListener('keydown', this.boundKeyDown, this.capture);
+    window.removeEventListener('keyup', this.boundKeyUp, this.capture);
+    this.clearAllTimers();
+  }
+
+  /** 销毁，释放所有资源 */
+  destroy() {
+    this.stop();
+    this.handlers.clear();
+  }
+
+  /** 解析事件对应的注册 key，未注册返回 null */
+  resolveKey(event) {
+    if (this.handlers.has(event.key)) return event.key;
+    if (this.handlers.has(event.code)) return event.code;
+    return null;
+  }
+  handleKeyDown(event) {
+    // keydown 钩子，返回 false 则不处理
+    if (this.onKeydown?.(event) === false) return;
+    // 忽略系统重复 keydown
+    if (event.repeat) return;
+    const key = this.resolveKey(event);
+    if (!key) return;
+    let state = this.keyStates.get(key);
+    if (!state) {
+      state = {
+        longPressTimer: null,
+        isHolding: false
+      };
+      this.keyStates.set(key, state);
+    }
+    // 已在计时中，防御性跳过
+    if (state.longPressTimer !== null) return;
+    state.isHolding = false;
+    state.longPressTimer = window.setTimeout(() => {
+      state.longPressTimer = null;
+      state.isHolding = true;
+      this.handlers.get(key)?.onLongPressStart?.(event);
+    }, this.longPressThreshold);
+  }
+  handleKeyUp(event) {
+    this.onKeyup?.(event);
+    const key = this.resolveKey(event);
+    if (!key) return;
+    const state = this.keyStates.get(key);
+    if (!state) return;
+    if (state.longPressTimer !== null) {
+      clearTimeout(state.longPressTimer);
+      state.longPressTimer = null;
+    }
+    const handlers = this.handlers.get(key);
+    if (state.isHolding) {
+      handlers?.onLongPressEnd?.(event);
+    } else {
+      handlers?.onTap?.(event);
+    }
+    this.keyStates.delete(key);
+  }
+  clearAllTimers() {
+    this.keyStates.forEach(state => {
+      if (state.longPressTimer !== null) {
+        clearTimeout(state.longPressTimer);
+        state.longPressTimer = null;
+      }
+    });
+    this.keyStates.clear();
+  }
+}
 ;// ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -128,52 +256,26 @@ function isInputActive() {
   const tagName = activeElement.tagName;
   return tagName === 'INPUT' || tagName === 'TEXTAREA' || activeElement instanceof HTMLElement && activeElement.isContentEditable;
 }
-;// ./src/scripts/bilibili/speed.ts
-
-function speed() {
-  longPress('KeyS', () => {
-    const video = findBestVideoElement();
-    if (!video) return;
-    const oldPlaybackRate = video.playbackRate;
-    video.playbackRate = 6;
-    window.addEventListener('keyup', () => {
-      video.playbackRate = oldPlaybackRate;
-    }, {
-      once: true
-    });
-  });
-}
-
-/**
- * 长按键盘
- * @param code keyCode
- * @param callback
- * @param duration 长按时间
- */
-function longPress(code, callback, duration = 350) {
-  let timeoutID;
-  window.addEventListener('keydown', event => {
-    if (event.code === code && timeoutID) return;
-    if (event.code !== code) {
-      if (timeoutID) {
-        clearTimeout(timeoutID);
-        timeoutID = undefined;
-      }
-      return;
-    }
-    timeoutID = setTimeout(() => {
-      callback();
-    }, duration);
-    window.addEventListener('keyup', () => {
-      clearTimeout(timeoutID);
-      timeoutID = undefined;
-    }, {
-      once: true
-    });
-  });
-}
 ;// ./src/scripts/bilibili/index.ts
 
+
+function speed() {
+  let savedRate = 1;
+  const tapHold = new TapHold();
+  tapHold.on('KeyS', {
+    onLongPressStart: () => {
+      const video = findBestVideoElement();
+      if (!video) return;
+      savedRate = video.playbackRate;
+      video.playbackRate = 6;
+    },
+    onLongPressEnd: () => {
+      const video = findBestVideoElement();
+      if (video) video.playbackRate = savedRate;
+    }
+  });
+  tapHold.start();
+}
 speed();
 /******/ })()
 ;

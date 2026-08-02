@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         视频倍速播放快捷键
-// @version      2.1.0
+// @version      3.0.0
 // @description  为网页视频添加统一的倍速播放快捷键：→ 方向键点按快进、长按倍速，← 方向键后退；长按 3 倍速，双击长按 6 倍速。适配了哔哩哔哩、抖音、小红书、知乎、微博、X、Facebook、Instagram、YouTube、腾讯视频、爱奇艺、优酷、PPTV、芒果TV、乐视视频、搜狐视频、咪咕视频、今日头条、极客时间
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -33,341 +33,133 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
-;// ./src/scripts/playback-rate/multi-press.ts
+;// ./src/scripts/playback-rate/tap-hold.ts
 // =====================================================
-// Name: 多击键盘事件
+// Name: 点按与长按键盘事件
 // Author: AI
 // =====================================================
 
 /**
- * 多击长按事件配置
+ * 点按与长按处理器配置
  */
 
 /**
- * 多击长按事件详情
+ * 按键回调集合
  */
 
 /**
- * 事件回调函数类型
+ * 点按与长按键盘事件检测器
+ *
+ * - 点按：按下后在长按阈值内松开
+ * - 长按：按下后持续超过阈值
+ *
+ * 长按触发后松开只会触发 `onLongPressEnd`，不会触发 `onTap`；
+ * 未注册 `onLongPressStart` 的键长按后松开同样不触发 `onTap`（长按视为"取消点按"）。
+ *
+ * `on(key, handlers)` 的 `key` 既可匹配 `event.key` 也可匹配 `event.code`。
  */
-
-/**
- * 多击长按键盘事件处理器
- *
- * 功能特点：
- * - 支持单次、两次、三次、四次等任意多击检测
- * - 支持长按检测（按下后持续一段时间）
- * - 支持双击长按、三击长按等组合模式
- * - 可配置时间阈值
- * - 支持长按期间重复触发
- *
- * @example
- * ```typescript
- * // 创建处理器
- * const handler = new MultiPress({
- *   pressInterval: 300,      // 多击间隔 300ms
- *   longPressThreshold: 500, // 长按阈值 500ms
- *   enableRepeat: true,      // 启用重复触发
- *   repeatInterval: 100      // 每 100ms 重复一次
- * });
- *
- * // 监听单击长按（按一次并长按）
- * handler.on('Space', 1, (event) => {
- *   console.log('空格单击长按', event.pressDuration);
- * });
- *
- * // 监听双击长按（按两次后第二次长按）
- * handler.on('Enter', 2, (event) => {
- *   console.log('回车双击长按', event.pressCount);
- * });
- *
- * // 监听三击长按
- * handler.on('ArrowUp', 3, (event) => {
- *   console.log('上箭头三击长按');
- * });
- *
- * // 启动监听
- * handler.start();
- *
- * // 停止监听
- * handler.stop();
- * ```
- */
-class MultiPress {
+class TapHold {
+  isActive = false;
   constructor(config) {
-    const defaultConfig = {
-      pressInterval: 150,
-      longPressThreshold: 350,
-      enableRepeat: false,
-      repeatInterval: 100,
-      onKeydown() {},
-      onKeyup() {}
-    };
-    this.config = {
-      ...defaultConfig,
-      ...config
-    };
-    this.listeners = new Map();
+    this.longPressThreshold = config?.longPressThreshold ?? 300;
+    this.capture = config?.capture ?? false;
+    this.onKeydown = config?.onKeydown;
+    this.onKeyup = config?.onKeyup;
+    this.handlers = new Map();
     this.keyStates = new Map();
-    this.isActive = false;
     this.boundKeyDown = this.handleKeyDown.bind(this);
     this.boundKeyUp = this.handleKeyUp.bind(this);
   }
 
   /**
-   * 注册事件监听器
-   * @param key 按键代码（如 'Space', 'Enter', 'a', 'A', 'ArrowUp' 等）
-   * @param pressCount 按键次数（1=单次, 2=两次, 3=三次, ...）
-   * @param callback 回调函数
+   * 注册按键回调
+   * @param key 按键标识，可为 `event.key`（如 'ArrowRight'、'2'）或 `event.code`（如 'KeyS'）
+   * @param handlers 回调集合
    */
-  on(key, pressCount, callback) {
-    if (!this.listeners.has(key)) {
-      this.listeners.set(key, new Map());
-    }
-    const keyListeners = this.listeners.get(key);
-    if (!keyListeners.has(pressCount)) {
-      keyListeners.set(pressCount, []);
-    }
-    keyListeners.get(pressCount).push(callback);
+  on(key, handlers) {
+    this.handlers.set(key, handlers);
   }
 
-  /**
-   * 移除事件监听器
-   * @param key 按键代码
-   * @param pressCount 按键次数
-   * @param callback 要移除的回调函数（可选，不传则移除该按键和按键次数的所有监听器）
-   */
-  off(key, pressCount, callback) {
-    if (!this.listeners.has(key)) return;
-    const keyListeners = this.listeners.get(key);
-    if (pressCount === undefined) {
-      // 移除该按键的所有监听器
-      this.listeners.delete(key);
-      return;
-    }
-    if (!keyListeners.has(pressCount)) return;
-    if (callback === undefined) {
-      // 移除该按键和按键次数的所有监听器
-      keyListeners.delete(pressCount);
-    } else {
-      // 移除特定回调
-      const callbacks = keyListeners.get(pressCount);
-      const index = callbacks.indexOf(callback);
-      if (index !== -1) {
-        callbacks.splice(index, 1);
-      }
-      if (callbacks.length === 0) {
-        keyListeners.delete(pressCount);
-      }
-    }
-    if (keyListeners.size === 0) {
-      this.listeners.delete(key);
-    }
-  }
-
-  /**
-   * 获取当前配置
-   */
-  getConfig() {
-    return {
-      ...this.config
-    };
-  }
-
-  /**
-   * 更新配置
-   */
-  updateConfig(config) {
-    this.config = {
-      ...this.config,
-      ...config
-    };
-  }
-
-  /**
-   * 启动键盘事件监听
-   */
+  /** 启动监听 */
   start() {
     if (this.isActive) return;
     this.isActive = true;
-    window.addEventListener('keydown', this.boundKeyDown, true);
-    window.addEventListener('keyup', this.boundKeyUp, true);
+    window.addEventListener('keydown', this.boundKeyDown, this.capture);
+    window.addEventListener('keyup', this.boundKeyUp, this.capture);
   }
 
-  /**
-   * 停止键盘事件监听
-   */
+  /** 停止监听并清理计时器 */
   stop() {
     if (!this.isActive) return;
     this.isActive = false;
-    window.removeEventListener('keydown', this.boundKeyDown, true);
-    window.removeEventListener('keyup', this.boundKeyUp, true);
+    window.removeEventListener('keydown', this.boundKeyDown, this.capture);
+    window.removeEventListener('keyup', this.boundKeyUp, this.capture);
     this.clearAllTimers();
   }
 
-  /**
-   * 销毁处理器，清理所有资源
-   */
+  /** 销毁，释放所有资源 */
   destroy() {
     this.stop();
-    this.listeners.clear();
-    this.keyStates.clear();
+    this.handlers.clear();
+  }
+
+  /** 解析事件对应的注册 key，未注册返回 null */
+  resolveKey(event) {
+    if (this.handlers.has(event.key)) return event.key;
+    if (this.handlers.has(event.code)) return event.code;
+    return null;
   }
   handleKeyDown(event) {
-    this.config.onKeydown(event);
-    const key = event.key;
-
-    // 避免重复触发（按住不放）
+    // keydown 钩子，返回 false 则不处理
+    if (this.onKeydown?.(event) === false) return;
+    // 忽略系统重复 keydown
     if (event.repeat) return;
-    const now = Date.now();
+    const key = this.resolveKey(event);
+    if (!key) return;
     let state = this.keyStates.get(key);
     if (!state) {
       state = {
-        pressCount: 0,
-        lastKeyDownTime: 0,
-        lastKeyUpTime: 0,
         longPressTimer: null,
-        repeatTimer: null,
-        pressResetTimer: null,
-        pressTriggerTimer: null,
-        isLongPressing: false,
-        pressStartTime: 0,
-        lastEvent: null
+        isHolding: false
       };
       this.keyStates.set(key, state);
     }
-
-    // 判断是否为连续点击
-    const timeSinceLastUp = now - state.lastKeyUpTime;
-    if (timeSinceLastUp <= this.config.pressInterval && state.lastKeyUpTime > 0) {
-      // 连续点击，增加计数
-      state.pressCount++;
-    } else {
-      // 新的点击序列
-      state.pressCount = 1;
-    }
-    state.lastKeyDownTime = now;
-    state.pressStartTime = now;
-    state.isLongPressing = false;
-    state.lastEvent = event;
-
-    // 清除之前的定时器（包括按键触发定时器）
-    this.clearTimers(state);
-    if (state.pressTriggerTimer !== null) {
-      clearTimeout(state.pressTriggerTimer);
-      state.pressTriggerTimer = null;
-    }
-
-    // 设置长按检测定时器
+    // 已在计时中，防御性跳过
+    if (state.longPressTimer !== null) return;
+    state.isHolding = false;
     state.longPressTimer = window.setTimeout(() => {
-      state.isLongPressing = true;
-      this.triggerEvent(key, state.pressCount, true, event, now, false);
-
-      // 如果启用重复触发
-      if (this.config.enableRepeat) {
-        state.repeatTimer = window.setInterval(() => {
-          if (state.isLongPressing) {
-            // TODO: 这里 `event.repeat` 应该为 true
-            this.triggerEvent(key, state.pressCount, true, event, state.pressStartTime, true);
-          }
-        }, this.config.repeatInterval);
-      }
-    }, this.config.longPressThreshold);
+      state.longPressTimer = null;
+      state.isHolding = true;
+      this.handlers.get(key)?.onLongPressStart?.(event);
+    }, this.longPressThreshold);
   }
   handleKeyUp(event) {
-    this.config.onKeyup(event);
-    const key = event.key;
+    this.onKeyup?.(event);
+    const key = this.resolveKey(event);
+    if (!key) return;
     const state = this.keyStates.get(key);
     if (!state) return;
-    const now = Date.now();
-    state.lastKeyUpTime = now;
-
-    // 清除长按和重复定时器
-    this.clearTimers(state);
-
-    // 如果没有触发长按，需要延迟触发以等待可能的后续点击
-    if (!state.isLongPressing) {
-      // 清除之前的延迟触发定时器
-      if (state.pressTriggerTimer !== null) {
-        clearTimeout(state.pressTriggerTimer);
-        state.pressTriggerTimer = null;
-      }
-
-      // 保存当前的 pressCount 和 event
-      const currentPressCount = state.pressCount;
-      const currentEvent = state.lastEvent || event;
-
-      // 设置延迟触发定时器，等待 pressInterval 时间
-      // 如果在这个时间内没有新的点击，则触发当前次数的回调
-      state.pressTriggerTimer = window.setTimeout(() => {
-        // 触发当前点击次数的事件
-        this.triggerEvent(key, currentPressCount, false, currentEvent);
-
-        // 重置按键计数
-        state.pressCount = 0;
-        state.pressTriggerTimer = null;
-      }, this.config.pressInterval);
-    } else {
-      // 如果已经触发长按，只需要重置状态
-      state.isLongPressing = false;
-
-      // 设置按键计数重置定时器
-      state.pressResetTimer = window.setTimeout(() => {
-        state.pressCount = 0;
-      }, this.config.pressInterval);
-    }
-  }
-  triggerEvent(key, pressCount, isLongPress, originalEvent, pressStartTime, isRepeat = false) {
-    const keyListeners = this.listeners.get(key);
-    if (!keyListeners) return;
-    const callbacks = keyListeners.get(pressCount);
-    if (!callbacks || callbacks.length === 0) return;
-    const eventDetail = {
-      key,
-      pressCount,
-      isLongPress,
-      isRepeat,
-      pressDuration: pressStartTime ? Date.now() - pressStartTime : undefined,
-      originalEvent
-    };
-    callbacks.forEach(callback => {
-      try {
-        callback(eventDetail);
-      } catch (error) {
-        console.error('MultiPress callback error:', error);
-      }
-    });
-  }
-  clearTimers(state) {
     if (state.longPressTimer !== null) {
       clearTimeout(state.longPressTimer);
       state.longPressTimer = null;
     }
-    if (state.repeatTimer !== null) {
-      clearInterval(state.repeatTimer);
-      state.repeatTimer = null;
+    const handlers = this.handlers.get(key);
+    if (state.isHolding) {
+      handlers?.onLongPressEnd?.(event);
+    } else {
+      handlers?.onTap?.(event);
     }
+    this.keyStates.delete(key);
   }
   clearAllTimers() {
     this.keyStates.forEach(state => {
-      this.clearTimers(state);
-      if (state.pressResetTimer !== null) {
-        clearTimeout(state.pressResetTimer);
-        state.pressResetTimer = null;
-      }
-      if (state.pressTriggerTimer !== null) {
-        clearTimeout(state.pressTriggerTimer);
-        state.pressTriggerTimer = null;
+      if (state.longPressTimer !== null) {
+        clearTimeout(state.longPressTimer);
+        state.longPressTimer = null;
       }
     });
+    this.keyStates.clear();
   }
-}
-
-/**
- * 便捷工厂函数
- */
-function createMultiPress(config) {
-  return new MultiPress(config);
 }
 ;// ./src/utils/selector.ts
 const $ = document.querySelector.bind(document);
@@ -489,129 +281,200 @@ function isInputActive() {
 // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
 new class PlaybackRateController {
-  /** 触发按键 */
-  triggerKeys = ['ArrowLeft', 'ArrowRight'];
-  /** 按键次数 -> 倍速 映射 */
-  rateMap = {
-    1: 3,
-    2: 6,
-    3: 9
+  /** 长按方向右键时的倍速 */
+  arrowRightBoostRate = 3;
+  /** 点按快进/后退步长（秒） */
+  seekStep = 5;
+  /** 长按方向左键持续后退的步长（秒） */
+  continuousSeekStep = 2;
+  /** 长按方向左键持续后退的间隔（毫秒） */
+  continuousSeekInterval = 80;
+  /** 数字键 -> 倍速映射（0 重置为 1x，1 为 1.5x） */
+  numberRateMap = {
+    '0': 1,
+    '1': 1.5,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9
   };
-  currentTriggerKey = null;
-  videoPlaybackRate = 1;
-  /** 是否正在倍速播放 */
-  isBoosting = false;
-  /** 当前视频元素 */
-  _video = null;
 
-  /** 当前视频元素 */
+  /** 被追踪的按键（event.key） */
+  trackedKeys = new Set(['ArrowLeft', 'ArrowRight', ...Object.keys(this.numberRateMap)]);
+
+  /** 长按倍速期间保存的"按下前速度" */
+  savedRate = 1;
+  /** 当前长按激活的按键（倍速或连退），null 表示未激活 */
+  activeKey = null;
+  /** 长按连退定时器 */
+  seekTimer = null;
+  _video = null;
   get video() {
     return this._video;
   }
   set video(video) {
-    // 处于倍速时不能置空视频元素，否则播放速度无法恢复
-    if (this.isBoosting && video === null) {
-      return;
-    }
+    // 长按激活期间不能置空，否则倍速无法恢复 / 连退中断
+    if (this.activeKey && video === null) return;
     this._video = video;
   }
-
-  /**
-   * 判断当前是否处于输入状态，
-   * 如果是，不处理任何快捷键。避免冲突，比如输入状态下按方向键。
-   */
-  isInputActive = false;
   constructor() {
-    this.multiPress = createMultiPress({
-      pressInterval: 100,
-      longPressThreshold: 200,
-      enableRepeat: true,
-      onKeydown: event => {
-        /**
-         * 按下方向键时如果有视频元素，则阻止网站本身行为
-         */
-        if (!this.triggerKeys.includes(event.key)) return;
-
-        // 只在首次按下时获取状态，重复按下时不再获取避免影响性能
-        if (event.repeat === false) {
-          if (this.isInputActive = isInputActive()) return;
-          this.video ??= findBestVideoElement();
-        }
-        if (this.isInputActive) return;
-        if (this.video) {
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          event.preventDefault();
-        }
-
-        // ← ArrowLeft
-        // 这里无多击判断延迟
-        if (event.key === 'ArrowLeft') {
-          this.handleSeek('backward');
-        }
-      },
-      onKeyup: event => {
-        // 松开方向键时如果有视频元素，则阻止网站本身行为
-        // 虽然 keyup 不一定需要停止传播，但为了逻辑一致性避免页面响应 keyup
-        if (this.triggerKeys.includes(event.key) && this.video) {
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          event.preventDefault();
-        }
-        this.handleKeyUp(event);
-      }
+    this.tapHold = new TapHold({
+      longPressThreshold: 300,
+      capture: true,
+      onKeydown: event => this.handleKeydown(event),
+      onKeyup: event => this.handleKeyup(event)
     });
-    this.init();
-  }
-  init() {
-    // → ArrowRight
-    for (const pressCount of Object.keys(this.rateMap)) {
-      this.multiPress.on('ArrowRight', Number(pressCount), event => {
-        if (event.isRepeat || this.isInputActive) return;
-        if (event.isLongPress) {
-          this.handleSpeed(event);
-        } else {
-          this.handleSeek('forward');
-        }
+    this.tapHold.on('ArrowRight', {
+      onTap: () => this.seek(1),
+      onLongPressStart: event => this.startBoost(event, this.arrowRightBoostRate),
+      onLongPressEnd: () => this.endBoost()
+    });
+    this.tapHold.on('ArrowLeft', {
+      onTap: () => this.seek(-1),
+      onLongPressStart: () => this.startContinuousSeek(-1),
+      onLongPressEnd: () => this.stopContinuousSeek()
+    });
+    for (const [key, rate] of Object.entries(this.numberRateMap)) {
+      this.tapHold.on(key, {
+        onTap: () => this.setRate(rate),
+        onLongPressStart: event => this.startBoost(event, rate),
+        onLongPressEnd: () => this.endBoost()
       });
     }
-    this.multiPress.start();
+    this.tapHold.start();
   }
-  handleSpeed(event) {
-    warn('speed');
-    if (this.isBoosting || !event.isLongPress) return;
-    const {
-      video
-    } = this;
-    if (!video) return;
-    this.isBoosting = true;
-    this.currentTriggerKey = event.key;
-    this.videoPlaybackRate = video.playbackRate;
-    video.playbackRate = this.rateMap[event.pressCount] ?? this.videoPlaybackRate;
+  handleKeydown(event) {
+    if (!this.trackedKeys.has(event.key)) return;
+
+    // 输入框激活时不处理任何快捷键
+    if (isInputActive()) return false;
+
+    // 首次按下时查找视频元素
+    if (!event.repeat) {
+      this.video ??= findBestVideoElement();
+    }
+
+    // 有视频则阻止网站自身行为
+    if (this.video) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+
+    // 长按激活期间锁住其他键，避免速率/seek 互相干扰
+    if (this.activeKey && event.key !== this.activeKey) return false;
   }
-  handleKeyUp(event) {
-    if (this.isBoosting && event.key === this.currentTriggerKey) {
-      warn('恢复播放速度');
-      this.video.playbackRate = this.videoPlaybackRate;
-      this.isBoosting = false;
-      this.currentTriggerKey = null;
-      this.video = null;
+  handleKeyup(event) {
+    if (!this.trackedKeys.has(event.key)) return;
+    if (this.video) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      event.preventDefault();
     }
   }
 
-  /** 前进或后退 */
-  handleSeek(direction = 'forward') {
-    warn('seek');
+  /** 点按：前进 / 后退一次（结束后释放视频引用） */
+  seek(direction) {
     const {
       video
     } = this;
     if (video) {
-      video.currentTime += direction === 'forward' ? 5 : -5;
+      const step = this.getSeekStep(video);
+      video.currentTime += direction * step;
+      warn(`seek ${step}s`);
     }
     this.video = null;
   }
+
+  /**
+   * 计算点按 seek 步长
+   *
+   * 默认 5s；视频时长较短时按"至少能跳 10 次"缩放（时长 / 10），
+   * 下限 0.5s，避免短视频跳一次就结束。直播流（duration 为 Infinity/NaN）用默认值。
+   */
+  getSeekStep(video) {
+    const {
+      duration
+    } = video;
+    if (!Number.isFinite(duration)) return this.seekStep;
+    const rawStep = duration / 10;
+    const roundedStep = Math.round(rawStep * 10) / 10;
+    return Math.max(0.5, Math.min(this.seekStep, roundedStep));
+  }
+
+  /** 长按连退：单次 seek（不释放视频引用） */
+  seekBy(direction, step) {
+    if (this.video) {
+      this.video.currentTime += direction * step;
+    }
+  }
+
+  /** 点按数字键：永久设置倍速 */
+  setRate(rate) {
+    const {
+      video
+    } = this;
+    if (video) {
+      video.playbackRate = rate;
+      warn(`rate ${rate}x`);
+    }
+    this.video = null;
+  }
+
+  /** 长按开始：临时倍速，保存按下前速度 */
+  startBoost(event, rate) {
+    const {
+      video
+    } = this;
+    if (!video) return;
+    this.savedRate = video.playbackRate;
+    this.activeKey = event.key;
+    video.playbackRate = rate;
+    warn(`boost ${rate}x`);
+  }
+
+  /** 长按结束：恢复按下前速度 */
+  endBoost() {
+    if (this.activeKey && this.video) {
+      this.video.playbackRate = this.savedRate;
+      warn('恢复播放速度');
+    }
+    this.activeKey = null;
+    this.video = null;
+  }
+
+  /** 长按连退开始：立即后退一次，随后持续后退 */
+  startContinuousSeek(direction) {
+    const {
+      video
+    } = this;
+    if (!video) return;
+    this.activeKey = 'ArrowLeft';
+    this.seekBy(direction, this.continuousSeekStep);
+    this.seekTimer = window.setInterval(() => {
+      this.seekBy(direction, this.continuousSeekStep);
+    }, this.continuousSeekInterval);
+  }
+
+  /** 长按连退结束：停止定时器 */
+  stopContinuousSeek() {
+    if (this.seekTimer !== null) {
+      clearInterval(this.seekTimer);
+      this.seekTimer = null;
+    }
+    this.activeKey = null;
+    this.video = null;
+  }
   destroy() {
-    this.multiPress.stop();
+    this.tapHold.destroy();
+    if (this.seekTimer !== null) {
+      clearInterval(this.seekTimer);
+      this.seekTimer = null;
+    }
   }
 }();
 /******/ })()
