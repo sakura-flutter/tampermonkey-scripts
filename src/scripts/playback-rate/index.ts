@@ -1,153 +1,207 @@
-import { createMultiPress, type MultiPressEvent } from './multi-press'
+import { TapHold } from './tap-hold'
 import { findBestVideoElement, isInputActive } from './utils'
 import { warn } from '@/utils/log'
 
 // 由于 sohu 阻止了键盘事件，需要在捕获阶段监听
 
 new (class PlaybackRateController {
-  /** 触发按键 */
-  private triggerKeys = ['ArrowLeft', 'ArrowRight']
-  /** 按键次数 -> 倍速 映射 */
-  private rateMap = {
-    1: 3,
-    2: 6,
-    3: 9,
+  /** 长按方向右键时的倍速 */
+  private readonly arrowRightBoostRate = 3
+  /** 点按快进/后退步长（秒） */
+  private readonly seekStep = 5
+  /** 长按方向左键持续后退的步长（秒） */
+  private readonly continuousSeekStep = 2
+  /** 长按方向左键持续后退的间隔（毫秒） */
+  private readonly continuousSeekInterval = 80
+  /** 数字键 -> 倍速映射（0 重置为 1x，1 为 1.5x） */
+  private readonly numberRateMap: Record<string, number> = {
+    '0': 1,
+    '1': 1.5,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
   }
 
-  private currentTriggerKey: KeyboardEvent['key'] | null = null
+  /** 被追踪的按键（event.key） */
+  private readonly trackedKeys = new Set<string>(['ArrowLeft', 'ArrowRight', ...Object.keys(this.numberRateMap)])
 
-  private videoPlaybackRate = 1
-  /** 是否正在倍速播放 */
-  private isBoosting = false
+  /** 长按倍速期间保存的"按下前速度" */
+  private savedRate = 1
+  /** 当前长按激活的按键（倍速或连退），null 表示未激活 */
+  private activeKey: string | null = null
+  /** 长按连退定时器 */
+  private seekTimer: number | null = null
 
-  private multiPress
-
-  /** 当前视频元素 */
   private _video: HTMLVideoElement | null = null
-
-  /** 当前视频元素 */
-  private get video(): HTMLVideoElement | null {
+  private get video() {
     return this._video
   }
-
   private set video(video: HTMLVideoElement | null) {
-    // 处于倍速时不能置空视频元素，否则播放速度无法恢复
-    if (this.isBoosting && video === null) {
-      return
-    }
-
+    // 长按激活期间不能置空，否则倍速无法恢复 / 连退中断
+    if (this.activeKey && video === null) return
     this._video = video
   }
 
-  /**
-   * 判断当前是否处于输入状态，
-   * 如果是，不处理任何快捷键。避免冲突，比如输入状态下按方向键。
-   */
-  private isInputActive = false
+  private tapHold: TapHold
 
   constructor() {
-    this.multiPress = createMultiPress({
-      pressInterval: 100,
-      longPressThreshold: 200,
-      enableRepeat: true,
-      onKeydown: event => {
-        /**
-         * 按下方向键时如果有视频元素，则阻止网站本身行为
-         */
-        if (!this.triggerKeys.includes(event.key)) return
-
-        // 只在首次按下时获取状态，重复按下时不再获取避免影响性能
-        if (event.repeat === false) {
-          if ((this.isInputActive = isInputActive())) return
-
-          this.video ??= findBestVideoElement()
-        }
-
-        if (this.isInputActive) return
-
-        if (this.video) {
-          event.stopPropagation()
-          event.stopImmediatePropagation()
-          event.preventDefault()
-        }
-
-        // ← ArrowLeft
-        // 这里无多击判断延迟
-        if (event.key === 'ArrowLeft') {
-          this.handleSeek('backward')
-        }
-      },
-      onKeyup: event => {
-        // 松开方向键时如果有视频元素，则阻止网站本身行为
-        // 虽然 keyup 不一定需要停止传播，但为了逻辑一致性避免页面响应 keyup
-        if (this.triggerKeys.includes(event.key) && this.video) {
-          event.stopPropagation()
-          event.stopImmediatePropagation()
-          event.preventDefault()
-        }
-
-        this.handleKeyUp(event)
-      },
+    this.tapHold = new TapHold({
+      longPressThreshold: 300,
+      capture: true,
+      onKeydown: event => this.handleKeydown(event),
+      onKeyup: event => this.handleKeyup(event),
     })
 
-    this.init()
-  }
+    this.tapHold.on('ArrowRight', {
+      onTap: () => this.seek(1),
+      onLongPressStart: event => this.startBoost(event, this.arrowRightBoostRate),
+      onLongPressEnd: () => this.endBoost(),
+    })
 
-  private init() {
-    // → ArrowRight
-    for (const pressCount of Object.keys(this.rateMap)) {
-      this.multiPress.on('ArrowRight', Number(pressCount), event => {
-        if (event.isRepeat || this.isInputActive) return
+    this.tapHold.on('ArrowLeft', {
+      onTap: () => this.seek(-1),
+      onLongPressStart: () => this.startContinuousSeek(-1),
+      onLongPressEnd: () => this.stopContinuousSeek(),
+    })
 
-        if (event.isLongPress) {
-          this.handleSpeed(event)
-        } else {
-          this.handleSeek('forward')
-        }
+    for (const [key, rate] of Object.entries(this.numberRateMap)) {
+      this.tapHold.on(key, {
+        onTap: () => this.setRate(rate),
+        onLongPressStart: event => this.startBoost(event, rate),
+        onLongPressEnd: () => this.endBoost(),
       })
     }
 
-    this.multiPress.start()
+    this.tapHold.start()
   }
 
-  private handleSpeed(event: MultiPressEvent) {
-    warn('speed')
-    if (this.isBoosting || !event.isLongPress) return
+  private handleKeydown(event: KeyboardEvent): boolean | void {
+    if (!this.trackedKeys.has(event.key)) return
 
+    // 输入框激活时不处理任何快捷键
+    if (isInputActive()) return false
+
+    // 首次按下时查找视频元素
+    if (!event.repeat) {
+      this.video ??= findBestVideoElement()
+    }
+
+    // 有视频则阻止网站自身行为
+    if (this.video) {
+      event.stopPropagation()
+      event.stopImmediatePropagation()
+      event.preventDefault()
+    }
+
+    // 长按激活期间锁住其他键，避免速率/seek 互相干扰
+    if (this.activeKey && event.key !== this.activeKey) return false
+  }
+
+  private handleKeyup(event: KeyboardEvent) {
+    if (!this.trackedKeys.has(event.key)) return
+    if (this.video) {
+      event.stopPropagation()
+      event.stopImmediatePropagation()
+      event.preventDefault()
+    }
+  }
+
+  /** 点按：前进 / 后退一次（结束后释放视频引用） */
+  private seek(direction: 1 | -1) {
     const { video } = this
+    if (video) {
+      const step = this.getSeekStep(video)
+      video.currentTime += direction * step
+      warn(`seek ${step}s`)
+    }
+    this.video = null
+  }
 
+  /**
+   * 计算点按 seek 步长
+   *
+   * 默认 5s；视频时长较短时按"至少能跳 10 次"缩放（时长 / 10），
+   * 下限 0.5s，避免短视频跳一次就结束。直播流（duration 为 Infinity/NaN）用默认值。
+   */
+  private getSeekStep(video: HTMLVideoElement): number {
+    const { duration } = video
+    if (!Number.isFinite(duration)) return this.seekStep
+
+    const rawStep = duration / 10
+    const roundedStep = Math.round(rawStep * 10) / 10
+    return Math.max(0.5, Math.min(this.seekStep, roundedStep))
+  }
+
+  /** 长按连退：单次 seek（不释放视频引用） */
+  private seekBy(direction: 1 | -1, step: number) {
+    if (this.video) {
+      this.video.currentTime += direction * step
+    }
+  }
+
+  /** 点按数字键：永久设置倍速 */
+  private setRate(rate: number) {
+    const { video } = this
+    if (video) {
+      video.playbackRate = rate
+      warn(`rate ${rate}x`)
+    }
+    this.video = null
+  }
+
+  /** 长按开始：临时倍速，保存按下前速度 */
+  private startBoost(event: KeyboardEvent, rate: number) {
+    const { video } = this
     if (!video) return
 
-    this.isBoosting = true
-    this.currentTriggerKey = event.key
-    this.videoPlaybackRate = video.playbackRate
-
-    video.playbackRate = this.rateMap[event.pressCount as keyof typeof this.rateMap] ?? this.videoPlaybackRate
+    this.savedRate = video.playbackRate
+    this.activeKey = event.key
+    video.playbackRate = rate
+    warn(`boost ${rate}x`)
   }
 
-  private handleKeyUp(event: KeyboardEvent) {
-    if (this.isBoosting && event.key === this.currentTriggerKey) {
+  /** 长按结束：恢复按下前速度 */
+  private endBoost() {
+    if (this.activeKey && this.video) {
+      this.video.playbackRate = this.savedRate
       warn('恢复播放速度')
-      this.video!.playbackRate = this.videoPlaybackRate
-      this.isBoosting = false
-      this.currentTriggerKey = null
-      this.video = null
     }
+    this.activeKey = null
+    this.video = null
   }
 
-  /** 前进或后退 */
-  private handleSeek(direction: 'forward' | 'backward' = 'forward') {
-    warn('seek')
+  /** 长按连退开始：立即后退一次，随后持续后退 */
+  private startContinuousSeek(direction: 1 | -1) {
     const { video } = this
+    if (!video) return
 
-    if (video) {
-      video.currentTime += direction === 'forward' ? 5 : -5
+    this.activeKey = 'ArrowLeft'
+    this.seekBy(direction, this.continuousSeekStep)
+    this.seekTimer = window.setInterval(() => {
+      this.seekBy(direction, this.continuousSeekStep)
+    }, this.continuousSeekInterval)
+  }
+
+  /** 长按连退结束：停止定时器 */
+  private stopContinuousSeek() {
+    if (this.seekTimer !== null) {
+      clearInterval(this.seekTimer)
+      this.seekTimer = null
     }
-
+    this.activeKey = null
     this.video = null
   }
 
   destroy() {
-    this.multiPress.stop()
+    this.tapHold.destroy()
+    if (this.seekTimer !== null) {
+      clearInterval(this.seekTimer)
+      this.seekTimer = null
+    }
   }
 })()
