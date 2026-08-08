@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         视频倍速播放快捷键
-// @version      3.0.0
+// @version      3.1.0
 // @description  为网页视频添加统一的倍速播放快捷键：→ 方向键点按快进、长按倍速，← 方向键后退；长按 3 倍速，双击长按 6 倍速。适配了哔哩哔哩、抖音、小红书、知乎、微博、X、Facebook、Instagram、YouTube、腾讯视频、爱奇艺、优酷、PPTV、芒果TV、乐视视频、搜狐视频、咪咕视频、今日头条、极客时间
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -33,6 +33,9 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 
+;// ./src/utils/selector.ts
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 ;// ./src/scripts/playback-rate/tap-hold.ts
 // =====================================================
 // Name: 点按与长按键盘事件
@@ -161,9 +164,6 @@ class TapHold {
     this.keyStates.clear();
   }
 }
-;// ./src/utils/selector.ts
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
 ;// ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 function warn(...args) {
@@ -183,7 +183,6 @@ function table(...args) {
 }
 
 ;// ./src/scripts/playback-rate/utils.ts
-
 
 
 /** 判断视频是否正在播放 */
@@ -209,31 +208,45 @@ function getDistanceFromViewportCenter(rect) {
 }
 
 /**
- * 查找页面中最符合条件的视频元素
+ * 深度收集某个文档（及其下所有「开放」shadow DOM）中**正在播放**的 video 元素
  *
- * 多个视频元素时的权重优先级：
- * 1. 播放状态 (播放中 > 其他)：只有播放中才需要倍速
- * 2. 音频状态 (有声 > 静音)：如果有多个视频同时播放，优先处理有声音的，因为静音的通常是广告或背景视频，
- * 理想情况下不会出现多个有声音的视频同时播放
- * 3. 元素大小 (大 > 小)：大尺寸的视频通常是主要内容，虽然背景视频尺寸可能更大但通常都是静音的
- * 4. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近的视频
+ * 只收集正在播放的 video（倍速/seek 仅对播放中有效），免去后续再过滤。
+ * 注意：mode 为 'closed' 的 shadow root 无法访问，其中的 video 会漏掉。
+ */
+function getVideosDeep(root) {
+  const videos = [];
+  const collect = node => {
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+    let el;
+    while (el = walker.nextNode()) {
+      const video = el;
+      if (el.tagName === 'VIDEO' && isPlaying(video)) videos.push(video);
+      if (el.shadowRoot) collect(el.shadowRoot);
+    }
+  };
+  collect(root);
+  return videos;
+}
+
+/**
+ * 查找「当前文档」（含 shadow DOM）中最优的「正在播放」video 元素，供快捷键操作。
+ *
+ * 只扫描本实例所在文档：iframe 内的 video 由各 iframe 自身的实例通过 postMessage
+ * 链逐层处理，不在父文档里跨文档查找（统一一套机制，不分同源 / 跨域）。
+ *
+ * 多个视频同时播放时的权重优先级：
+ * 1. 音频状态 (有声 > 静音)：静音的通常是广告或背景视频，理想情况下不会出现多个有声音的视频
+ * 2. 元素大小 (大 > 小)：大尺寸的视频通常是主要内容
+ * 3. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近
  */
 function findBestVideoElement() {
-  // 优先级 1 播放状态：播放中优先
-  const videos = Array.from($$('video')).filter(video => isPlaying(video));
+  const videos = getVideosDeep(document);
   if (videos.length === 0) {
     warn('视频元素为空');
     return null;
   }
   videos.sort((a, b) => {
-    // 优先级 1 播放状态：播放中优先
-    // const playingA = isPlaying(a)
-    // const playingB = isPlaying(b)
-    // if (playingA !== playingB) {
-    //   return playingA ? -1 : 1
-    // }
-
-    // 优先级 2 音频状态：非静音优先
+    // 优先级 1 音频状态：非静音优先
     const audibleA = isAudible(a);
     const audibleB = isAudible(b);
     if (audibleA !== audibleB) {
@@ -242,15 +255,14 @@ function findBestVideoElement() {
     const rectA = a.getBoundingClientRect();
     const rectB = b.getBoundingClientRect();
 
-    // 优先级 3 元素大小：大尺寸优先
+    // 优先级 2 元素大小：大尺寸优先
     const sizeA = rectA.width * rectA.height;
     const sizeB = rectB.width * rectB.height;
-    // 允许 100 像素的误差视为相等，或者直接比较
     if (sizeA !== sizeB) {
       return sizeB - sizeA;
     }
 
-    // 优先级 4 视口距离：距离视口中心越近越优先 (距离越小越好)
+    // 优先级 3 视口距离：距离视口中心越近越优先 (距离越小越好)
     const distA = getDistanceFromViewportCenter(rectA);
     const distB = getDistanceFromViewportCenter(rectB);
     return distA - distB;
@@ -261,19 +273,53 @@ function findBestVideoElement() {
   return videos[0];
 }
 
-/**
- * 检测当前活动元素是否为输入元素
- */
+/** 判断元素是否为输入元素（输入框 / 文本域 / 下拉选择 / 可编辑元素） */
+function isInputElement(el) {
+  if (!el) return false;
+  const {
+    tagName
+  } = el;
+  return tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || el instanceof HTMLElement && el.isContentEditable;
+}
+
+/** 检测当前焦点是否落在输入元素上 */
 function isInputActive() {
-  let activeElement = document.activeElement;
-  if (!activeElement) return false;
-  while (activeElement.shadowRoot?.activeElement) {
-    activeElement = activeElement.shadowRoot.activeElement;
+  let {
+    activeElement
+  } = document;
+
+  // 穿透 shadowRoot 与同域 iframe，定位真正获得焦点的元素；无更深层则结束
+  while (true) {
+    const shadowEl = activeElement.shadowRoot?.activeElement;
+    if (shadowEl) {
+      activeElement = shadowEl;
+      continue;
+    }
+    if (activeElement instanceof HTMLIFrameElement) {
+      const innerEl = activeElement.contentDocument?.activeElement;
+      if (innerEl) {
+        activeElement = innerEl;
+        continue;
+      }
+    }
+    break;
   }
-  const tagName = activeElement.tagName;
-  return tagName === 'INPUT' || tagName === 'TEXTAREA' || activeElement instanceof HTMLElement && activeElement.isContentEditable;
+  return isInputElement(activeElement);
+}
+;// ./src/scripts/playback-rate/command.ts
+/**
+ * 跨 iframe 传递的统一命令协议。
+ *
+ * 不区分同源 / 跨域：父实例与各级 iframe 实例之间一律通过 postMessage 下发命令，
+ * 由各实例在自己的文档内执行（或继续向下 relay）。
+ */
+
+function isCommandMessage(data) {
+  return typeof data === 'object' && data !== null && data.__pbCmd === true && typeof data.cmd === 'object';
 }
 ;// ./src/scripts/playback-rate/index.ts
+
+
 
 
 
@@ -308,10 +354,14 @@ new class PlaybackRateController {
 
   /** 长按倍速期间保存的"按下前速度" */
   savedRate = 1;
-  /** 当前长按激活的按键（倍速或连退），null 表示未激活 */
+  /** 当前长按激活的按键（event.key），null 表示未激活；用于锁住其它按键、避免互相干扰 */
   activeKey = null;
+  /** 当前激活的操作类型，供失焦复位（cancelActive）区分是否需要恢复速率 */
+  activeMode = null;
   /** 长按连退定时器 */
   seekTimer = null;
+  /** 本实例是否处于 iframe 内（只有被嵌套时才可能收到父级下发的命令） */
+  isFramed = window.parent !== window;
   _video = null;
   get video() {
     return this._video;
@@ -321,6 +371,11 @@ new class PlaybackRateController {
     if (this.activeKey && video === null) return;
     this._video = video;
   }
+
+  /** 失焦/切后台复位处理器的绑定引用，便于销毁时移除监听 */
+
+  /** 接收父实例下发的命令 */
+
   constructor() {
     this.tapHold = new TapHold({
       longPressThreshold: 300,
@@ -329,43 +384,78 @@ new class PlaybackRateController {
       onKeyup: event => this.handleKeyup(event)
     });
     this.tapHold.on('ArrowRight', {
-      onTap: () => this.seek(1),
-      onLongPressStart: event => this.startBoost(event, this.arrowRightBoostRate),
-      onLongPressEnd: () => this.endBoost()
+      onTap: () => this.dispatch({
+        type: 'seek',
+        direction: 1
+      }),
+      onLongPressStart: event => this.dispatch({
+        type: 'boostStart',
+        rate: this.arrowRightBoostRate,
+        key: event.key
+      }),
+      onLongPressEnd: () => this.dispatch({
+        type: 'boostEnd'
+      })
     });
     this.tapHold.on('ArrowLeft', {
-      onTap: () => this.seek(-1),
-      onLongPressStart: () => this.startContinuousSeek(-1),
-      onLongPressEnd: () => this.stopContinuousSeek()
+      onTap: () => this.dispatch({
+        type: 'seek',
+        direction: -1
+      }),
+      onLongPressStart: event => this.dispatch({
+        type: 'seekStart',
+        direction: -1,
+        key: event.key
+      }),
+      onLongPressEnd: () => this.dispatch({
+        type: 'seekEnd'
+      })
     });
     for (const [key, rate] of Object.entries(this.numberRateMap)) {
       this.tapHold.on(key, {
-        onTap: () => this.setRate(rate),
-        onLongPressStart: event => this.startBoost(event, rate),
-        onLongPressEnd: () => this.endBoost()
+        onTap: () => this.dispatch({
+          type: 'setRate',
+          rate
+        }),
+        onLongPressStart: event => this.dispatch({
+          type: 'boostStart',
+          rate,
+          key: event.key
+        }),
+        onLongPressEnd: () => this.dispatch({
+          type: 'boostEnd'
+        })
       });
     }
+    this.boundBlur = () => this.handleBlur();
+    this.boundVisibility = () => {
+      if (document.hidden) this.handleBlur();
+    };
+    this.onMessage = e => this.handleMessage(e);
+    window.addEventListener('blur', this.boundBlur);
+    document.addEventListener('visibilitychange', this.boundVisibility);
+    // 仅当本实例处于 iframe 内时才监听命令：顶级文档不会收到父级下发，无需该监听
+    if (this.isFramed) window.addEventListener('message', this.onMessage);
     this.tapHold.start();
   }
   handleKeydown(event) {
-    if (!this.trackedKeys.has(event.key)) return;
+    if (!this.trackedKeys.has(event.key)) return false;
 
     // 输入框激活时不处理任何快捷键
     if (isInputActive()) return false;
 
-    // 首次按下时查找视频元素
+    // 首次按下时刷新本地视频引用（已连接则保留，否则重查；长按激活期不覆盖受保护引用）
     if (!event.repeat) {
-      this.video ??= findBestVideoElement();
+      this.resolveLocalVideo();
     }
-
-    // 有视频则阻止网站自身行为
+    // [当前文档] 有视频则阻止网站自身行为，不检测 iframe 避免误伤
     if (this.video) {
       event.stopPropagation();
       event.stopImmediatePropagation();
       event.preventDefault();
     }
 
-    // 长按激活期间锁住其他键，避免速率/seek 互相干扰
+    // 长按激活期间锁住"其它按键"，避免倍速/连退互相干扰
     if (this.activeKey && event.key !== this.activeKey) return false;
   }
   handleKeyup(event) {
@@ -377,7 +467,66 @@ new class PlaybackRateController {
     }
   }
 
-  /** 点按：前进 / 后退一次（结束后释放视频引用） */
+  /** 在本地文档中查找最优视频并缓存到 this.video（仅在非激活态刷新，避免覆盖长按保护中的引用） */
+  resolveLocalVideo() {
+    if (this.activeKey) return;
+    if (this.video && this.video.isConnected) return;
+    this.video = findBestVideoElement();
+  }
+
+  /**
+   * 统一命令入口（顶层与各级 iframe 实例共用）：
+   * - 本实例文档能找到视频 → 本地执行；
+   * - 找不到 → 向下 relay 给直接子 iframe，由子实例重复本逻辑（自然穿透任意嵌套深度）。
+   * 本地视频引用由 resolveLocalVideo 统一查找，此处不再重复查询。
+   */
+  dispatch(cmd) {
+    if (this.video) {
+      this.applyCommand(cmd);
+    } else {
+      this.relay(cmd);
+    }
+  }
+
+  /** 在本实例文档内执行命令 */
+  applyCommand(cmd) {
+    switch (cmd.type) {
+      case 'setRate':
+        this.setRate(cmd.rate);
+        break;
+      case 'seek':
+        this.seek(cmd.direction);
+        break;
+      case 'boostStart':
+        this.startBoost(cmd.rate, cmd.key);
+        break;
+      case 'boostEnd':
+        this.endBoost();
+        break;
+      case 'seekStart':
+        this.startContinuousSeek(cmd.direction, cmd.key);
+        break;
+      case 'seekEnd':
+        this.stopContinuousSeek();
+        break;
+      case 'cancel':
+        this.cancelActive();
+        break;
+    }
+  }
+
+  /** 把命令转发给所有直接子 iframe（执行或继续向下 relay 由子实例决定） */
+  relay(cmd) {
+    const msg = {
+      __pbCmd: true,
+      cmd
+    };
+    $$('iframe').forEach(iframe => {
+      iframe.contentWindow?.postMessage(msg, '*');
+    });
+  }
+
+  /** 点按：前进 / 后退一次 */
   seek(direction) {
     const {
       video
@@ -426,13 +575,14 @@ new class PlaybackRateController {
   }
 
   /** 长按开始：临时倍速，保存按下前速度 */
-  startBoost(event, rate) {
+  startBoost(rate, key) {
     const {
       video
     } = this;
     if (!video) return;
     this.savedRate = video.playbackRate;
-    this.activeKey = event.key;
+    this.activeKey = key;
+    this.activeMode = 'boost';
     video.playbackRate = rate;
     warn(`boost ${rate}x`);
   }
@@ -444,16 +594,18 @@ new class PlaybackRateController {
       warn('恢复播放速度');
     }
     this.activeKey = null;
+    this.activeMode = null;
     this.video = null;
   }
 
   /** 长按连退开始：立即后退一次，随后持续后退 */
-  startContinuousSeek(direction) {
+  startContinuousSeek(direction, key) {
     const {
       video
     } = this;
     if (!video) return;
-    this.activeKey = 'ArrowLeft';
+    this.activeKey = key;
+    this.activeMode = 'seek';
     this.seekBy(direction, this.continuousSeekStep);
     this.seekTimer = window.setInterval(() => {
       this.seekBy(direction, this.continuousSeekStep);
@@ -467,9 +619,55 @@ new class PlaybackRateController {
       this.seekTimer = null;
     }
     this.activeKey = null;
+    this.activeMode = null;
     this.video = null;
   }
+
+  /**
+   * 复位所有激活态：恢复速率、停止连退、清空视频引用（用于失焦 / 切后台等中断场景）。
+   * 同时向下 relay 取消指令，确保深层 iframe 实例一并复位。
+   */
+  cancelActive() {
+    if (this.seekTimer !== null) {
+      clearInterval(this.seekTimer);
+      this.seekTimer = null;
+    }
+    // 长按倍速（非连退）需恢复按下前的速率；连退不改变速率，无需处理
+    if (this.activeKey && this.activeMode === 'boost' && this.video) {
+      this.video.playbackRate = this.savedRate;
+    }
+    this.activeKey = null;
+    this.activeMode = null;
+    this.video = null;
+  }
+
+  /** 失焦 / 切后台：复位本地并广播取消指令给子 iframe */
+  handleBlur() {
+    this.cancelActive();
+    this.relay({
+      type: 'cancel'
+    });
+  }
+
+  /** 只接受来自直接父级（window.parent）的命令，避免任意来源驱动 */
+  handleMessage(e) {
+    if (e.source !== window.parent) return;
+    if (!isCommandMessage(e.data)) return;
+    const {
+      cmd
+    } = e.data;
+    if (cmd.type === 'cancel') {
+      this.cancelActive();
+      this.relay(cmd); // 继续向下传播
+      return;
+    }
+    this.resolveLocalVideo();
+    this.dispatch(cmd);
+  }
   destroy() {
+    window.removeEventListener('blur', this.boundBlur);
+    document.removeEventListener('visibilitychange', this.boundVisibility);
+    if (this.isFramed) window.removeEventListener('message', this.onMessage);
     this.tapHold.destroy();
     if (this.seekTimer !== null) {
       clearInterval(this.seekTimer);

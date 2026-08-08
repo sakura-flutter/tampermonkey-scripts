@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.7.0
+// @version      1.7.1
 // @description  长按 S 键倍速播放
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -144,9 +144,6 @@ class TapHold {
     this.keyStates.clear();
   }
 }
-;// ./src/utils/selector.ts
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
 ;// ./src/utils/log.ts
 const isDebug = "production" !== 'production';
 function warn(...args) {
@@ -166,7 +163,6 @@ function table(...args) {
 }
 
 ;// ./src/scripts/playback-rate/utils.ts
-
 
 
 /** 判断视频是否正在播放 */
@@ -192,31 +188,45 @@ function getDistanceFromViewportCenter(rect) {
 }
 
 /**
- * 查找页面中最符合条件的视频元素
+ * 深度收集某个文档（及其下所有「开放」shadow DOM）中**正在播放**的 video 元素
  *
- * 多个视频元素时的权重优先级：
- * 1. 播放状态 (播放中 > 其他)：只有播放中才需要倍速
- * 2. 音频状态 (有声 > 静音)：如果有多个视频同时播放，优先处理有声音的，因为静音的通常是广告或背景视频，
- * 理想情况下不会出现多个有声音的视频同时播放
- * 3. 元素大小 (大 > 小)：大尺寸的视频通常是主要内容，虽然背景视频尺寸可能更大但通常都是静音的
- * 4. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近的视频
+ * 只收集正在播放的 video（倍速/seek 仅对播放中有效），免去后续再过滤。
+ * 注意：mode 为 'closed' 的 shadow root 无法访问，其中的 video 会漏掉。
+ */
+function getVideosDeep(root) {
+  const videos = [];
+  const collect = node => {
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);
+    let el;
+    while (el = walker.nextNode()) {
+      const video = el;
+      if (el.tagName === 'VIDEO' && isPlaying(video)) videos.push(video);
+      if (el.shadowRoot) collect(el.shadowRoot);
+    }
+  };
+  collect(root);
+  return videos;
+}
+
+/**
+ * 查找「当前文档」（含 shadow DOM）中最优的「正在播放」video 元素，供快捷键操作。
+ *
+ * 只扫描本实例所在文档：iframe 内的 video 由各 iframe 自身的实例通过 postMessage
+ * 链逐层处理，不在父文档里跨文档查找（统一一套机制，不分同源 / 跨域）。
+ *
+ * 多个视频同时播放时的权重优先级：
+ * 1. 音频状态 (有声 > 静音)：静音的通常是广告或背景视频，理想情况下不会出现多个有声音的视频
+ * 2. 元素大小 (大 > 小)：大尺寸的视频通常是主要内容
+ * 3. 视口距离 (距离视口中心近 > 远)：短视频或信息流页面可滚动时，优先处理视口中心附近
  */
 function findBestVideoElement() {
-  // 优先级 1 播放状态：播放中优先
-  const videos = Array.from($$('video')).filter(video => isPlaying(video));
+  const videos = getVideosDeep(document);
   if (videos.length === 0) {
     warn('视频元素为空');
     return null;
   }
   videos.sort((a, b) => {
-    // 优先级 1 播放状态：播放中优先
-    // const playingA = isPlaying(a)
-    // const playingB = isPlaying(b)
-    // if (playingA !== playingB) {
-    //   return playingA ? -1 : 1
-    // }
-
-    // 优先级 2 音频状态：非静音优先
+    // 优先级 1 音频状态：非静音优先
     const audibleA = isAudible(a);
     const audibleB = isAudible(b);
     if (audibleA !== audibleB) {
@@ -225,15 +235,14 @@ function findBestVideoElement() {
     const rectA = a.getBoundingClientRect();
     const rectB = b.getBoundingClientRect();
 
-    // 优先级 3 元素大小：大尺寸优先
+    // 优先级 2 元素大小：大尺寸优先
     const sizeA = rectA.width * rectA.height;
     const sizeB = rectB.width * rectB.height;
-    // 允许 100 像素的误差视为相等，或者直接比较
     if (sizeA !== sizeB) {
       return sizeB - sizeA;
     }
 
-    // 优先级 4 视口距离：距离视口中心越近越优先 (距离越小越好)
+    // 优先级 3 视口距离：距离视口中心越近越优先 (距离越小越好)
     const distA = getDistanceFromViewportCenter(rectA);
     const distB = getDistanceFromViewportCenter(rectB);
     return distA - distB;
@@ -244,34 +253,56 @@ function findBestVideoElement() {
   return videos[0];
 }
 
-/**
- * 检测当前活动元素是否为输入元素
- */
+/** 判断元素是否为输入元素（输入框 / 文本域 / 下拉选择 / 可编辑元素） */
+function isInputElement(el) {
+  if (!el) return false;
+  const {
+    tagName
+  } = el;
+  return tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || el instanceof HTMLElement && el.isContentEditable;
+}
+
+/** 检测当前焦点是否落在输入元素上 */
 function isInputActive() {
-  let activeElement = document.activeElement;
-  if (!activeElement) return false;
-  while (activeElement.shadowRoot?.activeElement) {
-    activeElement = activeElement.shadowRoot.activeElement;
+  let {
+    activeElement
+  } = document;
+
+  // 穿透 shadowRoot 与同域 iframe，定位真正获得焦点的元素；无更深层则结束
+  while (true) {
+    const shadowEl = activeElement.shadowRoot?.activeElement;
+    if (shadowEl) {
+      activeElement = shadowEl;
+      continue;
+    }
+    if (activeElement instanceof HTMLIFrameElement) {
+      const innerEl = activeElement.contentDocument?.activeElement;
+      if (innerEl) {
+        activeElement = innerEl;
+        continue;
+      }
+    }
+    break;
   }
-  const tagName = activeElement.tagName;
-  return tagName === 'INPUT' || tagName === 'TEXTAREA' || activeElement instanceof HTMLElement && activeElement.isContentEditable;
+  return isInputElement(activeElement);
 }
 ;// ./src/scripts/bilibili/index.ts
 
 
 function speed() {
+  let video = null;
   let savedRate = 1;
   const tapHold = new TapHold();
-  tapHold.on('KeyS', {
+  tapHold.on('s', {
     onLongPressStart: () => {
-      const video = findBestVideoElement();
+      video = findBestVideoElement();
       if (!video) return;
       savedRate = video.playbackRate;
       video.playbackRate = 6;
     },
     onLongPressEnd: () => {
-      const video = findBestVideoElement();
       if (video) video.playbackRate = savedRate;
+      video = null;
     }
   });
   tapHold.start();
