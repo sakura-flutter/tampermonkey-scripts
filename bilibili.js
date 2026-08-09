@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili 工具箱
-// @version      1.7.1
+// @version      1.7.2
 // @description  长按 S 键倍速播放
 // @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
@@ -293,7 +293,7 @@ function speed() {
   let video = null;
   let savedRate = 1;
   const tapHold = new TapHold();
-  tapHold.on('s', {
+  tapHold.on('KeyS', {
     onLongPressStart: () => {
       video = findBestVideoElement();
       if (!video) return;
