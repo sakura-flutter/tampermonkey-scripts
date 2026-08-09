@@ -8,7 +8,7 @@ function speed() {
 
   const tapHold = new TapHold()
 
-  tapHold.on('s', {
+  tapHold.on('KeyS', {
     onLongPressStart: () => {
       video = findBestVideoElement()
       if (!video) return
