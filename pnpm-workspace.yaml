@@ -21,6 +21,7 @@ catalog:
   '@types/crypto-js': 4.2.2
   crypto-js: 4.2.0
   viewerjs: 1.11.9
+  '@inquirer/prompts': 8.7.0
 
 minimumReleaseAgeExclude:
   - viewerjs@1.11.9

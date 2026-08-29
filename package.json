@@ -24,11 +24,13 @@
     "check": "vp check",
     "test": "vp test",
     "test:watch": "vp test watch",
+    "bump": "node scripts/bump-version.ts",
     "clean:dist": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "clean:modules": "pnpm -r exec node -e \"require('node:fs').rmSync('node_modules',{recursive:true,force:true})\" && node -e \"require('node:fs').rmSync('node_modules',{recursive:true,force:true})\"",
     "prepare": "vp config"
   },
   "devDependencies": {
+    "@inquirer/prompts": "catalog:",
     "@types/node": "catalog:",
     "gh-pages": "catalog:",
     "typescript": "catalog:",
