@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.web.json",
+  "compilerOptions": {
+    "types": ["vite/client", "vite-plugin-monkey/client", "jquery"]
+  },
+  "include": ["src", "../../typings"]
+}

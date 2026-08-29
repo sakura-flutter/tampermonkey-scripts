@@ -1,0 +1,19 @@
+{
+  "name": "@monkey/bilibili",
+  "version": "1.7.2",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@monkey/playback-rate": "workspace:*"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    "packages/**/*.test.ts",
+    "packages/**/*.test.tsx",
+    "shared/**/*.test.ts",
+    "shared/**/*.test.tsx",
+    "tools/**/*.test.ts",
+    "tools/**/*.test.tsx"
+  ]
+}

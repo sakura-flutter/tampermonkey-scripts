@@ -1,0 +1,21 @@
+{
+  "name": "@monkey/lanhu",
+  "version": "1.12.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@monkey/shared": "workspace:*",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "sass-embedded": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

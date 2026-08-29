@@ -1,3 +1,34 @@
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - core-js
+packages:
+  - packages/*
+  - shared
+  - tools/*
+
+allowBuilds:
+  '@parcel/watcher': true
+
+catalog:
+  typescript: 7.0.2
+  vue: 3.5.41
+  vite-plus: 0.3.0
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.0
+  vite-plugin-monkey: 8.1.0
+  '@vitejs/plugin-vue-jsx': 5.1.6
+  sass-embedded: 1.103.1
+  autoprefixer: 10.5.4
+  postcss: 8.5.26
+  gh-pages: 6.3.0
+  '@types/node': 26.2.0
+  '@types/crypto-js': 4.2.2
+  crypto-js: 4.2.0
+  viewerjs: 1.11.9
+
+minimumReleaseAgeExclude:
+  - viewerjs@1.11.9
+
+overrides:
+  vite@*: 'catalog:'
+peerDependencyRules:
+  allowAny:
+    - vite
+  allowedVersions:
+    vite: '*'

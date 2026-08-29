@@ -1,0 +1,32 @@
+@use '../mixins' as *;
+
+$default-width: 652px;
+
+@include substrate(1600px, 73vw, 1530px) {
+  body {
+    $google-columns-repeat: 21;
+
+    /* 搜索结果 */
+    #rcnt {
+      grid-template-columns: 210px repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        ) minmax(0, 1fr);
+      width: var(--inject-page-width);
+    }
+
+    /* 列表 */
+    #w7tRq {
+      column-gap: 1%;
+      grid-template-columns: 0 repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        );
+
+      // /* 特殊类型还原宽度(搜索：蛇麻花) */
+      // g-section-with-header {
+      //   width: $default-width;
+      // }
+    }
+  }
+}

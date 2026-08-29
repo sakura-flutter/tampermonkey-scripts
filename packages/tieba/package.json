@@ -1,0 +1,24 @@
+{
+  "name": "@monkey/tieba",
+  "version": "3.4.4",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@monkey/shared": "workspace:*",
+    "crypto-js": "catalog:",
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "@types/crypto-js": "catalog:",
+    "@types/jquery": "3.5.32",
+    "sass-embedded": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

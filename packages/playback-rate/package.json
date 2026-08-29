@@ -1,0 +1,23 @@
+{
+  "name": "@monkey/playback-rate",
+  "version": "3.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tap-hold": "./src/tap-hold.ts",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@monkey/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

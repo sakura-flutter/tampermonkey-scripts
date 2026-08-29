@@ -1,0 +1,24 @@
+{
+  "name": "@monkey/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.scss",
+    "./src/utils/ready-state.ts"
+  ],
+  "exports": {
+    "./*": {
+      "types": "./src/*/index.ts",
+      "default": "./src/*"
+    }
+  },
+  "dependencies": {
+    "vue": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-monkey": "catalog:"
+  }
+}

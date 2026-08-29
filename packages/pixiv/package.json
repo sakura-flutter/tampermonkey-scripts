@@ -1,0 +1,20 @@
+{
+  "name": "@monkey/pixiv",
+  "version": "1.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "dependencies": {
+    "@monkey/shared": "workspace:*",
+    "viewerjs": "catalog:"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

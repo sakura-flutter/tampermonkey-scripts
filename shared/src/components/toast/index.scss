@@ -1,0 +1,90 @@
+$prefix-cls: '.skr-toast';
+
+#{$prefix-cls}-container {
+  position: fixed;
+  z-index: 99999;
+  top: 80px;
+  right: 0;
+  left: 0;
+  pointer-events: none;
+  text-align: center;
+}
+
+#{$prefix-cls} {
+  contain: content;
+  max-height: 100vh;
+  transition: all 0.3s ease-in-out;
+
+  &-content {
+    pointer-events: auto;
+    display: inline-flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    max-width: 90vw;
+    font-size: 14px;
+    line-height: 1.5em;
+    border: 1px solid;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 10%);
+
+    &--info {
+      color: #2e8bf0;
+      background: #f0faff;
+      border-color: #d4eeff;
+    }
+
+    &--success {
+      color: #19bf6c;
+      background: #edfff3;
+      border-color: #bbf2cf;
+    }
+
+    &--warning {
+      color: #f90;
+      background: #fff9e6;
+      border-color: #ffe7a3;
+    }
+
+    &--error {
+      color: #ed3f13;
+      background: #ffefe6;
+      border-color: #ffcfb8;
+    }
+
+    &-text {
+      flex: auto;
+    }
+
+    &-close {
+      flex: none;
+      width: 20px;
+      margin: 0 -8px 0 10px;
+      padding: 0;
+      font-size: 16px;
+      color: #ababab;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+  }
+
+  /* 动画 */
+  &-slide-fade {
+    &-enter-active,
+    &-leave-active {
+      transition: all 0.3s;
+    }
+
+    &-enter-from {
+      transform: translateY(-50%);
+      opacity: 0;
+    }
+
+    &-leave-to {
+      transform: translateY(50%);
+      max-height: 0;
+      padding: 0;
+      opacity: 0;
+    }
+  }
+}

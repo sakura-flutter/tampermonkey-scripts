@@ -1,0 +1,15 @@
+@use '@monkey/shared/components/index' as *;
+@include var;
+
+#hide-menu-control-js {
+  bottom: 40px;
+  contain: content;
+  left: 0;
+  padding: 10px 0;
+  position: fixed;
+  z-index: 50;
+
+  p {
+    writing-mode: vertical-lr;
+  }
+}

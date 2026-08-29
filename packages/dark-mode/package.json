@@ -1,0 +1,16 @@
+{
+  "name": "@monkey/dark-mode",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "devDependencies": {
+    "@monkey/vite-userscript": "workspace:*",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}
