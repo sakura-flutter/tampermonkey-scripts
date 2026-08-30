@@ -20,6 +20,7 @@
   "scripts": {
     "dev": "vp run",
     "build": "pnpm run clean:dist && vp run -F \"./packages/*\" --parallel --cache build",
+    "build:dev": "pnpm run build:watch --mode development",
     "build:watch": "pnpm run clean:dist && vp run -F \"./packages/*\" --parallel --cache build --watch",
     "check": "vp check",
     "test": "vp test",

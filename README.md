@@ -33,11 +33,12 @@ pnpm dev
 
 ### 按需执行
 
-| 命令               | 用途                                 |
-| ------------------ | ------------------------------------ |
-| `pnpm build`       | 一次性构建全部脚本，并更新到 `dist/` |
-| `pnpm build:watch` | 实时构建全部脚本，并更新到 `dist/`   |
-| `pnpm check`       | 执行格式化、lint 和类型检查          |
+| 命令               | 用途                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `pnpm build`       | 构建全部脚本，并更新到 `dist/`                                        |
+| `pnpm build:dev`   | 实时构建全部脚本，保留日志，配合 Tampermonkey `@require file://` 使用 |
+| `pnpm build:watch` | 实时构建全部脚本                                                      |
+| `pnpm check`       | 执行格式化、lint 和类型检查                                           |
 
 开发时遇到 CSP 问题，请参考 [vite-plugin-monkey 文档](https://github.com/lisonge/vite-plugin-monkey/blob/main/README_zh.md#csp)。
 

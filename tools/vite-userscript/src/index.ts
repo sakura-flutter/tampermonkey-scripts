@@ -43,6 +43,11 @@ export function defineUserScriptConfig(
     throw new Error(`[vite-userscript] package.json 的 name 必须使用 @monkey/ 作用域：${manifestPath}`)
   }
 
+  // 先简单覆盖下
+  if (env.mode !== 'production') {
+    process.env.NODE_ENV = env.mode
+  }
+
   const scriptName = resolveScriptName(name)
   const monkeyOption: MonkeyOption = {
     ...scriptOption,
