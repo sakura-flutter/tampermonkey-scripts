@@ -60,13 +60,18 @@ const sites: Site[] = [
     parse: ({ query }) => query.dest,
   },
   {
-    name: '贴吧',
+    name: '贴吧-旧版',
     match: /^jump2?\.bdimg\.com\/safecheck/, // 以前的地址没有 2
     readyState: 'interactive',
     parse: () => ({
       selector: '.warning_info a:nth-of-type(1)[href]',
       attr: 'href',
     }),
+  },
+  {
+    name: '贴吧',
+    match: 'tieba.baidu.com/mo/q/checkurl',
+    parse: ({ query }) => query.url,
   },
   {
     name: 'CSDN',

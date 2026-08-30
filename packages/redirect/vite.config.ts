@@ -16,6 +16,7 @@ const matches = [
   '*://app.yinxiang.com/OutboundRedirect.action*',
   '*://jump.bdimg.com/safecheck/*',
   '*://jump2.bdimg.com/safecheck/*',
+  '*://tieba.baidu.com/mo/q/checkurl*',
   '*://link.csdn.net/*',
   '*://www.youtube.com/redirect*',
   '*://mp.weixin.qq.com/s/*',

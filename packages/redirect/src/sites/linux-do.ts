@@ -1,14 +1,15 @@
-function continueExternalLink() {
-  const modal = document.querySelector('.external-link-modal')?.closest('.d-modal')
+function openExternalLink(event: MouseEvent) {
+  const target = event.target
+  if (!(target instanceof Element)) return
 
-  modal?.querySelector<HTMLButtonElement>('.d-modal__footer .btn-primary')?.click()
+  const link = target.closest<HTMLAnchorElement>('a.normal-external-link-icon[href]')
+  if (!link) return
+
+  event.stopImmediatePropagation()
+  event.preventDefault()
+  window.open(link.href)
 }
 
 export const linuxDo = () => {
-  new MutationObserver(continueExternalLink).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-  })
-
-  continueExternalLink()
+  document.addEventListener('click', openExternalLink, true)
 }
