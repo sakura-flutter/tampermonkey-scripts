@@ -1,14 +1,6 @@
 import { defineConfig } from 'vite-plus'
 
 export default defineConfig({
-  run: {
-    tasks: {
-      deploy: {
-        command: 'gh-pages -d ./dist',
-        dependsOn: ['build'],
-      },
-    },
-  },
   staged: {
     '*.{ts,tsx,scss}': 'vp check --fix',
   },
