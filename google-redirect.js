@@ -1,21 +1,21 @@
 // ==UserScript==
 // @name         谷歌重定向
-// @version      1.0.0
-// @description  hk -> jp
-// @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
-// @license      GPL-3.0
+// @version      1.0.0
+// @author       sakura-flutter
+// @description  hk -> jp
+// @license      MIT
+// @match        https://www.google.com.hk/search*
+// @run-at       document-start
 // @compatible   chrome Latest
 // @compatible   firefox Latest
 // @compatible   edge Latest
-// @run-at       document-start
 // @noframes
-// @match        https://www.google.com.hk/search*
 // ==/UserScript==
 
-/******/ (() => { // webpackBootstrap
-const url = new URL(location.href);
-url.hostname = 'www.google.co.jp';
-location.replace(url);
-/******/ })()
-;
+(function() {
+	"use strict";
+	var url = new URL(location.href);
+	url.hostname = "www.google.co.jp";
+	location.replace(url);
+})();

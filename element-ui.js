@@ -1,764 +1,260 @@
 // ==UserScript==
 // @name         Element UI文档辅助
-// @version      1.0.4
-// @description  在Element UI文档中增加示例目录导航，同时支持v2与v3(element-plus)版本，类似于Ant右侧悬浮的导航
-// @author       sakura-flutter
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
-// @license      GPL-3.0
-// @compatible   chrome Latest
-// @compatible   firefox Latest
-// @compatible   edge Latest
+// @version      1.0.4
+// @author       sakura-flutter
+// @description  在Element UI文档中增加示例目录导航，同时支持v2与v3(element-plus)版本，类似于Ant右侧悬浮的导航
+// @license      MIT
 // @match        https://element-plus.gitee.io/*
 // @match        https://element-plus.org/*
 // @match        https://element.eleme.cn/*
 // @match        https://element.eleme.io/*
-// @require      https://unpkg.com/vue@3/dist/vue.runtime.global.prod.min.js
+// @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.min.js
+// @grant        GM_addStyle
+// @compatible   chrome Latest
+// @compatible   firefox Latest
+// @compatible   edge Latest
 // ==/UserScript==
 
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ 1511
-(module) {
-
-
-
-var memo = {};
-
-/* istanbul ignore next  */
-function getTarget(target) {
-  if (typeof memo[target] === "undefined") {
-    var styleTarget = document.querySelector(target);
-
-    // Special case to return head of iframe instead of iframe itself
-    if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
-      try {
-        // This will throw an exception if access to iframe is blocked
-        // due to cross-origin restrictions
-        styleTarget = styleTarget.contentDocument.head;
-      } catch (e) {
-        // istanbul ignore next
-        styleTarget = null;
-      }
-    }
-    memo[target] = styleTarget;
-  }
-  return memo[target];
-}
-
-/* istanbul ignore next  */
-function insertBySelector(insert, style) {
-  var target = getTarget(insert);
-  if (!target) {
-    throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
-  }
-  target.appendChild(style);
-}
-module.exports = insertBySelector;
-
-/***/ },
-
-/***/ 2077
-(module) {
-
-
-
-/* istanbul ignore next  */
-function styleTagTransform(css, styleElement) {
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css;
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild);
-    }
-    styleElement.appendChild(document.createTextNode(css));
-  }
-}
-module.exports = styleTagTransform;
-
-/***/ },
-
-/***/ 2932
-(module, __unused_webpack_exports, __webpack_require__) {
-
-
-
-/* istanbul ignore next  */
-function setAttributesWithoutAttributes(styleElement) {
-  var nonce =  true ? __webpack_require__.nc : 0;
-  if (nonce) {
-    styleElement.setAttribute("nonce", nonce);
-  }
-}
-module.exports = setAttributesWithoutAttributes;
-
-/***/ },
-
-/***/ 3259
-(module, __webpack_exports__, __webpack_require__) {
-
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   A: () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8291);
-/* harmony import */ var _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8748);
-/* harmony import */ var _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-// Imports
-
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_pnpm_css_loader_7_1_2_webpack_5_104_1_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, `@media(width >= 1500px){#catalogue-js{left:calc(50% + 1140px/2 + 40px);right:auto}}#catalogue-js{contain:content;position:fixed;right:20px;top:100px;z-index:1000}#catalogue-js ul{border-left:1px solid #f0f0f0;font-size:12px;list-style:none;margin:0;padding-left:0}#catalogue-js li{border-left:1px solid rgba(0,0,0,0);color:rgba(0,0,0,.85);cursor:pointer;line-height:1.5;list-style:none;margin-left:-1px;overflow:hidden;padding:2px 0 2px 16px;text-overflow:ellipsis;transition:all .3s ease;white-space:nowrap;width:110px}#catalogue-js li:hover{border-left-color:#1890ff;color:#1890ff}`, ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ },
-
-/***/ 4812
-(module) {
-
-
-
-var stylesInDOM = [];
-function getIndexByIdentifier(identifier) {
-  var result = -1;
-  for (var i = 0; i < stylesInDOM.length; i++) {
-    if (stylesInDOM[i].identifier === identifier) {
-      result = i;
-      break;
-    }
-  }
-  return result;
-}
-function modulesToDom(list, options) {
-  var idCountMap = {};
-  var identifiers = [];
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i];
-    var id = options.base ? item[0] + options.base : item[0];
-    var count = idCountMap[id] || 0;
-    var identifier = "".concat(id, " ").concat(count);
-    idCountMap[id] = count + 1;
-    var indexByIdentifier = getIndexByIdentifier(identifier);
-    var obj = {
-      css: item[1],
-      media: item[2],
-      sourceMap: item[3],
-      supports: item[4],
-      layer: item[5]
-    };
-    if (indexByIdentifier !== -1) {
-      stylesInDOM[indexByIdentifier].references++;
-      stylesInDOM[indexByIdentifier].updater(obj);
-    } else {
-      var updater = addElementStyle(obj, options);
-      options.byIndex = i;
-      stylesInDOM.splice(i, 0, {
-        identifier: identifier,
-        updater: updater,
-        references: 1
-      });
-    }
-    identifiers.push(identifier);
-  }
-  return identifiers;
-}
-function addElementStyle(obj, options) {
-  var api = options.domAPI(options);
-  api.update(obj);
-  var updater = function updater(newObj) {
-    if (newObj) {
-      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap && newObj.supports === obj.supports && newObj.layer === obj.layer) {
-        return;
-      }
-      api.update(obj = newObj);
-    } else {
-      api.remove();
-    }
-  };
-  return updater;
-}
-module.exports = function (list, options) {
-  options = options || {};
-  list = list || [];
-  var lastIdentifiers = modulesToDom(list, options);
-  return function update(newList) {
-    newList = newList || [];
-    for (var i = 0; i < lastIdentifiers.length; i++) {
-      var identifier = lastIdentifiers[i];
-      var index = getIndexByIdentifier(identifier);
-      stylesInDOM[index].references--;
-    }
-    var newLastIdentifiers = modulesToDom(newList, options);
-    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
-      var _identifier = lastIdentifiers[_i];
-      var _index = getIndexByIdentifier(_identifier);
-      if (stylesInDOM[_index].references === 0) {
-        stylesInDOM[_index].updater();
-        stylesInDOM.splice(_index, 1);
-      }
-    }
-    lastIdentifiers = newLastIdentifiers;
-  };
-};
-
-/***/ },
-
-/***/ 7296
-(module) {
-
-
-
-/* istanbul ignore next  */
-function insertStyleElement(options) {
-  var element = document.createElement("style");
-  options.setAttributes(element, options.attributes);
-  options.insert(element, options.options);
-  return element;
-}
-module.exports = insertStyleElement;
-
-/***/ },
-
-/***/ 7381
-(module) {
-
-
-
-/* istanbul ignore next  */
-function apply(styleElement, options, obj) {
-  var css = "";
-  if (obj.supports) {
-    css += "@supports (".concat(obj.supports, ") {");
-  }
-  if (obj.media) {
-    css += "@media ".concat(obj.media, " {");
-  }
-  var needLayer = typeof obj.layer !== "undefined";
-  if (needLayer) {
-    css += "@layer".concat(obj.layer.length > 0 ? " ".concat(obj.layer) : "", " {");
-  }
-  css += obj.css;
-  if (needLayer) {
-    css += "}";
-  }
-  if (obj.media) {
-    css += "}";
-  }
-  if (obj.supports) {
-    css += "}";
-  }
-  var sourceMap = obj.sourceMap;
-  if (sourceMap && typeof btoa !== "undefined") {
-    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
-  }
-
-  // For old IE
-  /* istanbul ignore if  */
-  options.styleTagTransform(css, styleElement, options.options);
-}
-function removeStyleElement(styleElement) {
-  // istanbul ignore if
-  if (styleElement.parentNode === null) {
-    return false;
-  }
-  styleElement.parentNode.removeChild(styleElement);
-}
-
-/* istanbul ignore next  */
-function domAPI(options) {
-  if (typeof document === "undefined") {
-    return {
-      update: function update() {},
-      remove: function remove() {}
-    };
-  }
-  var styleElement = options.insertStyleElement(options);
-  return {
-    update: function update(obj) {
-      apply(styleElement, options, obj);
-    },
-    remove: function remove() {
-      removeStyleElement(styleElement);
-    }
-  };
-}
-module.exports = domAPI;
-
-/***/ },
-
-/***/ 8291
-(module) {
-
-
-
-module.exports = function (i) {
-  return i[1];
-};
-
-/***/ },
-
-/***/ 8748
-(module) {
-
-
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-*/
-module.exports = function (cssWithMappingToString) {
-  var list = [];
-
-  // return the list of modules as css string
-  list.toString = function toString() {
-    return this.map(function (item) {
-      var content = "";
-      var needLayer = typeof item[5] !== "undefined";
-      if (item[4]) {
-        content += "@supports (".concat(item[4], ") {");
-      }
-      if (item[2]) {
-        content += "@media ".concat(item[2], " {");
-      }
-      if (needLayer) {
-        content += "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {");
-      }
-      content += cssWithMappingToString(item);
-      if (needLayer) {
-        content += "}";
-      }
-      if (item[2]) {
-        content += "}";
-      }
-      if (item[4]) {
-        content += "}";
-      }
-      return content;
-    }).join("");
-  };
-
-  // import a list of modules into the list
-  list.i = function i(modules, media, dedupe, supports, layer) {
-    if (typeof modules === "string") {
-      modules = [[null, modules, undefined]];
-    }
-    var alreadyImportedModules = {};
-    if (dedupe) {
-      for (var k = 0; k < this.length; k++) {
-        var id = this[k][0];
-        if (id != null) {
-          alreadyImportedModules[id] = true;
-        }
-      }
-    }
-    for (var _k = 0; _k < modules.length; _k++) {
-      var item = [].concat(modules[_k]);
-      if (dedupe && alreadyImportedModules[item[0]]) {
-        continue;
-      }
-      if (typeof layer !== "undefined") {
-        if (typeof item[5] === "undefined") {
-          item[5] = layer;
-        } else {
-          item[1] = "@layer".concat(item[5].length > 0 ? " ".concat(item[5]) : "", " {").concat(item[1], "}");
-          item[5] = layer;
-        }
-      }
-      if (media) {
-        if (!item[2]) {
-          item[2] = media;
-        } else {
-          item[1] = "@media ".concat(item[2], " {").concat(item[1], "}");
-          item[2] = media;
-        }
-      }
-      if (supports) {
-        if (!item[4]) {
-          item[4] = "".concat(supports);
-        } else {
-          item[1] = "@supports (".concat(item[4], ") {").concat(item[1], "}");
-          item[4] = supports;
-        }
-      }
-      list.push(item);
-    }
-  };
-  return list;
-};
-
-/***/ }
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/nonce */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nc = undefined;
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-
-;// external "Vue"
-const external_Vue_namespaceObject = Vue;
-;// ./src/utils/base.ts
-function throttle(fn, delay) {
-  let timeoutId;
-  let begin = Date.now();
-  return function (...args) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
-    const cur = Date.now();
-    clearTimeout(timeoutId);
-    if (cur - begin >= delay) {
-      fn.apply(self, args);
-      begin = cur;
-    } else {
-      timeoutId = setTimeout(function () {
-        fn.apply(self, args);
-      }, delay);
-    }
-  };
-}
-function once(fn) {
-  let called = false;
-  return function (...args) {
-    if (!called) {
-      called = true;
-      fn.apply(this, args);
-    }
-  };
-}
-
-/**
- * 延时
- * @param ms 毫秒数
- */
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-function isFunction(value) {
-  return typeof value === 'function';
-}
-;// ./src/utils/selector.ts
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
-;// ./src/utils/compatibility.ts
-/**
- * 兼容性检查，只是用来拦截低版本用户
- * @return 是否通过
- */
-function checker({
-  firefox = 75,
-  edge = 80,
-  chrome = 80,
-  safari = 14,
-  notify = true
-} = {}) {
-  const {
-    userAgent
-  } = window.navigator;
-  const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
-  const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
-  const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
-  const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1]; // 不保证兼容
-
-  let pass = false;
-  if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) {
-    pass = true;
-  }
-  if (!pass) {
-    const {
-      Toast
-    } = window;
-    notify && Toast && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
-  }
-  return pass;
-}
-;// ./src/utils/vue-root.ts
-function getVueRoot(rootContainer) {
-  if (isVue2(rootContainer)) return getVue2Instance(rootContainer);
-  if (isVue3(rootContainer)) return getVue3Instance(rootContainer);
-  return {};
-}
-function isVue2(rootContainer) {
-  return '__vue__' in rootContainer;
-}
-function isVue3(rootContainer) {
-  // https://github.com/vuejs/vue-next/blob/a66e53a24f445b688eef6812ecb872dc53cf2702/packages/runtime-core/src/apiCreateApp.ts#L252
-  return '__vue_app__' in rootContainer;
-}
-function getVue2Instance(rootContainer) {
-  return {
-    instance: rootContainer.__vue__
-  };
-}
-function getVue3Instance(rootContainer) {
-  return {
-    app: rootContainer.__vue_app__,
-    // dev mode下组件el有__vueParentComponent __vnode属性
-    // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L767
-    // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L763
-
-    // _vnode.component.proxy获取实例，应该就是app.mount返回的
-    // https://github.com/vuejs/vue-next/blob/a66e53a24f445b688eef6812ecb872dc53cf2702/packages/runtime-core/src/apiCreateApp.ts#L258
-    // https://github.com/vuejs/vue-next/blob/3867bb4c14131ef94098a62bffba97a5b7d1fe66/packages/runtime-core/src/renderer.ts#L2198
-    instance: rootContainer._vnode && rootContainer._vnode.component.proxy
-  };
-}
-
-;// ./src/utils/log.ts
-const isDebug = "production" !== 'production';
-function warn(...args) {
-  isDebug && warn.force(...args);
-}
-warn.force = function (...args) {
-  console.warn('%c      warn      ', 'background: #ffa500; padding: 1px; color: #fff;', ...args);
-};
-function error(...args) {
-  isDebug && error.force(...args);
-}
-error.force = function (...args) {
-  console.error('%c      error      ', 'background: red; padding: 1px; color: #fff;', ...args);
-};
-function table(...args) {
-  isDebug && console.table(...args);
-}
-
-;// ./src/utils/mount-component.ts
-/*
-  引用：https://github.com/youzan/vant/blob/dev/src/utils/mount-component.ts
-*/
-
-
-function append(el) {
-  document.body ? document.body.appendChild(el) : window.addEventListener('DOMContentLoaded', () => append(el));
-}
-function mountComponent(RootComponent) {
-  const app = (0,external_Vue_namespaceObject.createApp)(RootComponent);
-  const root = document.createElement('div');
-  append(root);
-  return {
-    instance: app.mount(root),
-    unmount() {
-      app.unmount();
-      document.body.removeChild(root);
-    }
-  };
-}
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js
-var injectStylesIntoStyleTag = __webpack_require__(4812);
-var injectStylesIntoStyleTag_default = /*#__PURE__*/__webpack_require__.n(injectStylesIntoStyleTag);
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/styleDomAPI.js
-var styleDomAPI = __webpack_require__(7381);
-var styleDomAPI_default = /*#__PURE__*/__webpack_require__.n(styleDomAPI);
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/insertBySelector.js
-var insertBySelector = __webpack_require__(1511);
-var insertBySelector_default = /*#__PURE__*/__webpack_require__.n(insertBySelector);
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js
-var setAttributesWithoutAttributes = __webpack_require__(2932);
-var setAttributesWithoutAttributes_default = /*#__PURE__*/__webpack_require__.n(setAttributesWithoutAttributes);
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/insertStyleElement.js
-var insertStyleElement = __webpack_require__(7296);
-var insertStyleElement_default = /*#__PURE__*/__webpack_require__.n(insertStyleElement);
-// EXTERNAL MODULE: ./node_modules/.pnpm/style-loader@4.0.0_webpack@5.104.1/node_modules/style-loader/dist/runtime/styleTagTransform.js
-var styleTagTransform = __webpack_require__(2077);
-var styleTagTransform_default = /*#__PURE__*/__webpack_require__.n(styleTagTransform);
-// EXTERNAL MODULE: ./node_modules/.pnpm/css-loader@7.1.2_webpack@5.104.1/node_modules/css-loader/dist/cjs.js!./node_modules/.pnpm/postcss-loader@8.2.0_postcs_f7b9b6eeb235e9c34e895671d59aede2/node_modules/postcss-loader/dist/cjs.js!./node_modules/.pnpm/sass-loader@16.0.6_sass-emb_bcbe7ab246d4bc18ed8dda483dca47bd/node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/scripts/element-ui/catalogue.scss
-var catalogue = __webpack_require__(3259);
-;// ./src/scripts/element-ui/catalogue.scss
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-
-var options = {};
-
-options.styleTagTransform = (styleTagTransform_default());
-options.setAttributes = (setAttributesWithoutAttributes_default());
-options.insert = insertBySelector_default().bind(null, "head");
-options.domAPI = (styleDomAPI_default());
-options.insertStyleElement = (insertStyleElement_default());
-
-var update = injectStylesIntoStyleTag_default()(catalogue/* default */.A, options);
-
-
-
-
-       /* harmony default export */ const element_ui_catalogue = (catalogue/* default */.A && catalogue/* default */.A.locals ? catalogue/* default */.A.locals : undefined);
-
-;// ./src/scripts/element-ui/catalogue.tsx
-
-
-
-
-
-class Catalogue {
-  #scope = '';
-  #cat = (0,external_Vue_namespaceObject.ref)([]);
-  constructor({
-    scope
-  }) {
-    this.#scope = scope;
-    this.#createUI();
-  }
-  update() {
-    const els = this.#getElements();
-    const cat = els.map(el => {
-      const catItem = {
-        id: el.id,
-        text: ''
-      };
-      // 仅显示文本节点内容
-      el.childNodes.forEach(node => {
-        if (node.nodeName === '#text') {
-          catItem.text += node.nodeValue;
-        }
-      });
-      catItem.text = catItem.text.trim();
-      return catItem;
-    });
-    warn(els, cat);
-    this.#cat.value = cat;
-  }
-  #getElements() {
-    return [...$$(this.#scope)];
-  }
-  #createUI() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
-    mountComponent({
-      setup() {
-        function intoView(item) {
-          $('#' + item.id)?.scrollIntoView({
-            block: 'center'
-          });
-        }
-        return () => (0,external_Vue_namespaceObject.createVNode)("div", {
-          "id": "catalogue-js"
-        }, [(0,external_Vue_namespaceObject.createVNode)("ul", null, [self.#cat.value.map(item => (0,external_Vue_namespaceObject.createVNode)("li", {
-          "key": item.id,
-          "title": item.text,
-          "onClick": () => intoView(item)
-        }, [item.text]))])]);
-      }
-    });
-  }
-}
-;// ./src/scripts/element-ui/index.ts
-
-
-
-
-
-
-
-async function main() {
-  if (!checker()) return;
-  let instance;
-  // 非国内链接打开较慢，防止未完成加载
-  while (instance == null) {
-    ;
-    ({
-      instance
-    } = getVueRoot($('#app')));
-    await sleep(500);
-  }
-  warn(instance);
-  // element-plus 已支持
-  if ($('#app').__vue_app__) return;
-  const catalogue = new Catalogue({
-    // 注意：选择器要同时兼容element与element plus文档
-    scope: '.page-container .page-component__content section.element-doc > h3'
-  });
-  let unwatch;
-  instance.$watch('$route', function () {
-    (0,external_Vue_namespaceObject.nextTick)(() => {
-      const target = $('.page-component__content');
-      if (target && unwatch == null) {
-        unwatch = watchDocs(target);
-      } else if (!target) {
-        unwatch?.();
-        unwatch = undefined;
-      }
-    });
-  }, {
-    immediate: true
-  });
-  function watchDocs(target) {
-    catalogue.update();
-    const observer = new MutationObserver(() => catalogue.update());
-    observer.observe(target, {
-      subtree: true,
-      childList: true
-    });
-    return () => {
-      observer.disconnect();
-      catalogue.update();
-    };
-  }
-}
-main();
-/******/ })()
-;
+(function(vue) {
+	"use strict";
+	var s = new Set();
+	var _css = async (t) => {
+		if (s.has(t)) return;
+		s.add(t);
+		((c) => {
+			if (typeof GM_addStyle === "function") GM_addStyle(c);
+			else (document.head || document.documentElement).appendChild(document.createElement("style")).append(c);
+		})(t);
+	};
+	var sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+	_css("@charset \"UTF-8\";\n.skr-toast-container {\n  position: fixed;\n  z-index: 99999;\n  top: 80px;\n  right: 0;\n  left: 0;\n  pointer-events: none;\n  text-align: center;\n}\n\n.skr-toast {\n  contain: content;\n  max-height: 100vh;\n  transition: all 0.3s ease-in-out;\n}\n.skr-toast-content {\n  pointer-events: auto;\n  display: inline-flex;\n  justify-content: center;\n  margin-bottom: 10px;\n  padding: 8px 16px;\n  max-width: 90vw;\n  font-size: 14px;\n  line-height: 1.5em;\n  border: 1px solid;\n  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);\n}\n.skr-toast-content--info {\n  color: #2e8bf0;\n  background: #f0faff;\n  border-color: #d4eeff;\n}\n.skr-toast-content--success {\n  color: #19bf6c;\n  background: #edfff3;\n  border-color: #bbf2cf;\n}\n.skr-toast-content--warning {\n  color: #f90;\n  background: #fff9e6;\n  border-color: #ffe7a3;\n}\n.skr-toast-content--error {\n  color: #ed3f13;\n  background: #ffefe6;\n  border-color: #ffcfb8;\n}\n.skr-toast-content-text {\n  flex: auto;\n}\n.skr-toast-content-close {\n  flex: none;\n  width: 20px;\n  margin: 0 -8px 0 10px;\n  padding: 0;\n  font-size: 16px;\n  color: #ababab;\n  border: none;\n  background: transparent;\n  cursor: pointer;\n}\n.skr-toast {\n  /* 动画 */\n}\n.skr-toast-slide-fade-enter-active, .skr-toast-slide-fade-leave-active {\n  transition: all 0.3s;\n}\n.skr-toast-slide-fade-enter-from {\n  transform: translateY(-50%);\n  opacity: 0;\n}\n.skr-toast-slide-fade-leave-to {\n  transform: translateY(50%);\n  max-height: 0;\n  padding: 0;\n  opacity: 0;\n}");
+	var toastTypes = [
+		"info",
+		"success",
+		"warning",
+		"error"
+	];
+	var prefixCls = "skr-toast";
+	var containerCls = `${prefixCls}-container`;
+	function normalizeOptions(options, duration) {
+		const normalized = typeof options === "string" || (0, vue.isVNode)(options) ? { content: options } : { ...options };
+		normalized.duration = duration ?? normalized.duration;
+		return normalized;
+	}
+	var ToastComponent = (0, vue.defineComponent)({
+		props: {
+			content: {
+				type: [String, Object],
+				default: ""
+			},
+			type: {
+				type: String,
+				validator: (value) => toastTypes.includes(value),
+				default: "info"
+			},
+			closable: {
+				type: Boolean,
+				default: null
+			},
+			duration: {
+				type: Number,
+				default: 3e3
+			},
+			onClosed: Function
+		},
+		setup(props, { expose }) {
+			const visible = (0, vue.ref)(false);
+			const closable = (0, vue.computed)(() => props.duration === 0 && props.closable == null ? true : props.closable);
+			let timer;
+			const close = () => {
+				if (timer !== void 0) {
+					clearTimeout(timer);
+					timer = void 0;
+				}
+				visible.value = false;
+			};
+			(0, vue.onMounted)(() => {
+				visible.value = true;
+				if (props.duration > 0) timer = setTimeout(close, props.duration);
+			});
+			(0, vue.onBeforeUnmount)(() => {
+				if (timer !== void 0) clearTimeout(timer);
+			});
+			expose({ close });
+			return () => (0, vue.createVNode)(vue.Transition, {
+				"name": `${prefixCls}-slide-fade`,
+				"appear": true,
+				"onAfterLeave": () => props.onClosed?.()
+			}, { default: () => [visible.value && (0, vue.createVNode)("div", { "class": prefixCls }, [(0, vue.createVNode)("div", { "class": [`${prefixCls}-content`, `${prefixCls}-content--${props.type}`] }, [(0, vue.createVNode)("div", { "class": `${prefixCls}-content-text` }, [props.content]), closable.value && (0, vue.createVNode)("button", {
+				"class": `${prefixCls}-content-close`,
+				"onClick": close
+			}, [(0, vue.createTextVNode)("×")])])])] });
+		}
+	});
+	var Toast = function(_opts, duration) {
+		const options = normalizeOptions(_opts, duration);
+		const container = document.createElement("div");
+		const toastVNode = (0, vue.createVNode)(ToastComponent, {
+			...options,
+			onClosed: () => {
+				(0, vue.render)(null, container);
+				container.remove();
+			}
+		});
+		(0, vue.render)(toastVNode, container);
+		insertElementInContainer(container);
+		return { close: toastVNode.component.exposed.close };
+	};
+	toastTypes.forEach((type) => {
+		Toast[type] = function(_opts, duration) {
+			return Toast({
+				...normalizeOptions(_opts, duration),
+				type
+			}, duration);
+		};
+	});
+	function safeAppendElement(cb) {
+		document.body ? cb() : window.addEventListener("DOMContentLoaded", cb);
+	}
+	function insertElementInContainer(element) {
+		safeAppendElement(() => {
+			let container = document.querySelector(`.${containerCls}`);
+			if (container == null) {
+				container = document.createElement("div");
+				container.classList.add(containerCls);
+				document.body.appendChild(container);
+			}
+			container.appendChild(element);
+		});
+	}
+	function checker({ firefox = 75, edge = 80, chrome = 80, safari = 14, notify = true } = {}) {
+		const { userAgent } = window.navigator;
+		const firefoxVersion = userAgent.match(/Firefox\/(\d+)/)?.[1];
+		const edgeVersion = userAgent.match(/Edg\/(\d+)/)?.[1];
+		const chromeVersion = userAgent.match(/Chrome\/(\d+)/)?.[1];
+		const safariVersion = userAgent.match(/Version\/(\d+).*Safari/)?.[1];
+		let pass = false;
+		if (firefoxVersion && Number(firefoxVersion) >= firefox || edgeVersion && Number(edgeVersion) >= edge || chromeVersion && Number(chromeVersion) >= chrome || safariVersion && Number(safariVersion) >= safari) pass = true;
+		if (!pass) notify && Toast.error(`哎呀！遇到错误：不支持的浏览器版本(需要Chrome${chrome}或Firefox${firefox}以上~)，请更新浏览器版本 o(╥﹏╥)o`, 0);
+		return pass;
+	}
+	function append(el) {
+		document.body ? document.body.appendChild(el) : window.addEventListener("DOMContentLoaded", () => append(el));
+	}
+	function mountComponent(RootComponent) {
+		const app = (0, vue.createApp)(RootComponent);
+		const root = document.createElement("div");
+		append(root);
+		return {
+			instance: app.mount(root),
+			unmount() {
+				app.unmount();
+				document.body.removeChild(root);
+			}
+		};
+	}
+	var $ = document.querySelector.bind(document);
+	var $$ = document.querySelectorAll.bind(document);
+	function getVueRoot(rootContainer) {
+		if (isVue2(rootContainer)) return getVue2Instance(rootContainer);
+		if (isVue3(rootContainer)) return getVue3Instance(rootContainer);
+		return {};
+	}
+	function isVue2(rootContainer) {
+		return "__vue__" in rootContainer;
+	}
+	function isVue3(rootContainer) {
+		return "__vue_app__" in rootContainer;
+	}
+	function getVue2Instance(rootContainer) {
+		return { instance: rootContainer.__vue__ };
+	}
+	function getVue3Instance(rootContainer) {
+		return {
+			app: rootContainer.__vue_app__,
+			instance: rootContainer._vnode && rootContainer._vnode.component.proxy
+		};
+	}
+	function warn(...args) {}
+	warn.force = function(...args) {
+		console.warn("%c      warn      ", "background: #ffa500; padding: 1px; color: #fff;", ...args);
+	};
+	function error(...args) {}
+	error.force = function(...args) {
+		console.error("%c      error      ", "background: red; padding: 1px; color: #fff;", ...args);
+	};
+	_css("@charset \"UTF-8\";\n@media (width >= 1500px) {\n  #catalogue-js {\n    left: calc(50% + 1140px / 2 + 40px);\n    right: auto;\n  }\n}\n#catalogue-js {\n  contain: content;\n  position: fixed;\n  right: 20px;\n  top: 100px;\n  z-index: 1000;\n  /* 列表样式复制ant，仅略微调整 */\n}\n#catalogue-js ul {\n  border-left: 1px solid #f0f0f0;\n  font-size: 12px;\n  list-style: none;\n  margin: 0;\n  padding-left: 0;\n}\n#catalogue-js li {\n  border-left: 1px solid transparent;\n  color: rgba(0, 0, 0, 0.85);\n  cursor: pointer;\n  line-height: 1.5;\n  list-style: none;\n  margin-left: -1px;\n  overflow: hidden;\n  padding: 2px 0 2px 16px;\n  text-overflow: ellipsis;\n  transition: all 0.3s ease;\n  white-space: nowrap;\n  width: 110px;\n}\n#catalogue-js li:hover {\n  border-left-color: #1890ff;\n  color: #1890ff;\n}");
+	var Catalogue = class {
+		#scope = "";
+		#cat = (0, vue.ref)([]);
+		constructor({ scope }) {
+			this.#scope = scope;
+			this.#createUI();
+		}
+		update() {
+			const cat = this.#getElements().map((el) => {
+				const catItem = {
+					id: el.id,
+					text: ""
+				};
+				el.childNodes.forEach((node) => {
+					if (node.nodeName === "#text") catItem.text += node.nodeValue;
+				});
+				catItem.text = catItem.text.trim();
+				return catItem;
+			});
+			this.#cat.value = cat;
+		}
+		#getElements() {
+			return [...$$(this.#scope)];
+		}
+		#createUI() {
+			const self = this;
+			mountComponent({ setup() {
+				function intoView(item) {
+					$("#" + item.id)?.scrollIntoView({ block: "center" });
+				}
+				return () => (0, vue.createVNode)("div", { "id": "catalogue-js" }, [(0, vue.createVNode)("ul", null, [self.#cat.value.map((item) => (0, vue.createVNode)("li", {
+					"key": item.id,
+					"title": item.text,
+					"onClick": () => intoView(item)
+				}, [item.text]))])]);
+			} });
+		}
+	};
+	async function main() {
+		if (!checker()) return;
+		let instance;
+		while (instance == null) {
+			({instance} = getVueRoot($("#app")));
+			await sleep(500);
+		}
+		if ($("#app").__vue_app__) return;
+		const catalogue = new Catalogue({ scope: ".page-container .page-component__content section.element-doc > h3" });
+		let unwatch;
+		instance.$watch("$route", function() {
+			(0, vue.nextTick)(() => {
+				const target = $(".page-component__content");
+				if (target && unwatch == null) unwatch = watchDocs(target);
+				else if (!target) {
+					unwatch?.();
+					unwatch = void 0;
+				}
+			});
+		}, { immediate: true });
+		function watchDocs(target) {
+			catalogue.update();
+			const observer = new MutationObserver(() => catalogue.update());
+			observer.observe(target, {
+				subtree: true,
+				childList: true
+			});
+			return () => {
+				observer.disconnect();
+				catalogue.update();
+			};
+		}
+	}
+	main();
+})(Vue);
