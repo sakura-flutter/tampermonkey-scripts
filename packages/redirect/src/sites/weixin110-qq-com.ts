@@ -1,10 +1,9 @@
-import { qs } from '@monkey/shared/utils'
 import type { Site } from '../types'
 
 const { atob } = window
 
-export const weixin: Site['use'] = () => {
-  const { main_type, midpagecode } = qs.parse()
+export const weixin: Site['parse'] = ({ query }) => {
+  const { main_type, midpagecode } = query
 
   /**
    * main_type 貌似是旧的规则
@@ -15,7 +14,7 @@ export const weixin: Site['use'] = () => {
       // 转为 1 可还原链接
       url.searchParams.set('main_type', '1')
       location.replace(url.href)
-      return {}
+      return
     }
     case '1':
       break
@@ -34,7 +33,7 @@ export const weixin: Site['use'] = () => {
     // 会还原链接
     url.searchParams.set('midpagecode', MAGIC_KEY)
     location.replace(url.href)
-    return {}
+    return
   }
 
   return {

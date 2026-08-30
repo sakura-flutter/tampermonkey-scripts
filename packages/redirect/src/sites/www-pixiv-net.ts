@@ -1,10 +1,10 @@
-import { qs } from '@monkey/shared/utils'
+import type { Site } from '../types'
 
-export const pixiv = () => {
+export const pixiv: Site['parse'] = ({ query }) => {
   let link
-  // 链接居然是直接拼在url上的
+  // 链接居然是直接拼在 url 上的
   // https://www.pixiv.net/jump.php?https%3A%2F%2Fwww.huawei.com%2Fcn%2Fcorporate-information
-  for (const [key, value] of Object.entries(qs.parse())) {
+  for (const [key, value] of Object.entries(query)) {
     try {
       link ||= new URL(key).href
     } catch {}

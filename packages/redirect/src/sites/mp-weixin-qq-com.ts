@@ -2,7 +2,7 @@ import { unsafeWindow } from '$'
 import { log } from '@monkey/shared/utils'
 import type { Site } from '../types'
 
-export const weixin: Site['use'] = () => {
+export const weixin: Site['parse'] = () => {
   window.addEventListener(
     'click',
     event => {
@@ -22,6 +22,4 @@ export const weixin: Site['use'] = () => {
     },
     true,
   )
-
-  return {}
 }

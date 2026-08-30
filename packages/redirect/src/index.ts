@@ -1,75 +1,105 @@
 import { qs, readyState, $, log } from '@monkey/shared/utils'
 import sites from './sites'
-import type { Site } from './types'
+import type { Site, SiteContext } from './types'
 
 function hidePage() {
-  readyState.interactive(() => {
-    document.body.style.cssText = 'display:none !important;'
-  })
+  const style = document.createElement('style')
+  style.textContent = 'html{visibility:hidden!important}'
+  document.documentElement.append(style)
 }
 
 class App {
+  /** 白名单 */
+  static readonly #SAFE_PROTOCOLS = new Set(['http:', 'https:'])
+
   #sites
+
   constructor(sites: Site[]) {
     this.#sites = sites
   }
 
-  boot() {
-    const briefURL = location.host + location.pathname
+  async run() {
+    const hostPath = location.host + location.pathname
 
-    this.#sites.forEach(async site => {
-      const { name, test, use } = site
-      if (!this.#includes(test, briefURL)) return
+    const site = this.#sites.find(s => this.#matches(s.match, hostPath))
+    if (!site) return
 
-      const { readyState: state } = site
-      if (state) await readyState[state]()
+    if (site.readyState) await readyState[site.readyState]()
 
-      const redirection = await this.#parse(use)
-      log.table({ name, briefURL, redirection })
-      if (!redirection) return
-      location.replace(redirection)
-      // 为什么要这样做？
-      // 只是为了避免被问“哎！怎么好像没有跳转啊？！”的烦恼（实际上跳转了只是外链打开慢）(x_x)
-      hidePage()
-    })
+    const ctx = this.#createContext()
+    const redirection = await this.#resolve(site.parse, ctx)
+    log.table({ name: site.name, hostPath, redirection })
+    if (!redirection) return
+
+    // 为什么要这样做？
+    // 只是为了避免被问“哎！怎么好像没有跳转啊？！”的烦恼（实际上跳转了只是外链打开慢）
+    hidePage()
+    window.stop()
+    location.replace(redirection)
   }
 
-  #includes(test: Site['test'], url: string) {
-    return ([] as Site['test'][]).concat(test).some(item => {
+  #matches(match: Site['match'], url: string) {
+    return (Array.isArray(match) ? match : [match]).some(item => {
       if (typeof item === 'string') return item === url
       if (item instanceof RegExp) return item.test(url)
       return false
     })
   }
 
-  async #parse(use: Site['use']) {
-    const { query, link, selector, attr } = await use()
-    let redirection: Location['href'] | undefined
+  #createContext(): SiteContext {
+    let queryCache: Record<string, string>
+    return {
+      get query() {
+        return (queryCache ??= qs.parse())
+      },
+    }
+  }
 
-    if (query) {
-      redirection = qs.parse()[query]
+  async #resolve(parse: Site['parse'], ctx: SiteContext) {
+    const result = await parse(ctx)
+
+    if (!result) return
+    if (typeof result === 'string') return this.#sanitize(result)
+
+    const { searchParam, link, selector, attr } = result
+    let redirection: string | undefined
+
+    if (searchParam) {
+      redirection = qs.parse()[searchParam]
     } else if (link) {
       redirection = link
     } else if (selector) {
       redirection = ($(selector) as any)?.[attr ?? 'innerText']
     }
 
-    redirection &&= this.#ensure(redirection.trim())
-    return redirection
+    return this.#sanitize(redirection)
   }
 
-  #ensure(url: string): Location['href'] {
-    try {
-      new URL(url)
-    } catch (error) {
-      log.warn(error)
-      // 修复某些链接没有 protocol 导致跳转不正确
-      // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
-      const protocol = 'http:'
-      url = protocol + '//' + url
+  /**
+   * 危险协议（如 javascript:、data:）应该由用户自行打开
+   */
+  #sanitize(input: string | null | undefined): string | undefined {
+    const raw = input?.trim()
+    if (!raw) return
+
+    // 尝试直接解析，失败则补 http://（某些链接缺少 protocol）
+    // https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转/discussions/69178
+    let url: URL | undefined
+    for (const candidate of [raw, `http://${raw}`]) {
+      try {
+        url = new URL(candidate)
+        break
+      } catch {}
     }
-    return url
+
+    if (!url) return
+    if (!App.#SAFE_PROTOCOLS.has(url.protocol)) {
+      log.warn.force('不安全的重定向：', raw)
+      return
+    }
+
+    return url.href
   }
 }
 
-new App(sites).boot()
+new App(sites).run()

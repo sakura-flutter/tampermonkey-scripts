@@ -11,6 +11,4 @@ export const linuxDo = () => {
   })
 
   continueExternalLink()
-
-  return {}
 }

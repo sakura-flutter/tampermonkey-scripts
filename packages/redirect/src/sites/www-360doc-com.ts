@@ -17,6 +17,4 @@ export const doc360 = () => {
     },
     true,
   )
-
-  return {}
 }
