@@ -23,6 +23,7 @@
     "build:dev": "pnpm run build:watch --mode development",
     "build:watch": "pnpm run clean:dist && vp run -F \"./packages/*\" --parallel --cache build --watch",
     "check": "vp check",
+    "check:fix": "vp check --fix",
     "test": "vp test",
     "test:watch": "vp test watch",
     "bump": "node scripts/bump-version.ts",

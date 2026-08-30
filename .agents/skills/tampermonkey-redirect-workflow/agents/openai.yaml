@@ -1,0 +1,4 @@
+interface:
+  display_name: '页面跳转规则工作流'
+  short_description: '区分直接链接与点击确认跳转，完成规则修改、重装和实时验证'
+  default_prompt: '使用 $tampermonkey-redirect-workflow 按完整流程处理这个页面跳转规则。'
