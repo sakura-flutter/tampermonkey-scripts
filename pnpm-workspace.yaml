@@ -11,7 +11,7 @@ catalog:
   vue: 3.5.41
   vite-plus: 0.3.0
   vite: npm:@voidzero-dev/vite-plus-core@0.3.0
-  vite-plugin-monkey: 8.1.0
+  vite-plugin-monkey: 8.1.1
   '@vitejs/plugin-vue-jsx': 5.1.6
   sass-embedded: 1.103.1
   autoprefixer: 10.5.4

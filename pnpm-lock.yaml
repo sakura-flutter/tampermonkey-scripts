@@ -7,52 +7,52 @@ importers:
     configDependencies: {}
     packageManagerDependencies:
       '@pnpm/exe':
-        specifier: 11.21.0
-        version: 11.21.0
+        specifier: ^11.0.0
+        version: 11.25.0
       pnpm:
-        specifier: 11.21.0
-        version: 11.21.0
+        specifier: ^11.0.0
+        version: 11.25.0
 
 packages:
 
-  '@pnpm/exe@11.21.0':
-    resolution: {integrity: sha512-zawQxIewH1od72HhlmXWq3No6XyuWn+nMvQ9BjWWGNBVskmS+RDlTu7ey2ruL650PbbyuCATYSal1DaXFKBdcw==}
+  '@pnpm/exe@11.25.0':
+    resolution: {integrity: sha512-X19R2uC+VAJ4UJQE9c/PCdOXbDaWnZtad7WUrTHBFQuMVaK9MAHbyO/WgahQCuRtTmJkLbxcWKKCk+JeTYFm/g==}
     hasBin: true
 
-  '@pnpm/linux-arm64@11.21.0':
-    resolution: {integrity: sha512-gOSfQKr6kZjEwHyoRwMt9qrqQ9sqbZmUm2hbgJJG8bp0ZR9YkQ4BZV2k4qlQA2jtsmHV1u1MwiaLcuK7DauvBg==}
+  '@pnpm/linux-arm64@11.25.0':
+    resolution: {integrity: sha512-ra8akqhzsbcOhKSJ9fFV8H+Oc9uGQAcp/XmIBEdT+8hPPoZCit3+RNCHmg8bLoNvpSLtRvZE0WFCMj7WyzxeBA==}
     cpu: [arm64]
     os: [linux]
 
-  '@pnpm/linux-x64@11.21.0':
-    resolution: {integrity: sha512-X+kBR8yscKyhhElO+WLrb6sFbl/3Ow70B+6fqZUYI8T8wtmlCw5GtcPXVBJPDJcLN5joe227h7lyCCZo4tdKdw==}
+  '@pnpm/linux-x64@11.25.0':
+    resolution: {integrity: sha512-pQl/L10diKQCbF73viRrtVU8qVWMTudUCSG1uZ+EWBNKtU9Sbxe6Q378diXDb1uTwSgUVMQoypxlC1MTzh7qvQ==}
     cpu: [x64]
     os: [linux]
 
-  '@pnpm/linuxstatic-arm64@11.21.0':
-    resolution: {integrity: sha512-IUJfAclH0b3QxaHuQuVxXQIzEkDtTm0C+G3tgG0ET5tDRGc7wH7eU0GEM75ojHOwzqv7s0y00xPVVCIsxUM4Nw==}
+  '@pnpm/linuxstatic-arm64@11.25.0':
+    resolution: {integrity: sha512-cYcrbB/xN1N6/5VUlFuHblb1gNyJgZv1CF5Pk1T0sHJxQMY4DFJV3OqHVAgahxyUfSTaQcVLvH1H2JFvd/+sgw==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/linuxstatic-x64@11.21.0':
-    resolution: {integrity: sha512-6Y2u+AfOUuTqWgTCpFhySL8HAcONDucCFixKle9tWoW7bm8RF0+fwQBRWNWGdx+Toau07wZ1LNZPqN8gpgeBDQ==}
+  '@pnpm/linuxstatic-x64@11.25.0':
+    resolution: {integrity: sha512-HXDtaeQod16DDMUUcVLIMxvEc1jKn7IYsNPwbwAPs/Je/d3umRPJi3Ejjdn6e9qpXN6Oon+yvSsJr7B9oDt6KA==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/macos-arm64@11.21.0':
-    resolution: {integrity: sha512-sLMGvVJXWdhFAouY2icjeZ2VCFmyPPZvvtHkfj1oeCWGppsbWcP5cExSw9yU1Uw7ALwrV0I2lRZv33yWYfDtcQ==}
+  '@pnpm/macos-arm64@11.25.0':
+    resolution: {integrity: sha512-m/eAgEqKhiSexGxWPHNXNnSRI0hudymg6K7LbrU2EoDs9IgJ28OKEz9mGxMzhkYBweEquR4k5teMNes/aToy9w==}
     cpu: [arm64]
     os: [darwin]
 
-  '@pnpm/win-arm64@11.21.0':
-    resolution: {integrity: sha512-79Nc+YI5B2ddH5MQD2YITL/PKnmXdcQKwmwx0HaD4QnsCco8DFaTho242e5sd9QfXKxYRvB9AOnuqIV4VjhAAw==}
+  '@pnpm/win-arm64@11.25.0':
+    resolution: {integrity: sha512-oAeECbtZ+eJziaBmPUkwJM8Dx7KVQ5FO367AXTjD2HGfB5ob1Bcu5hoUF5RBTgDBiP9fRQ1u13uAEpqar/6NLA==}
     cpu: [arm64]
     os: [win32]
 
-  '@pnpm/win-x64@11.21.0':
-    resolution: {integrity: sha512-zT3TufmVOroWPrzXTPPPgYvIsTZIsK13kjpmgXlICyEFrhd16RFLoTWFhP+8UqHXpTNmVbtTHzg+fEVYy9rlEQ==}
+  '@pnpm/win-x64@11.25.0':
+    resolution: {integrity: sha512-8/n+wCc0a8TRYTMFqti93Vh0cscdJ25xfMyYSDdXrLUh2ccxSFuS+SE7cNPjd/nOXoFAJvdW0kwfbyRPLa16/w==}
     cpu: [x64]
     os: [win32]
 
@@ -116,45 +116,45 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  pnpm@11.21.0:
-    resolution: {integrity: sha512-UhcFvOaJkk6scvWjWHEi82JonvZXHlW6gAdv1jfBETLs/62ib61Op5xIW/3b/T1aKlsFgFp36JPeceyKbMo7sQ==}
+  pnpm@11.25.0:
+    resolution: {integrity: sha512-XN6SW08HX3Jetx+64YpC/+eEUkeJ8ZthxzHLhyHsKKruFg4BqNWvT+2ypCzb8wDv4j2zVrDUoXtNY+EfirfJVg==}
     engines: {node: '>=22.13'}
     hasBin: true
 
 snapshots:
 
-  '@pnpm/exe@11.21.0':
+  '@pnpm/exe@11.25.0':
     dependencies:
       '@reflink/reflink': 0.1.19
       detect-libc: 2.1.2
     optionalDependencies:
-      '@pnpm/linux-arm64': 11.21.0
-      '@pnpm/linux-x64': 11.21.0
-      '@pnpm/linuxstatic-arm64': 11.21.0
-      '@pnpm/linuxstatic-x64': 11.21.0
-      '@pnpm/macos-arm64': 11.21.0
-      '@pnpm/win-arm64': 11.21.0
-      '@pnpm/win-x64': 11.21.0
+      '@pnpm/linux-arm64': 11.25.0
+      '@pnpm/linux-x64': 11.25.0
+      '@pnpm/linuxstatic-arm64': 11.25.0
+      '@pnpm/linuxstatic-x64': 11.25.0
+      '@pnpm/macos-arm64': 11.25.0
+      '@pnpm/win-arm64': 11.25.0
+      '@pnpm/win-x64': 11.25.0
 
-  '@pnpm/linux-arm64@11.21.0':
+  '@pnpm/linux-arm64@11.25.0':
     optional: true
 
-  '@pnpm/linux-x64@11.21.0':
+  '@pnpm/linux-x64@11.25.0':
     optional: true
 
-  '@pnpm/linuxstatic-arm64@11.21.0':
+  '@pnpm/linuxstatic-arm64@11.25.0':
     optional: true
 
-  '@pnpm/linuxstatic-x64@11.21.0':
+  '@pnpm/linuxstatic-x64@11.25.0':
     optional: true
 
-  '@pnpm/macos-arm64@11.21.0':
+  '@pnpm/macos-arm64@11.25.0':
     optional: true
 
-  '@pnpm/win-arm64@11.21.0':
+  '@pnpm/win-arm64@11.25.0':
     optional: true
 
-  '@pnpm/win-x64@11.21.0':
+  '@pnpm/win-x64@11.25.0':
     optional: true
 
   '@reflink/reflink-darwin-arm64@0.1.19':
@@ -194,7 +194,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  pnpm@11.21.0: {}
+  pnpm@11.25.0: {}
 
 ---
 lockfileVersion: '9.0'
@@ -239,8 +239,8 @@ catalogs:
       specifier: npm:@voidzero-dev/vite-plus-core@0.3.0
       version: 0.3.0
     vite-plugin-monkey:
-      specifier: 8.1.0
-      version: 8.1.0
+      specifier: 8.1.1
+      version: 8.1.1
     vite-plus:
       specifier: 0.3.0
       version: 0.3.0
@@ -272,7 +272,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2)'
       vite-plugin-monkey:
         specifier: 'catalog:'
-        version: 8.1.0(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
+        version: 8.1.1(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
       vite-plus:
         specifier: 'catalog:'
         version: 0.3.0(@types/node@26.2.0)(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2)
@@ -576,7 +576,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2)'
       vite-plugin-monkey:
         specifier: 'catalog:'
-        version: 8.1.0(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
+        version: 8.1.1(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
 
   tools/vite-plugin-lazy-css:
     devDependencies:
@@ -606,7 +606,7 @@ importers:
         version: 10.5.4(postcss@8.5.26)
       vite-plugin-monkey:
         specifier: 'catalog:'
-        version: 8.1.0(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
+        version: 8.1.1(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -2114,8 +2114,8 @@ packages:
     resolution: {integrity: sha512-qI4JLRKnSzqFqr7hAlS5xQDusBCjKSEG4t4+7aNrIQMHBcsC2TGEhuyABJdYkgSewL57PNLYEiibY2iPKhKpaA==}
     engines: {node: '>=20.19.0'}
 
-  electron-to-chromium@1.5.416:
-    resolution: {integrity: sha512-K6bvB2BjnNrugtIih6ewlbBI9DXa976jIdiIlRLHhBoEI9a4JaQjjHyF+A1IQI543aQYR4LnmOrT/K5fZj0aPA==}
+  electron-to-chromium@1.5.417:
+    resolution: {integrity: sha512-4T+DTDWuMPM4aHlHwWdAVCVWwp7LDilnhzkj+c/Lbj91XSQrLuOmZSLtS9Q4iIqjlPUbPOnC624zDVVHCHaolQ==}
 
   email-addresses@5.0.0:
     resolution: {integrity: sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==}
@@ -2162,8 +2162,8 @@ packages:
   fast-wrap-ansi@0.2.2:
     resolution: {integrity: sha512-7F2Fl+TjRSenLqlU3UjSH0iyqopqoZIu7eZVpEirP2g1GtWa2G/ecEmBdgz31+Mxr+ELclgg6sokpSFIQiZ02Q==}
 
-  fastq@1.20.2:
-    resolution: {integrity: sha512-UpGiiODyCGprM8EPP6JodP6jC9Rws6TCuiDOD+nn0CJhR8guI3g/ozo4ugL0vJ+Yz1UtJuuRPqvQuybVOF1VQA==}
+  fastq@1.20.3:
+    resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
 
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
@@ -2432,8 +2432,8 @@ packages:
     resolution: {integrity: sha512-4a+OsYv9UktOJKE+l1A4OufDgdRF9PifWj+tJnHURo/P+WOxpG4GzUFL9qCalmWauao6ogiG+QvnCovwPoyAWA==}
     engines: {node: '>=12.20.0'}
 
-  open@11.0.1:
-    resolution: {integrity: sha512-NzwMUB6C1D0+Kd+9iMS/H4k+Ck3cTX6Ckyfr/gAGlmvSE1LUQZnEZvWBi4PYmMwH/S5SMeTXnE+9uAz8uF+pWw==}
+  open@11.0.2:
+    resolution: {integrity: sha512-RWqF+pBSkqecEvCKOn8QYhaNdRMJDZRIrlS/7rTDdLHaPcfXGCZ/h8zb413NfvdeAV0MR7T1yJcA34/q+CSm1Q==}
     engines: {node: '>=20'}
 
   oxfmt@0.64.0:
@@ -2529,8 +2529,8 @@ packages:
     resolution: {integrity: sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A==}
     engines: {node: '>=20'}
 
-  powershell-utils@0.2.0:
-    resolution: {integrity: sha512-ZlsFlG7MtSFCoc5xreOvBAozCJ6Pf06opgJjh9ONEv418xpZSAzNjstD36C6+JwOnfSqOW/9uDkqKjezTdxZhw==}
+  powershell-utils@0.2.1:
+    resolution: {integrity: sha512-C+y9x90UElAddDZmV4qOx9W53B61PO7cIqWz2dQsWlwswuq4mr8NEwytdGKboYbQlGZ3awrkTeNvcZiZNHnQ8A==}
     engines: {node: '>=20'}
 
   pretty-format@27.0.2:
@@ -2813,8 +2813,8 @@ packages:
   viewerjs@1.11.9:
     resolution: {integrity: sha512-ooK2OUVd2C59pmkWW5cX1OiGX9s2ATXZNlruhOYc43fkh4vgYXwCdLEwXBoP6sNNPHQbJQzMq0/vhOzlgFWBng==}
 
-  vite-plugin-monkey@8.1.0:
-    resolution: {integrity: sha512-/fsxr3qV/GdKyyG1v6uK55RGDm0z95Ym+VkoEWZ7YKZ26eT7XelwBIqzo30Nc37bxuHxlr8TyVkxrb7p8KEHjg==}
+  vite-plugin-monkey@8.1.1:
+    resolution: {integrity: sha512-9mX7eTHzkCnVV5+TTW4/Xt5gKol/3g5ilJXUJd6iiCwJz4tmWUB+Qfk3YUL+b5ZGDfult2ScbxFuPkrm/NUXIg==}
     peerDependencies:
       vite: ^8.0.0
     peerDependenciesMeta:
@@ -3263,7 +3263,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.20.2
+      fastq: 1.20.3
 
   '@oxc-project/runtime@0.146.0': {}
 
@@ -3985,7 +3985,7 @@ snapshots:
     dependencies:
       baseline-browser-mapping: 2.11.20
       caniuse-lite: 1.0.30001810
-      electron-to-chromium: 1.5.416
+      electron-to-chromium: 1.5.417
       node-releases: 2.0.54
       update-browserslist-db: 1.3.2(browserslist@4.28.8)
 
@@ -4082,7 +4082,7 @@ snapshots:
       domelementtype: 3.0.0
       domhandler: 6.0.1
 
-  electron-to-chromium@1.5.416: {}
+  electron-to-chromium@1.5.417: {}
 
   email-addresses@5.0.0: {}
 
@@ -4122,7 +4122,7 @@ snapshots:
     dependencies:
       fast-string-width: 3.0.2
 
-  fastq@1.20.2:
+  fastq@1.20.3:
     dependencies:
       reusify: 1.1.0
 
@@ -4339,13 +4339,13 @@ snapshots:
 
   obug@2.1.4: {}
 
-  open@11.0.1:
+  open@11.0.2:
     dependencies:
       default-browser: 5.5.1
       define-lazy-prop: 3.0.0
       is-in-ssh: 1.0.0
       is-inside-container: 1.0.0
-      powershell-utils: 0.2.0
+      powershell-utils: 0.2.1
       wsl-utils: 1.0.0
 
   oxfmt@0.64.0(vite-plus@0.3.0(@types/node@26.2.0)(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2)):
@@ -4454,7 +4454,7 @@ snapshots:
 
   powershell-utils@0.1.0: {}
 
-  powershell-utils@0.2.0: {}
+  powershell-utils@0.2.1: {}
 
   pretty-format@27.0.2:
     dependencies:
@@ -4722,7 +4722,7 @@ snapshots:
 
   viewerjs@1.11.9: {}
 
-  vite-plugin-monkey@8.1.0(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26):
+  vite-plugin-monkey@8.1.1(@voidzero-dev/vite-plus-core@0.3.0(@types/node@26.2.0)(sass-embedded@1.103.1)(sass@1.103.1)(typescript@7.0.2))(postcss@8.5.26):
     dependencies:
       acorn-walk: 8.3.5
       cross-spawn: 7.0.6
@@ -4730,7 +4730,7 @@ snapshots:
       import-meta-resolve: 4.2.0
       magic-string: 0.30.21
       mrmime: 2.0.1
-      open: 11.0.1
+      open: 11.0.2
       picocolors: 1.1.1
       postcss-url: 10.1.4(postcss@8.5.26)
       rollup: 4.63.1

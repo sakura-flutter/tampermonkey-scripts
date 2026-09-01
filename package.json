@@ -18,11 +18,11 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "vp run",
-    "build": "pnpm run clean:dist && vp run -F \"./packages/*\" --parallel --cache build",
-    "build:dev": "pnpm run build:watch --mode development",
-    "build:watch": "pnpm run clean:dist && vp run -F \"./packages/*\" --parallel --cache build --watch",
-    "deploy": "pnpm run build && gh-pages -d ./dist",
+    "dev": "vp dev",
+    "build": "vp run clean:dist && vp run -F \"./packages/*\" --parallel --cache build",
+    "build:watch": "vp run build --watch",
+    "build:dev": "vp run build:watch --mode development",
+    "deploy": "vp run build && gh-pages -d ./dist",
     "check": "vp check",
     "check:fix": "vp check --fix",
     "test": "vp test",
@@ -45,7 +45,7 @@
     "packageManager": {
       "name": "pnpm",
       "version": "^11.0.0",
-      "onFail": "warn"
+      "pmOnFail": "ignore"
     }
   },
   "engines": {
