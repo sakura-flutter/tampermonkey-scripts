@@ -97,6 +97,7 @@ function registerMenuCommands() {
 
 registerMenuCommands()
 
-syncButtons()
+// 不能太快，避免被 GitHub 覆盖
+setTimeout(syncButtons, 500)
 
 monkeyWindow.addEventListener('urlchange', () => setTimeout(syncButtons, 500))
