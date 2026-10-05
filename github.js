@@ -2,7 +2,7 @@
 // @name            GitHub 工具箱
 // @name:en         GitHub ToolBox
 // @namespace       https://github.com/sakura-flutter/tampermonkey-scripts
-// @version         1.2.0
+// @version         1.2.1
 // @author          sakura-flutter
 // @description     添加用 VS Code 阅读代码按钮(github1s)
 // @description:en  Read code with VS Code(github1s)
@@ -91,6 +91,6 @@
 		});
 	}
 	registerMenuCommands();
-	syncButtons();
+	setTimeout(syncButtons, 500);
 	_monkeyWindow.addEventListener("urlchange", () => setTimeout(syncButtons, 500));
 })();
