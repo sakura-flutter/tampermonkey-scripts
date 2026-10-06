@@ -6,14 +6,6 @@ export default defineConfig(env =>
     userscript: {
       name: '百度贴吧签到',
       description: '网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~',
-      author: 'sakura-flutter',
-      namespace: 'https://github.com/sakura-flutter/tampermonkey-scripts',
-      license: 'MIT',
-      $extra: [
-        ['compatible', 'chrome Latest'],
-        ['compatible', 'firefox Latest'],
-        ['compatible', 'edge Latest'],
-      ],
       'run-at': 'document-end',
       match: ['https://tieba.baidu.com/index.html', 'https://tieba.baidu.com/'],
       connect: ['tieba.baidu.com'],

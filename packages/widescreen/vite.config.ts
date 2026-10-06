@@ -35,14 +35,6 @@ export default defineConfig(env =>
       name: '网页宽屏',
       description:
         '适配了微信公众号、知乎、掘金、简书、贴吧、segmentfault、哔哩哔哩、微博、豆瓣、今日头条、Google、crates.io、米游社原神',
-      author: 'sakura-flutter',
-      namespace: 'https://github.com/sakura-flutter/tampermonkey-scripts',
-      license: 'MIT',
-      $extra: [
-        ['compatible', 'chrome Latest'],
-        ['compatible', 'firefox Latest'],
-        ['compatible', 'edge Latest'],
-      ],
       'run-at': 'document-start',
       noframes: true,
       match: matches,

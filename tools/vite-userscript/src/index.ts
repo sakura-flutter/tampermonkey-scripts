@@ -11,6 +11,17 @@ const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url))
 const browsers = ['chrome130', 'edge130', 'firefox140']
 const cssBrowsers = ['Chrome >= 130', 'Edge >= 130', 'Firefox >= 140']
 
+const defaultUserscript = {
+  author: 'sakura-flutter',
+  namespace: 'https://github.com/sakura-flutter/tampermonkey-scripts',
+  license: 'MIT',
+  $extra: [
+    ['compatible', 'chrome Latest'],
+    ['compatible', 'firefox Latest'],
+    ['compatible', 'edge Latest'],
+  ],
+} satisfies MonkeyOption['userscript']
+
 function readPackageManifest(packageRoot: string): { name?: string } {
   const manifestPath = path.join(packageRoot, 'package.json')
 
@@ -52,6 +63,10 @@ export function defineUserScriptConfig(
   const monkeyOption: MonkeyOption = {
     ...scriptOption,
     entry: scriptOption.entry ? path.resolve(packageRoot, scriptOption.entry) : path.join(packageRoot, 'src/index.ts'),
+    userscript: {
+      ...defaultUserscript,
+      ...scriptOption.userscript,
+    },
     build: {
       ...scriptOption.build,
       fileName: scriptOption.build?.fileName ?? `${scriptName}.js`,
