@@ -1,0 +1,292 @@
+:host {
+  all: initial;
+  color-scheme: light dark;
+}
+
+.panel {
+  // 面板尺寸集中在这里，调整面板大小时图标按钮会同步适配。
+  --control-panel-size: 44px;
+  --control-panel-padding: 4px;
+  --control-panel-offset-inline-end: 16px;
+  --control-panel-offset-block-end: 100px;
+  --control-panel-z-index: 100;
+  --control-panel-radius: 16px;
+  --control-trigger-size: calc(var(--control-panel-size) - var(--control-panel-padding) - var(--control-panel-padding));
+  --control-trigger-radius: 12px;
+  --control-button-radius: 10px;
+  --control-color-text: oklch(27% 0.04 255);
+  --control-color-trigger: oklch(48% 0.13 255);
+  --control-color-accent: oklch(58% 0.14 255);
+  --control-color-selected: oklch(40% 0.14 255);
+  --control-color-white: rgb(100% 100% 100%);
+  --control-color-trigger-bg: color-mix(in srgb, var(--control-color-white) 24%, transparent);
+  --control-color-trigger-bg-hover: color-mix(in srgb, var(--control-color-white) 50%, transparent);
+  --control-color-button-bg: color-mix(in srgb, var(--control-color-white) 26%, transparent);
+  --control-color-button-bg-hover: color-mix(in srgb, var(--control-color-white) 50%, transparent);
+  --control-color-button-border: color-mix(in srgb, currentColor 12%, transparent);
+  --control-color-accent-border: color-mix(in srgb, var(--control-color-accent) 42%, transparent);
+  --control-color-selected-border: color-mix(in srgb, var(--control-color-accent) 60%, transparent);
+  --control-color-selected-bg: color-mix(in srgb, oklch(68% 0.15 245) 28%, transparent);
+
+  position: fixed;
+  inset-inline-end: var(--control-panel-offset-inline-end);
+  inset-block-end: var(--control-panel-offset-block-end);
+  z-index: var(--control-panel-z-index);
+  color: var(--control-color-text);
+  font:
+    13px/1.4 system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.96);
+  pointer-events: none;
+  transition:
+    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 260ms allow-discrete;
+  transition-behavior: allow-discrete;
+}
+
+.panel.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+}
+
+.card {
+  inline-size: var(--control-panel-size);
+  block-size: var(--control-panel-size);
+  min-block-size: var(--control-panel-size);
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--control-panel-radius);
+  interpolate-size: allow-keywords;
+}
+
+.panel:hover .card {
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 32px);
+}
+
+.panel.is-dragging {
+  user-select: none;
+}
+
+.panel.is-dragging .card {
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 32px);
+  transition: none;
+}
+
+.panel.is-dragging .content {
+  inline-size: max-content;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+button {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.trigger {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 var(--control-trigger-size);
+  inline-size: var(--control-trigger-size);
+  block-size: var(--control-trigger-size);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: var(--control-trigger-radius);
+  cursor: grab;
+  touch-action: none;
+  background: var(--control-color-trigger-bg);
+  color: var(--control-color-trigger);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.trigger:hover {
+  background: var(--control-color-trigger-bg-hover);
+  outline: none;
+}
+
+.panel.is-dragging .trigger {
+  cursor: grabbing;
+}
+
+.trigger svg,
+.control svg {
+  inline-size: 21px;
+  block-size: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  min-inline-size: 0;
+  // 收起时不参与横向布局，避免被压缩出 2px 的占位导致图标偏移。
+  flex: 0 1 auto;
+  inline-size: 0;
+  max-inline-size: 100%;
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+  interpolate-size: allow-keywords;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(8px);
+  background: transparent;
+  transition:
+    inline-size 180ms ease-out,
+    opacity 140ms ease-out,
+    transform 180ms ease-out;
+}
+
+.panel:hover .content {
+  inline-size: max-content;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.content-inner {
+  position: relative;
+  z-index: 1;
+  inline-size: max-content;
+  max-inline-size: 100%;
+  min-block-size: 0;
+  min-inline-size: 0;
+  padding-inline-start: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.site-name {
+  flex: 0 0 auto;
+  margin: 0;
+  color: color-mix(in srgb, currentColor 88%, transparent);
+  white-space: nowrap;
+}
+
+.actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.control {
+  min-inline-size: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 1px solid var(--control-color-button-border);
+  border-radius: var(--control-button-radius);
+  background: var(--control-color-button-bg);
+  color: color-mix(in srgb, currentColor 76%, transparent);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.control svg {
+  inline-size: 15px;
+  block-size: 15px;
+}
+
+.control:hover,
+.control:focus-visible {
+  border-color: var(--control-color-accent-border);
+  background: var(--control-color-button-bg-hover);
+  outline: none;
+}
+
+.control[aria-pressed='true'] {
+  border-color: var(--control-color-selected-border);
+  background: var(--control-color-selected-bg);
+  color: var(--control-color-selected);
+}
+
+.control:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+@starting-style {
+  .panel.is-visible {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .panel {
+    --control-color-text: oklch(94% 0.03 250);
+    --control-color-trigger: oklch(82% 0.1 250);
+    --control-color-button-bg: color-mix(in srgb, var(--control-color-white) 8%, transparent);
+    --control-color-button-bg-hover: color-mix(in srgb, var(--control-color-white) 16%, transparent);
+    --control-color-selected-bg: color-mix(in srgb, oklch(68% 0.15 245) 34%, transparent);
+    --control-color-selected: oklch(90% 0.06 245);
+    color: var(--control-color-text);
+  }
+
+  .trigger {
+    background: var(--control-color-button-bg);
+    color: var(--control-color-trigger);
+  }
+
+  .trigger:hover,
+  .trigger:focus-visible,
+  .control:hover,
+  .control:focus-visible {
+    background: color-mix(in srgb, #ffffff 16%, transparent);
+  }
+
+  .control {
+    background: var(--control-color-button-bg);
+    color: oklch(88% 0.05 245);
+  }
+
+  .control[aria-pressed='true'] {
+    background: var(--control-color-selected-bg);
+    color: var(--control-color-selected);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .card,
+  .content,
+  .trigger,
+  .control {
+    transition: none;
+  }
+}

@@ -1,0 +1,18 @@
+@use '../../../mixins' as *;
+
+@include substrate(1570px) {
+  .pc-main-page-layout {
+    .content-container {
+      max-width: var(--ws-content-width);
+    }
+
+    .frs-page-container {
+      max-width: none;
+    }
+
+    /* 避免帖子图片太宽 */
+    .thread-card .thread-card-wrapper .thread-image {
+      max-width: 800px;
+    }
+  }
+}

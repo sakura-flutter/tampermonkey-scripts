@@ -1,0 +1,14 @@
+@use '../../../mixins' as *;
+
+/* 专栏/问答 */
+@include substrate(1390px) {
+  /* url `/q` */
+  #question-wrap {
+    max-width: var(--ws-content-width);
+  }
+
+  /* url `/a` */
+  .article-wrap {
+    max-width: calc(var(--ws-content-width) + 300px);
+  }
+}

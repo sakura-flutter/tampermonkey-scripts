@@ -1,0 +1,22 @@
+@use '../../../mixins' as *;
+
+@include substrate(1380px) {
+  #app .bili-dyn-home--member {
+    width: var(--ws-content-width) !important;
+
+    /* 内容 */
+    > main {
+      flex: 1;
+
+      /* up 列表 */
+      .bili-dyn-up-list {
+        width: auto;
+      }
+    }
+
+    .bili-dyn-content,
+    .bili-dyn-content__orig__major {
+      width: auto !important;
+    }
+  }
+}

@@ -1,0 +1,151 @@
+.glass-surface {
+  --glass-color-white: rgb(100% 100% 100%);
+  --glass-color-black: rgb(0% 0% 0%);
+  --glass-color-fallback-border: color-mix(in srgb, var(--glass-color-white) 30%, transparent);
+  --glass-color-fallback-bg: color-mix(in srgb, var(--glass-color-white) 25%, transparent);
+  --glass-color-shadow-1: light-dark(rgb(80% 85% 89% / 0.28), rgb(100% 100% 100% / 0.1));
+  --glass-color-shadow-2: light-dark(rgb(84% 88% 92% / 0.2), rgb(100% 100% 100% / 0.06));
+  --glass-color-inset-1: rgb(100% 100% 100% / 0.52);
+  --glass-color-inset-2: rgb(100% 100% 100% / 0.16);
+  --glass-color-shadow-fallback: rgb(12% 15% 53% / 0.2);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    opacity 260ms ease-out,
+    inline-size 180ms ease-out,
+    border-radius 180ms ease-out;
+}
+
+.glass-content {
+  inline-size: 100%;
+  block-size: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  // 内容收起时也将图标组贴到右侧，确保展开前后的图标锚点一致。
+  justify-content: flex-end;
+  gap: 0;
+  padding: var(--control-panel-padding, 4px);
+  border-radius: inherit;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.glass-content::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--glass-color-white) 50%, transparent);
+  pointer-events: none;
+  content: '';
+}
+
+.glass-filter {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  inline-size: 100%;
+  block-size: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glass-surface--svg {
+  background: light-dark(hsl(0 0% 100% / var(--glass-frost, 0)), hsl(0 0% 0% / var(--glass-frost, 0)));
+  backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1));
+  box-shadow:
+    0 2px 8px var(--glass-color-shadow-1),
+    0 8px 22px var(--glass-color-shadow-2),
+    0 0 2px 1px var(--glass-color-inset-1) inset,
+    0 0 8px 2px var(--glass-color-inset-2) inset;
+}
+
+.glass-surface--fallback {
+  border: 1px solid var(--glass-color-fallback-border);
+  background: var(--glass-color-fallback-bg);
+  backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.1);
+  box-shadow:
+    0 8px 32px var(--glass-color-shadow-fallback),
+    0 2px 16px color-mix(in srgb, var(--glass-color-shadow-fallback) 50%, transparent),
+    inset 0 1px 0 rgb(100% 100% 100% / 0.4),
+    inset 0 -1px 0 rgb(100% 100% 100% / 0.2);
+}
+
+.panel:hover .glass-content {
+  gap: 8px;
+}
+
+.panel:hover .glass-content::before {
+  opacity: 0.95;
+}
+
+.panel.is-dragging .glass-content {
+  gap: 8px;
+}
+
+.panel.is-dragging .glass-content::before {
+  opacity: 0.95;
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-surface--fallback {
+    border-color: color-mix(in srgb, var(--glass-color-white) 20%, transparent);
+    background: color-mix(in srgb, var(--glass-color-white) 10%, transparent);
+    backdrop-filter: blur(12px) saturate(1.8) brightness(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.8) brightness(1.2);
+    box-shadow:
+      inset 0 1px 0 rgb(100% 100% 100% / 0.2),
+      inset 0 -1px 0 rgb(100% 100% 100% / 0.1);
+  }
+
+  .glass-content::before {
+    background: color-mix(in srgb, var(--glass-color-black) 40%, transparent);
+  }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-surface--fallback {
+    background: color-mix(in srgb, var(--glass-color-white) 40%, transparent);
+    box-shadow:
+      inset 0 1px 0 rgb(100% 100% 100% / 0.5),
+      inset 0 -1px 0 rgb(100% 100% 100% / 0.3);
+  }
+
+  .glass-surface--fallback::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: color-mix(in srgb, var(--glass-color-white) 15%, transparent);
+    border-radius: inherit;
+    content: '';
+    pointer-events: none;
+  }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  @media (prefers-color-scheme: dark) {
+    .glass-surface--fallback {
+      background: color-mix(in srgb, var(--glass-color-black) 40%, transparent);
+    }
+
+    .glass-surface--fallback::before {
+      background: color-mix(in srgb, var(--glass-color-white) 5%, transparent);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-surface,
+  .glass-content::before {
+    transition: none;
+  }
+}

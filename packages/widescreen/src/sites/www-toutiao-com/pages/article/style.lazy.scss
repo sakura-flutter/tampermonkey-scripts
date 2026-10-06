@@ -1,0 +1,30 @@
+@use '../../../mixins' as *;
+
+$default-width: 676px;
+
+@include substrate(1350px) {
+  // 文章
+  .article-detail-container,
+  // 话题
+  .wtt-detail-container {
+    width: var(--ws-content-width) !important;
+
+    > .main {
+      /* 内容 */
+      width: calc(var(--ws-content-width) - 298px - 60px - 48px * 2) !important; // 右侧 + 右侧间距保留 + 父元素内间距
+
+      // 不要使用flex，头条的布局都是浮动的
+      /* 评论 */
+      .ttp-comment-block {
+        width: auto;
+      }
+    }
+
+    /* 底部信息流 */
+    .detail-end-feed {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: $default-width;
+    }
+  }
+}

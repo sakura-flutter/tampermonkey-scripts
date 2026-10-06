@@ -1,0 +1,9 @@
+@use '../../../mixins' as *;
+
+/* crates.io package */
+@include substrate(1300px) {
+  // 内容区整体宽度
+  main .inner-main {
+    width: var(--ws-content-width);
+  }
+}

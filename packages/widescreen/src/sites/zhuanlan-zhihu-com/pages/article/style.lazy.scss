@@ -1,0 +1,25 @@
+@use '../../../mixins' as *;
+
+$default-width: 690px;
+
+@include substrate(1350px) {
+  :root:root {
+    --container-width: var(--ws-content-width);
+    --container-main-column-width: calc(
+      var(--container-width) - var(--right-sidebar-width) - var(--container-padding-x) * 3
+    );
+  }
+
+  .Post-content {
+    /* 正文区域 */
+    > div:nth-of-type(3) {
+      width: var(--container-width);
+    }
+
+    /* 内容图片 */
+    .ztext .content_image,
+    .ztext .origin_image {
+      max-width: $default-width !important;
+    }
+  }
+}

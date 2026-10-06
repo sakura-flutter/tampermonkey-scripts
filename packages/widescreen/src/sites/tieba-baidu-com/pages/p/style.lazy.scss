@@ -1,0 +1,19 @@
+@use '../../../mixins' as *;
+
+@include substrate(1570px) {
+  .pc-main-page-layout {
+    .content-container {
+      max-width: var(--ws-content-width);
+    }
+
+    .pc-pb-box {
+      .container {
+        max-width: none;
+      }
+
+      .center-content {
+        max-width: none;
+      }
+    }
+  }
+}

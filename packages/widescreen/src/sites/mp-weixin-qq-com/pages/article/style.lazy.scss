@@ -1,0 +1,22 @@
+@use '../../../mixins' as *;
+
+@include substrate(750px) {
+  /* 文章宽屏 */
+  .rich_media_area_primary_inner {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--ws-content-width) !important;
+  }
+
+  /* 二维码位置 */
+  #js_pc_qr_code .qr_code_pc {
+    opacity: 0.2;
+    position: fixed;
+    right: 3vw;
+    top: 25vh;
+  }
+
+  #js_pc_qr_code .qr_code_pc:hover {
+    opacity: 1;
+  }
+}

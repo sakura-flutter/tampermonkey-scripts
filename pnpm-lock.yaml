@@ -542,9 +542,6 @@ importers:
       '@monkey/shared':
         specifier: workspace:*
         version: link:../../shared
-      vue:
-        specifier: 'catalog:'
-        version: 3.5.41(typescript@7.0.2)
     devDependencies:
       '@monkey/vite-userscript':
         specifier: workspace:*

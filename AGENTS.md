@@ -4,7 +4,12 @@
 
 ## 工作规范
 
-- 当前项目使用 `vite-plugin-monkey`。修改脚本构建相关配置时，优先查阅其 [配置文档](https://github.com/lisonge/vite-plugin-monkey#config) 并确认是否已有对应支持；已有支持时优先采用 `vite-plugin-monkey` 的方式，仅在不支持时自行实现。
+- 当前项目使用 `vite-plugin-monkey`。修改脚本构建相关配置时，优先查阅其 [配置文档](https://github.com/lisonge/vite-plugin-monkey/blob/main/website/guide/configuration.md) 并确认是否已有对应支持；已有支持时优先采用 `vite-plugin-monkey` 的方式，仅在不支持时自行实现。
+- 使用 `GM_*` API 时，除 `window.onurlchange` 外无需在 `vite.config.ts` 的 `userscript.grant` 中手动声明权限；构建工具会自动补充对应的 `@grant`。
+
+## Git 操作权限
+
+- 未经用户明确许可，严禁自行执行 `git commit` 或 `git push`。用户未授权时只修改工作区文件，不提交或推送代码。
 
 ## 开发服务下的用户脚本同步与安装
 
@@ -16,6 +21,7 @@
 ## 验证要求
 
 - 修改代码或配置后，在报告工作完成前运行 `pnpm check`；如果检查发现问题，可以运行 `pnpm check:fix`。
+- 默认无需执行额外的 `build`；仅在大范围改动、构建配置改动或用户明确要求时执行构建验证。
 - 仅修改文档时无需执行代码检查，除非改动影响命令或项目行为。
 - 验证完成后停止临时 dev 服务，除非用户明确要求保留。
 

@@ -1,0 +1,21 @@
+@use '../../../mixins' as *;
+
+@include substrate(1300px) {
+  .m-main {
+    width: var(--ws-content-width);
+  }
+
+  /* 左侧导航 */
+  .m-main-nav {
+    flex-shrink: 0;
+  }
+
+  /* 内容 */
+  #pl_feed_main {
+    flex: 1;
+
+    .main-full {
+      width: auto;
+    }
+  }
+}

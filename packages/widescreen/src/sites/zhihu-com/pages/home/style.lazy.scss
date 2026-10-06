@@ -1,0 +1,20 @@
+@use '../../../mixins' as *;
+
+@include substrate(1300px) {
+  body {
+    .Topstory-container {
+      width: var(--ws-content-width);
+    }
+
+    /* 内容 */
+    .Topstory-mainColumn {
+      flex: 1;
+    }
+
+    /* 右侧 */
+    .GlobalSideBar {
+      flex: initial;
+      width: 296px;
+    }
+  }
+}

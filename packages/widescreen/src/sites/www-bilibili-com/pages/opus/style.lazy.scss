@@ -1,0 +1,21 @@
+@use '../../../mixins' as *;
+
+@include substrate(900px) {
+  #app {
+    /* Opus 内容容器 */
+    .opus-detail {
+      width: var(--ws-content-width) !important;
+
+      /* Opus 顶部封面图片 */
+      .opus-module-top__album__cover {
+        width: auto;
+        height: auto !important;
+      }
+    }
+
+    /* 右侧工具栏 */
+    .right-sidebar-wrap {
+      margin-left: calc(var(--ws-content-width) + 12px);
+    }
+  }
+}

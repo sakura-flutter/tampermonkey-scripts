@@ -1,0 +1,54 @@
+@use '../../../mixins' as *;
+
+$gap: 20px; // 每个区域之间的间距
+
+@include substrate(1320px) {
+  :root[data-ws-mode='uncapped'] {
+    .mhy-rocket,
+    .mhy-qrcode-bottom-card {
+      left: auto;
+      margin-left: 0;
+      right: 24px;
+    }
+
+    .mhy-qrcode-bottom-card {
+      width: auto;
+    }
+  }
+
+  .root-page-container {
+    /* 米游社根据 类名 作为页面间区分 */
+    /* 文章页 */
+    > .mhy-main-page {
+      display: flex;
+      width: var(--ws-content-width);
+
+      /* 主体 */
+      .mhy-layout__main {
+        flex: 1;
+        padding-right: $gap;
+        max-width: none;
+
+        .mhy-video-article-container__content #videoPlayer {
+          width: auto;
+          height: auto;
+        }
+
+        .mhy-video-article-container__info {
+          max-width: none;
+        }
+      }
+    }
+
+    /* 需要兼容 文章 与 视频 页面 */
+    > .mhy-video-page .mhy-layout__main {
+      padding-right: 0;
+    }
+
+    /* 左侧悬浮操作 */
+    .mhy-article-actions {
+      margin-left: calc(var(--ws-content-width) / 2 * -1);
+      transform: translate(calc(-100% - 10px)); // 间距
+    }
+  }
+}

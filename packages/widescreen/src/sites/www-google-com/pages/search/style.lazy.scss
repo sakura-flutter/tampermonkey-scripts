@@ -1,0 +1,25 @@
+@use '../../../mixins' as *;
+
+@include substrate(1600px) {
+  body {
+    $google-columns-repeat: 21;
+
+    /* 搜索结果 */
+    #rcnt {
+      grid-template-columns: 210px repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        ) minmax(0, 1fr);
+      width: var(--ws-content-width);
+    }
+
+    /* 列表 */
+    #w7tRq {
+      column-gap: 1%;
+      grid-template-columns: 0 repeat(
+          $google-columns-repeat,
+          calc(#{100% - $google-columns-repeat} / #{$google-columns-repeat})
+        );
+    }
+  }
+}

@@ -1,0 +1,41 @@
+@use '../../../mixins' as *;
+
+@include substrate(1450px) {
+  :root:root {
+    --mid-width: var(--ws-content-width);
+  }
+
+  /* 主体结构 */
+  [class*='_top_'] + div {
+    --main-width: none;
+  }
+
+  /* 列表3张图 */
+  .u-col-3.woo-box-wrap {
+    max-width: 550px;
+  }
+
+  /* 列表4张图 */
+  .u-col-4.woo-box-wrap {
+    max-width: 550px;
+  }
+
+  /* 列表 */
+  .wbpro-scroller-item {
+    /* 列表中视频 */
+    [class*='_videoBox_'] {
+      max-width: 700px;
+    }
+
+    /* 列表中文章，选择器实际选择了列表所有图片 */
+    .woo-picture-main[class*='pic'] {
+      max-width: 700px;
+    }
+  }
+
+  /* 返回顶部按钮 */
+  [class*='_backTop_'] {
+    left: calc(50% + var(--ws-content-width) / 2 + var(--right-width) + 5px);
+    margin-left: 0;
+  }
+}

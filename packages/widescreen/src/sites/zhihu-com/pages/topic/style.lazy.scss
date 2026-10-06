@@ -1,0 +1,9 @@
+@use '../../../mixins' as *;
+
+@include substrate(1300px) {
+  .App-main {
+    > div:first-child {
+      max-width: var(--ws-content-width);
+    }
+  }
+}

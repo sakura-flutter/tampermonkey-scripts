@@ -1,79 +1,42 @@
 import { GM_registerMenuCommand } from '$'
-import { readyState, checker, log } from '@monkey/shared/utils'
-import { Toast } from '@monkey/shared/components'
-import globalStore, { createStore as _createStore } from '@monkey/shared/store'
+import { RouteMonitor } from './core/route-monitor'
+import { WidescreenRuntime } from './core/runtime'
+import { SettingsStore } from './core/settings'
 import sites from './sites'
-import createControl from './control'
-import type { Site } from './types'
+import { ControlPanel } from './ui'
 
-// 主函数
 function main() {
-  if (!checker()) return
-
-  GM_registerMenuCommand('宽屏通知', function () {
-    const nextStatus = !(globalStore.notify_enabled ?? false)
-    Toast.success(nextStatus ? '已开启通知' : '已关闭通知')
-    globalStore.notify_enabled = nextStatus
-  })
-  GM_registerMenuCommand('控制按钮', function () {
-    const nextStatus = !(globalStore.ui_visible ?? true)
-    Toast.success(nextStatus ? '已显示按钮' : '已隐藏按钮')
-    globalStore.ui_visible = nextStatus
-  })
-
-  new App(sites).boot()
-}
-
-class App {
-  #sites
-  constructor(sites: Site[]) {
-    this.#sites = sites
-  }
-
-  boot() {
-    const briefURL = location.host + location.pathname
-
-    this.#sites.forEach(async site => {
-      const { name, namespace, test, use } = site
-      if (!this.#includes(test, briefURL)) return
-
-      const { readyState: state } = site
-      if (state) await readyState[state]()
-      // fix: 罕见情况下会获取不到 head，原因未知
-      // 偶尔会在知乎中出现
-      if (document.head == null) await readyState.interactive()
-
-      const config = use({
-        createControl,
-        store: createStore(namespace),
-      })
-      log.warn(name)
-      config.handler()
-    })
-  }
-
-  #includes(test: Site['test'], url: string) {
-    return ([] as Site['test'][]).concat(test).some(item => {
-      if (item instanceof RegExp) return item.test(url)
-      if (typeof item === 'boolean') return item
-      return false
-    })
-  }
-}
-
-// 存储
-function createStore(namespace: string) {
-  const store = new Proxy(_createStore(namespace), {
-    get(target, property: string, receiver) {
-      let value = Reflect.get(target, property, receiver)
-      if (property === 'enabled') {
-        // 默认开启
-        value ??= true
-      }
-      return value
+  const settings = new SettingsStore()
+  let runtime: WidescreenRuntime
+  const panel = new ControlPanel({
+    getPanelPosition: () => settings.getPanelPosition(),
+    setPanelPosition: position => settings.setPanelPosition(position),
+    onEnabledChange: (siteId, value) => {
+      settings.update(siteId, { enabled: value })
+      runtime.reconcile()
+    },
+    onUncappedChange: (siteId, value) => {
+      settings.update(siteId, { uncapped: value })
+      runtime.reconcile()
     },
   })
-  return store
+
+  runtime = new WidescreenRuntime({ sites, settings, panel })
+  const routeMonitor = new RouteMonitor()
+  routeMonitor.subscribe(route => runtime.transition(route))
+  settings.subscribe(() => runtime.reconcile())
+  panel.setVisible(settings.getPanelVisible())
+  registerMenu(panel, settings)
+
+  routeMonitor.start()
+}
+
+function registerMenu(panel: ControlPanel, settings: SettingsStore) {
+  GM_registerMenuCommand('显示/隐藏 控制按钮', () => {
+    const nextStatus = !settings.getPanelVisible()
+    settings.setPanelVisible(nextStatus)
+    panel.setVisible(nextStatus)
+  })
 }
 
 main()

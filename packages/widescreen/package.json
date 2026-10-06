@@ -1,6 +1,6 @@
 {
   "name": "@monkey/widescreen",
-  "version": "2.15.16",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,8 +8,7 @@
     "dev": "vp dev"
   },
   "dependencies": {
-    "@monkey/shared": "workspace:*",
-    "vue": "catalog:"
+    "@monkey/shared": "workspace:*"
   },
   "devDependencies": {
     "@monkey/vite-userscript": "workspace:*",

@@ -1,0 +1,30 @@
+@use '../../../mixins' as *;
+
+@include substrate(1120px) {
+  #app {
+    /* 文章 */
+    .article-detail {
+      width: var(--ws-content-width);
+    }
+
+    #article-content {
+      /* 图片宽度 */
+      .img-box img[data-type='preview'] {
+        width: auto !important;
+        max-width: 100%;
+        height: auto !important;
+      }
+    }
+
+    /* 右侧悬浮按钮 */
+    .right-side-bar {
+      margin-left: calc(var(--ws-content-width) + 25px);
+      transition-property: bottom; // 避免更改 margin 触发了过渡
+    }
+
+    /* 文章下方图片 哎？广告 */
+    .activty-image .card-image {
+      margin: auto;
+    }
+  }
+}

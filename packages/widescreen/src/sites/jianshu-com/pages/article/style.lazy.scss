@@ -1,0 +1,20 @@
+@use '../../../mixins' as *;
+
+/* 简书文章 */
+@include substrate(1250px) {
+  #__next {
+    /* 左侧悬浮按钮 */
+    > div:last-child {
+      left: calc(50% - (var(--ws-content-width) / 2) - 80px);
+    }
+
+    [role='main'] {
+      width: var(--ws-content-width);
+
+      /* 内容 */
+      > div:first-child {
+        flex: 1;
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+@use '../../../mixins' as *;
+
+@include substrate(1300px) {
+  #wrapper {
+    width: var(--ws-content-width) !important;
+  }
+
+  /* 内容 */
+  #content .grid-16-8 .article {
+    width: calc(100% - 360px) !important;
+  }
+}

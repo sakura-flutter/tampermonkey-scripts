@@ -1,0 +1,49 @@
+@use '../../../mixins' as *;
+
+$default-width: 694px;
+
+@include substrate(1350px) {
+  :root:root {
+    --container-width: var(--ws-content-width);
+  }
+
+  .App-main {
+    /* 标题区域 */
+    .QuestionHeader-content {
+      margin-inline: auto;
+      padding-inline: var(--container-padding-x);
+      max-width: none;
+      width: calc(var(--container-width) + var(--container-padding-x) * 2);
+      padding-left: 0;
+
+      .QuestionHeader-main {
+        flex: 1;
+      }
+    }
+
+    .QuestionHeader-footer {
+      margin-inline: auto;
+      width: calc(var(--container-width) + var(--container-padding-x) * 2);
+
+      &-inner {
+        margin-inline: 0;
+        padding-left: 0;
+      }
+    }
+
+    /* 主要内容 */
+    .Question-mainColumn {
+      width: auto;
+
+      .ContentItem-actions.is-fixed {
+        width: calc(var(--container-width) - var(--right-sidebar-width) - var(--container-padding-x) + 5px) !important;
+      }
+    }
+
+    /* 内容图片 */
+    .ztext .content_image,
+    .ztext .origin_image {
+      max-width: $default-width !important;
+    }
+  }
+}
