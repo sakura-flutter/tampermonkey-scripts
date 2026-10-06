@@ -28,6 +28,9 @@
 // @match        *://www.toutiao.com/*
 // @match        *://time.geekbang.org/*
 // @run-at       document-start
+// @compatible   chrome Latest
+// @compatible   firefox Latest
+// @compatible   edge Latest
 // ==/UserScript==
 
 (function() {
