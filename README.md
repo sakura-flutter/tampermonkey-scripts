@@ -1,7 +1,5 @@
 # tampermonkey-scripts
 
-自用油猴脚本。
-
 ## 脚本
 
 - [重定向](https://greasyfork.org/zh-CN/scripts/416338-redirect-外链跳转)
@@ -40,7 +38,7 @@ pnpm dev
 | `pnpm build:watch` | 实时构建全部脚本                                                      |
 | `pnpm check`       | 执行格式化、lint 和类型检查                                           |
 
-开发时遇到 CSP 问题，请参考 [vite-plugin-monkey 文档](https://github.com/lisonge/vite-plugin-monkey/blob/main/README_zh.md#csp)。
+开发时遇到 CSP 问题，请参考 [vite-plugin-monkey 文档](https://vite-plugin-monkey.pages.dev/zh/guide/notes#csp)。
 
 ## 致谢
 
