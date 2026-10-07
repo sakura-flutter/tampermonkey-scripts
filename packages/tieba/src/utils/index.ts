@@ -5,6 +5,9 @@ import type { PageData } from '../types'
 export * from './request'
 export * from './signature'
 
+/**
+ * 新版已经没有 jq，这里为最小改动先不动，后续再重新实现
+ */
 const jQuery: JQueryStatic = (unsafeWindow as any).jQuery
 
 /**
@@ -51,8 +54,25 @@ export function getElementsInPage() {
 /**
  * 获取 PageData
  */
-export function getPageData() {
-  return (unsafeWindow as any).PageData as PageData
+export function getPageData(): PageData {
+  const tiabaPcLocalStorage = localStorage.getItem('tiabaPcLocalStorage')
+
+  if (!tiabaPcLocalStorage) {
+    // 如果没有数据，返回一个默认值
+    return {
+      tbs: '',
+      leftNavCollaped: false,
+      user: {
+        is_login: 0,
+        name_show: '',
+        user_id: 0,
+        portrait: '',
+        session_id: '',
+      },
+    }
+  }
+
+  return JSON.parse(tiabaPcLocalStorage) as PageData
 }
 
 /**

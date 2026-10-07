@@ -176,7 +176,18 @@ export type LikeForumData = WebApiLikeForumResponse['data']['like_forum'][number
     sign_bonus_point?: string
   }
 
-/** window.PageData */
+/**
+ * 页面数据，
+ * 改版前是 window.PageData 现在是 localStorage.tiabaPcLocalStorage
+ */
 export interface PageData {
   tbs: string
+  leftNavCollaped: boolean
+  user: {
+    is_login: 1 | 0
+    name_show: string
+    user_id: number
+    portrait: string
+    session_id: string
+  }
 }

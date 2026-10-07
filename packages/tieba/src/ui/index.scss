@@ -8,6 +8,8 @@
   // 列表距离右边距离
   --container-right: 10px;
 
+  --skr-primary-color: #4070ff;
+
   @include reset;
 
   box-sizing: border-box;
@@ -37,6 +39,10 @@
     background-image: none;
   }
 
+  .skr-button {
+    border-radius: 25px;
+  }
+
   // 主按钮
   .control {
     align-items: center;
@@ -57,7 +63,7 @@
       flex: 1;
       flex-wrap: wrap;
       margin-left: 10px;
-      max-width: 156px;
+      max-width: 170px;
     }
   }
 
@@ -69,7 +75,7 @@
     contain: content;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 124px);
+    max-height: calc(100vh - 150px);
     min-width: 280px;
     padding: 5px;
     position: fixed;
@@ -123,6 +129,7 @@
     border-bottom: 1px solid rgb(221 221 221 / 40%);
     cursor: default;
     display: flex;
+    align-items: center;
     transition: height 0.15s;
 
     &:hover {
@@ -181,5 +188,9 @@
         height: 32px;
       }
     }
+  }
+
+  input::placeholder {
+    color: var(--skr-text-regular-color);
   }
 }

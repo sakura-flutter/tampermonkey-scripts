@@ -1,11 +1,10 @@
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useGMvalue } from '@monkey/shared/composables'
-import { mountComponent, log } from '@monkey/shared/utils'
+import { mountComponent, log, sleep } from '@monkey/shared/utils'
 import { Checkbox, Button, Toast } from '@monkey/shared/components'
 import store from '../store'
 import { mergeLikeForum } from '../api'
 import { Adapter, type SignMode } from '../sign'
-import { getElementsInPage } from '../utils'
 import ForumList from './ForumList'
 import type { LikeForumData } from '../types'
 import './index.scss'
@@ -26,8 +25,13 @@ export function createUI() {
   mountComponent({
     setup() {
       const state = reactive({
-        loading: false,
+        /** 列表是否加载完成 */
+        loaded: false,
+        /** 是否正在签到 */
+        signing: false,
+        /** 界面大小 */
         size: sizeTick.next().value,
+        /** 关注列表 */
         likeForums: [] as LikeForumData[],
       })
       const isSimulate = useGMvalue('is_simulate', false)
@@ -35,18 +39,23 @@ export function createUI() {
       const isComplete = useGMvalue('is_complete', false)
       const isCover = useGMvalue('is_cover', false)
       const toastTime = useGMvalue<number | undefined>('toast_time', undefined)
-      let setSign: (key: string) => void
+      // let setSign: (key: string) => void
+
+      const signs = computed(() => {
+        return state.likeForums.filter(v => v.is_sign === 1)
+      })
+
+      const unsigns = computed(() => {
+        return state.likeForums.filter(v => v.is_sign === 0)
+      })
 
       function run(toastVisible = true) {
-        if (state.loading) {
+        if (state.signing) {
           Toast('签到中')
           return
         }
 
-        const { unsigns, signs, setSign: _setSign } = getElementsInPage()
-        setSign = _setSign
-
-        if (unsigns.length === 0) {
+        if (unsigns.value.length === 0) {
           const now = new Date()
           // 避免每次都提示
           if (toastVisible || toastTime.value === undefined || new Date(toastTime.value).getDate() < now.getDate()) {
@@ -63,7 +72,7 @@ export function createUI() {
             return
           }
           // 签了 20 个以上视为用过批量签到
-          if (signs.length >= 20) {
+          if (signs.value.length >= 20) {
             mode = 'app'
           } else {
             mode = 'fast'
@@ -72,32 +81,39 @@ export function createUI() {
           mode = 'web'
         }
 
-        state.loading = true
+        state.signing = true
         const toast = Toast('开始签到，请等待', 0)
         new Adapter({
-          unsigns,
+          unsigns: unsigns.value.map(v => ({ fid: v.forum_id.toString(), kw: v.forum_name })),
           BDUSS: store.BDUSS,
           onSuccess({ fid, kw, data }) {
-            const key = fid || kw
-            if (key) setSign(key)
+            // const key = fid || kw
+            // if (key) setSign(key)
             if (fid && data) updateLikeForum(fid, data)
           },
         })
           .sign(mode)
           .then(async () => {
-            if (store.BDUSS) await fetchForums()
-            // 以页面为准，因为有时签到失败但实际上是成功的
-            const failList = getElementsInPage().unsigns
-            const length = failList.length
-            if (length > 0) {
-              Toast.warning(`签到成功，失败${length}个：${failList.map(v => v.kw).join('、')}`, 0)
+            // 没有 BDUSS 时，无法获取列表因此直接提示成功
+            if (!store.BDUSS) {
+              Toast.success('签到成功')
+              return
+            }
+
+            await sleep(1000)
+            await fetchForums()
+
+            const failList = unsigns.value
+            const failLens = failList.length
+            if (failLens > 0) {
+              Toast.warning(`签到成功，失败${failLens}个：${failList.map(v => v.forum_name).join('、')}`, 0)
             } else {
               Toast.success('签到成功')
             }
           })
           .finally(() => {
             toast.close()
-            state.loading = false
+            state.signing = false
           })
       }
 
@@ -123,12 +139,14 @@ export function createUI() {
           .then(forums => {
             state.likeForums = forums
             sort()
-            forums.forEach(forum => {
+            state.loaded = true
+            // 新版废弃逻辑
+            /* forums.forEach(forum => {
               // 签到可能失败，以这里为准
               if (forum.is_sign === 1) {
-                setSign?.(forum.forum_name)
+                // setSign?.(forum.forum_name)
               }
-            })
+            }) */
           })
           .catch(error => {
             // 爆炸了也没什么需要处理的，这里就不抛了
@@ -177,7 +195,7 @@ export function createUI() {
           }}
         >
           <div class="control">
-            <Button disabled={state.loading} type="primary" shadow onClick={() => run()}>
+            <Button disabled={state.signing} type="primary" shadow onClick={() => run()}>
               一键签到
             </Button>
             <div class="settings">

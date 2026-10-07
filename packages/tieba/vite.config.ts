@@ -7,7 +7,7 @@ export default defineConfig(env =>
       name: '百度贴吧签到',
       description: '网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~',
       'run-at': 'document-end',
-      match: ['https://tieba.baidu.com/index.html', 'https://tieba.baidu.com/'],
+      match: ['https://tieba.baidu.com/*'],
       connect: ['tieba.baidu.com'],
     },
     build: {
