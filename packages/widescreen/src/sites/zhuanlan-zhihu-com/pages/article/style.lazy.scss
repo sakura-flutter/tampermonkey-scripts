@@ -3,7 +3,7 @@
 $default-width: 690px;
 
 @include substrate(1350px) {
-  :root:root {
+  :root {
     --container-width: var(--ws-content-width);
     --container-main-column-width: calc(
       var(--container-width) - var(--right-sidebar-width) - var(--container-padding-x) * 3

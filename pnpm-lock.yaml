@@ -226,6 +226,9 @@ catalogs:
     gh-pages:
       specifier: 6.3.0
       version: 6.3.0
+    postcss:
+      specifier: 8.5.26
+      version: 8.5.26
     sass-embedded:
       specifier: 1.103.1
       version: 1.103.1
@@ -546,6 +549,9 @@ importers:
       '@monkey/vite-userscript':
         specifier: workspace:*
         version: link:../../tools/vite-userscript
+      postcss:
+        specifier: 'catalog:'
+        version: 8.5.26
       sass-embedded:
         specifier: 'catalog:'
         version: 1.103.1

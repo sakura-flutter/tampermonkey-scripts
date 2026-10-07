@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite-plus'
 import { defineUserScriptConfig } from '@monkey/vite-userscript'
+import { pageScopePlugin } from './plugins/page-scope'
 
 const matches = [
   'https://mp.weixin.qq.com/s*',
@@ -29,8 +30,8 @@ const matches = [
 
 const includes = [/^https:\/\/www\.google\..{2,7}search/]
 
-export default defineConfig(env =>
-  defineUserScriptConfig(env, import.meta.url, {
+export default defineConfig(env => {
+  const baseConfig = defineUserScriptConfig(env, import.meta.url, {
     userscript: {
       name: '网页宽屏',
       description:
@@ -40,5 +41,22 @@ export default defineConfig(env =>
       match: matches,
       include: includes,
     },
-  }),
-)
+  })
+
+  const postcss = baseConfig.css?.postcss
+  const postcssConfig =
+    postcss && typeof postcss === 'object' && !Array.isArray(postcss) ? (postcss as { plugins?: unknown[] }) : undefined
+
+  const css = {
+    ...baseConfig.css,
+    postcss: {
+      ...postcssConfig,
+      plugins: [pageScopePlugin(), ...(postcssConfig?.plugins ?? [])],
+    },
+  } as typeof baseConfig.css
+
+  return {
+    ...baseConfig,
+    css,
+  }
+})

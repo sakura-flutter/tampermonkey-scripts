@@ -1,7 +1,7 @@
 @use '../../../mixins' as *;
 
 @include substrate(1450px) {
-  :root:root {
+  :root {
     --mid-width: var(--ws-content-width);
   }
 

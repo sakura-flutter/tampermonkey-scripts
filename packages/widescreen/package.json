@@ -1,6 +1,6 @@
 {
   "name": "@monkey/widescreen",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@monkey/vite-userscript": "workspace:*",
+    "postcss": "catalog:",
     "sass-embedded": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
