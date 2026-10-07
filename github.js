@@ -2,7 +2,7 @@
 // @name            GitHub 工具箱
 // @name:en         GitHub ToolBox
 // @namespace       https://github.com/sakura-flutter/tampermonkey-scripts
-// @version         1.2.1
+// @version         1.2.2
 // @author          sakura-flutter
 // @description     添加用 VS Code 阅读代码按钮(github1s)
 // @description:en  Read code with VS Code(github1s)
@@ -26,6 +26,7 @@
 	var _monkeyWindow = (() => window)();
 	var $ = document.querySelector.bind(document);
 	document.querySelectorAll.bind(document);
+	var REPO_HEADER_ACTIONS_SELECTOR = "[class*=\"RepoHeaderActions-module\"]";
 	var BUTTONS = [{
 		id: "vscode-button",
 		label: "VS Code",
@@ -68,7 +69,7 @@
 		document.getElementById(button.id)?.closest("li")?.remove();
 	}
 	function syncButtons() {
-		const actions = $("[class*=\"RepoHeaderActions-module__Actions\"]");
+		const actions = $(REPO_HEADER_ACTIONS_SELECTOR);
 		if (actions == null) return;
 		for (const button of BUTTONS) {
 			if (!isButtonVisible(button)) {
@@ -90,7 +91,23 @@
 			syncButtons();
 		});
 	}
+	var SYNC_DEBOUNCE_MS = 200;
+	var syncTimer;
+	function scheduleSyncButtons() {
+		clearTimeout(syncTimer);
+		syncTimer = setTimeout(syncButtons, SYNC_DEBOUNCE_MS);
+	}
+	var headerObserver;
+	function watchRepoHeader() {
+		headerObserver?.disconnect();
+		headerObserver = new MutationObserver(scheduleSyncButtons);
+		headerObserver.observe(document.body, {
+			childList: true,
+			subtree: true
+		});
+	}
 	registerMenuCommands();
-	setTimeout(syncButtons, 500);
-	_monkeyWindow.addEventListener("urlchange", () => setTimeout(syncButtons, 500));
+	watchRepoHeader();
+	syncButtons();
+	_monkeyWindow.addEventListener("urlchange", scheduleSyncButtons);
 })();
