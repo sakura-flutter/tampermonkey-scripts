@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         百度贴吧签到
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
-// @version      3.4.4
+// @version      3.5.0
 // @author       sakura-flutter
 // @description  网页版签到或模拟客户端签到，模拟客户端可获得与客户端相同经验并且签到速度更快~
 // @license      MIT
-// @match        https://tieba.baidu.com/index.html
-// @match        https://tieba.baidu.com/
+// @match        https://tieba.baidu.com/*
 // @require      https://unpkg.com/crypto-js@4.2.0/core.js
 // @require      https://unpkg.com/crypto-js@4.2.0/md5.js
 // @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.js
@@ -221,8 +220,6 @@
 			});
 		}
 	};
-	document.querySelector.bind(document);
-	var $$ = document.querySelectorAll.bind(document);
 	function warn(...args) {}
 	warn.force = function(...args) {
 		console.warn("%c      warn      ", "background: #ffa500; padding: 1px; color: #fff;", ...args);
@@ -231,19 +228,6 @@
 	error.force = function(...args) {
 		console.error("%c      error      ", "background: red; padding: 1px; color: #fff;", ...args);
 	};
-	function parse(href = location.href) {
-		if (!href) return {};
-		let search;
-		try {
-			const url = new URL(href);
-			({search} = url);
-			if (!search && url.hash.includes("?")) search = url.hash.split("?")[1];
-		} catch {
-			if (href.includes("?")) search = href.split("?")[1];
-			else search = href;
-		}
-		return Object.fromEntries(new URLSearchParams(search));
-	}
 	function stringify(obj) {
 		return Object.entries(obj).filter(([, value]) => value !== void 0).map(([key, value]) => `${key}=${value ?? ""}`).join("&");
 	}
@@ -374,38 +358,21 @@
 			sign: sign(params)
 		};
 	}
-	var jQuery = _unsafeWindow.jQuery;
-	function getElementsInPage() {
-		const $moreforumEl = jQuery("#moreforum");
-		$moreforumEl.trigger("mouseenter");
-		const likeUnsignEls = $$("#likeforumwraper .unsign");
-		const likeSignEls = $$("#likeforumwraper .sign");
-		const alwayUnsignEls = $$("#alwayforum-wraper .unsign");
-		const alwaySignEls = $$("#alwayforum-wraper .sign");
-		$moreforumEl.trigger("click");
-		const unsigns = [...likeUnsignEls, ...alwayUnsignEls].map((element) => {
-			const fid = element.dataset.fid;
-			const { kw } = parse(element.href);
-			return {
-				fid,
-				kw,
-				element
-			};
-		});
-		const unsignsMap = unsigns.reduce((map, unsign) => {
-			return map.set(unsign.fid, unsign.element).set(unsign.kw, unsign.element);
-		}, new Map());
-		return {
-			moreForum: $moreforumEl,
-			unsigns,
-			signs: [...likeSignEls, ...alwaySignEls],
-			setSign(key) {
-				unsignsMap.get(key)?.classList.replace("unsign", "sign");
+	_unsafeWindow.jQuery;
+	function getPageData() {
+		const tiabaPcLocalStorage = localStorage.getItem("tiabaPcLocalStorage");
+		if (!tiabaPcLocalStorage) return {
+			tbs: "",
+			leftNavCollaped: false,
+			user: {
+				is_login: 0,
+				name_show: "",
+				user_id: 0,
+				portrait: "",
+				session_id: ""
 			}
 		};
-	}
-	function getPageData() {
-		return _unsafeWindow.PageData;
+		return JSON.parse(tiabaPcLocalStorage);
 	}
 	function encodeRequestParams(obj) {
 		const newObj = { ...obj };
@@ -938,7 +905,7 @@
 			])]);
 		}
 	});
-	_css("/* var */\n/* reset */\n:root {\n  --skr-primary-color: #2878ff;\n  --skr-primary-lighten-color: rgb(24 144 255 / 20%);\n  --skr-white-color: #fff;\n  /* transition */\n  --skr-transition-duration-fast: 0.1s;\n  --skr-transition-duration-normal: 0.3s;\n  /* shadow */\n  --skr-box-shadow-lighten: 0 1px 6px rgb(0 0 0 / 15%);\n  --skr-box-shadow-normal: 0 1px 6px rgb(0 0 0 / 20%);\n  /* border */\n  --skr-border-color: #d9d9d9;\n  /* text */\n  --skr-text-primary-color: #303133;\n  --skr-text-regular-color: #666;\n  --skr-text-secondary-color: #909399;\n  --skr-text-inverse-color: var(--skr-white-color);\n  /* button */\n  --skr-button-transition: all var(--skr-transition-duration-normal);\n  --skr-button-box-shadow: 0 2px 0 rgb(0 0 0 / 4.5%);\n  /* ripple */\n  --skr-ripple-color: rgb(138 218 255 / 20%);\n}\n\n#inject-sign {\n  --container-width: 19vw;\n  --container-right: 10px;\n}\n#inject-sign [class*=skr-] {\n  box-sizing: border-box;\n}\n#inject-sign {\n  box-sizing: border-box;\n  color: var(--skr-text-regular-color);\n}\n#inject-sign.normal, #inject-sign.large {\n  --container-width: 21vw;\n}\n#inject-sign *::-webkit-scrollbar {\n  background: #f2f2f2;\n  height: 8px;\n  width: 8px;\n}\n#inject-sign *::-webkit-scrollbar-thumb {\n  background: #c1c1c1;\n  border: 0;\n}\n#inject-sign a {\n  color: var(--skr-primary-color);\n}\n#inject-sign button {\n  background-image: none;\n}\n#inject-sign .control {\n  align-items: center;\n  bottom: 12px;\n  contain: content;\n  display: flex;\n  position: fixed;\n  right: max(var(--container-right) + var(--container-width) / 2, 150px);\n  transform: translateX(50%);\n  transition: bottom 0.3s, right 0.15s;\n  user-select: none;\n  z-index: 500;\n}\n#inject-sign .control .settings {\n  display: inline-flex;\n  flex: 1;\n  flex-wrap: wrap;\n  margin-left: 10px;\n  max-width: 156px;\n}\n#inject-sign .forums-container {\n  background: #fafafa;\n  bottom: 60px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n  contain: content;\n  display: flex;\n  flex-direction: column;\n  max-height: calc(100vh - 124px);\n  min-width: 280px;\n  padding: 5px;\n  position: fixed;\n  right: var(--container-right);\n  transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;\n  width: var(--container-width);\n  z-index: 2;\n}\n#inject-sign .forums-container:hover {\n  box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);\n}\n#inject-sign.forums-hide .forums-container {\n  bottom: 0;\n  transform: translateY(calc(100% - 35px));\n}\n#inject-sign.forums-hide .control {\n  bottom: 40px;\n}\n#inject-sign.cover .forums-container {\n  z-index: 9999;\n}\n#inject-sign header {\n  display: flex;\n  margin-bottom: 4px;\n}\n#inject-sign .reverse-btn {\n  flex: 1;\n  text-align: center;\n}\n#inject-sign .resize-btn {\n  flex: none;\n  margin-left: 4px;\n}\n#inject-sign li {\n  border-bottom: 1px solid rgba(221, 221, 221, 0.4);\n  cursor: default;\n  display: flex;\n  transition: height 0.15s;\n}\n#inject-sign li:hover {\n  background-color: #f0f8ff;\n}\n#inject-sign li > * {\n  line-height: 2.325em;\n}\n#inject-sign li a {\n  flex: 1;\n  overflow: hidden;\n  padding-left: 0.2em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n#inject-sign li .signed {\n  width: 0.9em;\n}\n#inject-sign li .level {\n  width: 2.4em;\n}\n#inject-sign li .gain {\n  width: 1.8em;\n}\n#inject-sign li .exp {\n  flex: none;\n  width: 6.7em;\n}\n#inject-sign ul {\n  overflow-x: hidden;\n}\n#inject-sign ul.small li {\n  height: 24px;\n}\n#inject-sign ul.normal li {\n  font-size: 13px;\n  height: 28px;\n}\n#inject-sign ul.large li {\n  font-size: 14px;\n  height: 32px;\n}");
+	_css("/* var */\n/* reset */\n:root {\n  --skr-primary-color: #2878ff;\n  --skr-primary-lighten-color: rgb(24 144 255 / 20%);\n  --skr-white-color: #fff;\n  /* transition */\n  --skr-transition-duration-fast: 0.1s;\n  --skr-transition-duration-normal: 0.3s;\n  /* shadow */\n  --skr-box-shadow-lighten: 0 1px 6px rgb(0 0 0 / 15%);\n  --skr-box-shadow-normal: 0 1px 6px rgb(0 0 0 / 20%);\n  /* border */\n  --skr-border-color: #d9d9d9;\n  /* text */\n  --skr-text-primary-color: #303133;\n  --skr-text-regular-color: #666;\n  --skr-text-secondary-color: #909399;\n  --skr-text-inverse-color: var(--skr-white-color);\n  /* button */\n  --skr-button-transition: all var(--skr-transition-duration-normal);\n  --skr-button-box-shadow: 0 2px 0 rgb(0 0 0 / 4.5%);\n  /* ripple */\n  --skr-ripple-color: rgb(138 218 255 / 20%);\n}\n\n#inject-sign {\n  --container-width: 19vw;\n  --container-right: 10px;\n  --skr-primary-color: #4070ff;\n}\n#inject-sign [class*=skr-] {\n  box-sizing: border-box;\n}\n#inject-sign {\n  box-sizing: border-box;\n  color: var(--skr-text-regular-color);\n}\n#inject-sign.normal, #inject-sign.large {\n  --container-width: 21vw;\n}\n#inject-sign *::-webkit-scrollbar {\n  background: #f2f2f2;\n  height: 8px;\n  width: 8px;\n}\n#inject-sign *::-webkit-scrollbar-thumb {\n  background: #c1c1c1;\n  border: 0;\n}\n#inject-sign a {\n  color: var(--skr-primary-color);\n}\n#inject-sign button {\n  background-image: none;\n}\n#inject-sign .skr-button {\n  border-radius: 25px;\n}\n#inject-sign .control {\n  align-items: center;\n  bottom: 12px;\n  contain: content;\n  display: flex;\n  position: fixed;\n  right: max(var(--container-right) + var(--container-width) / 2, 150px);\n  transform: translateX(50%);\n  transition: bottom 0.3s, right 0.15s;\n  user-select: none;\n  z-index: 500;\n}\n#inject-sign .control .settings {\n  display: inline-flex;\n  flex: 1;\n  flex-wrap: wrap;\n  margin-left: 10px;\n  max-width: 170px;\n}\n#inject-sign .forums-container {\n  background: #fafafa;\n  bottom: 60px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n  contain: content;\n  display: flex;\n  flex-direction: column;\n  max-height: calc(100vh - 150px);\n  min-width: 280px;\n  padding: 5px;\n  position: fixed;\n  right: var(--container-right);\n  transition: transform 0.3s, bottom 0.3s, width 0.15s, box-shadow 0.3s;\n  width: var(--container-width);\n  z-index: 2;\n}\n#inject-sign .forums-container:hover {\n  box-shadow: 0 2px 4px 3px rgba(0, 0, 0, 0.1);\n}\n#inject-sign.forums-hide .forums-container {\n  bottom: 0;\n  transform: translateY(calc(100% - 35px));\n}\n#inject-sign.forums-hide .control {\n  bottom: 40px;\n}\n#inject-sign.cover .forums-container {\n  z-index: 9999;\n}\n#inject-sign header {\n  display: flex;\n  margin-bottom: 4px;\n}\n#inject-sign .reverse-btn {\n  flex: 1;\n  text-align: center;\n}\n#inject-sign .resize-btn {\n  flex: none;\n  margin-left: 4px;\n}\n#inject-sign li {\n  border-bottom: 1px solid rgba(221, 221, 221, 0.4);\n  cursor: default;\n  display: flex;\n  align-items: center;\n  transition: height 0.15s;\n}\n#inject-sign li:hover {\n  background-color: #f0f8ff;\n}\n#inject-sign li > * {\n  line-height: 2.325em;\n}\n#inject-sign li a {\n  flex: 1;\n  overflow: hidden;\n  padding-left: 0.2em;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n#inject-sign li .signed {\n  width: 0.9em;\n}\n#inject-sign li .level {\n  width: 2.4em;\n}\n#inject-sign li .gain {\n  width: 1.8em;\n}\n#inject-sign li .exp {\n  flex: none;\n  width: 6.7em;\n}\n#inject-sign ul {\n  overflow-x: hidden;\n}\n#inject-sign ul.small li {\n  height: 24px;\n}\n#inject-sign ul.normal li {\n  font-size: 13px;\n  height: 28px;\n}\n#inject-sign ul.large li {\n  font-size: 14px;\n  height: 32px;\n}\n#inject-sign input::placeholder {\n  color: var(--skr-text-regular-color);\n}");
 	var sizeTick = function* () {
 		const sizes = [
 			"small",
@@ -957,7 +924,8 @@
 	function createUI() {
 		mountComponent({ setup() {
 			const state = (0, vue.reactive)({
-				loading: false,
+				loaded: false,
+				signing: false,
 				size: sizeTick.next().value,
 				likeForums: []
 			});
@@ -966,15 +934,18 @@
 			const isComplete = useGMvalue("is_complete", false);
 			const isCover = useGMvalue("is_cover", false);
 			const toastTime = useGMvalue("toast_time", void 0);
-			let setSign;
+			const signs = (0, vue.computed)(() => {
+				return state.likeForums.filter((v) => v.is_sign === 1);
+			});
+			const unsigns = (0, vue.computed)(() => {
+				return state.likeForums.filter((v) => v.is_sign === 0);
+			});
 			function run(toastVisible = true) {
-				if (state.loading) {
+				if (state.signing) {
 					Toast("签到中");
 					return;
 				}
-				const { unsigns, signs, setSign: _setSign } = getElementsInPage();
-				setSign = _setSign;
-				if (unsigns.length === 0) {
+				if (unsigns.value.length === 0) {
 					const now = new Date();
 					if (toastVisible || toastTime.value === void 0 || new Date(toastTime.value).getDate() < now.getDate()) Toast.success("所有吧已签到");
 					toastTime.value = +now;
@@ -986,28 +957,34 @@
 						Toast.error("请先输入 BDUSS 或 BDUSS_BFESS");
 						return;
 					}
-					if (signs.length >= 20) mode = "app";
+					if (signs.value.length >= 20) mode = "app";
 					else mode = "fast";
 				} else mode = "web";
-				state.loading = true;
+				state.signing = true;
 				const toast = Toast("开始签到，请等待", 0);
 				new Adapter({
-					unsigns,
+					unsigns: unsigns.value.map((v) => ({
+						fid: v.forum_id.toString(),
+						kw: v.forum_name
+					})),
 					BDUSS: store_default.BDUSS,
 					onSuccess({ fid, kw, data }) {
-						const key = fid || kw;
-						if (key) setSign(key);
 						if (fid && data) updateLikeForum(fid, data);
 					}
 				}).sign(mode).then(async () => {
-					if (store_default.BDUSS) await fetchForums();
-					const failList = getElementsInPage().unsigns;
-					const length = failList.length;
-					if (length > 0) Toast.warning(`签到成功，失败${length}个：${failList.map((v) => v.kw).join("、")}`, 0);
+					if (!store_default.BDUSS) {
+						Toast.success("签到成功");
+						return;
+					}
+					await sleep(1e3);
+					await fetchForums();
+					const failList = unsigns.value;
+					const failLens = failList.length;
+					if (failLens > 0) Toast.warning(`签到成功，失败${failLens}个：${failList.map((v) => v.forum_name).join("、")}`, 0);
 					else Toast.success("签到成功");
 				}).finally(() => {
 					toast.close();
-					state.loading = false;
+					state.signing = false;
 				});
 			}
 			function updateLikeForum(fid, forum) {
@@ -1026,9 +1003,7 @@
 				return mergeLikeForum().then((forums) => {
 					state.likeForums = forums;
 					sort();
-					forums.forEach((forum) => {
-						if (forum.is_sign === 1) setSign?.(forum.forum_name);
-					});
+					state.loaded = true;
 				}).catch((error$1) => {
 					error.force(error$1);
 					Toast.error("获取贴吧列表失败。。请刷新重试~", 0);
@@ -1059,7 +1034,7 @@
 					[state.size]: true
 				}
 			}, [(0, vue.createVNode)("div", { "class": "control" }, [(0, vue.createVNode)(Button, {
-				"disabled": state.loading,
+				"disabled": state.signing,
 				"type": "primary",
 				"shadow": true,
 				"onClick": () => run()
@@ -1092,14 +1067,18 @@
 			}, null)]);
 		} });
 	}
+	var LOCK_NAME = "tieba-sign-owner";
 	function main() {
 		if (!checker()) return;
-		if (!getElementsInPage().moreForum.length) {
+		if (!getPageData().user.is_login) {
 			delete store_default.BDUSS;
 			delete store_default.is_complete;
 			return;
 		}
-		createUI();
+		navigator.locks.request(LOCK_NAME, async () => {
+			createUI();
+			await new Promise(() => {});
+		}).catch(() => {});
 	}
 	main();
 })(Vue, CryptoJS.MD5);
