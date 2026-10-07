@@ -86,6 +86,7 @@ export function createUI() {
         new Adapter({
           unsigns: unsigns.value.map(v => ({ fid: v.forum_id.toString(), kw: v.forum_name })),
           BDUSS: store.BDUSS,
+          // oxlint-disable-next-line no-unused-vars
           onSuccess({ fid, kw, data }) {
             // const key = fid || kw
             // if (key) setSign(key)
