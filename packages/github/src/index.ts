@@ -11,6 +11,9 @@ type ButtonConfig = {
   storageKey: string
 }
 
+/* GitHub 仓库页面头部操作区的节点选择器 */
+const REPO_HEADER_ACTIONS_SELECTOR = '[class*="RepoHeaderActions-module"]'
+
 const BUTTONS: ButtonConfig[] = [
   {
     id: 'vscode-button',
@@ -66,7 +69,7 @@ function removeButton(button: ButtonConfig) {
 }
 
 function syncButtons() {
-  const actions = $('[class*="RepoHeaderActions-module__Actions"]')
+  const actions = $(REPO_HEADER_ACTIONS_SELECTOR)
   if (actions == null) return
 
   for (const button of BUTTONS) {
@@ -95,9 +98,28 @@ function registerMenuCommands() {
   }
 }
 
+/** 防抖时间 */
+const SYNC_DEBOUNCE_MS = 200
+
+let syncTimer: ReturnType<typeof setTimeout> | undefined
+
+function scheduleSyncButtons() {
+  clearTimeout(syncTimer)
+  syncTimer = setTimeout(syncButtons, SYNC_DEBOUNCE_MS)
+}
+
+let headerObserver: MutationObserver | undefined
+
+/** GitHub 重渲染清空按钮后自动补回 */
+function watchRepoHeader() {
+  headerObserver?.disconnect()
+  headerObserver = new MutationObserver(scheduleSyncButtons)
+  headerObserver.observe(document.body, { childList: true, subtree: true })
+}
+
 registerMenuCommands()
 
-// 不能太快，避免被 GitHub 覆盖
-setTimeout(syncButtons, 500)
+watchRepoHeader()
+syncButtons()
 
-monkeyWindow.addEventListener('urlchange', () => setTimeout(syncButtons, 500))
+monkeyWindow.addEventListener('urlchange', scheduleSyncButtons)
