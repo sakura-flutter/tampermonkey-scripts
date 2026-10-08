@@ -8,7 +8,7 @@
 // @match        https://tieba.baidu.com/*
 // @require      https://unpkg.com/crypto-js@4.2.0/core.js
 // @require      https://unpkg.com/crypto-js@4.2.0/md5.js
-// @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.js
+// @require      https://unpkg.com/vue@3.5.43/dist/vue.runtime.global.prod.js
 // @connect      tieba.baidu.com
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener

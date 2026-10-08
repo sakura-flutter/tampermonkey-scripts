@@ -6,7 +6,7 @@
 // @description  自动填充填写过的产品密码(不是蓝湖账户)；快捷查看打开过的项目
 // @license      MIT
 // @match        https://lanhuapp.com/web/
-// @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.js
+// @require      https://unpkg.com/vue@3.5.43/dist/vue.runtime.global.prod.js
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
 // @grant        GM_deleteValue

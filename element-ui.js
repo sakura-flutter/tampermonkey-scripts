@@ -9,7 +9,7 @@
 // @match        https://element-plus.org/*
 // @match        https://element.eleme.cn/*
 // @match        https://element.eleme.io/*
-// @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.min.js
+// @require      https://unpkg.com/vue@3.5.43/dist/vue.runtime.global.prod.min.js
 // @grant        GM_addStyle
 // @compatible   chrome Latest
 // @compatible   firefox Latest

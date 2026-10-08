@@ -7,8 +7,8 @@
 // @license      MIT
 // @match        https://www.pixiv.net
 // @match        https://www.pixiv.net/*
-// @require      https://unpkg.com/viewerjs@1.11.9/dist/viewer.min.js
-// @resource     viewerjs/dist/viewer.css  https://unpkg.com/viewerjs@1.11.9/dist/viewer.min.css
+// @require      https://unpkg.com/viewerjs@1.15.2/dist/viewer.min.js
+// @resource     viewerjs/dist/viewer.css  https://unpkg.com/viewerjs@1.15.2/dist/viewer.min.css
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        window.onurlchange

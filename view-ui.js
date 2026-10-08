@@ -6,7 +6,7 @@
 // @description  (原iView)隐藏文档中菜单项：Pro、物料
 // @license      MIT
 // @match        *://v4.iviewui.com/*
-// @require      https://unpkg.com/vue@3.5.41/dist/vue.runtime.global.prod.min.js
+// @require      https://unpkg.com/vue@3.5.43/dist/vue.runtime.global.prod.min.js
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
 // @grant        GM_getValue
