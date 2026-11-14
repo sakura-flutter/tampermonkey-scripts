@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         redirect 外链跳转
 // @namespace    https://github.com/sakura-flutter/tampermonkey-scripts
-// @version      1.67.0
+// @version      1.67.1
 // @author       sakura-flutter
 // @description  自动跳转(重定向)到目标链接，免去点击步骤。适配了简书、知乎、微博、QQ邮箱、QQPC、QQNT、印象笔记、贴吧、CSDN、YouTube、微信、企业微信、微信开放社区、开发者知识库、豆瓣、个人图书馆、Pixiv、搜狗、Google、站长之家、OSCHINA、掘金、腾讯文档、pc6下载站、爱发电、Gitee、天眼查、爱企查、企查查、优设网、51CTO、力扣、花瓣网、飞书、Epic、Steam、语雀、牛客网、哔哩哔哩、少数派、5ch、金山文档、石墨文档、urlshare、酷安、网盘分享、腾讯云开发者社区、腾讯兔小巢、云栖社区、NodeSeek、亿企查、异次元软件、HelloGitHub、知更鸟、巴哈姆特、ABABTOOLS、阿里云帮助中心、LINUX DO
 // @license      MIT
@@ -209,6 +209,16 @@
 			window.open(href);
 		}, true);
 	};
+	function parseQQNTUrl(search) {
+		for (const pair of search.replace(/^\?/, "").split("&")) {
+			const eq = pair.indexOf("=");
+			if (eq === -1 || pair.slice(0, eq) !== "url") continue;
+			const raw = pair.slice(eq + 1);
+			const value = /(%2f)$/i.test(raw) ? raw.slice(0, -3) : raw;
+			return value ? decodeURIComponent(value) : void 0;
+		}
+	}
+	var QQNT = () => parseQQNTUrl(location.search);
 	var pixiv = ({ query }) => {
 		let link;
 		for (const [key, value] of Object.entries(query)) {
@@ -272,7 +282,7 @@
 		{
 			name: "QQNT",
 			match: /^c\.pc\.qq\.com\/(pc|ios|android)\.html/,
-			parse: ({ query }) => query.url
+			parse: QQNT
 		},
 		{
 			name: "腾讯文档",
