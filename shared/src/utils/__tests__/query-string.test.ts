@@ -35,6 +35,24 @@ describe('query string 工具函数', () => {
     expect(parse('https://example.com/?from=search#/route?from=hash')).toEqual({ from: 'search' })
   })
 
+  it('提取作为参数值的完整 url，保留其自身 query、末尾斜杠和编码字符', () => {
+    const encodedSlash =
+      'https://mock.example.com/jump?channel=news&url=https://mock.example.org/detail?id=987654%2F&ref=share'
+    const withoutSlash =
+      'https://mock.example.com/jump?channel=news&url=https://mock.example.org/detail?id=987654&ref=share'
+    const withSlash =
+      'https://mock.example.com/jump?channel=news&url=https://mock.example.org/detail?id=987654/&ref=share'
+
+    expect(parse(encodedSlash)).toEqual({
+      channel: 'news',
+      url: 'https://mock.example.org/detail?id=987654/',
+      ref: 'share',
+    })
+    expect(parse(withoutSlash).url).toBe('https://mock.example.org/detail?id=987654')
+    expect(parse(withSlash).url).toBe('https://mock.example.org/detail?id=987654/')
+    expect(parse(withSlash).ref).toBe('share')
+  })
+
   it('处理重复参数、加号和编码后的参数名', () => {
     expect(parse('https://example.com/?tag=one&tag=two&full%20name=Jane+Doe')).toEqual({
       tag: 'two',
