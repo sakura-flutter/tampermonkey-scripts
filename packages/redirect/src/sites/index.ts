@@ -3,6 +3,7 @@ import { weibo } from './t-cn'
 import { weixin } from './mp-weixin-qq-com'
 import { weixin as weixin2 } from './weixin110-qq-com'
 import { doc360 } from './www-360doc-com'
+import { QQNT } from './c-pc-qq-com'
 import { pixiv } from './www-pixiv-net'
 import { linuxDo } from './linux-do'
 import type { Site } from '../types'
@@ -47,7 +48,7 @@ const sites: Site[] = [
     // 被阻止访问
     name: 'QQNT',
     match: /^c\.pc\.qq\.com\/(pc|ios|android)\.html/,
-    parse: ({ query }) => query.url,
+    parse: QQNT,
   },
   {
     name: '腾讯文档',
